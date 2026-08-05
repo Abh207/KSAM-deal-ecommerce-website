@@ -1,0 +1,84 @@
+*{
+    margin: 0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+body{
+  max-width: 120rem;
+  padding: 0 3.2rem;
+  margin: 0 auto;
+}
+
+.top-txt{
+  background-color: green;
+  padding: 0.2rem 0rem;
+  color:white;
+
+}
+
+.sign{
+  color:white;
+}
+
+.nav-link{
+  color: green;
+}
+.header-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.sign-in-up{
+  display: flex;
+  gap: 5rem;
+}
+
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: whitesmoke;
+  padding: 1rem 0rem;
+}
+
+.navbar ul {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+    gap: 1.5rem;
+    
+  ;
+}
+
+a{
+  text-decoration: none;
+}
+
+.container.grid.grid-two--cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.custom-shape-divider-bottom-1785952215 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1785952215 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 150px;
+}
+
+.custom-shape-divider-bottom-1785952215 .shape-fill {
+    fill: #B8E986;
+}
