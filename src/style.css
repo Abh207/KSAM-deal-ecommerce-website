@@ -11,18 +11,41 @@ body{
 }
 
 .top-txt{
-  background-color: green;
-  padding: 0.2rem 0rem;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: rgb(37, 219, 37);
+  padding: 0.5rem 0rem;
   color:white;
 
 }
 
 .sign{
+  font-size: 1rem;
+  font-weight: 500;
   color:white;
 }
 
 .nav-link{
-  color: green;
+  background-color: rgb(37, 219, 37);
+  color: white;
+  border-radius: 30%;
+  padding: 0.3rem 1.4rem;
+}
+
+i{
+  color: white;
+  
+}
+
+.nav-link-cart{
+  background-color: rgb(155, 74, 15);
+  padding: 0.3rem 1.6rem 0.3rem 1.6rem;
+  border-radius: 30%;
+}
+
+.logo{
+  width: 30%;
+  height: auto;
 }
 .header-container{
   display: flex;
@@ -36,20 +59,28 @@ body{
 }
 
 .container{
+  max-width: 140rem;
+  margin: 0.8rem auto;
+  padding: 0 3.2rem;
+  font-size: 1.5rem;
+  font-weight: 500;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  background-color: whitesmoke;
-  padding: 1rem 0rem;
+  /* background-color: whitesmoke; */
+}
+
+main{
+   background-color: whitesmoke;
 }
 
 .navbar ul {
     display: flex;
     gap: 3rem;
     list-style: none;
-    gap: 1.5rem;
-    
+    gap: 3rem;
+
   ;
 }
 
@@ -60,6 +91,7 @@ a{
 .container.grid.grid-two--cols {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    padding: 5rem 5rem 8rem;
 }
 
 .custom-shape-divider-bottom-1785952215 {
@@ -80,5 +112,54 @@ a{
 }
 
 .custom-shape-divider-bottom-1785952215 .shape-fill {
-    fill: #B8E986;
+    fill: rgb(37, 219, 37);
 }
+
+.secton-hero--content{
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-subheading{
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgb(10, 192, 10);
+  margin-bottom: 0.5rem;
+}
+
+.hero-para{
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 2.1rem;
+  color: rgb(105, 46, 4);
+}
+
+.hero-heading{
+  text-transform: capitalize;
+  color: rgb(37, 219, 37);
+  margin-bottom: 1.6rem;
+}
+
+.hero-btn{
+  width: 15.5rem;
+  background-color: rgb(37, 219, 37);
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 2.5rem;
+
+}
+
+.btn{
+  color: white;
+}
+
+.section-hero-image{
+  margin-left: 15rem;
+}
+
+img.img-style{
+  width: 100%;
+  height: auto;
+}  
