@@ -352,7 +352,7 @@ img.img-style{
 /* Image Container */
 .extra-image {
     position: relative;
-    z-index: 10;        /* Above the green shape */
+    z-index: 10;        
     display: flex;
     justify-content: center;
     align-items: center;
@@ -660,7 +660,7 @@ input::placeholder {
 #productContainer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 4.8rem;
+  gap: 1.5rem;
 
   & .information {
     display: flex;
@@ -675,7 +675,7 @@ input::placeholder {
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 2.5rem;
-  width: 36rem;
+  width: 27.4rem;
   padding: 1.6rem;
   /* max-width: 1000px; */
   margin: 1.8vh auto;
@@ -730,7 +730,7 @@ input::placeholder {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  border: 0.2rem solid var(--borderColor);
+  border: 0.2rem solid #9ed3b1;
   border-radius: 0.8rem;
   margin: 0.8rem 0;
 
@@ -738,7 +738,7 @@ input::placeholder {
     background-color: transparent;
     color: var(--buttonColor);
     font-size: 2rem;
-    padding: 0.6rem 2rem;
+    padding: 0.2rem 0.5rem;
     font-weight: bold;
     border: none;
 
@@ -780,14 +780,13 @@ input::placeholder {
 }
 
 .add-to-cart-button,
-.contact-btn,
-.hero-btn a {
+.contact-btn{
   font-weight: 500;
   font: inherit;
   border-radius: 6px;
   border: 0;
   padding: 1rem 2.8rem;
-  background-color: var(--buttonColor);
+  background-color: #0a5426;
   color: #fff;
   font-size: 1.6rem;
   /* margin-top: 1.2rem; */
@@ -863,8 +862,10 @@ input::placeholder {
 }
 
 .productRating {
-  color: #e9db16;
+  color: #ecdd0c;
+  background-color: #ecdd0c;
 }
+
 
 .productPrice,
 .productActualPrice {
