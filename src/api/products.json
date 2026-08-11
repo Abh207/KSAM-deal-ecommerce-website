@@ -5,8 +5,9 @@
     "category": "Computers",
     "brand": "ExampleBrand",
     "price": 999.99,
+    "Actualprice": 2999.99,
     "stock": 50,
-    "image": "/images/computer.png",
+    "image": "/computer.png",
     "description": "Powerful laptop with a quad-core i5 processor, 8GB RAM, 256GB SSD, and a 14-inch FHD display."
     
   },
@@ -16,8 +17,9 @@
     "category": "Mobiles",
     "brand": "TechGadget",
     "price": 499.99,
+    "Actualprice": 999,
     "stock": 100,
-    "image": "../images/smartPhone.png",
+    "image": "/smartPhone.png",
     "description": "Feature-rich smartphone with a 6.2-inch screen, 12MP dual camera, 128GB storage, and a 4000mAh battery."
     
   },
@@ -27,8 +29,9 @@
     "category": "Audio",
     "brand": "SoundBeats",
     "price": 149.99,
+    "Actualprice": 299,
     "stock": 30,
-    "image": "../images/headphone.png",
+    "image": "/headphone.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -38,8 +41,9 @@
     "category": "Wearables",
     "brand": "FitTech",
     "price": 199.99,
+    "Actualprice": 299.99,
     "stock": 20,
-    "image": "../images/watch.png",
+    "image": "/watch.png",
     "description": "Smartwatch with a 1.3-inch AMOLED display, water-resistant design, fitness tracking features, and a stylish silver color."
     
   },
@@ -49,8 +53,9 @@
     "category": "Audio",
     "brand": "SoundBeats",
     "price": 149.99,
+    "Actualprice": 199.99,
     "stock": 30,
-    "image": "../images/speakers.png",
+    "image": "/speakers.png",
     "description": "High-quality wireless speakers with rich bass, Bluetooth connectivity, and a sleek black color."
     
   },
@@ -59,64 +64,82 @@
     "name": "Television",
     "category": "Video",
     "brand": "Samsung",
-    "price": 199.99,
+    "price": 1999.99,
+    "Actualprice": 2999.99,
     "stock": 20,
-    "image": "../images/tv.png",
+    "image": "/tv.png",
     "description": "Smart television with a 43-inch display, vibrant picture quality, and stylish black color."
     
   },
   {
-    "id": 3,
+    "id": 7,
     "name": "Charger",
-    "category": "Audio",
+    "category": "Charging",
     "brand": "SoundBeats",
-    "price": 149.99,
+    "price": 549.99,
+    "Actualprice": 999.99,
     "stock": 30,
-    "image": "../images/charger.png",
+    "image": "/charger.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
   {
-    "id": 3,
+    "id": 8,
     "name": "Hardware",
     "category": "Audio",
     "brand": "SoundBeats",
-    "price": 149.99,
+    "price": 1489.99,
+    "Actualprice": 2999.99,
     "stock": 30,
-    "image": "../images/computer-hardware.png",
+    "image": "/computer-hardware.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
   {
-    "id": 3,
-    "name": "Hardware",
-    "category": "Audio",
+    "id": 9,
+    "name": "Mouse",
+    "category": "Accessories",
     "brand": "SoundBeats",
-    "price": 149.99,
+    "price": 449.99,
+    "Actualprice": 899.99,
     "stock": 30,
-    "image": "../images/computer-hardware.png",
+    "image": "/mouse.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
   {
-    "id": 3,
-    "name": "Hardware",
-    "category": "Audio",
+    "id": 10,
+    "name": "Keyboard",
+    "category": "Computer Accessories",
     "brand": "SoundBeats",
-    "price": 149.99,
+    "price": 949.99,
+    "Actualprice": 1599.99,
     "stock": 30,
-    "image": "../images/computer-hardware.png",
+    "image": "keyboard.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
   {
-    "id": 3,
-    "name": "Hardware",
-    "category": "Audio",
+    "id": 11,
+    "name": "Bottle",
+    "category": "Home & Kitchen",
     "brand": "SoundBeats",
-    "price": 149.99,
+    "price": 649.99,
+    "Actualprice": 899.99,
     "stock": 30,
-    "image": "../images/computer-hardware.png",
+    "image": "/bottle.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 12,
+    "name": "Iron",
+    "category": "Electrics",
+    "brand": "SoundBeats",
+    "price": 1249.99,
+    "Actualprice": 1999.99,
+    "stock": 30,
+    "image": "/iron.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   }

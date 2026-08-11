@@ -676,11 +676,12 @@ input::placeholder {
   align-items: flex-start;
   gap: 2.5rem;
   width: 27.4rem;
-  padding: 1.6rem;
+  padding: 1.2rem;
   /* max-width: 1000px; */
   margin: 1.8vh auto;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 0.3rem;
+  position: relative;
   /*border: 0.1rem solid #ccc;
   */
   -webkit-border-radius: 0.2rem;
@@ -690,8 +691,34 @@ input::placeholder {
   -webkit-border-radius: 0.3rem;
 }
 
+/* Right Corner Shape */
+.cards::after {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 110px;
+    background: #dff8e8;
+    bottom: 0px;
+    right: 0px;
+    border-radius: 100% 0 0 0;
+    z-index: 1;
+}
+
+.cards::before {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 110px;
+    background: #dff8e8;
+    top: 0px;
+    right: 0px;
+    border-radius: 0 0 0 100%;
+    z-index: 1;
+}
+
+
 .category {
-  background-color: #e7d6d6;
+  background-color: #c50b0b;
   padding: 0.3rem 1.2rem;
   font-size: 1.2rem;
   letter-spacing: 0.1rem;
@@ -704,7 +731,7 @@ input::placeholder {
 
 .productImage {
   max-width: 100%;
-  width: 32rem;
+  width: 15rem;
   height: auto;
 }
 
@@ -721,9 +748,19 @@ input::placeholder {
   margin: 0.8rem 0;
 }
 
-.productProperty,
-.productDescription {
+.productProperty{
   font-size: 1.6rem;
+  color: #000;
+}
+
+.productDescription {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.09rem;
+    white-space: 1rem;
+    line-height: 1.6;
+    color: black;
 }
 
 .stockElement {
@@ -736,7 +773,7 @@ input::placeholder {
 
   & button {
     background-color: transparent;
-    color: var(--buttonColor);
+    color: black
     font-size: 2rem;
     padding: 0.2rem 0.5rem;
     font-weight: bold;
@@ -747,7 +784,7 @@ input::placeholder {
     }
 
     &:first-child {
-      border-right: 0.1rem solid var(--borderColor);
+      border-right: 0.1rem solid black;
       border-radius: 0;
       -webkit-border-radius: 0;
       -moz-border-radius: 0;
@@ -756,7 +793,7 @@ input::placeholder {
     }
 
     &:last-child {
-      border-left: 0.1rem solid var(--borderColor);
+      border-left: 0.1rem solid black;
       border-radius: 0;
       -webkit-border-radius: 0;
       -moz-border-radius: 0;
@@ -774,7 +811,7 @@ input::placeholder {
 /**** Our Home product section Ends  ****/
 
 #cartValue {
-  background-color: var(--buttonColor);
+  background-color: red;
   color: #fff;
   padding: 1rem 2rem;
 }
@@ -794,8 +831,8 @@ input::placeholder {
   &:hover {
     box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.16),
       inset 0px 0px 0px 3px rgb(51, 51, 51);
-    background-color: var(--backgroundColor);
-    color: var(--buttonColor);
+    background-color:#5cd88c; 
+    color: white
     cursor: pointer;
   }
 
@@ -833,20 +870,21 @@ input::placeholder {
   }
 
   & .productImage {
-    width: 16rem;
+    width: 4rem;
   }
 
   & .productName {
     font-size: 2rem;
   }
 
-  & .productPrice {
-    font-size: 1.6rem;
+  /* & .productPrice {
+    font-size: 1rem;
+    color: #c50b0b;
   }
 
   & .productActualPrice {
-    font-size: 1.6rem;
-  }
+    font-size: 1rem;
+  } */
 }
 
 .category {
@@ -869,7 +907,8 @@ input::placeholder {
 
 .productPrice,
 .productActualPrice {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
+  font-weight: 300;
 }
 
 .productActualPrice {
@@ -885,7 +924,7 @@ input::placeholder {
 
 .productCartTotalElement {
   padding: 2.4rem;
-  background-color: var(--backgroundSecondary);
+  background-color: #0a5426;
   height: auto;
   width: 32rem;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
@@ -907,7 +946,7 @@ input::placeholder {
     .productSubTotal,
     .productFinalTotal,
     .productTax {
-      color: var(--textColor);
+      color: red;
       font-weight: bold;
     }
   }
