@@ -750,7 +750,7 @@ input::placeholder {
 
 .productProperty{
   font-size: 1.6rem;
-  color: #000;
+  color: #4B5563;
 }
 
 .productDescription {
@@ -760,7 +760,7 @@ input::placeholder {
     letter-spacing: 0.09rem;
     white-space: 1rem;
     line-height: 1.6;
-    color: black;
+    color: #555A60;
 }
 
 .stockElement {
@@ -805,8 +805,18 @@ input::placeholder {
   .productQuantity {
     padding: 0rem 3rem;
     margin: 0;
+    color:#16803C ;
     font-weight: bold;
   }
+}
+
+.cartIncrement , .cartDecrement{
+  color:#16803C ;
+  font-size: 1rem;
+}
+
+.productStack{
+  color:#13a248 ;
 }
 /**** Our Home product section Ends  ****/
 
@@ -823,7 +833,7 @@ input::placeholder {
   border-radius: 6px;
   border: 0;
   padding: 1rem 2.8rem;
-  background-color: #0a5426;
+  background-color: #57ce84;
   color: #fff;
   font-size: 1.6rem;
   /* margin-top: 1.2rem; */
@@ -899,9 +909,9 @@ input::placeholder {
   -o-border-radius: 10rem;
 }
 
-.productRating {
-  color: #ecdd0c;
-  background-color: #ecdd0c;
+.productRating i {
+    color: #F4C430;
+    background-color: transparent;
 }
 
 
@@ -909,6 +919,14 @@ input::placeholder {
 .productActualPrice {
   font-size: 1.8rem;
   font-weight: 300;
+  color: #171717;
+}
+
+.productActualPrice {
+  color: #777777;
+}
+ .productPrice{
+  color: #171717;
 }
 
 .productActualPrice {
@@ -950,6 +968,12 @@ input::placeholder {
       font-weight: bold;
     }
   }
+}
+
+imaeContainer{
+  .extra-image img:hover {
+    transform: scale(1.08);
+}
 }
 
 /* End template section css code */

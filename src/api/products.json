@@ -109,13 +109,13 @@
   },
   {
     "id": 10,
-    "name": "Keyboard",
-    "category": "Computer Accessories",
+    "name": "Geyser",
+    "category": "Home Accessories",
     "brand": "SoundBeats",
     "price": 949.99,
     "Actualprice": 1599.99,
     "stock": 30,
-    "image": "keyboard.png",
+    "image": "geyser.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -140,6 +140,42 @@
     "Actualprice": 1999.99,
     "stock": 30,
     "image": "/iron.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 13,
+    "name": "Air Conditioning",
+    "category": "Home",
+    "brand": "SoundBeats",
+    "price": 9649.99,
+    "Actualprice": 8899.99,
+    "stock": 30,
+    "image": "/airconditioning.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 14,
+    "name": "Heater",
+    "category": "Home",
+    "brand": "SoundBeats",
+    "price": 549.99,
+    "Actualprice": 769.99,
+    "stock": 30,
+    "image": "/Heater.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 15,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 30,
+    "image": "/Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   }
