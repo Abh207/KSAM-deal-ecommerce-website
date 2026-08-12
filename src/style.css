@@ -821,9 +821,9 @@ input::placeholder {
 /**** Our Home product section Ends  ****/
 
 #cartValue {
-  background-color: red;
+  background-color: #ff8c00;
   color: #fff;
-  padding: 1rem 2rem;
+  padding: 0.5rem 3.2rem;
 }
 
 .add-to-cart-button,
@@ -887,14 +887,6 @@ input::placeholder {
     font-size: 2rem;
   }
 
-  /* & .productPrice {
-    font-size: 1rem;
-    color: #c50b0b;
-  }
-
-  & .productActualPrice {
-    font-size: 1rem;
-  } */
 }
 
 .category {
