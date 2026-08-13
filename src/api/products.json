@@ -178,5 +178,77 @@
     "image": "/Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
+  },
+  {
+    "id": 16,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 40,
+    "image": "/Microwave.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 17,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 25,
+    "image": "/Microwave.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 18,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 19,
+    "image": "/Microwave.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 19,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 32,
+    "image": "/Microwave.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 20,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 52,
+    "image": "/Microwave.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
+  },
+  {
+    "id": 21,
+    "name": "Microwave",
+    "category": "Home & Kitchen",
+    "brand": "SoundBeats",
+    "price": 2649.99,
+    "Actualprice": 4899.99,
+    "stock": 6,
+    "image": "/Microwave.png",
+    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    
   }
 ]
