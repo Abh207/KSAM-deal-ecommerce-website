@@ -51,6 +51,50 @@
 </header>
 
 <!-- Start of main content part -->
+
+<section class="addToCartElement">
+  <div class="container">
+    <section>
+      <div id="productCartContainer"></div>
+    </section>
+    <section class="productCartTotalElem">
+      <div class="productCartTotalElement">
+        <p>Selected Offer Summary</p>
+        <div class="productOrderTotal">
+          <div>
+            <p>Sub Total:</p>
+            <p class="productSubTotal">0</p>
+          </div>
+          <div>
+            <p>Tax:</p>
+            <p class="ProductTax">$50</p>
+          </div>
+          <hr>
+          <div>
+            <p>
+              Final Total:
+            </p>
+            <p class="productFinalTotal">0</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<template id="productCartTemplate">
+  <div class="cards" id="cardValue">
+    <article class="information [ card ]">
+      <div>
+        <span class="category"></span>
+      </div>
+      <div class="imageContainer">
+        <img src="" alt="">
+      </div>
+    </article>
+  </div>
+</template>
+
 <!-- End of main content part -->
 <footer class="section-footer">
   <div class="footer-container container">
@@ -111,4 +155,5 @@
   </div>
 </footer>
 <script type="module" src="./src/main.js"></script>
+<script type="module" src="showAddToCards.js"></script>
 </body>

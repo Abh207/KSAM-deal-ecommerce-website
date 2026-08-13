@@ -941,11 +941,12 @@ input::placeholder {
 }
 
 .productCartTotalElement {
+  background-color: whitesmoke;
   padding: 2.4rem;
-  background-color: #0a5426;
   height: auto;
   width: 32rem;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+  color: #1F2937;
+  box-shadow: #B8C2CC 0px 1px 4px, #B8C2CC 0px 0px 0px 3px;
 }
 
 .productOrderTotal {
@@ -964,10 +965,14 @@ input::placeholder {
     .productSubTotal,
     .productFinalTotal,
     .productTax {
-      color: red;
+      color: black;
       font-weight: bold;
     }
   }
+}
+
+.productTax{
+  margin-bottom: 1.3rem;
 }
 
 imaeContainer{
