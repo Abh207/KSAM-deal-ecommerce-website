@@ -89,8 +89,19 @@
         <span class="category"></span>
       </div>
       <div class="imageContainer">
-        <img src="" alt="">
+        <img src="" alt="" class="productImage">
       </div>
+      <h2 class="productName">${product.name}</h2>
+      <p class="productPrice"></p>
+      <div class="stockElement">
+        <button class="cartIncrement">+</button>
+        <p class="productQuantity" data-quantity="1">1</p>
+        <button class="cartDecrement">-</button>
+      </div>
+
+      <button class="add-to-cart-button remove-to-cart-button">
+        Remove
+      </button>
     </article>
   </div>
 </template>
