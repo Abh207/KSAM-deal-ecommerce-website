@@ -1,6 +1,6 @@
 import products from "./api/products.json";
-import { getCartProductFromLS } from "./getCartProducts";
 
+import { getCartProductFromLS } from "./getCartProducts.js";
 
 let cartProducts = getCartProductFromLS();
 
@@ -13,11 +13,8 @@ console.log(filterProducts);
 
 
 const cartElement = document.querySelector("#productCartContainer");
-const templateContainer = document.querySelector("#productsCartTemplate");
-
-
-const cartElement = document.querySelector("#productCartContainer");
 const templateContainer = document.querySelector("#productCartTemplate");
+
 
 const showCartProduct = () => {
   filterProducts.forEach((curProd) => {
@@ -25,8 +22,31 @@ const showCartProduct = () => {
 
     let productClone = document.importNode(templateContainer.content, true);
 
-    productClone.querySelector(".category").textContent = category;
+    
+        productClone.querySelector(".category").textContent = category;
 
+        productClone.querySelector(".productName").textContent = name;
+
+        productClone.querySelector(".productPrice").textContent = `$${price}`;
+
+        productClone.querySelector(".productImage").src = image;
+        productClone.querySelector(".productImage").alt = name;
+
+        productClone
+            .querySelector(".productQuantity")
+            .setAttribute("data-quantity", "1");
     cartElement.appendChild(productClone);
   });
 };
+
+
+showCartProduct();
+
+
+
+
+
+
+
+
+

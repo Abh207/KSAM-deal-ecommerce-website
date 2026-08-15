@@ -893,7 +893,7 @@ input::placeholder {
   & .cards {
     width: 100%;
     max-width: 100%;
-    margin: 0;
+    margin-bottom: 1rem;
     box-shadow: 0 0;
     border-top: 0.1rem solid #d8d8d8;
     border-right: 0.1rem solid #d8d8d8;
@@ -967,16 +967,16 @@ input::placeholder {
 
 .productCartTotalElement {
   background-color: #F8F9FA;
-  padding: 2.4rem;
+  padding: 0.6rem;
   height: auto;
-  width: 32rem;
+  width: 24rem;
   color: #1F2937;
   box-shadow: #B8C2CC 0px 1px 4px, #B8C2CC 0px 0px 0px 3px;
 }
 
 .productOrderTotal {
   /* background-color: rgb(60, 60, 60); */
-  max-width: 30rem;
+  max-width: 25rem;
 
   & div {
     display: flex;
@@ -985,18 +985,21 @@ input::placeholder {
 
     p {
       color: #8c9299;
+      font-size: 2rem;
+      font-weight: 500;
     }
 
     .productSubTotal,
     .productFinalTotal,
-    .productTax {
+    .ProductTax {
       color: black;
+      font-size: 2rem;
       font-weight: bold;
     }
   }
 }
 
-.productTax{
+.ProductTax{
   margin-bottom: 1.3rem;
 }
 
@@ -1007,3 +1010,321 @@ imaeContainer{
 }
 
 /* End template section css code */
+
+
+
+
+
+/* ================================
+   CART PAGE FIX
+================================ */
+
+/* Main cart area */
+.addToCartElement {
+    padding: 3rem 0;
+    background-color: #fff;
+}
+
+/* Cart + summary */
+.addToCartElement > .container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 2.5rem;
+    align-items: start;
+
+}
+
+/* Left side */
+#productCartContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Each cart item */
+#productCartContainer .cards {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+
+    padding: 1.5rem;
+
+    background-color: #fff;
+
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* Remove the decorative shapes that cover content */
+#productCartContainer .cards::before,
+#productCartContainer .cards::after {
+    display: none;
+}
+
+/* Cart product information */
+#productCartContainer .card {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        140px
+        90px
+        minmax(150px, 1fr)
+        130px
+        150px
+        120px;
+
+    align-items: center;
+
+    gap: 1.5rem;
+
+    position: relative;
+    z-index: 2;
+}
+
+/* Category */
+#productCartContainer .category {
+    display: inline-block;
+    width: fit-content;
+
+    background-color: #eadada;
+
+    color: #171717;
+
+    padding: 0.5rem 1rem;
+
+    font-size: 1rem;
+
+    border-radius: 30px;
+}
+
+/* Product image */
+#productCartContainer .productImage {
+    width: 80px;
+    height: 80px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+/* Product name */
+#productCartContainer .productName {
+    font-size: 1.6rem;
+    font-weight: 700;
+
+    margin: 0;
+}
+
+/* Price */
+#productCartContainer .productPrice {
+    font-size: 1.4rem;
+    font-weight: 500;
+
+    margin: 0;
+}
+
+/* Quantity box */
+#productCartContainer .stockElement {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+    width: 130px;
+
+    border: 3px solid #9ed3b1;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    margin: 0;
+}
+
+/* Quantity buttons */
+#productCartContainer .stockElement button {
+    background-color: white;
+
+    color: #16803c;
+
+    border: none;
+
+    font-size: 1.4rem;
+
+    font-weight: bold;
+
+    padding: 0.4rem;
+
+    cursor: pointer;
+}
+
+/* Quantity number */
+#productCartContainer .stockElement .productQuantity {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+
+    padding: 0;
+
+    color: #16803c;
+
+    font-weight: bold;
+}
+
+/* Remove button */
+#productCartContainer .remove-to-cart-button {
+    position: relative;
+
+    z-index: 10;
+
+    width: 120px;
+
+    padding: 0.8rem 1rem;
+
+    background-color: #57ce84;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    font-size: 1.1rem;
+
+    cursor: pointer;
+}
+
+/* Remove button hover */
+#productCartContainer .remove-to-cart-button:hover {
+    background-color: white;
+    color: black;
+}
+
+/* ================================
+   SUMMARY
+================================ */
+
+.productCartTotalElem {
+    width: 100%;
+
+    display: block;
+
+    margin: 0;
+}
+
+.productCartTotalElement {
+    width: 100%;
+
+    background-color: #f8f9fa;
+
+    padding: 1.5rem;
+
+    color: #1f2937;
+
+    border: 1px solid #b8c2cc;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    border-radius: 8px;
+
+    position: sticky;
+
+    top: 20px;
+}
+
+.productCartTotalElement > p {
+    font-size: 1.5rem;
+
+    font-weight: 700;
+
+    margin-bottom: 1.5rem;
+}
+
+.productOrderTotal {
+    width: 100%;
+
+    max-width: none;
+}
+
+.productOrderTotal > div {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin: 1.2rem 0;
+}
+
+.productOrderTotal p {
+    margin: 0;
+
+    font-size: 1rem;
+}
+
+.productOrderTotal .productSubTotal,
+.productOrderTotal .productFinalTotal,
+.productOrderTotal .ProductTax {
+    color: #111;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 1100px) {
+
+    .addToCartElement > .container {
+        grid-template-columns: 1fr;
+    }
+
+    .productCartTotalElement {
+        position: static;
+    }
+
+    #productCartContainer .card {
+        grid-template-columns:
+            100px
+            80px
+            1fr
+            120px
+            120px;
+    }
+}
+
+@media (max-width: 750px) {
+
+    #productCartContainer .card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    #productCartContainer .category,
+    #productCartContainer .productImage {
+        margin: auto;
+    }
+
+    #productCartContainer .stockElement,
+    #productCartContainer .remove-to-cart-button {
+        margin: auto;
+    }
+}

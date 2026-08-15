@@ -1,5 +1,5 @@
-import { getCartProductFromLS } from "./getCartProducts";
-import { updateCartValue } from "./updateCartValue";
+import { getCartProductFromLS } from "./getCartProducts.js";
+import { updateCartValue } from "./updateCartValue.js";
 
 getCartProductFromLS();
 export const addToCart = (event,id,stock) => {
