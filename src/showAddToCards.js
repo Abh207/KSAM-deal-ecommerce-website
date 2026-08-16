@@ -1,4 +1,5 @@
 import products from "./api/products.json";
+import { fetchQuantityFromCartLS } from "./fetchQuantityFromCartLS.js";
 
 import { getCartProductFromLS } from "./getCartProducts.js";
 
@@ -22,12 +23,17 @@ const showCartProduct = () => {
 
     let productClone = document.importNode(templateContainer.content, true);
 
+    const LSActualData = fetchQuantityFromCartLS(id , price);
+
     
         productClone.querySelector(".category").textContent = category;
 
+        productClone.querySelector("#cardValue").setAttribute("id",`card${id}`);
+
         productClone.querySelector(".productName").textContent = name;
 
-        productClone.querySelector(".productPrice").textContent = `$${price}`;
+        productClone.querySelector(".productPrice").textContent = LSActualData.price;
+        productClone.querySelector(".productQuantity").textContent = LSActualData.quantity;
 
         productClone.querySelector(".productImage").src = image;
         productClone.querySelector(".productImage").alt = name;
