@@ -41,6 +41,8 @@ const showCartProduct = () => {
         productClone
             .querySelector(".productQuantity")
             .setAttribute("data-quantity", "1");
+
+    productClone.querySelector(".remove-to-cart-button").addEventListener("click", () => removeProdFromCart(id));
     cartElement.appendChild(productClone);
   });
 };
