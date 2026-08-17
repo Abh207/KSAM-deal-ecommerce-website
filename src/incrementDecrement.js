@@ -40,7 +40,23 @@ export const incrementDecrement = (event,id,stock,price) => {
 
     // finally we will update the price in localStorage
 
-    
+    localStoragePrice = price * quantity;
+    localStoragePrice = Number(localStoragePrice.toFixed(2));
 
+
+    let updatedCart = {id , quantity,price: localStoragePrice  };
+
+        let updateCart=localCartProducts.map((curProd) => {
+            return curProd.id === id ? updatedCart : curProd;
+
+        });
+        // console.log(updateCart);
+        localStorage.setItem("cartProductLS",JSON.stringify(updateCart));
+
+    
+// also we can need to reflects the changes on the main screen
+
+    productQuantity.innerText = quantity;
+    productPrice.innerText = localStoragePrice;
 
 };
