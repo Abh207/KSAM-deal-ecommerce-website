@@ -1,7 +1,7 @@
 import { getCartProductFromLS } from "./getCartProducts";
 import { updateCartValue } from "./updateCartValue";
 
-export const removeProdFromCart = (id) => {
+export const removeProdFromCart = (id,name) => {
     let cartProducts = getCartProductFromLS();
     cartProducts = cartProducts.filter((curProd) => curProd.id !== id);
 
@@ -12,6 +12,8 @@ export const removeProdFromCart = (id) => {
     let removeDiv = document.getElementById(`card${id}`);
     if(removeDiv){
         removeDiv.remove();
+        // show toast product delete to the cart message
+        showToast("delete",name);
     }
 
     updateCartValue(cartProducts);
