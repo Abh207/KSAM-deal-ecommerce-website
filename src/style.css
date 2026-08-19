@@ -4,6 +4,18 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+
+.section.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
 body{
   max-width: 120rem;
   padding: 0 3.2rem;
@@ -178,7 +190,7 @@ a{
   color: white;
 }
 
-.section-hero-image{
+.section-hero-image {
   margin-left: 15rem;
 }
 
@@ -1317,8 +1329,7 @@ imaeContainer{
     font-size: 1.2rem !important;
     font-weight: 700 !important;
     color: #111 !important;
-}
-
+} 
 
 
 /* ================================
@@ -1361,7 +1372,44 @@ imaeContainer{
     #productCartContainer .remove-to-cart-button {
         margin: auto;
     }
+} 
+
+
+
+
+/* toast notifications */
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+
+    padding: 16px 22px;
+    min-width: 280px;
+
+    background: #16803c;
+    color: white;
+
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+
+    z-index: 9999;
+
+    animation: toastSlideIn 0.4s ease;
 }
- 
 
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
 
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

@@ -9,25 +9,10 @@
 </head>
 <body>
 <header class = "section navbar">
-  <section class="top-txt">
-    <div class="header-container">
-      <div class="head-txt">
-        <p>free shoping. 30-days free return and refund guarantee</p>
-      </div>
-      <div class="sign-in-up">
-        <a href="#" class="sign">
-          SIGN IN
-        </a>
-        <a href="#" class="sign">
-          SIGN UP
-        </a>
-      </div>
-    </div>
-  </section>
   <div class="container">
     <div class="navbar-brand">
       <a href="#" target="_blank">
-        <img src="./ksam-deal logo.png"
+        <img src="../public/ksam-deal logo.png"
          alt="KSAM Deal Logo" 
          class="logo" 
          >
@@ -36,7 +21,7 @@
     <nav class="navbar">
       <ul>
         <li class="nav-item">
-          <a href="/index.html" class="nav-link">Home</a>
+          <a href="../index.html" class="nav-link">Home</a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link">Shop</a>
@@ -45,7 +30,7 @@
           <a href="#about" class="nav-link">About</a>
         </li>
         <li class="nav-item">
-          <a href="./src/Product.html" class="nav-link">Products</a>
+          <a href="#product" class="nav-link">Products</a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link">Contact</a>
@@ -59,48 +44,7 @@
     </nav>
   </div>
 </header>
-<main>
-  <section class="section-hero">
-  <div class="container grid grid-two--cols">
-    <div class="secton-hero--content">
-      <p class="hero-subheading">
-        Explore the world of fashion with our exclusive collections.
-      </p>
-      <h1 class ="hero-heading">
-        Discover the latest trends and elevate your style!!
-      </h1>
-      <p class="hero-para">
-        Shop now and experience the perfect blend of fashion, quality, 
-        and affordability.and find the perfect pieces to express 
-        your unique style or elevate your everyday look and make a statement with our fashion-forward designs.
-      </p>
-      <div class="hero-btn">
-        <a href="" class="btn">
-          Explore Our Products
-        </a>
-      </div>
-    </div>
-    <div class="section-hero-image" 
-    data-aos="fade-up"
-    data-aos-delay="600">
-    <figure>
-      <img src="./electronics-items.png"
-      alt="first big image"
-      class="img-style"
-      width="50%" height="auto">
-    </figure>
-  </div>
-  </div>
-  <div class="custom-shape-divider-bottom-1785952215">
-    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
-        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
-        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
-    </svg>
-</div>
-</section>
-</main>
-
+<script type="module" src="/src/main.js"></script>
 <section class="section-extra-product">
   <div class="container grid grid-three--cols">
     <div class="div-extra grid grid-two--cols">
@@ -114,7 +58,7 @@
         <a href="#">Show now</a>
       </div>
       <div class="extra-image extra-laptop">
-        <img src="./laptop-image.png" alt="laptop image">
+        <img src="../laptop-image.png" alt="laptop image">
       </div>
     </div>
     <div class="div-extra grid grid-two--cols">
@@ -128,7 +72,7 @@
         <a href="#">Show now</a>
       </div>
       <div class="extra-image extra-speaker">
-        <img src="./headphone-image.png" alt="speaker image">
+        <img src="../headphone-image.png" alt="speaker image">
       </div>
     </div>
     <div class="div-extra grid grid-two--cols">
@@ -142,7 +86,7 @@
         <a href="#">Show now</a>
       </div>
       <div class="extra-image extra-mobile">
-        <img src="./phone-image.png" alt="mobile image">
+        <img src="../phone-image.png" alt="mobile image">
       </div>
     </div>
   </div>
@@ -207,8 +151,8 @@
   </div>
 </section>
 
-<!-- start yours products section -->
- <section class="section-products" id="product">
+
+<section class="section-products" id="product">
   <div class="container">
     <div class="section-common-heading">
       Checkout Ksamdeal store
@@ -218,6 +162,7 @@
     <div id="productContainer"></div>
   </section>
  </section>
+
 
 <!-- start template section -->
 <template id="productTemplate">
@@ -263,85 +208,13 @@
  
  <!-- End yours products section -->
 
-<!-- start why choose ksamdeal store -->
-
-<section class="section-why--choose">
-
-    <div class="choose-container" id="about">
-
-        <h2 class="section-common--heading">
-            Why Choose Ksamdeal Store
-        </h2>
-
-        <p class="section-common--subheading">
-            Choose Ksamdeal Eduhub For A Holistic, Enriching Learning Experience.
-        </p>
-
-        <div class="main-div-feature">
-
-            <!-- LEFT SIDE -->
-            <div class="left-feature">
-
-                <div class="inner-div-feature">
-                    <span class="common-text--highlight">1</span>
-                    <h3 class="section-common--title">Wide Selection</h3>
-                    <p>Choose from a wide range of gadgets.</p>
-                </div>
-
-                <div class="inner-div-feature">
-                    <span class="common-text--highlight">2</span>
-                    <h3 class="section-common--title">Quality Assurance</h3>
-                    <p>Every gadget undergoes strict quality checks.</p>
-                </div>
-
-                <div class="inner-div-feature">
-                    <span class="common-text--highlight">3</span>
-                    <h3 class="section-common--title">Competitive Prices</h3>
-                    <p>Best prices without compromising quality.</p>
-                </div>
-
-            </div>
-
-            <!-- CENTER IMAGE -->
-            <div class="feature-image">
-                <img src="./green-feature-img.png"
-                     class="feature-img-tag">
-            </div>
-
-            <!-- RIGHT SIDE -->
-            <div class="right-feature">
-
-                <div class="inner-div-feature">
-                    <span class="common-text--highlight">4</span>
-                    <h3 class="section-common--title">Expert Guidance</h3>
-                    <p>Our experts help you choose the right products.</p>
-                </div>
-
-                <div class="inner-div-feature">
-                    <span class="common-text--highlight">5</span>
-                    <h3 class="section-common--title">Convenient Shopping</h3>
-                    <p>Easy shopping with secure payment.</p>
-                </div>
-
-                <div class="inner-div-feature">
-                    <span class="common-text--highlight">6</span>
-                    <h3 class="section-common--title">Excellent Service</h3>
-                    <p>Fast delivery and customer support.</p>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-<!-- End feature -->
 
 <!-- homepage footer  -->
-
-
 <footer class="section-footer">
+    <script src="/src/footer.js"></script>
+</footer>
+
+<!-- <footer class="section-footer">
   <div class="footer-container container">
     <div class="content_1">
       <img src="./ksam-deal logo.png" alt="logo" class="foot-logo">
@@ -398,8 +271,8 @@
       </p>
     </div>
   </div>
-</footer>
+</footer> -->
 <script type="module" src="./src/main.js"></script>
-<!-- <script type="module" src="./src/showAddToCards.js"></script> -->
+<script type="module" src="./src/showAddToCards.js"></script>
 </body>
 </html>

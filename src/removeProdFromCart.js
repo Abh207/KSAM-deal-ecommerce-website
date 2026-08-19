@@ -1,9 +1,11 @@
-import { getCartProductFromLS } from "./getCartProducts";
-import { updateCartValue } from "./updateCartValue";
+import { getCartProductFromLS } from "./getCartProducts.js";
+import { showToast } from "./showToast.js";
+import { updateCartValue } from "./updateCartValue.js";
 
-export const removeProdFromCart = (id,name) => {
+
+export const removeProdFromCart = (id) => {
     let cartProducts = getCartProductFromLS();
-    cartProducts = cartProducts.filter((curProd) => curProd.id !== id);
+    cartProducts = cartProducts.filter((curProd) => curProd.id !== Number(id));
 
     localStorage.setItem("cartProductLS",JSON.stringify(cartProducts));
 
@@ -13,7 +15,7 @@ export const removeProdFromCart = (id,name) => {
     if(removeDiv){
         removeDiv.remove();
         // show toast product delete to the cart message
-        showToast("delete",name);
+        showToast("delete",id);
     }
 
     updateCartValue(cartProducts);

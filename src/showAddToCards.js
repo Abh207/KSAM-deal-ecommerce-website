@@ -60,12 +60,3 @@ showCartProduct();
 
 
 updateCartProductTotal();
-
-
-
-
-
-
-
-
-
