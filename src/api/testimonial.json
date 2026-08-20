@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "company": "FORTER",
+    "comment": "Our system checks support, governance, and automation to help us make better decisions and improve our customer experience.",
+    "name": "Jonathan Swan",
+    "description": "Product Manager at Forter",
+    "image": "/images/customer1.jpg",
+    "theme": "light"
+  },
+  {
+    "id": 2,
+    "company": "MONDAY",
+    "comment": "We connected our workflow with the platform and it helped our team become much more productive and organized.",
+    "name": "Samuel",
+    "description": "Senior Architect at Monday",
+    "image": "/images/customer2.jpg",
+    "theme": "light"
+  },
+  {
+    "id": 3,
+    "company": "HUBSPOT",
+    "comment": "The automation features helped our team save time while keeping everything organized and easy to manage.",
+    "name": "Sarah Kim",
+    "description": "Marketing Manager at HubSpot",
+    "image": "/images/customer3.jpg",
+    "theme": "dark"
+  },
+  {
+    "id": 4,
+    "company": "FORTER",
+    "comment": "Before using the platform, our operations team spent hours manually processing data and preparing updates.",
+    "name": "Jordan Smith",
+    "description": "Product Manager at Forter",
+    "image": "/images/customer4.jpg",
+    "theme": "light"
+  },
+  {
+    "id": 5,
+    "company": "GOOGLE",
+    "comment": "We connected our tools and improved collaboration across the entire organization.",
+    "name": "Daniel",
+    "description": "Product Engineer at Google",
+    "image": "/images/customer5.jpg",
+    "theme": "light"
+  },
+  {
+    "id": 6,
+    "company": "MICROSOFT",
+    "comment": "Monitoring multiple environments used to be difficult. Now our team can manage everything from one place.",
+    "name": "Emma Watson",
+    "description": "Director of Sales at Microsoft",
+    "image": "/images/customer6.jpg",
+    "theme": "light"
+  }
+]

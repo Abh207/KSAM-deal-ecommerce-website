@@ -1414,3 +1414,858 @@ imaeContainer{
         opacity: 1;
     }
 }
+
+
+
+/* contact page css */
+
+
+/* Contact page footer */
+
+
+
+
+/* =========================================
+   CONTACT PAGE
+========================================= */
+
+.sectionMainContact {
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 2rem;
+
+    align-items: center;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.mainContactDescribe {
+    width: 100%;
+    max-width: 32rem;
+}
+
+.contacts {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.5rem;
+
+    padding: 0.45rem 0.9rem;
+
+    background: rgba(37, 219, 37, 0.10);
+
+    border-radius: 2rem;
+
+    color: rgb(37, 219, 37);
+
+    margin-bottom: 1rem;
+}
+
+.contacts i {
+    font-size: 1rem;
+}
+
+.contactPara {
+    margin: 0;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    color: rgb(37, 219, 37);
+}
+
+
+/* =========================================
+   MAIN HEADING
+========================================= */
+
+.mainHeading {
+    margin: 0 0 1rem;
+
+    font-size: 3rem;
+
+    line-height: 1.1;
+
+    font-weight: 500;
+
+    color: #10131a;
+}
+
+.get{
+  color: rgb(37, 219, 37);
+}
+
+.mainHeading br {
+    display: block;
+}
+
+.maincontactDescr {
+    max-width: 32rem;
+
+    margin-bottom: 2rem;
+
+    font-size: 1.2rem;
+
+    line-height: 1.5;
+
+    color: #555;
+}
+
+
+/* =========================================
+   CONTACT INFORMATION BOXES
+========================================= */
+
+.boxContact {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 0.8rem;
+}
+
+/* .headContain {
+    min-height: 6.5rem;
+
+    padding: 1rem;
+
+    border: 0.1rem solid #e5e5e5;
+
+    border-radius: 0.8rem;
+
+    background: #fff;
+
+    box-sizing: border-box;
+} */
+
+.headContain {
+    min-height: 7rem;
+    padding: 1.2rem;
+
+    border: 0.1rem solid #e5e5e5;
+    border-radius: 0.9rem;
+
+    background: #fff;
+
+    box-sizing: border-box;
+
+    transition: 0.3s ease;
+}
+
+.headContain:hover {
+    border-color: rgb(37, 219, 37);
+
+    box-shadow:
+        0 0 0 0.15rem
+        rgba(37, 219, 37, 0.12);
+}
+
+.symbolHead {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.6rem;
+
+    margin-bottom: 0.5rem;
+}
+
+.symbolHead i {
+    color: rgb(37, 219, 37);
+
+    font-size: 1.2rem;
+}
+
+.conhead {
+    margin: 0;
+
+    font-size: 1.2rem;
+
+    font-weight: 600;
+
+    color: #111;
+}
+
+.conpara {
+    margin: 0;
+
+    font-size: 1rem;
+
+    color: #777;
+}
+
+
+/* =========================================
+   CONTACT FORM
+========================================= */
+
+.contactForm {
+    width: 100%;
+
+    max-width: 32rem;
+
+    padding: 1.8rem;
+
+    border-radius: 1rem;
+
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #f8fff8 100%
+    );
+
+    border: 0.1rem solid #e1e8e1;
+
+    box-shadow:
+        0 0.5rem 1.5rem
+        rgba(0, 0, 0, 0.06);
+
+    box-sizing: border-box;
+
+    position: relative;
+}
+
+.contactForm::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 0.6rem;
+
+    background: rgb(37, 219, 37);
+
+    border-radius: 1rem 1rem 0 0;
+}
+
+.mainform {
+    padding-top: 0.8rem;
+}
+
+
+/* =========================================
+   FORM ROWS
+========================================= */
+
+.name,
+.emailNum,
+.jobcompany {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 0.8rem;
+
+    margin-bottom: 1rem;
+}
+
+.fname,
+.lname,
+.email,
+.phone,
+.job,
+.company {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* =========================================
+   FORM LABELS
+========================================= */
+
+.contactForm label {
+    margin-bottom: 0.35rem;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    color: #222;
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.contactForm input,
+.contactForm textarea {
+    width: 100%;
+
+    padding: 0.7rem 0.8rem;
+
+    border: 0.1rem solid #e1e5ea;
+
+    border-radius: 0.95rem;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 0.9rem;
+
+    box-sizing: border-box;
+
+    background: #fff;
+}
+
+.contactForm input {
+    height: 3.2rem;
+}
+
+.contactForm textarea {
+    resize: vertical;
+
+    min-height: 7rem;
+}
+
+
+/* =========================================
+   INPUT FOCUS
+========================================= */
+
+.contactForm input:focus,
+.contactForm textarea:focus {
+    border-color: rgb(37, 219, 37);
+
+    box-shadow:
+        0 0 0 0.15rem
+        rgba(37, 219, 37, 0.12);
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.message {
+    margin-bottom: 1rem;
+}
+
+.messageContainer h5 {
+    margin: 0 0 0.4rem;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
+.contactForm .button {
+    width: 100%;
+
+    height: 3.2rem;
+
+    border: none;
+
+    border-radius: 2rem;
+
+    background: rgb(37, 219, 37);
+
+    color: white;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.contactForm .button:hover {
+    transform: translateY(-0.15rem);
+
+    box-shadow:
+        0 0.4rem 1rem
+        rgba(37, 219, 37, 0.25);
+}
+
+
+/* =========================================
+   TESTIMONIAL
+========================================= */
+
+.feedback {
+    width: 100%;
+
+    padding: 3rem 1.5rem;
+
+    border-top: 0.1rem solid #e8e8e8;
+
+    background: #fff;
+
+    text-align: center;
+}
+
+.testmain {
+    max-width: 55rem;
+
+    margin: 0 auto;
+}
+
+.testh {
+    margin: 0 0 0.8rem;
+
+    color: rgb(37, 219, 37);
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    letter-spacing: 0.05rem;
+}
+
+.testpara p {
+    margin: 0;
+
+    font-size: 2.4rem;
+
+    line-height: 1.2;
+
+    font-weight: 500;
+
+    color: #10131a;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.section-footer {
+    margin-top: 0;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 70rem) {
+
+    .sectionMainContact {
+        max-width: 65rem;
+
+        grid-template-columns: 1fr;
+
+        gap: 2.5rem;
+
+        padding: 3rem 1.5rem;
+    }
+
+    .mainContactDescribe {
+        max-width: 50rem;
+    }
+
+    .contactForm {
+        max-width: 50rem;
+    }
+
+    .mainHeading {
+        font-size: 3rem;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 60rem) {
+
+    .sectionMainContact {
+        max-width: 100%;
+
+        padding: 2.5rem 1.2rem;
+
+        gap: 2rem;
+    }
+
+    .mainHeading {
+        font-size: 2.8rem;
+    }
+
+    .maincontactDescr {
+        font-size: 1.1rem;
+
+        margin-bottom: 1.8rem;
+    }
+
+    .boxContact {
+        grid-template-columns: 1fr;
+    }
+
+    .name,
+    .emailNum,
+    .jobcompany {
+        grid-template-columns: 1fr;
+    }
+
+    .contactForm {
+        max-width: 100%;
+
+        padding: 1.6rem 1.2rem;
+    }
+
+    .testpara p {
+        font-size: 2.1rem;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 40rem) {
+
+    .sectionMainContact {
+        padding: 2rem 1rem;
+    }
+
+    .mainHeading {
+        font-size: 2.5rem;
+    }
+
+    .contacts {
+        padding: 0.4rem 0.8rem;
+    }
+
+    .contactPara {
+        font-size: 0.9rem;
+    }
+
+    .headContain {
+        min-height: 6rem;
+
+        padding: 0.9rem;
+    }
+
+    .contactForm {
+        padding: 1.5rem 1rem;
+    }
+
+    .testpara p {
+        font-size: 1.9rem;
+    }
+}
+
+
+
+
+
+
+/* =========================================
+   TESTIMONIAL HEADING
+========================================= */
+
+.feedback {
+    width: 100%;
+
+    padding: 5rem 2rem;
+
+    border-top: 0.1rem solid #e8e8e8;
+
+    background: #fff;
+
+    text-align: center;
+}
+
+.testmain {
+    max-width: 60rem;
+
+    margin: 0 auto;
+}
+
+.testh {
+    margin: 0 0 1.2rem;
+
+    color: rgb(37, 219, 37);
+
+    font-size: 1.1rem;
+
+    font-weight: 600;
+
+    letter-spacing: 0.05rem;
+}
+
+.testpara p {
+    margin: 0;
+
+    font-size: 3rem;
+
+    line-height: 1.2;
+
+    font-weight: 500;
+
+    color: #10131a;
+}
+
+
+/* =========================================
+   TESTIMONIAL SECTION
+========================================= */
+
+.testimonialSection {
+    width: 100%;
+
+    padding: 4rem 2rem 6rem;
+
+    background: #fff;
+}
+
+
+/* =========================================
+   TESTIMONIAL CONTAINER
+========================================= */
+
+.testimonialContainer {
+    width: 100%;
+
+    max-width: 80rem;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 1.2rem;
+
+    align-items: start;
+}
+
+
+/* =========================================
+   TESTIMONIAL CARD
+========================================= */
+
+.testimonialCard {
+    min-height: 18rem;
+
+    padding: 1.8rem;
+
+    border: 0.1rem solid #e5e5e5;
+
+    border-radius: 1rem;
+
+    background: #fff;
+
+    box-shadow:
+        0 0.5rem 1.5rem
+        rgba(0, 0, 0, 0.05);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.testimonialCard:hover {
+    transform: translateY(-0.3rem);
+
+    box-shadow:
+        0 0.8rem 2rem
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   COMPANY
+========================================= */
+
+.testimonialCompany {
+    margin-bottom: 1.5rem;
+}
+
+.companyName {
+    margin: 0;
+
+    font-size: 1.5rem;
+
+    font-weight: 800;
+
+    color: rgb(37, 219, 37);
+
+    letter-spacing: -0.05rem;
+}
+
+/* =========================================
+   COMMENT
+========================================= */
+
+.productComment {
+    margin: 0 0 2rem;
+
+    font-size: 1.15rem;
+
+    line-height: 1.6;
+
+    color: #444;
+
+    flex: 1;
+}
+
+/* =========================================
+   CUSTOMER
+========================================= */
+
+.namephoto {
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+}
+
+
+.imageContainer {
+    width: 3.5rem;
+
+    height: 3.5rem;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+}
+
+
+.customerImage {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.nameContainer {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.2rem;
+}
+
+
+.customerName {
+    margin: 0;
+
+    font-size: 1.1rem;
+
+    font-weight: 700;
+
+    color: #111;
+}
+
+
+.custdescrib {
+    margin: 0;
+
+    font-size: 0.9rem;
+
+    color: #777;
+}
+
+
+/* =========================================
+   DARK TESTIMONIAL
+========================================= */
+
+.testimonialCard.dark {
+    background: rgb(81, 228, 81);
+
+    border-color: rgb(37, 219, 37);
+
+    color: #fff;
+}
+
+
+.testimonialCard.dark .companyName {
+    color: #fff;
+}
+
+
+.testimonialCard.dark .productComment {
+    color: #fff;
+}
+
+
+.testimonialCard.dark .customerName {
+    color: #fff;
+}
+
+
+.testimonialCard.dark .custdescrib {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 70rem) {
+
+    .testimonialContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 45rem) {
+
+    .feedback {
+        padding: 4rem 1.5rem;
+    }
+
+    .testpara p {
+        font-size: 2.4rem;
+    }
+
+    .testimonialSection {
+        padding: 3rem 1.5rem 4rem;
+    }
+
+    .testimonialContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonialCard {
+        min-height: 16rem;
+    }
+
+}
