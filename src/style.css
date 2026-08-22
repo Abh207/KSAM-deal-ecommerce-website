@@ -777,17 +777,13 @@ input::placeholder {
   -o-border-radius: 10rem;
 }
 
-/* .productImage {
-  max-width: 100%;
-  width: 15rem;
-  height: auto;
-} */
 
 .productImage {
   max-width: 100%;
   width: 11rem;
   height: auto;
-}
+}  
+
 
 .productPriceElement,
 .productQuantityElement,
@@ -831,7 +827,7 @@ input::placeholder {
 
   & button {
     background-color: transparent;
-    color: black
+    color: black;
     font-size: 2rem;
     padding: 0.2rem 0.5rem;
     font-weight: bold;
@@ -900,7 +896,7 @@ input::placeholder {
     box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.16),
       inset 0px 0px 0px 3px rgb(51, 51, 51);
     background-color:#5cd88c; 
-    color: white
+    color: white;
     cursor: pointer;
   }
 
@@ -2035,6 +2031,14 @@ imaeContainer{
     background: #fff;
 }
 
+.testimonialSection :hover {
+    border-color: rgb(37, 219, 37);
+
+    box-shadow:
+        0 0 0 0.15rem
+        rgba(37, 219, 37, 0.12);
+}
+
 
 /* =========================================
    TESTIMONIAL CONTAINER
@@ -2146,7 +2150,7 @@ imaeContainer{
 }
 
 
-.imageContainer {
+.imageContainerContain {
     width: 3.5rem;
 
     height: 3.5rem;
@@ -2268,4 +2272,684 @@ imaeContainer{
         min-height: 16rem;
     }
 
+}
+
+
+
+
+
+/* =========================================
+   SOCIAL LINKS SECTION
+========================================= */
+
+.socialLink {
+    width: 100%;
+    padding: 2rem 1.5rem;
+
+    background: #ffffff;
+
+    box-sizing: border-box;
+
+    border-top: 0.1rem solid #e5e5e5;
+}
+
+
+/* =========================================
+   MAIN SOCIAL CONTAINER
+========================================= */
+
+.socialLink .MainSocial {
+    width: 100%;
+    max-width: 75rem;
+
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 1.5rem;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   SOCIAL BOXES
+========================================= */
+
+.socialLink .git,
+.socialLink .twiter,
+.socialLink .Insta,
+.socialLink .link {
+
+    min-height: 18rem;
+
+    padding: 2.5rem 1.5rem;
+
+    background: #ffffff;
+
+    border: 0.1rem solid #e5e5e5;
+
+    border-radius: 1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    text-align: center;
+
+    box-sizing: border-box;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+.socialLink .git:hover,
+.socialLink .twiter:hover,
+.socialLink .Insta:hover,
+.socialLink .link:hover {
+
+    border-color: rgb(37, 219, 37);
+
+    transform: translateY(-0.4rem);
+
+    box-shadow:
+        0 0.8rem 2rem
+        rgba(37, 219, 37, 0.15);
+}
+
+
+/* =========================================
+   SOCIAL IMAGE CONTAINER
+========================================= */
+
+.socialLink .ContactImage {
+
+    width: 4rem;
+    height: 4rem;
+
+    margin-bottom: 1rem;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================
+   SOCIAL IMAGE
+========================================= */
+
+.socialLink .ContactImage img {
+
+    width: 3rem;
+    height: 3rem;
+
+    object-fit: contain;
+
+    display: block;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+/* IMAGE HOVER */
+
+.socialLink .git:hover .ContactImage img,
+.socialLink .twiter:hover .ContactImage img,
+.socialLink .Insta:hover .ContactImage img,
+.socialLink .link:hover .ContactImage img {
+
+    transform: scale(1.1);
+}
+
+
+/* =========================================
+   HEADINGS
+========================================= */
+
+.socialLink .gitHeading,
+.socialLink .twitHeading,
+.socialLink .instaHeading,
+.socialLink .linkHeading {
+
+    margin: 0 0 0.8rem;
+
+    font-size: 1.25rem;
+
+    line-height: 1.3;
+
+    font-weight: 600;
+
+    color: #111111;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.socialLink .gitPara,
+.socialLink .twitPara,
+.socialLink .instaPara,
+.socialLink .linkPara {
+
+    width: 100%;
+
+    max-width: 15rem;
+
+    margin: 0;
+
+    font-size: 0.95rem;
+
+    line-height: 1.6;
+
+    color: #555555;
+}
+
+
+/* =========================================
+   LINK BUTTONS
+========================================= */
+
+.socialLink .gitLink,
+.socialLink .twitLink,
+.socialLink .instaLink,
+.socialLink .linkLink {
+
+    display: flex;
+
+    width: 100%;
+    max-width: 12rem;
+
+    min-height: 2.7rem;
+
+    margin-top: 2.2rem;
+
+    padding: 0.6rem 1rem;
+
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    border: 0.1rem solid #dcdcdc;
+
+    border-radius: 2rem;
+
+    background: #ffffff;
+
+    color: #222222;
+
+    font-size: 0.9rem;
+
+    font-weight: 500;
+
+    text-decoration: none;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/* =========================================
+   LINK BUTTON HOVER
+========================================= */
+
+.socialLink .gitLink:hover,
+.socialLink .twitLink:hover,
+.socialLink .instaLink:hover,
+.socialLink .linkLink:hover {
+
+    border-color: rgb(37, 219, 37);
+
+    background: rgba(37, 219, 37, 0.08);
+
+    color: rgb(20, 150, 20);
+
+    transform: translateY(-0.15rem);
+
+    box-shadow:
+        0 0.4rem 1rem
+        rgba(37, 219, 37, 0.15);
+}
+
+
+/* =========================================
+   CARD + BUTTON ACTIVE HOVER EFFECT
+========================================= */
+
+.socialLink .git:hover .gitLink,
+.socialLink .twiter:hover .twitLink,
+.socialLink .Insta:hover .instaLink,
+.socialLink .link:hover .linkLink {
+
+    border-color: rgb(37, 219, 37);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 60rem) {
+
+    .socialLink {
+        padding: 2rem 1.2rem;
+    }
+
+    .socialLink .MainSocial {
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 1.2rem;
+    }
+
+    .socialLink .git,
+    .socialLink .twiter,
+    .socialLink .Insta,
+    .socialLink .link {
+
+        min-height: 17rem;
+
+        padding: 2.2rem 1.2rem;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 40rem) {
+
+    .socialLink {
+        padding: 1.5rem 1rem;
+    }
+
+    .socialLink .MainSocial {
+
+        grid-template-columns: 1fr;
+
+        gap: 1rem;
+    }
+
+    .socialLink .git,
+    .socialLink .twiter,
+    .socialLink .Insta,
+    .socialLink .link {
+
+        min-height: 16rem;
+
+        padding: 2rem 1rem;
+    }
+
+    .socialLink .ContactImage {
+
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .socialLink .ContactImage img {
+
+        width: 2.7rem;
+        height: 2.7rem;
+    }
+
+    .socialLink .gitHeading,
+    .socialLink .twitHeading,
+    .socialLink .instaHeading,
+    .socialLink .linkHeading {
+
+        font-size: 1.15rem;
+    }
+
+    .socialLink .gitPara,
+    .socialLink .twitPara,
+    .socialLink .instaPara,
+    .socialLink .linkPara {
+
+        font-size: 0.9rem;
+    }
+}
+
+
+
+
+
+
+
+/* Map Location */
+
+
+/* =========================================
+   LOCATION SECTION
+========================================= */
+
+.locationSection {
+    width: 100%;
+    max-width: 82rem;
+
+    margin: 0 auto;
+
+    padding: 5rem 2rem;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.locationHeading {
+    text-align: center;
+
+    max-width: 45rem;
+
+    margin: 0 auto 3rem;
+}
+
+.locationTag {
+    display: inline-block;
+
+    padding: 0.5rem 1rem;
+
+    border-radius: 2rem;
+
+    background: rgba(37, 219, 37, 0.1);
+
+    color: rgb(37, 219, 37);
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+}
+
+.locationHeading h2 {
+    margin: 1rem 0 0.8rem;
+
+    font-size: 2.8rem;
+
+    color: #111;
+
+    font-weight: 600;
+}
+
+.locationHeading p {
+    margin: 0;
+
+    color: #666;
+
+    font-size: 1.1rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   MAIN LOCATION CONTAINER
+========================================= */
+
+.locationContainer {
+    display: grid;
+
+    grid-template-columns: 1.4fr 1fr;
+
+    gap: 2rem;
+
+    padding: 1.2rem;
+
+    border: 0.1rem solid #e2e8e2;
+
+    border-radius: 1.5rem;
+
+    background: #fff;
+
+    box-shadow:
+        0 1rem 3rem
+        rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================
+   MAP
+========================================= */
+
+.locationMap {
+    position: relative;
+
+    min-height: 25rem;
+
+    overflow: hidden;
+
+    border-radius: 1rem;
+
+    background: #eef8ee;
+}
+
+
+
+/* =========================================
+   MAP PIN
+========================================= */
+
+iframe{
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 25rem;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* =========================================
+   LOCATION DETAILS
+========================================= */
+
+.locationDetails {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 2rem;
+}
+
+.locationIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1rem;
+
+    border-radius: 1rem;
+
+    background: rgba(37, 241, 5, 0.1);
+
+    color: rgb(37, 219, 37);
+
+    font-size: 1.5rem;
+}
+
+.locationDetails h3 {
+    margin: 0 0 0.8rem;
+
+    font-size: 1.8rem;
+
+    color: #111;
+}
+
+.locationDetails > p {
+    margin: 0 0 1.5rem;
+
+    color: #666;
+
+    font-size: 1.05rem;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   EXTRA INFORMATION
+========================================= */
+
+.locationInfo {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+
+    margin-bottom: 1.8rem;
+}
+
+.locationInfo div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    color: #555;
+
+    font-size: 0.95rem;
+}
+
+.locationInfo i {
+    color: rgb(37, 219, 37);
+
+    font-size: 1.2rem;
+
+    width: 1.5rem;
+}
+
+
+/* =========================================
+   DIRECTION BUTTON
+========================================= */
+
+.directionButton {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.6rem;
+
+    width: fit-content;
+
+    padding: 0.8rem 1.5rem;
+
+    border-radius: 2rem;
+
+    background: rgb(37, 219, 37);
+
+    color: #fff;
+
+    text-decoration: none;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+.directionButton:hover {
+    background: rgb(20, 180, 20);
+
+    transform: translateY(-0.2rem);
+
+    box-shadow:
+        0 0.5rem 1.2rem
+        rgba(37, 219, 37, 0.25);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 60rem) {
+
+    .locationSection {
+        padding: 4rem 1.5rem;
+    }
+
+    .locationContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .locationMap {
+        min-height: 22rem;
+    }
+
+    .locationMap img {
+        min-height: 22rem;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 40rem) {
+
+    .locationSection {
+        padding: 3rem 1rem;
+    }
+
+    .locationHeading h2 {
+        font-size: 2.2rem;
+    }
+
+    .locationHeading p {
+        font-size: 1rem;
+    }
+
+    .locationContainer {
+        padding: 0.7rem;
+
+        border-radius: 1rem;
+    }
+
+    .locationMap {
+        min-height: 18rem;
+    }
+
+    .locationMap img {
+        min-height: 18rem;
+    }
+
+    .locationDetails {
+        padding: 1.5rem;
+    }
+
+    .locationDetails h3 {
+        font-size: 1.5rem;
+    }
 }
