@@ -2953,3 +2953,771 @@ iframe{
         font-size: 1.5rem;
     }
 }
+
+
+
+
+/* =========================================================
+   SIGNUP PAGE
+   Completely isolated from other pages
+========================================================= */
+
+
+
+/* =========================================
+   SIGNUP BACKGROUND VIDEO
+========================================= */
+
+/* =========================================
+   PAGE
+========================================= */
+
+
+
+
+
+
+/* =========================================================
+   PAGE RESET
+========================================================= */
+
+html,
+body.signup-page {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+
+main {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    background: linear-gradient(
+        135deg,
+        #dfffe5 0%,
+        #bff5c8 45%,
+        #effff1 100%
+    )!important;
+}
+
+
+
+/* =========================================================
+   MAIN SIGNUP WRAPPER
+========================================================= */
+
+.signup-page main {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.signUPmain {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1.5rem;
+
+    box-sizing: border-box;
+
+    /* background: #eef2ec; */
+
+    overflow: hidden;
+
+}
+
+
+/* =========================================================
+   MAIN SIGNUP CARD
+========================================================= */
+
+.signUPmain .contcontainerMain {
+    width: 100%;
+    max-width: 68.75rem;
+
+    height: calc(100vh - 3rem);
+
+    max-height: 43.75rem;
+
+    display: grid;
+    grid-template-columns: 45% 55%;
+
+    overflow: hidden;
+
+    border-radius: 1.875rem;
+
+    background: linear-gradient(
+        135deg,
+        #dff8e8,
+        #e8fbd2
+    );
+
+    box-shadow:
+        0 0.9375rem 2.5rem
+        rgba(0, 0, 0, 0.15);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT FORM SECTION
+========================================================= */
+
+.signUPmain .signUpform {
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 2.5rem 2.8125rem;
+
+    box-sizing: border-box;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.signUPmain .signlogo {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+}
+
+.signUPmain .signlogo img {
+    width: 9rem;
+    height: auto;
+
+    max-width: 100%;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   FORM CONTENT
+========================================================= */
+
+.signUPmain .signformmainContent {
+    width: 100%;
+    max-width: 23.75rem;
+
+    margin: auto;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.signUPmain .headpara {
+    text-align: center;
+
+    margin-bottom: 1.875rem;
+}
+
+.signUPmain .signupHead {
+    margin: 0 0 0.5rem;
+
+    font-size: 1.625rem;
+    line-height: 1.3;
+
+    font-weight: 500;
+
+    color: #10131a;
+}
+
+.signUPmain .signUpPara {
+    margin: 0;
+
+    font-size: 0.8125rem;
+
+    color: #666;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.signUPmain .signForm {
+    width: 100%;
+}
+
+.signUPmain .signForm form {
+    width: 100%;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.signUPmain .signForm form > div {
+    width: 100%;
+
+    margin-bottom: 1.125rem;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.signUPmain .signForm label {
+    display: block;
+
+    margin-bottom: 0.4375rem;
+
+    font-size: 0.75rem;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.signUPmain .signForm input {
+    width: 100%;
+    height: 2.6875rem;
+
+    display: block;
+
+    padding: 0 1rem;
+
+    border: none;
+    outline: none;
+
+    border-radius: 1.5625rem;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    color: #222;
+
+    font-size: 0.75rem;
+
+    box-sizing: border-box;
+
+    transition:
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+
+/* =========================================================
+   INPUT HOVER
+========================================================= */
+
+.signUPmain .signForm input:hover {
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+========================================================= */
+
+.signUPmain .signForm input:focus {
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 0.125rem
+        rgba(37, 219, 37, 0.25);
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.signUPmain #signButton {
+    width: 100%;
+    height: 2.9375rem;
+
+    border: none;
+    outline: none;
+
+    border-radius: 1.5625rem;
+
+    background: #ffff36;
+
+    color: #111;
+
+    font-size: 0.875rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+========================================================= */
+
+.signUPmain #signButton:hover {
+    background: #f5f52c;
+
+    transform: translateY(-0.125rem);
+
+    box-shadow:
+        0 0.5rem 1.25rem
+        rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   APPLE + GOOGLE
+========================================================= */
+
+.signUPmain .appGoogle {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 0.5rem;
+
+    margin-top: 0.5rem;
+}
+
+
+/* =========================================================
+   APPLE / GOOGLE BOX
+========================================================= */
+
+.signUPmain .appGoogle > div {
+    height: 2.6875rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    border: 0.0625rem solid #c8c8c8;
+
+    border-radius: 1.5625rem;
+
+    background: rgba(255, 255, 255, 0.25);
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* =========================================================
+   SOCIAL ICON
+========================================================= */
+
+.signUPmain .appGoogle img {
+    width: 1.125rem;
+    height: 1.125rem;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   SOCIAL LINKS
+========================================================= */
+
+.signUPmain .appGoogle a {
+    color: #111;
+
+    font-size: 0.75rem;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   SOCIAL HOVER
+========================================================= */
+
+.signUPmain .appGoogle > div:hover {
+    background: #ffffff;
+
+    border-color: rgb(37, 219, 37);
+
+    transform: translateY(-0.0625rem);
+}
+
+
+/* =========================================================
+   BOTTOM LOGIN + TERMS
+========================================================= */
+
+.signUPmain .signUplastContent {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1.25rem;
+
+    margin-top: auto;
+
+    padding-top: 1rem;
+}
+
+
+/* =========================================================
+   LOGIN TEXT
+========================================================= */
+
+.signUPmain .signUplastContfirstTest {
+    margin: 0;
+
+    font-size: 0.6875rem;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   LOGIN LINK
+========================================================= */
+
+.signUPmain .signUplastContfirstTest a {
+    color: #111;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.signUPmain .signUplastContfirstTest a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   TERMS
+========================================================= */
+
+.signUPmain .signUpterm a {
+    color: #222;
+
+    font-size: 0.6875rem;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   RIGHT IMAGE CONTAINER
+========================================================= */
+
+.signUPmain .signUpimg {
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    padding: 0.9375rem;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   RIGHT IMAGE
+========================================================= */
+
+.signUPmain .signUpimg img {
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+    max-height: none;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 1.5625rem;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 56.25rem) {
+
+    .signUPmain {
+        height: auto;
+        min-height: 100vh;
+
+        padding: 1.5rem 1rem;
+
+        overflow: visible;
+    }
+
+
+    .signUPmain .contcontainerMain {
+        height: auto;
+        max-height: none;
+
+        max-width: 46.875rem;
+
+        grid-template-columns: 1fr;
+
+        overflow: hidden;
+    }
+
+
+    .signUPmain .signUpform {
+        height: auto;
+
+        min-height: auto;
+
+        padding: 2.5rem 2.8125rem;
+    }
+
+
+    .signUPmain .signformmainContent {
+        margin: 2.5rem auto;
+    }
+
+
+    .signUPmain .signUpimg {
+        height: 28rem;
+
+        min-height: 0;
+
+        padding: 0.9375rem 1.5625rem 1.5625rem;
+    }
+
+
+    .signUPmain .signUpimg img {
+        width: 100%;
+        height: 100%;
+
+        min-height: 0;
+
+        object-fit: cover;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 37.5rem) {
+
+    .signUPmain {
+        min-height: 100vh;
+
+        padding: 1rem 0.75rem;
+
+        overflow: visible;
+    }
+
+
+    .signUPmain .contcontainerMain {
+        width: 100%;
+
+        border-radius: 1.375rem;
+    }
+
+
+    .signUPmain .signUpform {
+        padding: 2rem 1.375rem;
+    }
+
+
+    .signUPmain .signlogo img {
+        width: 7.8125rem;
+    }
+
+
+    .signUPmain .signupHead {
+        font-size: 1.4375rem;
+    }
+
+
+    .signUPmain .signUpPara {
+        font-size: 0.75rem;
+    }
+
+
+    .signUPmain .signformmainContent {
+        width: 100%;
+
+        margin: 1.875rem auto;
+    }
+
+
+    .signUPmain .appGoogle {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .signUPmain .signUpimg {
+        height: 22rem;
+
+        min-height: 0;
+
+        padding: 0.625rem 0.625rem 1.25rem;
+    }
+
+
+    .signUPmain .signUpimg img {
+        width: 100%;
+        height: 100%;
+
+        min-height: 0;
+
+        border-radius: 1.125rem;
+
+        object-fit: cover;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 25rem) {
+
+    .signUPmain .signUpform {
+        padding: 1.5625rem 0.9375rem;
+    }
+
+
+    .signUPmain .signupHead {
+        font-size: 1.3125rem;
+    }
+
+
+    .signUPmain .signUpPara {
+        font-size: 0.6875rem;
+    }
+
+
+    .signUPmain .signForm input {
+        height: 2.5625rem;
+    }
+
+
+    .signUPmain #signButton {
+        height: 2.75rem;
+    }
+
+
+    .signUPmain .appGoogle {
+        grid-template-columns: 1fr;
+    }
+
+
+    .signUPmain .signUplastContent {
+        flex-direction: column;
+
+        justify-content: center;
+
+        text-align: center;
+
+        gap: 0.625rem;
+    }
+
+
+    .signUPmain .signUpimg {
+        height: 18rem;
+    }
+
+
+    .signUPmain .signUpimg img {
+        min-height: 0;
+
+        height: 100%;
+    }
+}
+
+
+
+
+
+
+
+/* =====================================================
+   SIGNUP PAGE BACKGROUND FIX
+===================================================== */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: #eef2ec;
+}
+
+main {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =====================================================
+   SIGNUP MAIN
+===================================================== */
+
+.signUPmain {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 1.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    background: #eef2ec;
+}
