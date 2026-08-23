@@ -1,11 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+
+    <title>Sign-In</title>
+
+    <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-    <h1>Login Page</h1>
+
+    <!-- Optional background video -->
+    <!--
+    <video class="signupBackgroundVideo" autoplay muted loop playsinline>
+        <source src="../public/backgroundimage2.mp4" type="video/mp4">
+    </video>
+    -->
+
+
+    <main class="SignUpMainTag">
+
+        <div class="signUPmain">
+
+            <div class="contcontainerMain">
+
+                <!-- =========================
+                     SIGN IN FORM
+                ========================== -->
+
+                <div class="signUpform">
+
+                    <!-- LOGO -->
+                    <div class="signlogo">
+                        <img
+                            src="../public/ksamDealPNGImg.png"
+                            alt="Ksam Deal Logo"
+                        >
+                    </div>
+
+
+                    <!-- FORM CONTENT -->
+                    <div class="signformmainContent">
+
+                        <!-- HEADING -->
+                        <div class="headpara">
+
+                            <h2 class="signupHead">
+                                Welcome Back
+                            </h2>
+
+                            <p class="signUpPara">
+                                Sign in to continue to your account
+                            </p>
+
+                        </div>
+
+
+                        <!-- SIGN IN FORM -->
+                        <div class="signForm">
+
+                            <form action="">
+
+                                <!-- EMAIL -->
+                                <div>
+
+                                    <label for="loginEmail">
+                                        Email
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="loginEmail"
+                                        placeholder="Enter your email"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- PASSWORD -->
+                                <div>
+
+                                    <label for="loginPassword">
+                                        Password
+                                    </label>
+
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        id="loginPassword"
+                                        placeholder="Enter your password"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- FORGOT PASSWORD -->
+                                <div class="forgotPassword">
+
+                                    <a href="#">
+                                        Forgot Password?
+                                    </a>
+
+                                </div>
+
+
+                                <!-- SIGN IN BUTTON -->
+                                <div>
+
+                                    <button
+                                        id="signButton"
+                                        type="submit"
+                                    >
+                                        Sign In
+                                    </button>
+
+                                </div>
+
+
+                                <!-- GOOGLE / APPLE -->
+                                <div class="appGoogle">
+
+                                    <div class="apple">
+
+                                        <img
+                                            src="../public/apple.png"
+                                            alt="Apple"
+                                        >
+
+                                        <a
+                                            href="#"
+                                            class="appleLink"
+                                        >
+                                            Continue with Apple
+                                        </a>
+
+                                    </div>
+
+
+                                    <div class="googl">
+
+                                        <img
+                                            src="../public/google.png"
+                                            alt="Google"
+                                        >
+
+                                        <a
+                                            href="#"
+                                            class="googleLink"
+                                        >
+                                            Continue with Google
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BOTTOM CONTENT -->
+                    <div class="signUplastContent">
+
+                        <div class="signUpLoginLink">
+
+                            <p class="signUplastContfirstTest">
+
+                                Don't have an account?
+
+                                <a href="./signup.html">
+                                    Sign Up
+                                </a>
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="signUpterm">
+
+                            <a href="#">
+                                Terms and Conditions
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     RIGHT IMAGE
+                ========================== -->
+
+                <div class="signUpimg">
+                    <img src="../public/loginImage.png" alt="Image">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
 </body>
+
 </html>
