@@ -4720,3 +4720,685 @@ main {
     }
 
 }
+
+
+
+
+
+
+
+
+.flashSaleSection {
+
+    width: 100%;
+
+    min-height: 30rem;
+
+    padding: 4rem 5%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.flashSaleContainer {
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    min-height: 25rem;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1.1fr;
+
+    align-items: center;
+
+    gap: 2rem;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =====================================================
+   LEFT CONTENT
+===================================================== */
+
+.flashSaleContent {
+
+    padding: 2rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.flashSaleTitle {
+
+    font-size: clamp(
+        2rem,
+        4vw,
+        3.4rem
+    );
+
+    line-height: 1.1;
+
+    font-weight: 700;
+
+    color: #111827;
+
+    margin-bottom: 0.7rem;
+}
+
+
+.flashSaleTitle span {
+
+    color: #087443;
+
+}
+
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.flashSaleDescription {
+
+    font-size: clamp(
+        0.9rem,
+        1.5vw,
+        1.1rem
+    );
+
+    color: #666;
+
+    margin-bottom: 2rem;
+}
+
+
+.flashSaleDescription span {
+
+    color: #999;
+
+}
+
+
+/* =====================================================
+   COUNTDOWN
+===================================================== */
+
+.countdown {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.5rem;
+
+    margin-bottom: 2rem;
+}
+
+
+/* =====================================================
+   TIME BOX
+===================================================== */
+
+.timeBox {
+
+    min-width: 4.2rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.timeNumber {
+
+    font-size: clamp(
+        1.8rem,
+        3vw,
+        2.5rem
+    );
+
+    line-height: 1;
+
+    font-weight: 500;
+
+    color: #111827;
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+.timeLabel {
+
+    margin-top: 0.4rem;
+
+    font-size: 0.8rem;
+
+    color: #777;
+
+    font-weight: 400;
+}
+
+
+/* =====================================================
+   SEPARATOR
+===================================================== */
+
+.timeSeparator {
+
+    font-size: 2rem;
+
+    font-weight: 600;
+
+    color: #333;
+
+    line-height: 1;
+
+    margin-top: 0.1rem;
+}
+
+
+/* =====================================================
+   SHOP BUTTON
+===================================================== */
+
+.shopNowButton {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 7.5rem;
+
+    padding: 0.7rem 1.5rem;
+
+    border-radius: 2rem;
+
+    background: #087443;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.shopNowButton:hover {
+
+    background: #065c36;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0.5rem 1.2rem
+        rgba(8, 116, 67, 0.25);
+}
+
+
+/* =====================================================
+   IMAGE AREA
+===================================================== */
+
+.flashSaleImages {
+
+    width: 100%;
+
+    min-height: 25rem;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   IMAGE COMMON
+===================================================== */
+
+.saleImage {
+
+    position: absolute;
+
+    overflow: hidden;
+
+    border-radius: 1rem;
+
+    background: #f3f3f3;
+
+    box-shadow:
+        0 0.5rem 2rem
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.saleImage img {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* =====================================================
+   MAIN IMAGE
+===================================================== */
+
+.mainImage {
+
+    width: 13rem;
+
+    height: 22rem;
+
+    left: 12%;
+
+    top: 1.5rem;
+
+    z-index: 2;
+}
+
+
+/* =====================================================
+   SECOND IMAGE
+===================================================== */
+
+.secondImage {
+
+    width: 13rem;
+
+    height: 22rem;
+
+    right: 4%;
+
+    top: 1.5rem;
+
+    z-index: 3;
+}
+
+
+/* =====================================================
+   ARROW / TRIANGLE
+===================================================== */
+
+.saleArrow {
+
+    position: absolute;
+
+    width: 0;
+
+    height: 0;
+
+    border-top: 7rem solid transparent;
+
+    border-bottom: 7rem solid transparent;
+
+    border-left: 10rem solid rgba(
+        255,
+        255,
+        255,
+        0.72
+    );
+
+    left: 38%;
+
+    top: 5rem;
+
+    z-index: 5;
+
+    filter:
+        drop-shadow(
+            0 0 1rem
+            rgba(255,255,255,0.4)
+        );
+}
+
+
+/* =====================================================
+   DOTS
+===================================================== */
+
+.dots {
+
+    position: absolute;
+
+    width: 7rem;
+
+    height: 4rem;
+
+    background-image:
+        radial-gradient(
+            #dce5df 1.5px,
+            transparent 1.5px
+        );
+
+    background-size: 10px 10px;
+
+    opacity: 0.5;
+
+    z-index: 1;
+}
+
+
+.dotsTop {
+
+    top: 3rem;
+
+    left: 30%;
+}
+
+
+.dotsBottom {
+
+    bottom: 2rem;
+
+    left: 10%;
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .flashSaleSection {
+
+        padding: 3rem 4%;
+    }
+
+
+    .flashSaleContainer {
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 1rem;
+    }
+
+
+    .flashSaleContent {
+
+        padding: 1rem;
+    }
+
+
+    .mainImage {
+
+        width: 10rem;
+
+        height: 18rem;
+
+        left: 5%;
+    }
+
+
+    .secondImage {
+
+        width: 10rem;
+
+        height: 18rem;
+
+        right: 0;
+    }
+
+
+    .flashSaleImages {
+
+        min-height: 21rem;
+    }
+
+
+    .saleArrow {
+
+        border-top-width: 5rem;
+
+        border-bottom-width: 5rem;
+
+        border-left-width: 7rem;
+
+        left: 35%;
+
+        top: 5.5rem;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+    .flashSaleSection {
+
+        padding: 2rem 1rem;
+
+    }
+
+
+    .flashSaleContainer {
+
+        grid-template-columns: 1fr;
+
+        text-align: center;
+
+    }
+
+
+    .flashSaleContent {
+
+        align-items: center;
+
+        padding: 1rem 0;
+    }
+
+
+    .flashSaleTitle {
+
+        font-size: 2.3rem;
+
+    }
+
+
+    .flashSaleDescription {
+
+        font-size: 0.9rem;
+
+        margin-bottom: 1.5rem;
+    }
+
+
+    .countdown {
+
+        gap: 0.2rem;
+    }
+
+
+    .timeBox {
+
+        min-width: 3.3rem;
+    }
+
+
+    .timeNumber {
+
+        font-size: 1.6rem;
+    }
+
+
+    .timeLabel {
+
+        font-size: 0.65rem;
+    }
+
+
+    .timeSeparator {
+
+        font-size: 1.5rem;
+    }
+
+
+    .flashSaleImages {
+
+        min-height: 20rem;
+
+        width: 100%;
+    }
+
+
+    .mainImage {
+
+        width: 9.5rem;
+
+        height: 17rem;
+
+        left: 10%;
+
+        top: 1rem;
+    }
+
+
+    .secondImage {
+
+        width: 9.5rem;
+
+        height: 17rem;
+
+        right: 7%;
+
+        top: 1rem;
+    }
+
+
+    .saleArrow {
+
+        border-top-width: 4.5rem;
+
+        border-bottom-width: 4.5rem;
+
+        border-left-width: 6rem;
+
+        left: 36%;
+
+        top: 4rem;
+    }
+
+
+    .dotsTop {
+
+        left: 5%;
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+    .flashSaleSection {
+
+        padding: 1.5rem 0.7rem;
+    }
+
+
+    .flashSaleTitle {
+
+        font-size: 2rem;
+    }
+
+
+    .timeBox {
+
+        min-width: 2.8rem;
+    }
+
+
+    .timeNumber {
+
+        font-size: 1.35rem;
+    }
+
+
+    .timeLabel {
+
+        font-size: 0.55rem;
+    }
+
+
+    .timeSeparator {
+
+        font-size: 1.2rem;
+    }
+
+
+    .mainImage {
+
+        width: 8rem;
+
+        height: 15rem;
+    }
+
+
+    .secondImage {
+
+        width: 8rem;
+
+        height: 15rem;
+    }
+
+
+    .flashSaleImages {
+
+        min-height: 18rem;
+    }
+
+}
