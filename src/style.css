@@ -30,7 +30,8 @@ body{
 .top-txt{
   font-size: 1rem;
   font-weight: 500;
-  background-color: rgb(37, 219, 37);
+  /* background-color: rgb(37, 219, 37); */
+  background-color: #087443;
   padding: 0.5rem 0rem;
   color:white;
 
@@ -43,7 +44,8 @@ body{
 }
 
 .nav-link{
-  background-color: rgb(37, 219, 37);
+  /* background-color: rgb(37, 219, 37); */
+  background-color: #087443;
   color: white;
   border-radius: 30%;
   padding: 0.3rem 1.4rem;
@@ -144,7 +146,8 @@ a{
 }
 
 .custom-shape-divider-bottom-1785952215 .shape-fill {
-    fill: rgb(37, 219, 37);
+    /* fill: rgb(37, 219, 37); */
+    fill: #087443;
 }
 
 .secton-hero--content{
@@ -156,7 +159,8 @@ a{
   text-transform: capitalize;
   font-size: 1.1rem;
   font-weight: 400;
-  color: rgb(10, 192, 10);
+  /* color: rgb(10, 192, 10); */
+  color: #087443;
   margin-bottom: 0.5rem;
   letter-spacing: 0.07rem;
   line-height: 1.5;
@@ -174,7 +178,8 @@ a{
 
 .hero-heading{
   text-transform: capitalize;
-  color: rgb(37, 219, 37);
+  /* color: rgb(37, 219, 37); */
+  color: #087443;
   margin-bottom: 1.6rem;
   /* letter-spacing: 0.1rem;
   line-height: 1.5; */
@@ -182,7 +187,8 @@ a{
 
 .hero-btn{
   width: 15.5rem;
-  background-color: rgb(37, 219, 37);
+  /* background-color: rgb(37, 219, 37); */
+  background-color: #087443;
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 2.5rem;
@@ -269,7 +275,7 @@ img.img-style{
     height: 15rem;
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     border-radius: 100% 0% 0% 100% / 100% 0% 100% 0%;
-    background-color: #d1f3de;
+    background-color: #087443;
     z-index: 1;
   }
 
@@ -356,7 +362,7 @@ img.img-style{
     position: absolute;
     width: 180px;
     height: 180px;
-    background: #dff8e8;
+    background: #50b587;
     bottom: -40px;
     left: -40px;
     border-radius: 0 100% 0 0;
@@ -369,7 +375,7 @@ img.img-style{
     position: absolute;
     width: 180px;
     height: 180px;
-    background: #dff8e8;
+    background: #50b587;
     bottom: -40px;
     right: -40px;
     border-radius: 100% 0 0 0;
@@ -428,13 +434,15 @@ i{
 } 
 
 .section-policy i{
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
     font-size: 2rem;
 
 }
 
 .icons i{
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
     font-size: 2rem;
 } 
 
@@ -461,7 +469,8 @@ i{
 
 .icons i{
     font-size: 2rem;
-    color: rgb(37,219,37);
+    /* color: rgb(37,219,37); */
+    color: #087443;
 }
 
 .div-policy-text p{
@@ -485,13 +494,14 @@ i{
   margin-bottom: 1rem;
   padding: 1.6rem;
   line-height: 1.7rem;  
-  background-color: rgb(37, 219, 37);
+  /* background-color: rgb(37, 219, 37); */
+  background-color: #087443;
 }
 
 .content_1 p{
   font-size: 1.4rem;
   font-weight: 500;
-  color: #0a5426;
+  color: black;
   text-transform: capitalize;
 }
 
@@ -504,7 +514,7 @@ i{
 }
 
 .content_2 a {
-  color: #0a5426;
+  color: black;
   font-size: 1.4rem;
   text-transform: capitalize;
   font-weight: 500;
@@ -521,14 +531,14 @@ i{
 .content_3 a {
   font-size: 1.4rem;
   font-weight: 500;
-  color: #0a5426;
+  color: black;
   text-transform: capitalize;
 }
 
 .content_4 p{
   font-size: 1.4rem;
   font-weight: 500;
-  color: #0a5426;
+  color: black;
   text-transform: capitalize;
 } 
 .content_4 h4 {
@@ -544,7 +554,7 @@ i{
   flex-direction: row;
 }
 input::placeholder {
-  color:#0a5426; 
+  color:black; 
   text-align: center;
 }
 
@@ -564,7 +574,7 @@ input::placeholder {
   text-align: center;
   font-size: 1.2rem;
   font-weight: 500;
-  color: #0a5426;
+  color: black;
   text-transform: capitalize;
 }
 
@@ -597,7 +607,7 @@ input::placeholder {
     height: 360px;
     left: -180px;
     bottom: -180px;
-    background: #dff8e8;
+    background: #50b587;
 
     border-radius: 60% 40% 70% 30% /
                    50% 60% 40% 50%;
@@ -613,7 +623,7 @@ input::placeholder {
     height: 360px;
     right: -180px;
     bottom: -180px;
-    background: #dff8e8;
+    background: #50b587;
 
     border-radius: 40% 60% 30% 70% /
                    60% 50% 50% 40%;
@@ -680,7 +690,8 @@ input::placeholder {
 }
 
 .common-text--highlight{
-    color:rgb(37, 219, 37);
+    /* color:rgb(37, 219, 37); */
+    color: #087443;
     font-size:28px;
     font-weight:700;
 }
@@ -782,7 +793,8 @@ input::placeholder {
   box-shadow: 
     0px -5px 10px -3px rgba(0, 0, 0, 0.2),  /* Top shadow */
     0px 5px 10px -3px rgba(0, 0, 0, 0.2); 
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color:#087443;
   
 }
 
@@ -905,7 +917,7 @@ input::placeholder {
 }
 
 .productStack{
-  color:#13a248 ;
+  color:#16803c;
 }
 /**** Our Home product section Ends  ****/
 
@@ -922,7 +934,7 @@ input::placeholder {
   border-radius: 6px;
   border: 0;
   padding: 1rem 2.8rem;
-  background-color: #57ce84;
+  background-color: #16803c;
   color: #fff;
   font-size: 1.6rem;
   /* margin-top: 1.2rem; */
@@ -930,7 +942,7 @@ input::placeholder {
   &:hover {
     box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.16),
       inset 0px 0px 0px 3px rgb(51, 51, 51);
-    background-color:#5cd88c; 
+    background-color:#16803c;
     color: white;
     cursor: pointer;
   }
@@ -1200,7 +1212,7 @@ imaeContainer{
 
     width: 130px;
 
-    border: 3px solid #9ed3b1;
+    border: 3px solid #50b587;
 
     border-radius: 12px;
 
@@ -1213,7 +1225,7 @@ imaeContainer{
 #productCartContainer .stockElement button {
     background-color: white;
 
-    color: #16803c;
+    color:#16803c;
 
     border: none;
 
@@ -1252,7 +1264,7 @@ imaeContainer{
 
     padding: 0.8rem 1rem;
 
-    background-color: #57ce84;
+    background-color: #16803c;
 
     color: white;
 
@@ -1497,7 +1509,8 @@ imaeContainer{
 
     border-radius: 2rem;
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     margin-bottom: 1rem;
 }
@@ -1513,7 +1526,8 @@ imaeContainer{
 
     font-weight: 600;
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 }
 
 
@@ -1534,7 +1548,8 @@ imaeContainer{
 }
 
 .get{
-  color: rgb(37, 219, 37);
+  /* color: rgb(37, 219, 37); */
+  color: #087443;
 }
 
 .mainHeading br {
@@ -1595,7 +1610,8 @@ imaeContainer{
 }
 
 .headContain:hover {
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color:#087443;
 
     box-shadow:
         0 0 0 0.15rem
@@ -1613,7 +1629,8 @@ imaeContainer{
 }
 
 .symbolHead i {
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     font-size: 1.2rem;
 }
@@ -1678,7 +1695,8 @@ imaeContainer{
 
     height: 0.6rem;
 
-    background: rgb(37, 219, 37);
+    /* background: rgb(37, 219, 37); */
+    background: #087443;
 
     border-radius: 1rem 1rem 0 0;
 }
@@ -1773,7 +1791,8 @@ imaeContainer{
 
 .contactForm input:focus,
 .contactForm textarea:focus {
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color: #087443;
 
     box-shadow:
         0 0 0 0.15rem
@@ -1811,7 +1830,8 @@ imaeContainer{
 
     border-radius: 2rem;
 
-    background: rgb(37, 219, 37);
+    /* background: rgb(37, 219, 37); */
+    background: #087443;
 
     color: white;
 
@@ -1858,7 +1878,8 @@ imaeContainer{
 .testh {
     margin: 0 0 0.8rem;
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     font-size: 1rem;
 
@@ -2032,7 +2053,8 @@ imaeContainer{
 .testh {
     margin: 0 0 1.2rem;
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     font-size: 1.1rem;
 
@@ -2067,7 +2089,8 @@ imaeContainer{
 }
 
 .testimonialSection :hover {
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color: #087443;
 
     box-shadow:
         0 0 0 0.15rem
@@ -2151,7 +2174,8 @@ imaeContainer{
 
     font-weight: 800;
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     letter-spacing: -0.05rem;
 }
@@ -2241,10 +2265,11 @@ imaeContainer{
 ========================================= */
 
 .testimonialCard.dark {
-    background: rgb(81, 228, 81);
+    /* background: rgb(81, 228, 81); */
+    background: #087443;
 
-    border-color: rgb(37, 219, 37);
-
+    /* border-color: rgb(37, 219, 37); */
+    border-color:#087443;
     color: #fff;
 }
 
@@ -2391,7 +2416,8 @@ imaeContainer{
 .socialLink .Insta:hover,
 .socialLink .link:hover {
 
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color: #087443;
 
     transform: translateY(-0.4rem);
 
@@ -2549,11 +2575,13 @@ imaeContainer{
 .socialLink .instaLink:hover,
 .socialLink .linkLink:hover {
 
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color:#087443;
 
     background: rgba(37, 219, 37, 0.08);
 
-    color: rgb(20, 150, 20);
+    /* color: rgb(20, 150, 20); */
+    color: #087443;
 
     transform: translateY(-0.15rem);
 
@@ -2572,7 +2600,8 @@ imaeContainer{
 .socialLink .Insta:hover .instaLink,
 .socialLink .link:hover .linkLink {
 
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color: #087443;
 }
 
 
@@ -2707,7 +2736,8 @@ imaeContainer{
 
     background: rgba(37, 219, 37, 0.1);
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     font-size: 0.9rem;
 
@@ -2824,7 +2854,8 @@ iframe{
 
     background: rgba(37, 241, 5, 0.1);
 
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     font-size: 1.5rem;
 }
@@ -2875,7 +2906,8 @@ iframe{
 }
 
 .locationInfo i {
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 
     font-size: 1.2rem;
 
@@ -2901,7 +2933,8 @@ iframe{
 
     border-radius: 2rem;
 
-    background: rgb(37, 219, 37);
+    /* background: rgb(37, 219, 37); */
+    background: #087443;
 
     color: #fff;
 
@@ -2915,7 +2948,8 @@ iframe{
 }
 
 .directionButton:hover {
-    background: rgb(20, 180, 20);
+    /* background: rgb(20, 180, 20); */
+    background: #087443;
 
     transform: translateY(-0.2rem);
 
@@ -3392,7 +3426,8 @@ iframe{
 .signUPmain .appGoogle > div:hover {
     background: #ffffff;
 
-    border-color: rgb(37, 219, 37);
+    /* border-color: rgb(37, 219, 37); */
+    border-color:#087443;
 
     transform: translateY(-0.0625rem);
 }
@@ -3802,7 +3837,7 @@ main {
 .mainChair:hover,
 .mainSofa:hover,
 .mainLight:hover {
-    border: 0.1rem solid rgb(37, 219, 37);
+    border: 0.1rem solid #087443;
 
     transform: translateY(-0.15rem);
 }
@@ -3872,7 +3907,7 @@ main {
 
     background: #ffffff;
 
-    border: 0.0625rem solid rgb(37, 219, 37);
+    border: 0.0625rem solid #087443;
 
     border-radius: 0.5rem;
 
@@ -3889,7 +3924,8 @@ main {
 
 
 .prNum{
-    color: rgb(37, 219, 37);
+    /* color: rgb(37, 219, 37); */
+    color: #087443;
 }
 
 /* =========================================
@@ -4196,4 +4232,491 @@ main {
 
         padding: 0.25rem 0.5rem;
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* new second type products */
+
+
+
+
+.productsSection {
+    width: 100%;
+    padding: 4rem 5%;
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.productsHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.smallHeading {
+    display: block;
+
+    color: #16834f;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    margin-bottom: 0.8rem;
+}
+
+.productsHeader h1 {
+    font-size: 2.8rem;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.productsHeader h1 span {
+    color: #0b6b43;
+}
+
+
+/* =====================================================
+   FILTER BUTTONS
+===================================================== */
+
+.productFilters {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 2.5rem;
+
+    margin-bottom: 3rem;
+
+    flex-wrap: wrap;
+}
+
+.filterButton {
+    border: none;
+
+    background: transparent;
+
+    color: #333;
+
+    font-size: 1.1rem;
+
+    font-weight: 600;
+
+    padding: 0.9rem 1.8rem;
+
+    border-radius: 2rem;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.filterButton:hover {
+    color: #087443;
+
+    transform: translateY(-2px);
+}
+
+.filterButton.active {
+    background: #087443;
+
+    color: white;
+
+    box-shadow:
+        0 0.4rem 1rem
+        rgba(8, 116, 67, 0.25);
+}
+
+
+/* =====================================================
+   PRODUCT SLIDER
+===================================================== */
+
+.productSliderWrapper {
+    width: 100%;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.productContainer {
+    display: flex;
+
+    gap: 1.5rem;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    padding: 0.5rem 0 1.5rem;
+
+    cursor: grab;
+
+    scroll-behavior: smooth;
+
+    scrollbar-width: none;
+}
+
+.productContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.productContainer.dragging {
+    cursor: grabbing;
+
+    scroll-behavior: auto;
+}
+
+
+/* =====================================================
+   PRODUCT CARD
+===================================================== */
+
+.productCard {
+    flex: 0 0 20rem;
+
+    min-width: 20rem;
+
+    background: #ffffff;
+
+    border-radius: 1rem;
+
+    overflow: hidden;
+
+    position: relative;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    border: 1px solid #eeeeee;
+}
+
+.productCard:hover {
+    transform: translateY(-0.4rem);
+
+    box-shadow:
+        0 1rem 2.5rem
+        rgba(0, 0, 0, 0.12);
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
+
+.productImageContainer {
+    height: 24rem;
+
+    background: #f5f5f5;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.productImage {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.4s ease;
+}
+
+.productCard:hover .productImage {
+    transform: scale(1.04);
+}
+
+
+/* =====================================================
+   DISCOUNT BADGE
+===================================================== */
+
+.discountBadge {
+    position: absolute;
+
+    top: 1rem;
+
+    left: 1rem;
+
+    background: #087443;
+
+    color: white;
+
+    padding: 0.5rem 0.9rem;
+
+    border-radius: 1.5rem;
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+
+    z-index: 2;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.productActions {
+    position: absolute;
+
+    right: 1rem;
+
+    top: 1rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.6rem;
+}
+
+.actionButton {
+    width: 2.5rem;
+
+    height: 2.5rem;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    font-size: 1.2rem;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0.2rem 0.6rem
+        rgba(0, 0, 0, 0.1);
+
+    transition: 0.3s;
+}
+
+.actionButton:hover {
+    background: #087443;
+
+    color: white;
+}
+
+
+/* =====================================================
+   PRODUCT INFORMATION
+===================================================== */
+
+.productInfo {
+    padding: 1.2rem;
+}
+
+.productCategory {
+    font-size: 0.85rem;
+
+    color: #777;
+
+    margin-bottom: 0.4rem;
+}
+
+.productName {
+    font-size: 1.25rem;
+
+    font-weight: 700;
+
+    margin-bottom: 0.7rem;
+
+    color: #111827;
+}
+
+
+/* =====================================================
+   RATING
+===================================================== */
+
+.productRating {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    margin-bottom: 0.8rem;
+}
+
+.stars {
+    color: #f4b400;
+
+    font-size: 1rem;
+
+    letter-spacing: 0.1rem;
+}
+
+.ratingNumber {
+    color: #555;
+
+    font-size: 0.9rem;
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.productPrice {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+}
+
+.currentPrice {
+    font-size: 1.3rem;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.oldPrice {
+    font-size: 1rem;
+
+    color: #999;
+
+    text-decoration: line-through;
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+.productTimer {
+    position: absolute;
+
+    bottom: 0.8rem;
+
+    left: 1rem;
+
+    right: 1rem;
+
+    background: #f4b400;
+
+    color: #111;
+
+    padding: 0.7rem;
+
+    border-radius: 0.6rem;
+
+    text-align: center;
+
+    font-weight: 700;
+
+    font-size: 0.9rem;
+
+    z-index: 2;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 60rem) {
+
+    .productsSection {
+        padding: 3rem 3%;
+    }
+
+    .productsHeader h1 {
+        font-size: 2.3rem;
+    }
+
+    .productCard {
+        flex-basis: 18rem;
+
+        min-width: 18rem;
+    }
+
+    .productImageContainer {
+        height: 21rem;
+    }
+
+}
+
+
+@media (max-width: 40rem) {
+
+    .productsSection {
+        padding: 2.5rem 1rem;
+    }
+
+    .productsHeader h1 {
+        font-size: 2rem;
+    }
+
+    .productFilters {
+        gap: 0.5rem;
+    }
+
+    .filterButton {
+        font-size: 0.9rem;
+
+        padding: 0.7rem 1rem;
+    }
+
+    .productCard {
+        flex-basis: 17rem;
+
+        min-width: 17rem;
+    }
+
+    .productImageContainer {
+        height: 19rem;
+    }
+
 }

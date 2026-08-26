@@ -1,0 +1,91 @@
+[
+    {
+        "id": 1,
+        "name": "Wooden Sofa Chair",
+        "category": "Chair",
+        "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=700&q=80",
+        "price": 80,
+        "oldPrice": 160,
+        "rating": 4.9,
+        "discount": 50,
+        "isLatest": true,
+        "isBestSeller": true,
+        "isFeatured": true,
+        "timer": "05:12:30:25"
+    },
+
+    {
+        "id": 2,
+        "name": "Circular Sofa Chair",
+        "category": "Chair",
+        "image": "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=700&q=80",
+        "price": 108,
+        "oldPrice": 120,
+        "rating": 5.0,
+        "discount": 10,
+        "isLatest": true,
+        "isBestSeller": true,
+        "isFeatured": false,
+        "timer": ""
+    },
+
+    {
+        "id": 3,
+        "name": "Wooden Nightstand",
+        "category": "Nightstand",
+        "image": "https://images.unsplash.com/photo-1532372576444-dda954194ad0?auto=format&fit=crop&w=700&q=80",
+        "price": 54,
+        "oldPrice": 60,
+        "rating": 4.8,
+        "discount": 10,
+        "isLatest": true,
+        "isBestSeller": false,
+        "isFeatured": true,
+        "timer": ""
+    },
+
+    {
+        "id": 4,
+        "name": "Bean Bag Chair",
+        "category": "Chair",
+        "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=700&q=80",
+        "price": 72,
+        "oldPrice": 90,
+        "rating": 4.7,
+        "discount": 20,
+        "isLatest": false,
+        "isBestSeller": true,
+        "isFeatured": true,
+        "timer": ""
+    },
+
+    {
+        "id": 5,
+        "name": "Modern Wooden Table",
+        "category": "Table",
+        "image": "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?auto=format&fit=crop&w=700&q=80",
+        "price": 145,
+        "oldPrice": 200,
+        "rating": 4.9,
+        "discount": 28,
+        "isLatest": true,
+        "isBestSeller": false,
+        "isFeatured": true,
+        "timer": ""
+    },
+
+    {
+        "id": 6,
+        "name": "Modern Lounge Chair",
+        "category": "Chair",
+        "image": "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=700&q=80",
+        "price": 125,
+        "oldPrice": 180,
+        "rating": 4.6,
+        "discount": 30,
+        "isLatest": false,
+        "isBestSeller": true,
+        "isFeatured": false,
+        "timer": ""
+    }
+]
