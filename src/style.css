@@ -5402,3 +5402,627 @@ main {
     }
 
 }
+
+
+
+
+
+/* =====================================================
+   DEALS SECTION
+===================================================== */
+
+.deals-section {
+
+    width: 100%;
+
+    max-width: 1300px;
+
+    margin: 0 auto;
+
+    padding: 80px 40px;
+
+}
+
+
+
+/* =====================================================
+   HEADING
+===================================================== */
+
+.deals-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 40px;
+
+    margin-bottom: 45px;
+
+}
+
+
+.heading-left {
+    flex: 1;
+}
+
+
+
+/* SMALL HEADING */
+
+.small-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 16px;
+
+    color: #555;
+
+    margin-bottom: 18px;
+
+}
+
+
+.small-line {
+
+    width: 25px;
+
+    height: 3px;
+
+    background: #d7c45a;
+
+    display: block;
+
+}
+
+
+
+/* MAIN HEADING */
+
+.deals-heading h2 {
+
+    font-size: 42px;
+
+    line-height: 1.1;
+
+    font-weight: 600;
+
+}
+
+
+.deals-heading h2 span {
+
+    color: #08783f;
+
+}
+
+
+
+/* DESCRIPTION */
+
+.heading-description {
+
+    max-width: 520px;
+
+    color: #777;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+
+}
+
+
+
+/* =====================================================
+   PRODUCT CONTAINER
+===================================================== */
+
+.deals-product-container {
+
+    display: flex;
+
+    gap: 35px;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    padding: 5px 5px 25px;
+
+    scroll-behavior: smooth;
+
+    cursor: grab;
+
+    
+    /* Hide scrollbar */
+
+    scrollbar-width: none;
+
+}
+
+
+.deals-product-container::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+.deals-product-container.dragging {
+
+    cursor: grabbing;
+
+    scroll-behavior: auto;
+
+}
+
+
+
+/* =====================================================
+   PRODUCT CARD
+===================================================== */
+
+.deal-card {
+
+    flex: 0 0 550px;
+
+    min-width: 550px;
+
+    display: grid;
+
+    grid-template-columns: 250px 1fr;
+
+    gap: 0;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    min-height: 390px;
+
+}
+
+
+
+/* =====================================================
+   IMAGE AREA
+===================================================== */
+
+.deal-image-container {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 390px;
+
+    background: #f5f5f5;
+
+    overflow: hidden;
+
+}
+
+
+.deal-image {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+
+
+/* =====================================================
+   DISCOUNT
+===================================================== */
+
+.deal-discount {
+
+    position: absolute;
+
+    top: 18px;
+
+    left: 18px;
+
+    z-index: 5;
+
+    background: #08783f;
+
+    color: #ffffff;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.deal-actions {
+
+    position: absolute;
+
+    top: 18px;
+
+    right: 15px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    z-index: 5;
+
+}
+
+
+.deal-action-btn {
+
+    width: 38px;
+
+    height: 38px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+    cursor: pointer;
+
+    font-size: 19px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition: 0.2s ease;
+
+}
+
+
+.deal-action-btn:hover {
+
+    background: #08783f;
+
+    color: white;
+
+    transform: scale(1.08);
+
+}
+
+
+
+/* =====================================================
+   INFORMATION
+===================================================== */
+
+.deal-information {
+
+    padding: 35px 25px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+
+
+/* CATEGORY */
+
+.deal-category {
+
+    color: #777;
+
+    font-size: 14px;
+
+    margin-bottom: 8px;
+
+}
+
+
+
+/* PRODUCT NAME */
+
+.deal-name {
+
+    font-size: 23px;
+
+    line-height: 1.25;
+
+    margin-bottom: 15px;
+
+    color: #111;
+
+}
+
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.deal-price {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.deal-current-price {
+
+    font-size: 22px;
+
+    font-weight: 600;
+
+}
+
+
+.deal-old-price {
+
+    font-size: 18px;
+
+    color: #999;
+
+    text-decoration: line-through;
+
+}
+
+
+
+/* =====================================================
+   RATING
+===================================================== */
+
+.deal-rating {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.deal-star {
+
+    color: #f6b800;
+
+    font-size: 22px;
+
+}
+
+
+.deal-rating-number {
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+}
+
+
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.deal-product-description {
+
+    color: #777;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-bottom: 20px;
+
+}
+
+
+
+/* =====================================================
+   SHOP BUTTON
+===================================================== */
+
+.deal-shop-btn {
+
+    border: none;
+
+    background: transparent;
+
+    color: #08783f;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    padding: 0;
+
+    width: fit-content;
+
+}
+
+
+.deal-shop-btn span {
+
+    margin-left: 8px;
+
+    font-size: 20px;
+
+    transition: 0.2s ease;
+
+}
+
+
+.deal-shop-btn:hover span {
+
+    margin-left: 14px;
+
+}
+
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .deals-section {
+
+        padding: 60px 25px;
+
+    }
+
+
+    .deals-heading {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 20px;
+
+    }
+
+
+    .heading-description {
+
+        max-width: 700px;
+
+    }
+
+
+    .deal-card {
+
+        flex: 0 0 500px;
+
+        min-width: 500px;
+
+        grid-template-columns: 220px 1fr;
+
+    }
+
+
+    .deal-image-container {
+
+        height: 360px;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .deals-section {
+
+        padding: 45px 15px;
+
+    }
+
+
+    .deals-heading h2 {
+
+        font-size: 32px;
+
+    }
+
+
+    .heading-description {
+
+        font-size: 14px;
+
+    }
+
+
+    .deals-product-container {
+
+        gap: 20px;
+
+    }
+
+
+    .deal-card {
+
+        flex: 0 0 90vw;
+
+        min-width: 90vw;
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .deal-image-container {
+
+        height: 280px;
+
+    }
+
+
+    .deal-information {
+
+        padding: 25px;
+
+    }
+
+
+    .deal-name {
+
+        font-size: 20px;
+
+    }
+
+}

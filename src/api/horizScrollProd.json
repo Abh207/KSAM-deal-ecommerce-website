@@ -1,0 +1,67 @@
+[
+    {
+        "id": 1,
+        "name": "Recliner Chair Wood",
+        "category": "Chair",
+        "image": "/chairimg1.png",
+        "price": 105,
+        "oldPrice": 150,
+        "discount": 30,
+        "rating": 5.0
+    },
+
+    {
+        "id": 2,
+        "name": "Recliner Chair Steel",
+        "category": "Chair",
+        "image": "/chairimg2.png",
+        "price": 80,
+        "oldPrice": 100,
+        "discount": 20,
+        "rating": 4.9
+    },
+
+    {
+        "id": 3,
+        "name": "Modern Lounge Chair",
+        "category": "Chair",
+        "image": "/chairimg5.png",
+        "price": 125,
+        "oldPrice": 180,
+        "discount": 30,
+        "rating": 4.8
+    },
+
+    {
+        "id": 4,
+        "name": "Modern Wooden Table",
+        "category": "Table",
+        "image": "/chairimg3.png",
+        "price": 145,
+        "oldPrice": 200,
+        "discount": 28,
+        "rating": 4.9
+    },
+
+    {
+        "id": 5,
+        "name": "Bean Bag Chair",
+        "category": "Chair",
+        "image": "/chairimg4.png",
+        "price": 72,
+        "oldPrice": 90,
+        "discount": 20,
+        "rating": 4.7
+    },
+
+    {
+        "id": 6,
+        "name": "Wooden Nightstand",
+        "category": "Nightstand",
+        "image": "/chairimg6.png",
+        "price": 54,
+        "oldPrice": 60,
+        "discount": 10,
+        "rating": 4.8
+    }
+]

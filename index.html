@@ -315,7 +315,7 @@
 
 <!-- start of scroll product section -->
 
-<section class="productsSection">
+    <section class="productsSection">
 
         <!-- HEADER -->
 
@@ -592,12 +592,238 @@
 
 
     </section>
+     <script src="./src/flashSale.js"></script>
 
 
 
-    <script src="./src/flashSale.js"></script>
+
+     <!-- =====================================================
+         DEALS OF THE DAY
+    ====================================================== -->
+
+    <section class="deals-section">
 
 
+        <!-- HEADING -->
+
+        <div class="deals-heading">
+
+            <div class="heading-left">
+
+                <div class="small-heading">
+
+                    <span class="small-line"></span>
+
+                    <span>Today Deals</span>
+
+                </div>
+
+
+                <h2>
+
+                    <span>Deals</span>
+                    of the Day
+
+                </h2>
+
+            </div>
+
+
+            <p class="heading-description">
+
+                Sed ut perspiciatis unde omnis iste natus error
+                sit voluptatem accusantium doloremque laudantium,
+                totam rem aperiam.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PRODUCT CONTAINER
+        ================================================== -->
+
+        <div
+            class="deals-product-container"
+            id="dealsProductContainer"
+        >
+
+
+            <!-- =================================================
+                 PRODUCT TEMPLATE
+            ================================================== -->
+
+            <template id="productTemplate">
+
+
+                <article class="deal-card">
+
+
+                    <!-- PRODUCT IMAGE -->
+
+                    <div class="deal-image-container">
+
+
+                        <!-- DISCOUNT -->
+
+                        <span class="deal-discount">
+                        
+                        </span>
+
+
+                        <!-- IMAGE -->
+
+                        <img
+                            class="deal-image"
+                            src=""
+                            alt=""
+                        >
+
+
+                        <!-- ACTION BUTTONS -->
+
+                        <div class="deal-actions">
+
+
+                            <button
+                                class="deal-action-btn favorite-btn"
+                                type="button"
+                                title="Add to wishlist"
+                            >
+                               
+                            </button>
+
+
+                            <button
+                                class="deal-action-btn quick-view-btn"
+                                type="button"
+                                title="Quick view"
+                            >
+                                
+                            </button>
+
+
+                            <button
+                                class="deal-action-btn cart-btn"
+                                type="button"
+                                title="Add to cart"
+                            >
+                                
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         PRODUCT INFORMATION
+                    ================================================== -->
+
+                    <div class="deal-information">
+
+
+                        <!-- CATEGORY -->
+
+                        <p class="deal-category">
+                            
+                        </p>
+
+
+                        <!-- PRODUCT NAME -->
+
+                        <h3 class="deal-name">
+                            
+                        </h3>
+
+
+                        <!-- PRICE -->
+
+                        <div class="deal-price">
+
+
+                            <span class="deal-current-price">
+                                
+                            </span>
+
+
+                            <span class="deal-old-price">
+                                
+                            </span>
+
+
+                        </div>
+
+
+
+                        <!-- RATING -->
+
+                        <div class="deal-rating">
+
+                            <span class="deal-star">
+                                
+                            </span>
+
+                            <span class="deal-rating-number">
+                                
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- DESCRIPTION -->
+
+                        <p class="deal-product-description">
+
+                            Lorem ipsum dolor sit amet,
+                            consectetur adipiscing elit,
+                            sed do eiusmod tempor incididunt.
+
+                        </p>
+
+
+
+                        <!-- SHOP BUTTON -->
+
+                        <button
+                            class="deal-shop-btn"
+                            type="button"
+                        >
+
+                            Shop Now
+
+                            <span>
+                                →
+                            </span>
+
+                        </button>
+
+
+                    </div>
+
+
+                </article>
+
+
+            </template>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="./src/deals.js"></script>
 
 
 <!-- start why choose ksamdeal store -->
