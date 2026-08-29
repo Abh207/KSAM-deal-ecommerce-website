@@ -15,7 +15,7 @@ const filterButtons =
    GET PRODUCTS FROM JSON
 ===================================================== */
 
-fetch("./src/api/productsBox2.json")
+fetch("../src/api/productsBox2.json")
     .then(response => {
 
         if (!response.ok) {

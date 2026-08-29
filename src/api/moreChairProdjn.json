@@ -1,0 +1,133 @@
+[
+    {
+        "id": 1,
+        "name": "Modern Fabric Sofa",
+        "image": "/moreprodimg1.png",
+        "price": 799,
+        "oldPrice": 899,
+        "rating": 4.8,
+        "badge": "NEW",
+        "category": "new"
+    },
+
+    {
+        "id": 2,
+        "name": "Wooden Dining Table Set",
+        "image": "/moreprodimg11.png",
+        "price": 599,
+        "oldPrice": 699,
+        "rating": 4.7,
+        "discount": 10,
+        "category": "new"
+    },
+
+    {
+        "id": 3,
+        "name": "Accent Lounge Chair",
+        "image": "/moreprodimg3.png",
+        "price": 279,
+        "oldPrice": 329,
+        "rating": 4.9,
+        "badge": "NEW",
+        "category": "new"
+    },
+
+    {
+        "id": 4,
+        "name": "Storage Bed Frame",
+        "image": "/moreprodimg8.png",
+        "price": 749,
+        "oldPrice": 899,
+        "rating": 4.6,
+        "discount": 15,
+        "category": "new"
+    },
+
+
+    {
+        "id": 5,
+        "name": "Round Coffee Table",
+        "image": "/moreprodimg5.png",
+        "price": 199,
+        "oldPrice": 249,
+        "rating": 4.7,
+        "category": "new"
+    },
+
+    {
+        "id": 6,
+        "name": "Modern Bookshelf",
+        "image": "/moreprodimg6.png",
+        "price": 229,
+        "oldPrice": 279,
+        "rating": 4.8,
+        "category": "new"
+    },
+
+
+    {
+        "id": 7,
+        "name": "Modern TV Stand",
+        "image": "/moreprodimg7.png",
+        "price": 329,
+        "oldPrice": 399,
+        "rating": 4.9,
+        "category": "new"
+    },
+
+    {
+        "id": 8,
+        "name": "Comfort Armchair",
+        "image": "/moreprodimg4.png",
+        "price": 349,
+        "oldPrice": 429,
+        "rating": 4.8,
+        "badge": "NEW",
+        "category": "new"
+    },
+
+
+    {
+        "id": 9,
+        "name": "Premium Lounge Chair",
+        "image": "/moreprodimg9.png",
+        "price": 299,
+        "oldPrice": 399,
+        "rating": 4.8,
+        "discount": 20,
+        "category": "special"
+    },
+
+    {
+        "id": 10,
+        "name": "Classic Wooden Chair",
+        "image": "/moreprodimg10.png",
+        "price": 159,
+        "oldPrice": 199,
+        "rating": 4.6,
+        "discount": 20,
+        "category": "special"
+    },
+
+
+    {
+        "id": 11,
+        "name": "Luxury Sofa",
+        "image": "/moreprodimg2.png",
+        "price": 899,
+        "oldPrice": 1099,
+        "rating": 5.0,
+        "badge": "NEW",
+        "category": "featured"
+    },
+
+    {
+        "id": 12,
+        "name": "Modern Comfort Chair",
+        "image": "/moreprodimg12.png",
+        "price": 399,
+        "oldPrice": 499,
+        "rating": 4.9,
+        "category": "featured"
+    }
+]
