@@ -5,7 +5,7 @@ const productTemplate =
     document.querySelector("#productTemplate");
 
 
-fetch("../src/api/horizScrollProd.json")
+fetch("./src/api/horizScrollProd.json")
 
     .then(function(response) {
         return response.json();

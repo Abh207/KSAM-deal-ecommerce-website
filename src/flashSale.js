@@ -240,15 +240,24 @@ function updateTimer() {
     Run immediately
 */
 
-updateTimer();
+// updateTimer();
 
 
 /*
     Update every second
 */
 
-const timerInterval =
-    setInterval(
-        updateTimer,
-        1000
-    );
+// const timerInterval =
+//     setInterval(
+//         updateTimer,
+//         1000
+//     );
+
+
+
+const timerInterval = setInterval(
+    updateTimer,
+    1000
+);
+
+updateTimer();
