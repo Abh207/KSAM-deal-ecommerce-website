@@ -2,7 +2,7 @@ const footerHTML = `
  <footer class="section-footer">
   <div class="footer-container container">
     <div class="content_1">
-      <img src="./ksam-deal logo.png" alt="logo" class="foot-logo">
+      <img src="./public/ksam-deal logo.png" alt="logo" class="foot-logo">
       <p>
         Welcome to the Ksamdeal store , your ultimate 
          destination for all your shopping needs.

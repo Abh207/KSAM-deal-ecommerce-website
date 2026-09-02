@@ -1,8 +1,8 @@
-import './style.css';
+import "./style.css";
 
 import products from "./api/products.json";
-// import { showProductContainer } from './homeproductcard.js';
 
-//call the function to display all the items of productin a cards .
+import { showProductContainer } from "./homeproductcard.js";
 
-// showProductContainer(products);
+// Display all products
+showProductContainer(products);
