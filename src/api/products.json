@@ -7,7 +7,7 @@
     "price": 999.99,
     "Actualprice": 2999.99,
     "stock": 50,
-    "image": "/computer.png",
+    "image": "computer.png",
     "description": "Powerful laptop with a quad-core i5 processor, 8GB RAM, 256GB SSD, and a 14-inch FHD display."
     
   },
@@ -19,7 +19,7 @@
     "price": 499.99,
     "Actualprice": 999,
     "stock": 100,
-    "image": "/smartPhone.png",
+    "image": "smartPhone.png",
     "description": "Feature-rich smartphone with a 6.2-inch screen, 12MP dual camera, 128GB storage, and a 4000mAh battery."
     
   },
@@ -31,7 +31,7 @@
     "price": 149.99,
     "Actualprice": 299,
     "stock": 30,
-    "image": "/headphone.png",
+    "image": "headphone.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -43,7 +43,7 @@
     "price": 199.99,
     "Actualprice": 299.99,
     "stock": 20,
-    "image": "/watch.png",
+    "image": "watch.png",
     "description": "Smartwatch with a 1.3-inch AMOLED display, water-resistant design, fitness tracking features, and a stylish silver color."
     
   },
@@ -55,7 +55,7 @@
     "price": 149.99,
     "Actualprice": 199.99,
     "stock": 30,
-    "image": "/speakers.png",
+    "image": "speakers.png",
     "description": "High-quality wireless speakers with rich bass, Bluetooth connectivity, and a sleek black color."
     
   },
@@ -67,7 +67,7 @@
     "price": 1999.99,
     "Actualprice": 2999.99,
     "stock": 20,
-    "image": "/tv.png",
+    "image": "tv.png",
     "description": "Smart television with a 43-inch display, vibrant picture quality, and stylish black color."
     
   },
@@ -79,7 +79,7 @@
     "price": 549.99,
     "Actualprice": 999.99,
     "stock": 30,
-    "image": "/charger.png",
+    "image": "charger.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -91,7 +91,7 @@
     "price": 1489.99,
     "Actualprice": 2999.99,
     "stock": 30,
-    "image": "/computer-hardware.png",
+    "image": "computer-hardware.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -103,7 +103,7 @@
     "price": 449.99,
     "Actualprice": 899.99,
     "stock": 30,
-    "image": "/mouse.png",
+    "image": "mouse.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -127,7 +127,7 @@
     "price": 649.99,
     "Actualprice": 899.99,
     "stock": 30,
-    "image": "/bottle.png",
+    "image": "bottle.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -139,7 +139,7 @@
     "price": 1249.99,
     "Actualprice": 1999.99,
     "stock": 30,
-    "image": "/iron.png",
+    "image": "iron.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -151,7 +151,7 @@
     "price": 9649.99,
     "Actualprice": 8899.99,
     "stock": 30,
-    "image": "/airconditioning.png",
+    "image": "airconditioning.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -163,7 +163,7 @@
     "price": 549.99,
     "Actualprice": 769.99,
     "stock": 30,
-    "image": "/Heater.png",
+    "image": "Heater.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -175,7 +175,7 @@
     "price": 2649.99,
     "Actualprice": 4899.99,
     "stock": 30,
-    "image": "/Microwave.png",
+    "image": "Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -187,7 +187,7 @@
     "price": 2649.99,
     "Actualprice": 4899.99,
     "stock": 40,
-    "image": "/Microwave.png",
+    "image": "Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -199,7 +199,7 @@
     "price": 2649.99,
     "Actualprice": 4899.99,
     "stock": 25,
-    "image": "/Microwave.png",
+    "image": "Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -211,7 +211,7 @@
     "price": 2649.99,
     "Actualprice": 4899.99,
     "stock": 19,
-    "image": "/Microwave.png",
+    "image": "Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -223,7 +223,7 @@
     "price": 2649.99,
     "Actualprice": 4899.99,
     "stock": 32,
-    "image": "/Microwave.png",
+    "image": "Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   },
@@ -247,7 +247,7 @@
     "price": 2649.99,
     "Actualprice": 4899.99,
     "stock": 6,
-    "image": "/Microwave.png",
+    "image": "Microwave.png",
     "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
     
   }
