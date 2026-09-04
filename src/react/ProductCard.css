@@ -1,0 +1,239 @@
+.beauty-product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.beauty-product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.14);
+}
+
+/* Product Image */
+
+.beauty-product-image-container {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: #f8f8f8;
+}
+
+.beauty-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.beauty-product-card:hover .beauty-product-image {
+    transform: scale(1.06);
+}
+
+/* Discount */
+
+.beauty-discount-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 6px 11px;
+    border-radius: 20px;
+    background: #111111;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* Content */
+
+.beauty-product-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px;
+}
+
+.beauty-product-category {
+    margin: 0 0 7px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9b6b73;
+}
+
+.beauty-product-name {
+    margin: 0 0 6px;
+    font-size: 20px;
+    line-height: 1.3;
+    color: #222222;
+}
+
+.beauty-product-brand {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #777777;
+}
+
+.beauty-product-description {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666666;
+}
+
+/* Price */
+
+.beauty-product-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.beauty-current-price {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111111;
+}
+
+.beauty-original-price {
+    font-size: 14px;
+    color: #999999;
+    text-decoration: line-through;
+}
+
+/* Stock */
+
+.beauty-stock {
+    margin: 0 0 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5c7a61;
+}
+
+/* Bottom Actions */
+
+.beauty-product-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+}
+
+/* Quantity */
+
+.beauty-quantity-control {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.beauty-quantity-control button {
+    width: 38px;
+    height: 100%;
+    border: none;
+    background: #f5f5f5;
+    color: #222222;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.beauty-quantity-control button:hover:not(:disabled) {
+    background: #e8e8e8;
+}
+
+.beauty-quantity-control button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.beauty-quantity-control span {
+    min-width: 30px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Add To Cart */
+
+.beauty-add-cart-button {
+    flex: 1;
+    min-height: 44px;
+    border: none;
+    border-radius: 10px;
+    padding: 0 14px;
+    background: #111111;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.beauty-add-cart-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.beauty-add-cart-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+    .beauty-product-image-container {
+        height: 240px;
+    }
+
+    .beauty-product-content {
+        padding: 16px;
+    }
+
+    .beauty-product-name {
+        font-size: 18px;
+    }
+
+    .beauty-current-price {
+        font-size: 20px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+    .beauty-product-image-container {
+        height: 220px;
+    }
+
+    .beauty-product-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .beauty-quantity-control {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .beauty-add-cart-button {
+        width: 100%;
+    }
+}

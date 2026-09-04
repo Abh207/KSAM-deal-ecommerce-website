@@ -65,7 +65,7 @@ i{
 }
 
 .nav-link-cart{
-  background-color: rgb(155, 74, 15);
+  /* background-color: rgb(155, 74, 15); */
   padding: 0.3rem 1.6rem 0.3rem 1.6rem;
   border-radius: 30%;
 }
@@ -8546,4 +8546,1077 @@ main {
             1fr !important;
     }
 
+}
+
+
+
+
+
+
+
+
+/* greenBeauty.css */
+
+
+
+
+/* ==========================================
+   GREEN BEAUTY
+   ALL STYLES ARE SCOPED TO #green-beauty
+========================================== */
+
+#green-beauty {
+    width: 100%;
+    overflow: hidden;
+
+    background: #f5f8f2;
+    color: #18351f;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ==========================================
+   HERO
+========================================== */
+
+#green-beauty .gb-hero {
+    width: 100%;
+    min-height: 560px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 70px 7%;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            120deg,
+            #edf6e9,
+            #f9fcf7
+        );
+
+    position: relative;
+}
+
+
+#green-beauty .gb-hero-content {
+    width: 50%;
+    max-width: 620px;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+#green-beauty .gb-hero-small-title {
+    margin: 0 0 18px;
+
+    color: #4e8c5b;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 3px;
+}
+
+
+#green-beauty .gb-hero h1 {
+    margin: 0;
+
+    font-size: clamp(48px, 6vw, 80px);
+
+    line-height: 0.98;
+
+    letter-spacing: -4px;
+
+    color: #153a20;
+}
+
+
+#green-beauty .gb-hero h1 span {
+    color: #4b945b;
+}
+
+
+#green-beauty .gb-hero-description {
+    max-width: 540px;
+
+    margin: 25px 0;
+
+    color: #607062;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+#green-beauty .gb-hero-buttons {
+    display: flex;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+
+#green-beauty .gb-primary-button,
+#green-beauty .gb-secondary-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 14px 23px;
+
+    border-radius: 30px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    transition: 0.3s;
+}
+
+
+#green-beauty .gb-primary-button {
+    background: #26753b;
+    color: white;
+}
+
+
+#green-beauty .gb-primary-button:hover {
+    background: #1c5c2d;
+
+    transform: translateY(-3px);
+}
+
+
+#green-beauty .gb-secondary-button {
+    border: 1px solid #8db596;
+
+    background: white;
+
+    color: #286438;
+}
+
+
+#green-beauty .gb-secondary-button:hover {
+    background: #edf6e9;
+
+    transform: translateY(-3px);
+}
+
+
+/* ==========================================
+   HERO PRODUCTS
+========================================== */
+
+#green-beauty .gb-hero-product-area {
+    width: 47%;
+    height: 430px;
+
+    position: relative;
+}
+
+
+#green-beauty .gb-hero-circle {
+    position: absolute;
+
+    width: 390px;
+    height: 390px;
+
+    top: 15px;
+    right: 40px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #dcefd7,
+            #b9d8b8
+        );
+
+    box-shadow:
+        0 30px 70px rgba(45, 100, 55, 0.18);
+}
+
+
+#green-beauty .gb-hero-bottle {
+    position: absolute;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    border-radius: 14px;
+
+    color: #285532;
+
+    background:
+        linear-gradient(
+            150deg,
+            #ffffff,
+            #d9ead6
+        );
+
+    border: 1px solid #c6ddc5;
+
+    box-shadow:
+        0 20px 35px rgba(30, 70, 35, 0.18);
+}
+
+
+#green-beauty .gb-hero-bottle::before {
+    content: "";
+
+    position: absolute;
+
+    top: -30px;
+
+    width: 30px;
+    height: 35px;
+
+    border-radius: 5px 5px 0 0;
+
+    background: #386a42;
+}
+
+
+#green-beauty .gb-hero-bottle span {
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+
+#green-beauty .gb-hero-bottle strong {
+    margin-top: 5px;
+
+    font-size: 15px;
+}
+
+
+#green-beauty .gb-bottle-one {
+    width: 125px;
+    height: 190px;
+
+    right: 255px;
+    top: 150px;
+}
+
+
+#green-beauty .gb-bottle-two {
+    width: 105px;
+    height: 155px;
+
+    right: 125px;
+    top: 210px;
+}
+
+
+#green-beauty .gb-bottle-three {
+    width: 140px;
+    height: 110px;
+
+    right: 5px;
+    top: 250px;
+}
+
+
+/* ==========================================
+   FEATURES
+========================================== */
+
+#green-beauty .gb-features {
+    max-width: 1200px;
+
+    margin: -30px auto 0;
+
+    position: relative;
+    z-index: 5;
+
+    padding: 18px 30px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    background: white;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 12px 30px rgba(30, 80, 40, 0.1);
+}
+
+
+#green-beauty .gb-features div {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    color: #526958;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+#green-beauty .gb-features strong {
+    color: #39814a;
+
+    font-size: 20px;
+}
+
+
+/* ==========================================
+   SECTIONS
+========================================== */
+
+#green-beauty .gb-section,
+#green-beauty .gb-products-section {
+    max-width: 1250px;
+
+    margin: auto;
+
+    padding: 80px 30px;
+}
+
+
+#green-beauty .gb-section-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+
+#green-beauty .gb-section-heading p {
+    margin: 0 0 7px;
+
+    color: #599465;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+#green-beauty .gb-section-heading h2 {
+    margin: 0;
+
+    font-size: 38px;
+
+    color: #193d23;
+}
+
+
+#green-beauty .gb-section-heading button {
+    border: none;
+
+    background: transparent;
+
+    color: #39814a;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   CATEGORIES
+========================================== */
+
+#green-beauty .gb-category-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 15px;
+}
+
+
+#green-beauty .gb-category-card {
+    padding: 0;
+
+    border: none;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    background: white;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(30, 80, 40, 0.08);
+
+    transition: 0.3s;
+}
+
+
+#green-beauty .gb-category-card:hover {
+    transform: translateY(-7px);
+}
+
+
+#green-beauty .gb-category-image {
+    height: 210px;
+}
+
+
+#green-beauty .gb-cleanser {
+    background: linear-gradient(
+        135deg,
+        #dcefd8,
+        #a8cca9
+    );
+}
+
+
+#green-beauty .gb-serum {
+    background: linear-gradient(
+        135deg,
+        #d4e9d3,
+        #8fbd98
+    );
+}
+
+
+#green-beauty .gb-moisturizer {
+    background: linear-gradient(
+        135deg,
+        #e3f0df,
+        #bad7b7
+    );
+}
+
+
+#green-beauty .gb-sunscreen {
+    background: linear-gradient(
+        135deg,
+        #edf5d9,
+        #c3dca5
+    );
+}
+
+
+#green-beauty .gb-face-mask {
+    background: linear-gradient(
+        135deg,
+        #d7ead5,
+        #9bc49f
+    );
+}
+
+
+#green-beauty .gb-category-card h3 {
+    margin: 0;
+
+    padding: 13px 13px 4px;
+
+    color: #24482c;
+
+    font-size: 14px;
+}
+
+
+#green-beauty .gb-category-card span {
+    display: block;
+
+    padding: 0 13px 14px;
+
+    color: #63936c;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   NEW ARRIVAL
+========================================== */
+
+#green-beauty .gb-arrival {
+    max-width: 1250px;
+
+    min-height: 330px;
+
+    margin: 0 auto 70px;
+
+    padding: 45px 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #dcebd9,
+            #f3f8ef
+        );
+}
+
+
+#green-beauty .gb-arrival-content {
+    max-width: 500px;
+}
+
+
+#green-beauty .gb-arrival-content > p:first-child {
+    color: #568c5e;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 3px;
+}
+
+
+#green-beauty .gb-arrival-content h2 {
+    margin: 10px 0;
+
+    font-size: 45px;
+
+    line-height: 1;
+}
+
+
+#green-beauty .gb-arrival-content h2 span {
+    color: #4a8e56;
+}
+
+
+#green-beauty .gb-arrival-content p:not(:first-child) {
+    margin: 15px 0 25px;
+
+    color: #627164;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+#green-beauty .gb-arrival-products {
+    display: flex;
+
+    align-items: end;
+
+    gap: 25px;
+}
+
+
+#green-beauty .gb-arrival-product {
+    position: relative;
+
+    width: 150px;
+    height: 200px;
+
+    border-radius: 15px;
+
+    background: #edf5e9;
+
+    box-shadow:
+        0 20px 35px rgba(30, 70, 35, 0.15);
+}
+
+
+#green-beauty .gb-arrival-bottle {
+    position: absolute;
+
+    left: 35px;
+    bottom: 0;
+
+    width: 80px;
+    height: 150px;
+
+    border-radius: 12px 12px 20px 20px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #ffffff,
+            #b9d6b8
+        );
+}
+
+
+#green-beauty .gb-arrival-bottle::before {
+    content: "";
+
+    position: absolute;
+
+    top: -35px;
+    left: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    background: #3e7347;
+
+    border-radius: 5px 5px 0 0;
+}
+
+
+#green-beauty .gb-arrival-bottle.gb-small {
+    height: 110px;
+}
+
+
+/* ==========================================
+   PRODUCT AREA
+========================================== */
+
+#green-beauty .gb-product-controls {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+#green-beauty .gb-product-controls input,
+#green-beauty .gb-product-controls select {
+    height: 42px;
+
+    padding: 0 13px;
+
+    border: 1px solid #cbdacb;
+
+    border-radius: 22px;
+
+    outline: none;
+
+    background: white;
+
+    color: #34543b;
+}
+
+
+#green-beauty .gb-product-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+
+#green-beauty .gb-product-card {
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: white;
+
+    border: 1px solid #e0e9df;
+
+    box-shadow:
+        0 8px 25px rgba(30, 80, 40, 0.07);
+}
+
+
+#green-beauty .gb-product-card-image {
+    height: 230px;
+
+    overflow: hidden;
+
+    position: relative;
+
+    background: #edf5e9;
+}
+
+
+#green-beauty .gb-product-card-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+#green-beauty .gb-product-card-content {
+    padding: 17px;
+}
+
+
+#green-beauty .gb-product-card-content small {
+    color: #619269;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+#green-beauty .gb-product-card-content h3 {
+    margin: 6px 0;
+
+    color: #24482c;
+
+    font-size: 17px;
+}
+
+
+#green-beauty .gb-product-card-content p {
+    margin-bottom: 13px;
+
+    color: #728073;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+#green-beauty .gb-product-price {
+    display: flex;
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+}
+
+
+#green-beauty .gb-current-price {
+    color: #26753b;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+
+#green-beauty .gb-old-price {
+    color: #999;
+
+    font-size: 12px;
+
+    text-decoration: line-through;
+}
+
+
+#green-beauty .gb-add-cart {
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #26753b;
+    color: white;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   SALE
+========================================== */
+
+#green-beauty .gb-sale {
+    max-width: 1250px;
+
+    margin: 0 auto 60px;
+
+    padding: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    border-radius: 25px;
+
+    background: #173d22;
+
+    color: white;
+}
+
+
+#green-beauty .gb-sale p {
+    color: #9dcca3;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+#green-beauty .gb-sale h2 {
+    margin: 8px 0;
+
+    font-size: 35px;
+}
+
+
+#green-beauty .gb-countdown {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+#green-beauty .gb-countdown div {
+    min-width: 70px;
+
+    padding: 12px 8px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    border: 1px solid rgba(
+        255,
+        255,
+        255,
+        0.15
+    );
+
+    border-radius: 10px;
+
+    background: rgba(
+        255,
+        255,
+        255,
+        0.06
+    );
+}
+
+
+#green-beauty .gb-countdown strong {
+    font-size: 25px;
+}
+
+
+#green-beauty .gb-countdown span {
+    color: #aac0ae;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+#green-beauty .gb-toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 99999;
+
+    min-width: 280px;
+
+    padding: 16px 20px;
+
+    border-radius: 13px;
+
+    background: white;
+
+    color: #24482c;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.2);
+
+    border-left: 5px solid #26753b;
+
+    transform: translateX(150%);
+
+    transition: 0.35s;
+}
+
+
+#green-beauty .gb-toast.show {
+    transform: translateX(0);
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1000px) {
+
+    #green-beauty .gb-category-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    #green-beauty .gb-product-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 700px) {
+
+    #green-beauty .gb-hero {
+        flex-direction: column;
+
+        padding: 50px 20px;
+
+        text-align: center;
+    }
+
+    #green-beauty .gb-hero-content {
+        width: 100%;
+    }
+
+    #green-beauty .gb-hero-buttons {
+        justify-content: center;
+    }
+
+    #green-beauty .gb-hero-product-area {
+        width: 100%;
+
+        transform: scale(0.7);
+
+        margin-top: -20px;
+    }
+
+    #green-beauty .gb-features {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        margin: 0 15px;
+    }
+
+    #green-beauty .gb-section-heading {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    #green-beauty .gb-category-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    #green-beauty .gb-arrival {
+        margin: 0 15px 50px;
+
+        padding: 35px 25px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    #green-beauty .gb-arrival-products {
+        margin-top: 30px;
+
+        align-self: center;
+    }
+
+    #green-beauty .gb-product-controls {
+        width: 100%;
+
+        flex-direction: column;
+    }
+
+    #green-beauty .gb-product-controls input,
+    #green-beauty .gb-product-controls select {
+        width: 100%;
+    }
+
+    #green-beauty .gb-product-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    #green-beauty .gb-sale {
+        margin: 0 15px 40px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 30px 20px;
+    }
+}
+
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 450px) {
+
+    #green-beauty .gb-category-grid,
+    #green-beauty .gb-product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #green-beauty .gb-hero h1 {
+        font-size: 43px;
+
+        letter-spacing: -2px;
+    }
+
+    #green-beauty .gb-hero-product-area {
+        transform: scale(0.55);
+
+        height: 300px;
+    }
+
+    #green-beauty .gb-countdown div {
+        min-width: 55px;
+    }
+
+    #green-beauty .gb-countdown strong {
+        font-size: 20px;
+    }
 }

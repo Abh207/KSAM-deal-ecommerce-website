@@ -1,0 +1,90 @@
+[
+  {
+    "id": 101,
+    "name": "Vitamin C Face Serum",
+    "brand": "GlowCare",
+    "category": "Skin Care",
+    "description": "Brightening vitamin C serum for glowing and healthy-looking skin.",
+    "price": 499,
+    "actualPrice": 799,
+    "stock": 25,
+    "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 102,
+    "name": "Hydrating Face Cream",
+    "brand": "PureGlow",
+    "category": "Skin Care",
+    "description": "Lightweight moisturizing cream for soft and hydrated skin.",
+    "price": 399,
+    "actualPrice": 599,
+    "stock": 30,
+    "image": "https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 103,
+    "name": "Matte Lipstick",
+    "brand": "BeautyLine",
+    "category": "Makeup",
+    "description": "Long-lasting matte lipstick with a smooth and comfortable finish.",
+    "price": 299,
+    "actualPrice": 449,
+    "stock": 40,
+    "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 104,
+    "name": "Perfume for Women",
+    "brand": "AromaLux",
+    "category": "Fragrance",
+    "description": "Elegant floral fragrance with a fresh and long-lasting aroma.",
+    "price": 699,
+    "actualPrice": 999,
+    "stock": 18,
+    "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 105,
+    "name": "Aloe Vera Face Wash",
+    "brand": "NatureFresh",
+    "category": "Skin Care",
+    "description": "Gentle aloe vera face wash that cleanses without drying the skin.",
+    "price": 249,
+    "actualPrice": 349,
+    "stock": 35,
+    "image": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 106,
+    "name": "Hair Repair Shampoo",
+    "brand": "SilkyHair",
+    "category": "Hair Care",
+    "description": "Nourishing shampoo designed to strengthen and smooth damaged hair.",
+    "price": 349,
+    "actualPrice": 499,
+    "stock": 28,
+    "image": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 107,
+    "name": "Makeup Brush Set",
+    "brand": "ProBeauty",
+    "category": "Makeup",
+    "description": "Professional makeup brush set for smooth and precise application.",
+    "price": 549,
+    "actualPrice": 799,
+    "stock": 22,
+    "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": 108,
+    "name": "Body Lotion",
+    "brand": "SoftSkin",
+    "category": "Body Care",
+    "description": "Deep moisturizing body lotion for smooth and nourished skin.",
+    "price": 299,
+    "actualPrice": 449,
+    "stock": 32,
+    "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80"
+  }
+]

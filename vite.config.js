@@ -1,6 +1,5 @@
-// vite.config.js
-
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -8,8 +7,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = resolve(__filename, "..");
 
 export default defineConfig({
-    // GitHub Pages repository path
     base: "/KSAM-deal-ecommerce-website/",
+
+    plugins: [react()],
 
     build: {
         rollupOptions: {
@@ -20,7 +20,8 @@ export default defineConfig({
                 product: resolve(__dirname, "Product.html"),
                 signUp: resolve(__dirname, "signUp.html"),
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
-                addToCart: resolve(__dirname, "addToCart.html")
+                addToCart: resolve(__dirname, "addToCart.html"),
+                beauty: resolve(__dirname, "beauty.html")
             }
         }
     }

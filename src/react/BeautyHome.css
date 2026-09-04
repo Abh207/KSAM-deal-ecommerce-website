@@ -1,0 +1,710 @@
+/* =========================================
+   BEAUTY PAGE
+========================================= */
+
+.beauty-page {
+    min-height: 100vh;
+    background: #fcfaf9;
+    color: #222222;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================
+   HERO SECTION
+========================================= */
+
+.beauty-hero {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 70px 60px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #f8eeee 0%,
+            #fffafa 55%,
+            #f4e7e5 100%
+        );
+}
+
+.beauty-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
+}
+
+.beauty-hero-small-title {
+    margin: 0 0 15px;
+
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 3px;
+
+    color: #9b6b73;
+}
+
+.beauty-hero h1 {
+    margin: 0;
+
+    font-size: clamp(48px, 6vw, 82px);
+    line-height: 0.98;
+    letter-spacing: -3px;
+
+    color: #171717;
+}
+
+.beauty-hero h1 span {
+    color: #9b6b73;
+}
+
+.beauty-hero-description {
+    max-width: 550px;
+    margin: 25px 0 30px;
+
+    font-size: 16px;
+    line-height: 1.8;
+
+    color: #666666;
+}
+
+.beauty-hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 150px;
+    padding: 14px 25px;
+
+    border-radius: 30px;
+
+    background: #111111;
+    color: #ffffff;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.beauty-hero-button:hover {
+    transform: translateY(-3px);
+    opacity: 0.88;
+}
+
+
+/* =========================================
+   HERO DECORATION
+========================================= */
+
+.beauty-hero-decoration {
+    position: relative;
+
+    width: 430px;
+    height: 430px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.beauty-hero-circle {
+    width: 360px;
+    height: 360px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #ffffff,
+            #f0d7d4 60%,
+            #d9b4b0 100%
+        );
+
+    box-shadow:
+        0 30px 70px rgba(100, 60, 60, 0.16);
+}
+
+.beauty-hero-card {
+    position: absolute;
+    right: 0;
+    bottom: 40px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    padding: 18px 22px;
+
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+    backdrop-filter: blur(10px);
+}
+
+.beauty-hero-card span {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #9b6b73;
+}
+
+.beauty-hero-card strong {
+    font-size: 16px;
+    color: #222222;
+}
+
+
+/* =========================================
+   SALE SECTION
+========================================= */
+
+.beauty-sale-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 55px 60px;
+
+    background: #111111;
+    color: #ffffff;
+}
+
+.beauty-countdown {
+    text-align: center;
+}
+
+.beauty-countdown-label {
+    margin: 0 0 8px;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+
+    color: #d7a8ae;
+}
+
+.beauty-countdown h2 {
+    margin: 0 0 25px;
+
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+}
+
+.beauty-countdown-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.beauty-time-box {
+    min-width: 95px;
+    padding: 15px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.beauty-time-box strong {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.beauty-time-box span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.65;
+}
+
+.beauty-time-separator {
+    font-size: 30px;
+    font-weight: 700;
+    opacity: 0.5;
+}
+
+
+/* =========================================
+   PRODUCTS SECTION
+========================================= */
+
+.beauty-products-section {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    padding: 70px 60px;
+}
+
+.beauty-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    margin-bottom: 35px;
+}
+
+.beauty-section-label {
+    margin: 0 0 8px;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+
+    color: #9b6b73;
+}
+
+.beauty-section-heading h2 {
+    margin: 0;
+
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1;
+}
+
+.beauty-result-count {
+    margin: 0;
+
+    color: #777777;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   PRODUCTS GRID
+========================================= */
+
+.beauty-products-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 25px;
+}
+
+
+/* =========================================
+   NO PRODUCTS
+========================================= */
+
+.beauty-no-products {
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    border: 1px dashed #d8d0ce;
+    border-radius: 20px;
+
+    background: #ffffff;
+}
+
+.beauty-no-products-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.beauty-no-products h3 {
+    margin: 0 0 8px;
+    font-size: 24px;
+}
+
+.beauty-no-products p {
+    margin: 0 0 20px;
+    color: #777777;
+}
+
+.beauty-no-products button {
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 25px;
+
+    background: #111111;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   BOTTOM OFFER
+========================================= */
+
+.beauty-bottom-offer {
+    max-width: 1400px;
+    margin: 0 auto 60px;
+    padding: 45px 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #f1dfdd,
+            #faf1ef
+        );
+}
+
+.beauty-bottom-offer p {
+    margin: 0 0 8px;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+
+    color: #9b6b73;
+}
+
+.beauty-bottom-offer h2 {
+    margin: 0 0 10px;
+
+    font-size: clamp(27px, 4vw, 42px);
+}
+
+.beauty-bottom-offer span {
+    color: #666666;
+    font-size: 14px;
+}
+
+.beauty-offer-button {
+    flex-shrink: 0;
+
+    padding: 14px 23px;
+
+    border-radius: 25px;
+
+    background: #111111;
+    color: #ffffff;
+
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+
+    transition: transform 0.2s ease;
+}
+
+.beauty-offer-button:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   TOAST / POPUP
+========================================= */
+
+.beauty-toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 9999;
+
+    width: min(390px, calc(100vw - 30px));
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.18);
+
+    border: 1px solid #eeeeee;
+
+    animation: beautyToastIn 0.3s ease;
+}
+
+.beauty-toast-icon {
+    flex-shrink: 0;
+
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #111111;
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.beauty-toast-content {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.beauty-toast-content strong {
+    font-size: 14px;
+    color: #222222;
+}
+
+.beauty-toast-content span {
+    font-size: 12px;
+    color: #777777;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.beauty-toast-close {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #f3f3f3;
+    color: #555555;
+
+    font-size: 18px;
+    cursor: pointer;
+}
+
+@keyframes beautyToastIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================
+   LARGE TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .beauty-hero {
+        padding: 60px 40px;
+    }
+
+    .beauty-hero-decoration {
+        width: 350px;
+        height: 350px;
+    }
+
+    .beauty-hero-circle {
+        width: 290px;
+        height: 290px;
+    }
+
+    .beauty-products-section {
+        padding: 60px 40px;
+    }
+
+    .beauty-sale-section {
+        padding: 50px 40px;
+    }
+
+    .beauty-products-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .beauty-bottom-offer {
+        margin-left: 40px;
+        margin-right: 40px;
+        padding: 40px;
+    }
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+    .beauty-hero {
+        min-height: auto;
+
+        flex-direction: column;
+        align-items: flex-start;
+
+        padding: 60px 25px 40px;
+    }
+
+    .beauty-hero-decoration {
+        align-self: center;
+
+        width: 320px;
+        height: 280px;
+
+        margin-top: 30px;
+    }
+
+    .beauty-hero-circle {
+        width: 250px;
+        height: 250px;
+    }
+
+    .beauty-products-section {
+        padding: 50px 25px;
+    }
+
+    .beauty-sale-section {
+        padding: 45px 25px;
+    }
+
+    .beauty-products-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .beauty-bottom-offer {
+        margin-left: 25px;
+        margin-right: 25px;
+
+        padding: 35px 25px;
+
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 550px) {
+
+    .beauty-hero {
+        padding: 45px 18px 30px;
+    }
+
+    .beauty-hero h1 {
+        font-size: 48px;
+        letter-spacing: -2px;
+    }
+
+    .beauty-hero-description {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .beauty-hero-decoration {
+        width: 280px;
+        height: 240px;
+    }
+
+    .beauty-hero-circle {
+        width: 210px;
+        height: 210px;
+    }
+
+    .beauty-hero-card {
+        right: -5px;
+        bottom: 10px;
+
+        padding: 13px 15px;
+    }
+
+    .beauty-sale-section {
+        padding: 40px 15px;
+    }
+
+    .beauty-countdown-timer {
+        gap: 5px;
+    }
+
+    .beauty-time-box {
+        min-width: 63px;
+        padding: 12px 5px;
+    }
+
+    .beauty-time-box strong {
+        font-size: 22px;
+    }
+
+    .beauty-time-box span {
+        font-size: 8px;
+    }
+
+    .beauty-time-separator {
+        font-size: 20px;
+    }
+
+    .beauty-products-section {
+        padding: 45px 15px;
+    }
+
+    .beauty-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .beauty-products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .beauty-bottom-offer {
+        margin: 0 15px 40px;
+        padding: 30px 20px;
+    }
+
+    .beauty-offer-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .beauty-toast {
+        right: 15px;
+        bottom: 15px;
+    }
+}
