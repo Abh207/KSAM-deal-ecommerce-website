@@ -1618,6 +1618,10 @@ input::placeholder {
             120px
             120px;
     }
+
+    .stockElement{
+        size: 3rem;
+    }
 }
 
 @media (max-width: 750px) {
@@ -1635,6 +1639,9 @@ input::placeholder {
     #productCartContainer .stockElement,
     #productCartContainer .remove-to-cart-button {
         margin: auto;
+    }
+    .stockElement{
+        size: 3rem;
     }
 } 
 
