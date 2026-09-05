@@ -8117,10 +8117,10 @@ main {
     }
 
     /* Product grid */
-    /* #productContainer {
+    #productContainer {
         grid-template-columns: 1fr;
         gap: 1rem;
-    } */
+    }
 
 
     #productContainer {
