@@ -21,7 +21,8 @@ export default defineConfig({
                 signUp: resolve(__dirname, "signUp.html"),
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
-                beauty: resolve(__dirname, "beauty.html")
+                beauty: resolve(__dirname, "beauty.html"),
+                Gadgets: resolve(__dirname, "fashionSpeaker.html")
             }
         }
     }
