@@ -1,0 +1,1154 @@
+/* =========================================
+   KSAM DEAL PROMO SECTION
+========================================= */
+
+.shop-promo-section {
+    width: 100%;
+    max-width: 1400px;
+    margin: 45px auto;
+    padding: 0 32px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.promo-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.promo-heading span {
+    color: #6d28d9;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.promo-heading h2 {
+    margin: 5px 0 0;
+    font-size: 28px;
+    color: #111827;
+    letter-spacing: -0.8px;
+}
+
+.promo-live {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 30px;
+    background: #f5f3ff;
+}
+
+.promo-live span:last-child {
+    color: #6d28d9;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #7c3aed;
+    animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+
+    0% {
+        box-shadow: 0 0 0 0 rgba(124,58,237,.5);
+    }
+
+    70% {
+        box-shadow: 0 0 0 7px rgba(124,58,237,0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(124,58,237,0);
+    }
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.shop-promo-grid {
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        .85fr
+        1.55fr;
+
+    grid-template-rows:
+        1fr
+        1fr;
+
+    gap: 14px;
+
+    min-height: 460px;
+}
+
+
+/* =========================================
+   COMMON CARD
+========================================= */
+
+.promo-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease;
+}
+
+.promo-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 20px 45px rgba(15,23,42,.16);
+}
+
+
+/* =========================================
+   CARD POSITIONS
+========================================= */
+
+.promo-laptop {
+    grid-column: 1;
+    grid-row: 1 / 3;
+
+    background:
+        radial-gradient(
+            circle at 80% 70%,
+            rgba(56,189,248,.08),
+            transparent 35%
+        ),
+        #050b13;
+
+    color: white;
+}
+
+.promo-headphones {
+    grid-column: 2;
+    grid-row: 1 / 3;
+
+    background:
+        linear-gradient(
+            145deg,
+            #5b21b6,
+            #32128f
+        );
+
+    color: white;
+}
+
+.promo-audio {
+    grid-column: 3;
+    grid-row: 1;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #c7dcfb
+        );
+
+    color: #111827;
+}
+
+.promo-camera {
+    grid-column: 3;
+    grid-row: 2;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eaf4b7,
+            #dfeaa0
+        );
+
+    color: #111827;
+}
+
+
+/* =========================================
+   SHINE EFFECT
+========================================= */
+
+.promo-shine {
+    position: absolute;
+
+    width: 180px;
+    height: 500px;
+
+    top: -100px;
+    right: -180px;
+
+    transform: rotate(25deg);
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(255,255,255,.08),
+            transparent
+        );
+
+    transition: right .7s ease;
+}
+
+.promo-laptop:hover .promo-shine {
+    right: 110%;
+}
+
+
+/* =========================================
+   PURPLE GLOW
+========================================= */
+
+.promo-glow {
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    right: -100px;
+    bottom: -90px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.18),
+            transparent 65%
+        );
+
+    filter: blur(8px);
+
+    transition:
+        transform .6s ease;
+}
+
+.promo-headphones:hover .promo-glow {
+    transform: scale(1.5);
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.promo-content {
+    position: relative;
+
+    z-index: 5;
+
+    max-width: 60%;
+}
+
+.promo-small-text {
+    display: block;
+
+    margin-bottom: 11px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.promo-content h2 {
+    margin: 0 0 11px;
+
+    font-size: 29px;
+
+    line-height: 1.08;
+
+    letter-spacing: -1px;
+}
+
+.promo-highlight {
+    margin: 0 0 16px;
+
+    font-size: 14px;
+
+    opacity: .9;
+}
+
+.promo-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 17px;
+
+    font-size: 11px;
+}
+
+.promo-price strong {
+    font-size: 18px;
+}
+
+.promo-price del {
+    opacity: .55;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.promo-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    min-height: 42px;
+
+    padding: 0 17px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #111827;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.promo-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.18);
+}
+
+.promo-button span {
+    font-size: 15px;
+
+    transition:
+        transform .25s ease;
+}
+
+.promo-button:hover span {
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   PRODUCT IMAGES
+========================================= */
+
+.promo-product-image {
+    position: absolute;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    transition:
+        transform .55s cubic-bezier(.2,.8,.2,1);
+}
+
+.promo-product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    filter:
+        drop-shadow(
+            0 20px 22px rgba(0,0,0,.25)
+        );
+}
+
+
+/* LAPTOP */
+
+.laptop-image {
+    width: 58%;
+    height: 42%;
+
+    right: 35%;
+    bottom: 5%;
+
+    z-index: 2;
+}
+
+.promo-laptop:hover .laptop-image {
+    transform:
+        scale(1.08)
+        rotate(-2deg);
+}
+
+
+/* HEADPHONES */
+
+.headphone-image {
+    width: 72%;
+    height: 45%;
+
+    right: 19%;
+    bottom: 8%;
+
+    z-index: 2;
+}
+
+.promo-headphones:hover .headphone-image {
+    transform:
+        scale(1.1)
+        rotate(3deg);
+}
+
+
+/* AUDIO */
+
+.audio-image {
+    width: 44%;
+    height: 100%;
+
+    right: 1%;
+    top: 0;
+}
+
+.promo-audio:hover .audio-image {
+    transform:
+        scale(1.07)
+        translateX(-5px);
+}
+
+
+/* CAMERA */
+
+.camera-image {
+    width: 44%;
+    height: 100%;
+
+    right: 1%;
+    top: 0;
+}
+
+.promo-camera:hover .camera-image {
+    transform:
+        scale(1.08)
+        translateX(-5px);
+}
+
+
+/* =========================================
+   BADGES
+========================================= */
+
+.promo-discount {
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #111827;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    z-index: 6;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.2);
+}
+
+.promo-floating-badge {
+    position: absolute;
+
+    top: 20px;
+    right: 18px;
+
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #5420bd;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+    z-index: 6;
+
+    animation:
+        badgeFloat 3s ease-in-out infinite;
+}
+
+.promo-floating-badge small {
+    font-size: 7px;
+
+    letter-spacing: 1px;
+}
+
+@keyframes badgeFloat {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+}
+
+
+/* =========================================
+   RIGHT CARD TEXT
+========================================= */
+
+.promo-audio .promo-content,
+.promo-camera .promo-content {
+    max-width: 55%;
+}
+
+.promo-audio .promo-content h2,
+.promo-camera .promo-content h2 {
+    font-size: 21px;
+
+    line-height: 1.05;
+}
+
+.promo-audio .promo-content p,
+.promo-camera .promo-content p {
+    margin: 0 0 13px;
+
+    font-size: 10px;
+
+    line-height: 1.45;
+
+    color: #374151;
+}
+
+
+/* =========================================
+   BOTTOM DEAL BAR
+========================================= */
+
+.promo-bottom-bar {
+    margin-top: 14px;
+
+    padding: 13px 18px;
+
+    border-radius: 13px;
+
+    background: #111827;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.deal-message {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.fire {
+    font-size: 23px;
+}
+
+.deal-message strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+.deal-message small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #9ca3af;
+
+    font-size: 9px;
+}
+
+
+/* =========================================
+   COUNTDOWN
+========================================= */
+
+.countdown {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.countdown > div {
+    min-width: 38px;
+
+    padding: 5px 6px;
+
+    border-radius: 6px;
+
+    background: #1f2937;
+
+    text-align: center;
+}
+
+.countdown strong {
+    display: block;
+
+    font-size: 15px;
+}
+
+.countdown small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #9ca3af;
+
+    font-size: 6px;
+
+    letter-spacing: 1px;
+}
+
+.countdown > span {
+    color: #9ca3af;
+
+    font-weight: 800;
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+.promo-cart-toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 13px 17px;
+
+    border-radius: 10px;
+
+    background: #111827;
+
+    color: white;
+
+    font-size: 12px;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.25);
+
+    animation:
+        toastIn .35s ease;
+}
+
+.promo-cart-toast span {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+}
+
+.promo-cart-toast a {
+    color: white;
+
+    font-weight: 700;
+
+    text-decoration: underline;
+}
+
+@keyframes toastIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================
+   QUICK VIEW MODAL
+========================================= */
+
+.promo-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(15,23,42,.72);
+
+    backdrop-filter:
+        blur(7px);
+
+    animation:
+        modalFade .25s ease;
+}
+
+.promo-modal {
+    position: relative;
+
+    width: min(700px, 100%);
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: white;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.3);
+
+    animation:
+        modalUp .3s ease;
+}
+
+.promo-modal-close {
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    z-index: 5;
+
+    width: 38px;
+    height: 38px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f3f4f6;
+
+    font-size: 25px;
+
+    cursor: pointer;
+}
+
+.promo-modal-image {
+    min-height: 340px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f8fafc;
+}
+
+.promo-modal-image img {
+    width: 90%;
+    height: 90%;
+
+    object-fit: contain;
+}
+
+.promo-modal-info {
+    padding: 40px 30px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.promo-modal-info > span {
+    color: #7c3aed;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.promo-modal-info h2 {
+    margin: 10px 0;
+
+    color: #111827;
+
+    font-size: 28px;
+}
+
+.promo-modal-info p {
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.modal-price {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 15px 0 20px;
+}
+
+.modal-price strong {
+    color: #111827;
+
+    font-size: 25px;
+}
+
+.modal-price del {
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+.modal-cart-button {
+    min-height: 45px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #6d28d9;
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+}
+
+.modal-cart-button:hover {
+    background: #5b21b6;
+
+    transform: translateY(-2px);
+}
+
+.modal-cart-button span {
+    margin-left: 8px;
+}
+
+@keyframes modalFade {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+@keyframes modalUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+    .shop-promo-section {
+        padding: 0 20px;
+    }
+
+    .shop-promo-grid {
+        grid-template-columns: 1fr 1fr;
+
+        grid-template-rows:
+            330px
+            330px
+            230px;
+    }
+
+    .promo-laptop {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .promo-headphones {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .promo-audio {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .promo-camera {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .promo-laptop,
+    .promo-headphones {
+        min-height: 330px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+    .shop-promo-section {
+        margin: 30px auto;
+
+        padding: 0 12px;
+    }
+
+    .promo-heading {
+        align-items: flex-start;
+    }
+
+    .promo-heading h2 {
+        font-size: 23px;
+    }
+
+    .promo-live {
+        display: none;
+    }
+
+    .shop-promo-grid {
+        grid-template-columns: 1fr;
+
+        grid-template-rows:
+            350px
+            350px
+            230px
+            230px;
+    }
+
+    .promo-laptop {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .promo-headphones {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .promo-audio {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .promo-camera {
+        grid-column: 1;
+        grid-row: 4;
+    }
+
+    .promo-card {
+        padding: 23px;
+    }
+
+    .promo-content {
+        max-width: 65%;
+    }
+
+    .promo-content h2 {
+        font-size: 25px;
+    }
+
+    .laptop-image {
+        width: 75%;
+        height: 55%;
+
+        right: -8%;
+    }
+
+    .headphone-image {
+        width: 90%;
+        height: 55%;
+
+        right: -18%;
+    }
+
+    .promo-bottom-bar {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 12px;
+    }
+
+    .countdown {
+        justify-content: center;
+    }
+
+    .promo-modal {
+        grid-template-columns: 1fr;
+    }
+
+    .promo-modal-image {
+        min-height: 230px;
+    }
+
+    .promo-modal-info {
+        padding: 25px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+
+    .shop-promo-grid {
+        grid-template-rows:
+            310px
+            310px
+            210px
+            210px;
+    }
+
+    .promo-card {
+        padding: 19px;
+    }
+
+    .promo-content h2 {
+        font-size: 22px;
+    }
+
+    .promo-highlight {
+        font-size: 12px;
+    }
+
+    .promo-button {
+        min-height: 39px;
+
+        padding: 0 12px;
+
+        font-size: 10px;
+    }
+
+}

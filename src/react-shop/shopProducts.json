@@ -1,0 +1,337 @@
+[
+    {
+        "id": 301,
+        "name": "Premium Smartphone",
+        "category": "Smartphones",
+        "price": 699,
+        "oldPrice": 799,
+        "rating": 4.8,
+        "discount": 13,
+        "accent": "#7c3aed",
+        "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600"
+    },
+    {
+        "id": 302,
+        "name": "Modern Laptop",
+        "category": "Laptops",
+        "price": 899,
+        "oldPrice": 999,
+        "rating": 4.7,
+        "discount": 10,
+        "accent": "#2563eb",
+        "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600"
+    },
+    {
+        "id": 303,
+        "name": "Wireless Headphones",
+        "category": "Audio",
+        "price": 149,
+        "oldPrice": 199,
+        "rating": 4.9,
+        "discount": 25,
+        "accent": "#ec4899",
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600"
+    },
+    {
+        "id": 304,
+        "name": "Digital Camera",
+        "category": "Cameras",
+        "price": 599,
+        "oldPrice": 699,
+        "rating": 4.6,
+        "discount": 14,
+        "accent": "#f97316",
+        "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600"
+    },
+    {
+        "id": 305,
+        "name": "Gaming Console",
+        "category": "Gaming",
+        "price": 499,
+        "oldPrice": 549,
+        "rating": 4.8,
+        "discount": 9,
+        "accent": "#10b981",
+        "image": "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600"
+    },
+    {
+        "id": 306,
+        "name": "Smart Speaker",
+        "category": "Smart Home",
+        "price": 99,
+        "oldPrice": 129,
+        "rating": 4.5,
+        "discount": 23,
+        "accent": "#06b6d4",
+        "image": "https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=600"
+    },
+{
+    "id": 307,
+    "name": "iPhone 15 Pro",
+    "category": "Smartphones",
+    "price": 899,
+    "oldPrice": 999,
+    "rating": 4.9,
+    "discount": 10,
+    "accent": "#8b5cf6",
+    "image": "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=600"
+},
+{
+    "id": 308,
+    "name": "Samsung Galaxy S24",
+    "category": "Smartphones",
+    "price": 749,
+    "oldPrice": 899,
+    "rating": 4.8,
+    "discount": 17,
+    "accent": "#3b82f6",
+    "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600"
+},
+{
+    "id": 309,
+    "name": "Google Pixel Phone",
+    "category": "Smartphones",
+    "price": 649,
+    "oldPrice": 749,
+    "rating": 4.7,
+    "discount": 13,
+    "accent": "#14b8a6",
+    "image": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600"
+},
+{
+    "id": 310,
+    "name": "OnePlus Smartphone",
+    "category": "Smartphones",
+    "price": 499,
+    "oldPrice": 599,
+    "rating": 4.6,
+    "discount": 17,
+    "accent": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600"
+},
+
+{
+    "id": 311,
+    "name": "MacBook Pro",
+    "category": "Laptops",
+    "price": 1499,
+    "oldPrice": 1699,
+    "rating": 4.9,
+    "discount": 12,
+    "accent": "#6366f1",
+    "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600"
+},
+{
+    "id": 312,
+    "name": "Premium Windows Laptop",
+    "category": "Laptops",
+    "price": 1099,
+    "oldPrice": 1299,
+    "rating": 4.8,
+    "discount": 15,
+    "accent": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600"
+},
+{
+    "id": 313,
+    "name": "Ultra Slim Laptop",
+    "category": "Laptops",
+    "price": 799,
+    "oldPrice": 949,
+    "rating": 4.7,
+    "discount": 16,
+    "accent": "#06b6d4",
+    "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600"
+},
+{
+    "id": 314,
+    "name": "Business Laptop",
+    "category": "Laptops",
+    "price": 899,
+    "oldPrice": 1049,
+    "rating": 4.6,
+    "discount": 14,
+    "accent": "#64748b",
+    "image": "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=600"
+},
+
+{
+    "id": 315,
+    "name": "Premium Wireless Headphones",
+    "category": "Audio",
+    "price": 249,
+    "oldPrice": 299,
+    "rating": 4.9,
+    "discount": 17,
+    "accent": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600"
+},
+{
+    "id": 316,
+    "name": "Noise Cancelling Headphones",
+    "category": "Audio",
+    "price": 199,
+    "oldPrice": 249,
+    "rating": 4.8,
+    "discount": 20,
+    "accent": "#8b5cf6",
+    "image": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600"
+},
+{
+    "id": 317,
+    "name": "Wireless Earbuds Pro",
+    "category": "Audio",
+    "price": 129,
+    "oldPrice": 169,
+    "rating": 4.7,
+    "discount": 24,
+    "accent": "#06b6d4",
+    "image": "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=600"
+},
+{
+    "id": 318,
+    "name": "Portable Bluetooth Speaker",
+    "category": "Audio",
+    "price": 89,
+    "oldPrice": 119,
+    "rating": 4.6,
+    "discount": 25,
+    "accent": "#f97316",
+    "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600"
+},
+
+{
+    "id": 319,
+    "name": "Professional DSLR Camera",
+    "category": "Cameras",
+    "price": 1199,
+    "oldPrice": 1399,
+    "rating": 4.9,
+    "discount": 14,
+    "accent": "#f59e0b",
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600"
+},
+{
+    "id": 320,
+    "name": "Mirrorless Camera",
+    "category": "Cameras",
+    "price": 999,
+    "oldPrice": 1199,
+    "rating": 4.8,
+    "discount": 17,
+    "accent": "#f97316",
+    "image": "https://images.unsplash.com/photo-1606986628253-1e5d3f6e9d9c?w=600"
+},
+{
+    "id": 321,
+    "name": "Compact Digital Camera",
+    "category": "Cameras",
+    "price": 449,
+    "oldPrice": 549,
+    "rating": 4.6,
+    "discount": 18,
+    "accent": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?w=600"
+},
+{
+    "id": 322,
+    "name": "Action Camera 4K",
+    "category": "Cameras",
+    "price": 299,
+    "oldPrice": 349,
+    "rating": 4.7,
+    "discount": 14,
+    "accent": "#10b981",
+    "image": "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600"
+},
+
+{
+    "id": 323,
+    "name": "Next Gen Gaming Console",
+    "category": "Gaming",
+    "price": 499,
+    "oldPrice": 549,
+    "rating": 4.9,
+    "discount": 9,
+    "accent": "#10b981",
+    "image": "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600"
+},
+{
+    "id": 324,
+    "name": "Gaming Controller Pro",
+    "category": "Gaming",
+    "price": 69,
+    "oldPrice": 89,
+    "rating": 4.8,
+    "discount": 22,
+    "accent": "#8b5cf6",
+    "image": "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=600"
+},
+{
+    "id": 325,
+    "name": "RGB Gaming Keyboard",
+    "category": "Gaming",
+    "price": 99,
+    "oldPrice": 129,
+    "rating": 4.7,
+    "discount": 23,
+    "accent": "#06b6d4",
+    "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600"
+},
+{
+    "id": 326,
+    "name": "Gaming Mouse",
+    "category": "Gaming",
+    "price": 49,
+    "oldPrice": 69,
+    "rating": 4.6,
+    "discount": 29,
+    "accent": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600"
+},
+
+{
+    "id": 327,
+    "name": "Smart Home Speaker",
+    "category": "Smart Home",
+    "price": 99,
+    "oldPrice": 129,
+    "rating": 4.7,
+    "discount": 23,
+    "accent": "#06b6d4",
+    "image": "https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=600"
+},
+{
+    "id": 328,
+    "name": "Smart Home Display",
+    "category": "Smart Home",
+    "price": 149,
+    "oldPrice": 199,
+    "rating": 4.8,
+    "discount": 25,
+    "accent": "#6366f1",
+    "image": "https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=600"
+},
+{
+    "id": 329,
+    "name": "Smart LED Light",
+    "category": "Smart Home",
+    "price": 29,
+    "oldPrice": 39,
+    "rating": 4.5,
+    "discount": 26,
+    "accent": "#f59e0b",
+    "image": "https://images.unsplash.com/photo-1550985543-f7a9b0c5b6b5?w=600"
+},
+{
+    "id": 330,
+    "name": "Smart Security Camera",
+    "category": "Smart Home",
+    "price": 79,
+    "oldPrice": 109,
+    "rating": 4.7,
+    "discount": 28,
+    "accent": "#3b82f6",
+    "image": "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=600"
+}
+]
