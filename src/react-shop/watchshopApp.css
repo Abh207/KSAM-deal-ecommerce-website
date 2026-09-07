@@ -1,0 +1,807 @@
+/* =========================================================
+   KSAM DEAL - WATCH SHOP
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #111111;
+}
+
+.watchshop-app {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.watchshop-loading {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.watch-header {
+    width: 100%;
+    height: 80px;
+
+    padding: 0 5%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #eeeeee;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 1000;
+}
+
+
+/* LOGO */
+
+.watch-logo {
+    font-size: 25px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+    color: #111111;
+
+    white-space: nowrap;
+}
+
+.watch-logo span {
+    color: #c89b3c;
+}
+
+
+/* NAVIGATION */
+
+.watch-nav {
+    display: flex;
+
+    align-items: center;
+
+    gap: 35px;
+}
+
+.watch-nav a {
+    position: relative;
+
+    text-decoration: none;
+
+    color: #111111;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    transition: color 0.3s ease;
+}
+
+.watch-nav a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -7px;
+
+    width: 0;
+    height: 1px;
+
+    background: #c89b3c;
+
+    transition: width 0.3s ease;
+}
+
+.watch-nav a:hover {
+    color: #c89b3c;
+}
+
+.watch-nav a:hover::after {
+    width: 100%;
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+.watch-cart {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    text-decoration: none;
+
+    color: #111111;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    transition: color 0.3s ease;
+}
+
+.watch-cart:hover {
+    color: #c89b3c;
+}
+
+.watch-cart-count {
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #c89b3c;
+
+    color: #ffffff;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.watch-hero {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 680px;
+
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    background-size: cover;
+
+    background-position: center center;
+
+    background-repeat: no-repeat;
+
+    isolation: isolate;
+}
+
+
+/* =========================================================
+   HERO DARK OVERLAY
+========================================================= */
+
+.watch-hero::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: -1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.90) 0%,
+            rgba(0, 0, 0, 0.76) 25%,
+            rgba(0, 0, 0, 0.42) 52%,
+            rgba(0, 0, 0, 0.08) 100%
+        );
+}
+
+
+/* =========================================================
+   SECONDARY VIGNETTE
+========================================================= */
+
+.watch-hero::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: -1;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 75% 50%,
+            transparent 0%,
+            rgba(0, 0, 0, 0.12) 45%,
+            rgba(0, 0, 0, 0.48) 100%
+        );
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.watch-hero-content {
+    position: relative;
+
+    z-index: 2;
+
+    width: 52%;
+
+    max-width: 720px;
+
+    margin-left: 7%;
+
+    padding: 90px 0;
+
+    animation: watchHeroContent 0.9s ease-out both;
+}
+
+
+/* =========================================================
+   HERO LABEL
+========================================================= */
+
+.watch-hero-content > span {
+    position: relative;
+
+    display: inline-block;
+
+    margin-bottom: 25px;
+
+    padding-left: 42px;
+
+    color: #d6ad5a;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+}
+
+.watch-hero-content > span::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 50%;
+
+    width: 30px;
+
+    height: 1px;
+
+    background: #d6ad5a;
+}
+
+
+/* =========================================================
+   HERO TITLE
+========================================================= */
+
+.watch-hero-content h1 {
+    margin: 0;
+
+    max-width: 700px;
+
+    color: #ffffff;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: clamp(48px, 5.5vw, 82px);
+
+    font-weight: 700;
+
+    line-height: 0.96;
+
+    letter-spacing: -3px;
+
+    text-transform: uppercase;
+}
+
+
+/* GOLD TITLE PART */
+
+.watch-hero-content h1 .watch-hero-gold {
+    color: #d6ad5a;
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+========================================================= */
+
+.watch-hero-content p {
+    max-width: 500px;
+
+    margin: 32px 0 38px;
+
+    color: rgba(255, 255, 255, 0.80);
+
+    font-size: 17px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   HERO SHOP BUTTON
+========================================================= */
+
+.watch-hero-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 155px;
+
+    padding: 16px 28px;
+
+    margin-right: 12px;
+
+    background: #c89b3c;
+
+    border: 1px solid #c89b3c;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.watch-hero-button:hover {
+    background: #e0b85e;
+
+    border-color: #e0b85e;
+
+    color: #111111;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 30px rgba(200, 155, 60, 0.30);
+}
+
+
+/* =========================================================
+   HERO OUTLINE BUTTON
+========================================================= */
+
+.watch-hero-outline-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 190px;
+
+    padding: 16px 28px;
+
+    border: 1px solid rgba(255, 255, 255, 0.70);
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.watch-hero-outline-button:hover {
+    background: #ffffff;
+
+    border-color: #ffffff;
+
+    color: #111111;
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   OLD IMAGE ELEMENT
+========================================================= */
+
+.watch-hero-image {
+    display: none;
+}
+
+
+/* =========================================================
+   HERO ANIMATION
+========================================================= */
+
+@keyframes watchHeroContent {
+
+    from {
+        opacity: 0;
+
+        transform: translateX(-35px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+
+}
+
+
+/* =========================================================
+   TOTAL PRODUCTS
+========================================================= */
+
+.watch-total-products {
+    max-width: 1400px;
+
+    margin: 30px auto 0;
+
+    padding: 0 5%;
+
+    color: #777777;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   OLD TEST PRODUCT STYLES
+========================================================= */
+
+.watchshop-test-products {
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.watchshop-test-card {
+    padding: 20px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    background: #f8f8f8;
+}
+
+.watchshop-test-card img {
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: contain;
+}
+
+.watchshop-test-card h2 {
+    margin: 15px 0 8px;
+
+    font-size: 20px;
+}
+
+.watchshop-test-card p {
+    margin: 5px 0;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .watch-header {
+        padding: 0 4%;
+    }
+
+    .watch-nav {
+        gap: 22px;
+    }
+
+    .watch-hero {
+        min-height: 620px;
+
+        background-position: 62% center;
+    }
+
+    .watch-hero-content {
+        width: 60%;
+
+        margin-left: 6%;
+    }
+
+    .watch-hero-content h1 {
+        font-size: 58px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .watch-header {
+        height: 65px;
+
+        padding: 0 18px;
+    }
+
+    .watch-logo {
+        font-size: 19px;
+
+        letter-spacing: 2px;
+    }
+
+    .watch-nav {
+        display: none;
+    }
+
+    .watch-cart {
+        font-size: 11px;
+    }
+
+
+    /* HERO */
+
+    .watch-hero {
+        min-height: 650px;
+
+        align-items: center;
+
+        background-position: 68% center;
+    }
+
+
+    .watch-hero::before {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.90) 0%,
+                rgba(0, 0, 0, 0.72) 48%,
+                rgba(0, 0, 0, 0.25) 100%
+            );
+    }
+
+
+    .watch-hero-content {
+        width: 100%;
+
+        max-width: none;
+
+        margin-left: 0;
+
+        padding: 60px 25px;
+    }
+
+
+    .watch-hero-content > span {
+        margin-bottom: 20px;
+
+        padding-left: 32px;
+
+        font-size: 10px;
+
+        letter-spacing: 2.5px;
+    }
+
+
+    .watch-hero-content > span::before {
+        width: 22px;
+    }
+
+
+    .watch-hero-content h1 {
+        font-size: clamp(38px, 11vw, 55px);
+
+        line-height: 1;
+
+        letter-spacing: -1.5px;
+    }
+
+
+    .watch-hero-content p {
+        max-width: 380px;
+
+        margin: 25px 0 30px;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+
+    .watch-hero-button,
+    .watch-hero-outline-button {
+        min-width: auto;
+
+        padding: 14px 19px;
+
+        font-size: 10px;
+
+        margin-right: 6px;
+    }
+
+
+    /* TEST PRODUCTS */
+
+    .watchshop-test-products {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+
+    .watchshop-app {
+        padding: 0;
+    }
+
+    .watch-header {
+        padding: 0 15px;
+    }
+
+    .watch-logo {
+        font-size: 17px;
+    }
+
+    .watch-cart {
+        font-size: 10px;
+    }
+
+    .watch-cart-count {
+        min-width: 18px;
+
+        height: 18px;
+
+        font-size: 9px;
+    }
+
+
+    /* HERO */
+
+    .watch-hero {
+        min-height: 620px;
+
+        background-position: 70% center;
+    }
+
+
+    .watch-hero-content {
+        padding: 50px 20px;
+    }
+
+
+    .watch-hero-content h1 {
+        font-size: 38px;
+
+        letter-spacing: -1px;
+    }
+
+
+    .watch-hero-content p {
+        font-size: 13px;
+    }
+
+
+    .watch-hero-button,
+    .watch-hero-outline-button {
+        width: 100%;
+
+        margin: 0 0 10px;
+
+        padding: 14px 18px;
+    }
+
+
+    /* TEST PRODUCTS */
+
+    .watchshop-test-products {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 10px;
+    }
+
+    .watchshop-test-card {
+        padding: 10px;
+    }
+
+    .watchshop-test-card img {
+        height: 150px;
+    }
+
+    .watchshop-test-card h2 {
+        font-size: 16px;
+    }
+
+}

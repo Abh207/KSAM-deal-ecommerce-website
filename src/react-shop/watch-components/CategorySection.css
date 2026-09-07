@@ -1,0 +1,405 @@
+/* =========================================
+   CATEGORY SECTION
+========================================= */
+
+.watch-category-section {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 5%;
+}
+
+
+/* =========================================
+   CATEGORY HEADING
+========================================= */
+
+.watch-category-heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.watch-category-heading span {
+    display: block;
+    color: #c89b3c;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.watch-category-heading h2 {
+    margin-top: 10px;
+    color: #111111;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   CATEGORY FILTER BUTTONS
+========================================= */
+
+.watch-category-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.watch-category-filters button {
+    padding: 11px 18px;
+
+    border: 1px solid #dddddd;
+    background: #ffffff;
+
+    color: #111111;
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+/* Hover */
+
+.watch-category-filters button:hover {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+    transform: translateY(-2px);
+}
+
+
+/* Active category */
+
+.watch-category-filters button.active {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+}
+
+
+/* =========================================
+   CATEGORY GRID
+========================================= */
+
+.watch-category-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+
+/* =========================================
+   CATEGORY CARD
+========================================= */
+
+.watch-category-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+
+    cursor: pointer;
+
+    border: 1px solid #eeeeee;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/* Card hover */
+
+.watch-category-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================================
+   CATEGORY IMAGE
+========================================= */
+
+.watch-category-image {
+    width: 100%;
+    height: 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+}
+
+
+/* Image */
+
+.watch-category-image img {
+    width: 80%;
+    height: 80%;
+
+    object-fit: contain;
+
+    transition:
+        transform 0.5s ease;
+}
+
+
+/* Image hover */
+
+.watch-category-card:hover
+.watch-category-image img {
+    transform:
+        scale(1.1)
+        rotate(-5deg);
+}
+
+
+/* =========================================
+   CATEGORY CONTENT
+========================================= */
+
+.watch-category-content {
+    padding: 20px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+/* Category name */
+
+.watch-category-content h3 {
+    margin: 0 0 12px;
+
+    color: #111111;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    letter-spacing: 1px;
+}
+
+
+/* Shop button */
+
+.watch-category-content button {
+    border: none;
+
+    background: transparent;
+
+    color: #c89b3c;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+/* Shop button hover */
+
+.watch-category-content button:hover {
+    color: #111111;
+
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+    .watch-category-section {
+        padding: 70px 5%;
+    }
+
+
+    .watch-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 18px;
+    }
+
+
+    .watch-category-image {
+        height: 280px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .watch-category-section {
+        padding: 55px 15px;
+    }
+
+
+    /* Heading */
+
+    .watch-category-heading {
+        margin-bottom: 25px;
+    }
+
+
+    .watch-category-heading span {
+        font-size: 9px;
+
+        letter-spacing: 2px;
+    }
+
+
+    .watch-category-heading h2 {
+        margin-top: 8px;
+
+        font-size: 25px;
+    }
+
+
+    /* Filter buttons */
+
+    .watch-category-filters {
+        gap: 7px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .watch-category-filters button {
+        padding: 9px 10px;
+
+        font-size: 9px;
+
+        letter-spacing: 0.5px;
+    }
+
+
+    /* Grid */
+
+    .watch-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+
+    /* Image */
+
+    .watch-category-image {
+        height: 190px;
+    }
+
+
+    .watch-category-image img {
+        width: 82%;
+        height: 82%;
+    }
+
+
+    /* Content */
+
+    .watch-category-content {
+        padding: 14px 8px;
+    }
+
+
+    .watch-category-content h3 {
+        margin-bottom: 8px;
+
+        font-size: 10px;
+
+        letter-spacing: 0.6px;
+    }
+
+
+    .watch-category-content button {
+        font-size: 9px;
+
+        letter-spacing: 0.5px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
+    .watch-category-section {
+        padding: 45px 10px;
+    }
+
+
+    .watch-category-heading h2 {
+        font-size: 22px;
+    }
+
+
+    .watch-category-filters {
+        gap: 5px;
+    }
+
+
+    .watch-category-filters button {
+        padding: 8px 8px;
+
+        font-size: 8px;
+    }
+
+
+    .watch-category-image {
+        height: 165px;
+    }
+
+
+    .watch-category-content {
+        padding: 12px 5px;
+    }
+
+
+    .watch-category-content h3 {
+        font-size: 9px;
+    }
+
+
+    .watch-category-content button {
+        font-size: 8px;
+    }
+
+}

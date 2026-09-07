@@ -1,0 +1,452 @@
+/* =========================================
+   PRODUCT CARD
+========================================= */
+
+.watch-product-card {
+    position: relative;
+    width: 100%;
+
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/* CARD HOVER */
+
+.watch-product-card:hover {
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================
+   IMAGE AREA
+========================================= */
+
+.watch-product-image-box {
+    position: relative;
+
+    width: 100%;
+    height: 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f7f7f7;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   PRODUCT IMAGE
+========================================= */
+
+.watch-product-image {
+    width: 85%;
+    height: 85%;
+
+    object-fit: contain;
+
+    opacity: 0;
+
+    transform:
+        translateY(35px)
+        rotate(-8deg)
+        scale(0.92);
+
+    transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+}
+
+
+/* IMAGE APPEARS WHEN CARD ENTERS SCREEN */
+
+.watch-product-card.image-visible
+.watch-product-image {
+    opacity: 1;
+
+    transform:
+        translateY(0)
+        rotate(0deg)
+        scale(1);
+}
+
+
+/* HOVER IMAGE */
+
+.watch-product-card:hover
+.watch-product-image {
+    transform:
+        scale(1.08)
+        rotate(-3deg);
+}
+
+
+/* =========================================
+   PRODUCT BADGE
+========================================= */
+
+.watch-product-badge {
+    position: absolute;
+
+    top: 15px;
+    left: 15px;
+
+    padding: 6px 10px;
+
+    background: #111111;
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+
+    z-index: 2;
+}
+
+
+/* =========================================
+   WISHLIST BUTTON
+========================================= */
+
+.watch-product-wishlist {
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #dddddd;
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #111111;
+
+    font-size: 23px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    z-index: 3;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+.watch-product-wishlist:hover {
+    background: #111111;
+    color: #ffffff;
+
+    transform: scale(1.1);
+}
+
+
+/* WISHLISTED */
+
+.watch-product-wishlist.wishlisted {
+    background: #111111;
+    color: #ffffff;
+
+    border-color: #111111;
+}
+
+
+.watch-product-wishlist.wishlisted:hover {
+    background: #c89b3c;
+    border-color: #c89b3c;
+}
+
+
+/* =========================================
+   PRODUCT INFORMATION
+========================================= */
+
+.watch-product-info {
+    padding: 20px;
+
+    text-align: left;
+}
+
+
+/* =========================================
+   CATEGORY
+========================================= */
+
+.watch-product-category {
+    margin: 0 0 7px;
+
+    color: #777777;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   PRODUCT NAME
+========================================= */
+
+.watch-product-name {
+    margin: 0 0 10px;
+
+    color: #111111;
+
+    font-size: 19px;
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================
+   RATING
+========================================= */
+
+.watch-product-rating {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+}
+
+
+.watch-stars {
+    color: #c89b3c;
+
+    font-size: 14px;
+
+    letter-spacing: 1px;
+}
+
+
+.watch-reviews {
+    color: #777777;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   PRICE
+========================================= */
+
+.watch-product-price {
+    margin: 0 0 16px;
+
+    color: #111111;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   VIEW PRODUCT BUTTON
+========================================= */
+
+.watch-product-button {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    border: none;
+
+    background: #111111;
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+.watch-product-button:hover {
+    background: #c89b3c;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+    .watch-product-image-box {
+        height: 250px;
+    }
+
+
+    .watch-product-info {
+        padding: 15px;
+    }
+
+
+    .watch-product-name {
+        font-size: 17px;
+    }
+
+
+    .watch-product-price {
+        font-size: 18px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+    .watch-product-image-box {
+        height: 190px;
+    }
+
+
+    .watch-product-info {
+        padding: 12px;
+    }
+
+
+    .watch-product-category {
+        font-size: 9px;
+
+        letter-spacing: 0.7px;
+    }
+
+
+    .watch-product-name {
+        font-size: 14px;
+
+        margin-bottom: 8px;
+    }
+
+
+    .watch-product-rating {
+        gap: 5px;
+
+        margin-bottom: 9px;
+    }
+
+
+    .watch-stars {
+        font-size: 11px;
+
+        letter-spacing: 0;
+    }
+
+
+    .watch-reviews {
+        font-size: 10px;
+    }
+
+
+    .watch-product-price {
+        font-size: 16px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .watch-product-button {
+        padding: 10px 8px;
+
+        font-size: 10px;
+    }
+
+
+    .watch-product-badge {
+        top: 8px;
+        left: 8px;
+
+        padding: 5px 7px;
+
+        font-size: 8px;
+    }
+
+
+    .watch-product-wishlist {
+        top: 8px;
+        right: 8px;
+
+        width: 31px;
+        height: 31px;
+
+        font-size: 19px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
+    .watch-product-image-box {
+        height: 165px;
+    }
+
+
+    .watch-product-info {
+        padding: 10px;
+    }
+
+
+    .watch-product-name {
+        font-size: 13px;
+    }
+
+
+    .watch-product-price {
+        font-size: 15px;
+    }
+
+
+    .watch-product-button {
+        padding: 9px 5px;
+
+        font-size: 9px;
+    }
+
+}

@@ -1,0 +1,405 @@
+/* =========================================
+   WATCH FOOTER
+========================================= */
+
+.watch-footer {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 300px;
+
+    background-image:
+        url("/KSAM-deal-ecommerce-website/products/watch1.png");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    color: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   DARK OVERLAY
+========================================= */
+
+.watch-footer-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(0, 0, 0, 0.88);
+
+    z-index: 1;
+}
+
+
+/* =========================================
+   FOOTER CONTENT
+========================================= */
+
+.watch-footer-content {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 45px 5% 35px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr;
+
+    gap: 70px;
+}
+
+
+/* =========================================
+   FOOTER COLUMN
+========================================= */
+
+.watch-footer-column {
+    min-width: 0;
+}
+
+
+.watch-footer-column h3 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   GOLD LINE
+========================================= */
+
+.watch-footer-line {
+    width: 130px;
+
+    height: 1px;
+
+    margin: 10px 0 18px;
+
+    background: rgba(255, 255, 255, 0.45);
+}
+
+
+/* =========================================
+   ABOUT LINKS
+========================================= */
+
+.watch-footer-column ul {
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+}
+
+
+.watch-footer-column ul li {
+    margin-bottom: 11px;
+}
+
+
+.watch-footer-column ul li a {
+    color: rgba(255, 255, 255, 0.75);
+
+    text-decoration: none;
+
+    font-size: 8px;
+
+    letter-spacing: 0.4px;
+
+    transition:
+        color 0.3s ease;
+}
+
+
+.watch-footer-column ul li a:hover {
+    color: #c89b3c;
+}
+
+
+/* =========================================
+   SOCIAL ICONS
+========================================= */
+
+.watch-social-icons {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 28px;
+}
+
+
+.watch-social-icons a {
+    width: 24px;
+
+    height: 24px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+.watch-social-icons a:hover {
+    color: #c89b3c;
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================
+   CONTACT INFO
+========================================= */
+
+.watch-contact-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    color: rgba(255, 255, 255, 0.75);
+
+    font-size: 8px;
+
+    line-height: 1.4;
+}
+
+
+.watch-contact-icon {
+    width: 18px;
+
+    flex-shrink: 0;
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   NEWSLETTER
+========================================= */
+
+.watch-footer-signup h3 {
+    text-transform: none;
+
+    font-size: 12px;
+}
+
+
+.watch-newsletter-form {
+    display: flex;
+
+    width: 100%;
+
+    max-width: 300px;
+
+    margin-top: 20px;
+}
+
+
+.watch-newsletter-form input {
+    width: 70%;
+
+    height: 30px;
+
+    padding: 0 10px;
+
+    border: none;
+
+    outline: none;
+
+    background: rgba(20, 25, 20, 0.95);
+
+    color: #ffffff;
+
+    font-size: 8px;
+}
+
+
+.watch-newsletter-form input::placeholder {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+
+.watch-newsletter-form button {
+    width: 30%;
+
+    height: 30px;
+
+    border: none;
+
+    background: rgba(70, 80, 70, 0.95);
+
+    color: #ffffff;
+
+    font-size: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease;
+}
+
+
+.watch-newsletter-form button:hover {
+    background: #c89b3c;
+}
+
+
+/* =========================================
+   NEWSLETTER MESSAGE
+========================================= */
+
+.watch-newsletter-message {
+    margin-top: 12px;
+
+    color: #c89b3c;
+
+    font-size: 9px;
+}
+
+
+/* =========================================
+   FOOTER BOTTOM
+========================================= */
+
+.watch-footer-bottom {
+    position: relative;
+
+    z-index: 2;
+
+    padding: 15px 20px;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.12);
+
+    text-align: center;
+}
+
+
+.watch-footer-bottom p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-size: 9px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .watch-footer-content {
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 45px;
+    }
+
+    .watch-footer-signup {
+        grid-column: span 2;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .watch-footer {
+        min-height: auto;
+
+        background-position: center;
+    }
+
+
+    .watch-footer-content {
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+
+        padding:
+            40px 25px 30px;
+    }
+
+
+    .watch-footer-signup {
+        grid-column: span 1;
+    }
+
+
+    .watch-footer-line {
+        width: 110px;
+    }
+
+
+    .watch-newsletter-form {
+        max-width: 100%;
+    }
+
+
+    .watch-social-icons {
+        margin-top: 22px;
+    }
+
+
+    .watch-footer-bottom {
+        padding: 13px 15px;
+    }
+
+}

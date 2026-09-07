@@ -22,7 +22,9 @@ export default defineConfig({
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),
-                Gadgets: resolve(__dirname, "fashionSpeaker.html")
+                Gadgets: resolve(__dirname, "fashionSpeaker.html"),
+                watchshop: resolve(__dirname, "watchshop.html"),
+                watchwishlist: resolve(__dirname, "watchwishlist.html")
             }
         }
     }
