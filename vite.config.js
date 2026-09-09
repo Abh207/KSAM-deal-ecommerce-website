@@ -14,10 +14,8 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                // Main website
-                main: resolve(__dirname, "index.html"),
+                main: resolve(__dirname, "heardeprod.html"),
 
-                // Existing pages
                 contact: resolve(__dirname, "contact.html"),
                 login: resolve(__dirname, "login.html"),
                 product: resolve(__dirname, "Product.html"),
@@ -27,17 +25,10 @@ export default defineConfig({
                 beauty: resolve(__dirname, "beauty.html"),
                 Gadgets: resolve(__dirname, "fashionSpeaker.html"),
 
-                // Watch shop
                 Watchshop: resolve(__dirname, "watchshop.html"),
                 watchwishlist: resolve(
                     __dirname,
                     "watchwishlist.html"
-                ),
-
-                // Dynamic header products
-                headerprod: resolve(
-                    __dirname,
-                    "heardeprod.html"
                 )
             }
         }
