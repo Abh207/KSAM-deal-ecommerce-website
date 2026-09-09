@@ -1,0 +1,792 @@
+/* =========================================================
+   HORIZONTAL PRODUCTS SECTION
+========================================================= */
+
+.horizontal-products-section {
+
+    width: min(1450px, 94%);
+
+    margin: 75px auto;
+
+    position: relative;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.horizontal-products-header {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 28px;
+
+}
+
+
+.horizontal-eyebrow {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    color: #6b7280;
+
+}
+
+
+.horizontal-products-header h2 {
+
+    margin: 0;
+
+    font-size: 36px;
+
+    line-height: 1.1;
+
+    font-weight: 950;
+
+    letter-spacing: -1.2px;
+
+    color: #111827;
+
+}
+
+
+.horizontal-products-header p {
+
+    margin: 9px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   ARROW CONTROLS
+========================================================= */
+
+.horizontal-controls {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.horizontal-controls button {
+
+    width: 45px;
+
+    height: 45px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #111827;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+
+}
+
+
+.horizontal-controls button:hover {
+
+    background: #111827;
+
+    color: #ffffff;
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+/* =========================================================
+   SLIDER
+========================================================= */
+
+.horizontal-slider-wrapper {
+
+    width: 100%;
+
+    overflow: hidden;
+
+}
+
+
+.horizontal-products-slider {
+
+    display: flex;
+
+    gap: 18px;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    padding:
+        8px
+        5px
+        20px;
+
+    scrollbar-width: none;
+
+    cursor: grab;
+
+    scroll-behavior: auto;
+
+}
+
+
+.horizontal-products-slider::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+.horizontal-products-slider:active {
+
+    cursor: grabbing;
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+.horizontal-product-card {
+
+    flex:
+        0 0 270px;
+
+    min-width: 270px;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        #e5e7eb;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+
+}
+
+
+.horizontal-product-card:hover {
+
+    transform:
+        translateY(-8px);
+
+    border-color:
+        #d1d5db;
+
+    box-shadow:
+        0 18px 45px
+        rgba(0, 0, 0, 0.12);
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.horizontal-product-image {
+
+    height: 225px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #eef2f7
+        );
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+}
+
+
+.horizontal-product-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+    padding: 25px;
+
+    transition:
+        transform 0.4s ease,
+        opacity 0.3s ease;
+
+}
+
+
+.horizontal-product-card:hover
+.horizontal-product-image img {
+
+    transform:
+        scale(1.08);
+
+}
+
+
+/* =========================================================
+   DISCOUNT
+========================================================= */
+
+.horizontal-discount {
+
+    position: absolute;
+
+    top: 12px;
+
+    left: 12px;
+
+    z-index: 2;
+
+    padding:
+        6px 9px;
+
+    border-radius:
+        6px;
+
+    background:
+        #111827;
+
+    color:
+        #ffffff;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.horizontal-badge {
+
+    position: absolute;
+
+    top: 12px;
+
+    right: 12px;
+
+    z-index: 2;
+
+    padding:
+        6px 8px;
+
+    border-radius:
+        6px;
+
+    background:
+        #ffffff;
+
+    color:
+        #111827;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.08);
+
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.horizontal-product-info {
+
+    padding:
+        18px;
+
+}
+
+
+.horizontal-category {
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
+
+    color:
+        #9ca3af;
+
+}
+
+
+.horizontal-product-info h3 {
+
+    margin:
+        7px 0;
+
+    color:
+        #111827;
+
+    font-size:
+        16px;
+
+    line-height:
+        1.35;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+/* =========================================================
+   RATING
+========================================================= */
+
+.horizontal-rating {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        4px;
+
+    font-size:
+        11px;
+
+    color:
+        #4b5563;
+
+}
+
+
+.horizontal-rating span {
+
+    font-size:
+        13px;
+
+}
+
+
+.horizontal-rating small {
+
+    color:
+        #9ca3af;
+
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.horizontal-price {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-top:
+        10px;
+
+}
+
+
+.horizontal-price strong {
+
+    font-size:
+        19px;
+
+    color:
+        #111827;
+
+}
+
+
+.horizontal-price del {
+
+    font-size:
+        11px;
+
+    color:
+        #9ca3af;
+
+}
+
+
+/* =========================================================
+   CART BUTTON
+========================================================= */
+
+.horizontal-product-info button {
+
+    width:
+        100%;
+
+    margin-top:
+        14px;
+
+    padding:
+        11px;
+
+    border:
+        none;
+
+    border-radius:
+        9px;
+
+    background:
+        #111827;
+
+    color:
+        #ffffff;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        0.5px;
+
+    cursor:
+        pointer;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+
+}
+
+
+.horizontal-product-info button:hover {
+
+    transform:
+        translateY(-2px);
+
+    opacity:
+        0.88;
+
+}
+
+
+.horizontal-product-info button:disabled {
+
+    opacity:
+        0.4;
+
+    cursor:
+        not-allowed;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.horizontal-scroll-status {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    margin-top:
+        10px;
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1.5px;
+
+    color:
+        #9ca3af;
+
+}
+
+
+.horizontal-scroll-status span {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        #111827;
+
+    animation:
+        horizontalPulse
+        1.4s
+        infinite;
+
+}
+
+
+.horizontal-scroll-status span.paused {
+
+    animation:
+        none;
+
+    opacity:
+        0.3;
+
+}
+
+
+@keyframes horizontalPulse {
+
+    0%,
+    100% {
+
+        opacity:
+            1;
+
+        transform:
+            scale(1);
+
+    }
+
+    50% {
+
+        opacity:
+            0.35;
+
+        transform:
+            scale(0.7);
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .horizontal-products-header h2 {
+
+        font-size:
+            30px;
+
+    }
+
+
+    .horizontal-product-card {
+
+        flex-basis:
+            245px;
+
+        min-width:
+            245px;
+
+    }
+
+
+    .horizontal-product-image {
+
+        height:
+            205px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .horizontal-products-section {
+
+        width:
+            94%;
+
+        margin:
+            50px auto;
+
+    }
+
+
+    .horizontal-products-header {
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .horizontal-products-header h2 {
+
+        font-size:
+            27px;
+
+    }
+
+
+    .horizontal-products-header p {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .horizontal-product-card {
+
+        flex-basis:
+            225px;
+
+        min-width:
+            225px;
+
+    }
+
+
+    .horizontal-product-image {
+
+        height:
+            185px;
+
+    }
+
+
+    .horizontal-controls button {
+
+        width:
+            38px;
+
+        height:
+            38px;
+
+        font-size:
+            17px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .horizontal-products-header {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .horizontal-controls {
+
+        align-self:
+            flex-end;
+
+    }
+
+}

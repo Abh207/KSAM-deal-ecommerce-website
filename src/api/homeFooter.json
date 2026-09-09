@@ -1,0 +1,124 @@
+{
+    "brand": {
+        "name": "KSAM Deal",
+        "description": "Discover amazing products, exclusive deals and a better online shopping experience.",
+        "tagline": "Shop Smart. Save More."
+    },
+
+    "columns": [
+        {
+            "title": "Shop",
+            "links": [
+                {
+                    "label": "All Products",
+                    "action": "products"
+                },
+                {
+                    "label": "Categories",
+                    "action": "categories"
+                },
+                {
+                    "label": "Deals",
+                    "action": "deals"
+                },
+                {
+                    "label": "New Arrivals",
+                    "action": "new-arrivals"
+                }
+            ]
+        },
+        {
+            "title": "Customer Care",
+            "links": [
+                {
+                    "label": "Contact Us",
+                    "url": "./contact.html"
+                },
+                {
+                    "label": "My Account",
+                    "url": "./login.html"
+                },
+                {
+                    "label": "Wishlist",
+                    "url": "./watchwishlist.html"
+                },
+                {
+                    "label": "Cart",
+                    "url": "./addToCart.html"
+                }
+            ]
+        },
+        {
+            "title": "Information",
+            "links": [
+                {
+                    "label": "About Us",
+                    "action": "about"
+                },
+                {
+                    "label": "Shipping Information",
+                    "action": "shipping"
+                },
+                {
+                    "label": "Returns",
+                    "action": "returns"
+                },
+                {
+                    "label": "Privacy Policy",
+                    "action": "privacy"
+                }
+            ]
+        }
+    ],
+
+    "contact": {
+        "title": "Get In Touch",
+        "email": "support@ksamdeal.com",
+        "phone": "+91 98765 43210",
+        "location": "India"
+    },
+
+    "social": [
+        {
+            "name": "Instagram",
+            "icon": "◎",
+            "url": "#"
+        },
+        {
+            "name": "Facebook",
+            "icon": "f",
+            "url": "#"
+        },
+        {
+            "name": "YouTube",
+            "icon": "▶",
+            "url": "#"
+        },
+        {
+            "name": "Twitter",
+            "icon": "𝕏",
+            "url": "#"
+        }
+    ],
+
+    "paymentMethods": [
+        "VISA",
+        "Mastercard",
+        "UPI",
+        "COD"
+    ],
+
+    "bottom": {
+        "copyright": "© {year} KSAM Deal. All rights reserved.",
+        "links": [
+            {
+                "label": "Privacy",
+                "action": "privacy"
+            },
+            {
+                "label": "Terms",
+                "action": "terms"
+            }
+        ]
+    }
+}

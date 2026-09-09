@@ -14,7 +14,10 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
+                // Main website
                 main: resolve(__dirname, "index.html"),
+
+                // Existing pages
                 contact: resolve(__dirname, "contact.html"),
                 login: resolve(__dirname, "login.html"),
                 product: resolve(__dirname, "Product.html"),
@@ -23,8 +26,19 @@ export default defineConfig({
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),
                 Gadgets: resolve(__dirname, "fashionSpeaker.html"),
-                watchshop: resolve(__dirname, "watchshop.html"),
-                watchwishlist: resolve(__dirname, "watchwishlist.html")
+
+                // Watch shop
+                Watchshop: resolve(__dirname, "watchshop.html"),
+                watchwishlist: resolve(
+                    __dirname,
+                    "watchwishlist.html"
+                ),
+
+                // Dynamic header products
+                headerprod: resolve(
+                    __dirname,
+                    "headerprod.html"
+                )
             }
         }
     }

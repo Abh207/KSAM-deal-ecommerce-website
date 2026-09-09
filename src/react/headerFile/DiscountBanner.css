@@ -1,0 +1,1034 @@
+/* =========================================================
+   DISCOUNT BANNER
+========================================================= */
+
+.discount-banner-section {
+
+    width:
+        min(1450px, 94%);
+
+    margin:
+        80px auto;
+
+}
+
+
+/* =========================================================
+   MAIN BANNER
+========================================================= */
+
+.discount-banner {
+
+    min-height:
+        370px;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        28px;
+
+    background:
+        linear-gradient(
+            115deg,
+            #111827 0%,
+            #1f2937 55%,
+            #374151 100%
+        );
+
+    color:
+        #ffffff;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        55px 70px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(
+            0,
+            0,
+            0,
+            0.18
+        );
+
+}
+
+
+/* =========================================================
+   BACKGROUND DECORATION
+========================================================= */
+
+.discount-decoration {
+
+    position:
+        absolute;
+
+    border-radius:
+        50%;
+
+    pointer-events:
+        none;
+
+}
+
+
+.discount-decoration-one {
+
+    width:
+        420px;
+
+    height:
+        420px;
+
+    right:
+        -170px;
+
+    top:
+        -180px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+}
+
+
+.discount-decoration-two {
+
+    width:
+        280px;
+
+    height:
+        280px;
+
+    right:
+        70px;
+
+    bottom:
+        -210px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.07
+        );
+
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.discount-banner-content {
+
+    width:
+        55%;
+
+    position:
+        relative;
+
+    z-index:
+        5;
+
+    animation:
+        discountContentIn
+        0.6s
+        ease;
+
+}
+
+
+.discount-banner-eyebrow {
+
+    display:
+        inline-block;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        3px;
+
+    opacity:
+        0.65;
+
+    margin-bottom:
+        12px;
+
+}
+
+
+.discount-banner-content h2 {
+
+    margin:
+        0;
+
+    font-size:
+        clamp(
+            42px,
+            5vw,
+            72px
+        );
+
+    line-height:
+        0.95;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -3px;
+
+}
+
+
+.discount-banner-content h3 {
+
+    margin:
+        14px 0 0;
+
+    font-size:
+        23px;
+
+    font-weight:
+        800;
+
+}
+
+
+.discount-banner-content p {
+
+    max-width:
+        480px;
+
+    margin:
+        10px 0 25px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.65
+        );
+
+    font-size:
+        14px;
+
+    line-height:
+        1.6;
+
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.discount-banner-button {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    border:
+        none;
+
+    background:
+        #ffffff;
+
+    color:
+        #111827;
+
+    padding:
+        14px 20px;
+
+    border-radius:
+        10px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        0.5px;
+
+    cursor:
+        pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+
+}
+
+
+.discount-banner-button:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(
+            0,
+            0,
+            0,
+            0.2
+        );
+
+}
+
+
+.discount-banner-button span {
+
+    font-size:
+        17px;
+
+}
+
+
+/* =========================================================
+   VISUAL
+========================================================= */
+
+.discount-banner-visual {
+
+    width:
+        45%;
+
+    height:
+        330px;
+
+    position:
+        relative;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+}
+
+
+/* =========================================================
+   CIRCLES
+========================================================= */
+
+.discount-circle {
+
+    position:
+        absolute;
+
+    border-radius:
+        50%;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+
+    animation:
+        discountFloat
+        5s
+        ease-in-out
+        infinite;
+
+}
+
+
+.discount-circle-one {
+
+    width:
+        280px;
+
+    height:
+        280px;
+
+}
+
+
+.discount-circle-two {
+
+    width:
+        210px;
+
+    height:
+        210px;
+
+    animation-delay:
+        -1.5s;
+
+}
+
+
+/* =========================================================
+   MAIN SHAPE
+========================================================= */
+
+.discount-main-shape {
+
+    width:
+        180px;
+
+    height:
+        180px;
+
+    border-radius:
+        45px;
+
+    transform:
+        rotate(
+            -10deg
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    box-shadow:
+        0 25px 60px
+        rgba(
+            0,
+            0,
+            0,
+            0.2
+        );
+
+    backdrop-filter:
+        blur(8px);
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    animation:
+        mainShapeFloat
+        4s
+        ease-in-out
+        infinite;
+
+}
+
+
+.discount-main-shape span {
+
+    font-size:
+        70px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -5px;
+
+    transform:
+        rotate(
+            10deg
+        );
+
+}
+
+
+/* =========================================================
+   FLOATING CARDS
+========================================================= */
+
+.discount-floating-card {
+
+    position:
+        absolute;
+
+    z-index:
+        6;
+
+    background:
+        #ffffff;
+
+    color:
+        #111827;
+
+    border-radius:
+        12px;
+
+    padding:
+        11px 15px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        950;
+
+    box-shadow:
+        0 15px 35px
+        rgba(
+            0,
+            0,
+            0,
+            0.2
+        );
+
+}
+
+
+.discount-card-one {
+
+    top:
+        48px;
+
+    right:
+        35px;
+
+    transform:
+        rotate(
+            8deg
+        );
+
+    animation:
+        floatingCardOne
+        3.5s
+        ease-in-out
+        infinite;
+
+}
+
+
+.discount-card-two {
+
+    bottom:
+        42px;
+
+    left:
+        35px;
+
+    transform:
+        rotate(
+            -8deg
+        );
+
+    animation:
+        floatingCardTwo
+        4s
+        ease-in-out
+        infinite;
+
+}
+
+
+/* =========================================================
+   INDICATORS
+========================================================= */
+
+.discount-indicators {
+
+    position:
+        absolute;
+
+    bottom:
+        25px;
+
+    left:
+        70px;
+
+    display:
+        flex;
+
+    gap:
+        6px;
+
+    z-index:
+        10;
+
+}
+
+
+.discount-indicators button {
+
+    width:
+        24px;
+
+    height:
+        3px;
+
+    padding:
+        0;
+
+    border:
+        none;
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.25
+        );
+
+    cursor:
+        pointer;
+
+    transition:
+        width 0.3s ease,
+        background 0.3s ease;
+
+}
+
+
+.discount-indicators button.active {
+
+    width:
+        42px;
+
+    background:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes discountContentIn {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateX(
+                -25px
+            );
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateX(
+                0
+            );
+
+    }
+
+}
+
+
+@keyframes discountFloat {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(
+                0
+            );
+
+    }
+
+    50% {
+
+        transform:
+            translateY(
+                -12px
+            );
+
+    }
+
+}
+
+
+@keyframes mainShapeFloat {
+
+    0%,
+    100% {
+
+        transform:
+            rotate(-10deg)
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            rotate(-6deg)
+            translateY(-10px);
+
+    }
+
+}
+
+
+@keyframes floatingCardOne {
+
+    0%,
+    100% {
+
+        transform:
+            rotate(8deg)
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            rotate(5deg)
+            translateY(-10px);
+
+    }
+
+}
+
+
+@keyframes floatingCardTwo {
+
+    0%,
+    100% {
+
+        transform:
+            rotate(-8deg)
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            rotate(-5deg)
+            translateY(9px);
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .discount-banner {
+
+        padding:
+            45px;
+
+    }
+
+
+    .discount-banner-content {
+
+        width:
+            60%;
+
+    }
+
+
+    .discount-banner-visual {
+
+        width:
+            40%;
+
+    }
+
+
+    .discount-main-shape {
+
+        width:
+            145px;
+
+        height:
+            145px;
+
+    }
+
+
+    .discount-main-shape span {
+
+        font-size:
+            55px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .discount-banner-section {
+
+        width:
+            94%;
+
+        margin:
+            55px auto;
+
+    }
+
+
+    .discount-banner {
+
+        min-height:
+            560px;
+
+        padding:
+            35px 25px;
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        border-radius:
+            22px;
+
+    }
+
+
+    .discount-banner-content {
+
+        width:
+            100%;
+
+    }
+
+
+    .discount-banner-content h2 {
+
+        font-size:
+            43px;
+
+        letter-spacing:
+            -2px;
+
+    }
+
+
+    .discount-banner-content h3 {
+
+        font-size:
+            19px;
+
+    }
+
+
+    .discount-banner-content p {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .discount-banner-visual {
+
+        width:
+            100%;
+
+        height:
+            230px;
+
+        margin-top:
+            10px;
+
+    }
+
+
+    .discount-circle-one {
+
+        width:
+            210px;
+
+        height:
+            210px;
+
+    }
+
+
+    .discount-circle-two {
+
+        width:
+            160px;
+
+        height:
+            160px;
+
+    }
+
+
+    .discount-main-shape {
+
+        width:
+            125px;
+
+        height:
+            125px;
+
+        border-radius:
+            30px;
+
+    }
+
+
+    .discount-main-shape span {
+
+        font-size:
+            42px;
+
+    }
+
+
+    .discount-card-one {
+
+        top:
+            15px;
+
+        right:
+            12px;
+
+    }
+
+
+    .discount-card-two {
+
+        bottom:
+            15px;
+
+        left:
+            12px;
+
+    }
+
+
+    .discount-indicators {
+
+        left:
+            25px;
+
+        bottom:
+            20px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .discount-banner {
+
+        min-height:
+            530px;
+
+        padding:
+            30px 20px;
+
+    }
+
+
+    .discount-banner-content h2 {
+
+        font-size:
+            37px;
+
+    }
+
+
+    .discount-banner-content h3 {
+
+        font-size:
+            17px;
+
+    }
+
+
+    .discount-banner-visual {
+
+        height:
+            210px;
+
+    }
+
+}

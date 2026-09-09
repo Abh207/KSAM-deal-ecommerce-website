@@ -1,0 +1,379 @@
+.home-footer {
+    width: 100%;
+    margin-top: 90px;
+
+    background: #111;
+    color: #fff;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.home-footer-main {
+    max-width: 1400px;
+    margin: auto;
+
+    padding: 70px 30px 55px;
+
+    display: grid;
+    grid-template-columns:
+        1.5fr
+        1fr
+        1fr
+        1fr
+        1.2fr;
+
+    gap: 45px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   BRAND
+========================= */
+
+.home-footer-brand {
+    max-width: 280px;
+}
+
+.home-footer-logo {
+    font-size: 26px;
+    font-weight: 900;
+
+    margin-bottom: 18px;
+}
+
+.home-footer-brand p {
+    margin: 0 0 20px;
+
+    font-size: 13px;
+    line-height: 1.7;
+
+    color: #999;
+}
+
+.home-footer-brand strong {
+    font-size: 13px;
+    color: #ddd;
+}
+
+
+/* =========================
+   COLUMNS
+========================= */
+
+.home-footer-column h3,
+.home-footer-contact h3 {
+    margin: 0 0 20px;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.home-footer-column ul {
+    list-style: none;
+
+    padding: 0;
+    margin: 0;
+}
+
+.home-footer-column li {
+    margin-bottom: 12px;
+}
+
+.home-footer-column a,
+.home-footer-column button {
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #999;
+
+    font-size: 13px;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.home-footer-column a:hover,
+.home-footer-column button:hover {
+    color: #fff;
+    transform: translateX(4px);
+}
+
+
+/* =========================
+   CONTACT
+========================= */
+
+.home-footer-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.home-footer-contact a,
+.home-footer-contact span {
+    margin-bottom: 13px;
+
+    color: #999;
+
+    font-size: 13px;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.home-footer-contact a:hover {
+    color: #fff;
+}
+
+
+/* =========================
+   MIDDLE
+========================= */
+
+.home-footer-middle {
+    max-width: 1400px;
+
+    margin: auto;
+
+    padding: 25px 30px;
+
+    border-top: 1px solid #292929;
+    border-bottom: 1px solid #292929;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    box-sizing: border-box;
+}
+
+.home-footer-social,
+.home-footer-payments {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.home-footer-middle > div > span {
+    font-size: 12px;
+    font-weight: 700;
+
+    color: #aaa;
+}
+
+
+/* =========================
+   SOCIAL
+========================= */
+
+.social-list {
+    display: flex;
+    gap: 8px;
+}
+
+.social-list a {
+    width: 35px;
+    height: 35px;
+
+    border: 1px solid #333;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.social-list a:hover {
+    background: #fff;
+    color: #111;
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================
+   PAYMENTS
+========================= */
+
+.payment-list {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.payment-list span {
+    padding: 7px 10px;
+
+    border-radius: 5px;
+
+    background: #222;
+
+    color: #ddd;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+
+/* =========================
+   BOTTOM
+========================= */
+
+.home-footer-bottom {
+    max-width: 1400px;
+
+    margin: auto;
+
+    padding: 22px 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    box-sizing: border-box;
+}
+
+.home-footer-bottom p {
+    margin: 0;
+
+    font-size: 11px;
+
+    color: #777;
+}
+
+.home-footer-bottom div {
+    display: flex;
+    gap: 20px;
+}
+
+.home-footer-bottom button {
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #777;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.home-footer-bottom button:hover {
+    color: #fff;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1050px) {
+
+    .home-footer-main {
+        grid-template-columns:
+            1.5fr
+            1fr
+            1fr;
+
+        gap: 40px;
+    }
+
+    .home-footer-contact {
+        grid-column: span 1;
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+    .home-footer-main {
+        grid-template-columns: 1fr 1fr;
+
+        padding: 50px 20px 40px;
+
+        gap: 35px 25px;
+    }
+
+    .home-footer-brand {
+        grid-column: span 2;
+        max-width: none;
+    }
+
+    .home-footer-contact {
+        grid-column: span 2;
+    }
+
+    .home-footer-middle {
+        padding: 25px 20px;
+
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .home-footer-social,
+    .home-footer-payments {
+        flex-wrap: wrap;
+    }
+
+    .home-footer-bottom {
+        padding: 20px;
+
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 400px) {
+
+    .home-footer-main {
+        grid-template-columns: 1fr;
+    }
+
+    .home-footer-brand,
+    .home-footer-contact {
+        grid-column: span 1;
+    }
+
+    .home-footer-bottom div {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}

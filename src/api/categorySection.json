@@ -1,0 +1,61 @@
+{
+    "section": {
+        "eyebrow": "EXPLORE & SHOP",
+        "title": "Shop by Category",
+        "description": "Find exactly what you need from our most popular categories.",
+        "showProductCount": true,
+        "showArrow": true,
+        "showViewAll": true
+    },
+
+    "categories": [
+        {
+            "id": "electronics",
+            "name": "Electronics",
+            "description": "Smart gadgets & devices",
+            "productIds": [],
+            "icon": "⚡",
+            "color": "#e8f1ff"
+        },
+        {
+            "id": "fashion",
+            "name": "Fashion",
+            "description": "Trending styles & clothing",
+            "productIds": [],
+            "icon": "👕",
+            "color": "#fff0f5"
+        },
+        {
+            "id": "beauty",
+            "name": "Beauty",
+            "description": "Beauty & personal care",
+            "productIds": [],
+            "icon": "✨",
+            "color": "#fff5e8"
+        },
+        {
+            "id": "home",
+            "name": "Home",
+            "description": "Everything for your home",
+            "productIds": [],
+            "icon": "🏠",
+            "color": "#eefbea"
+        },
+        {
+            "id": "chairs",
+            "name": "Chairs",
+            "description": "Comfortable & stylish chairs",
+            "productIds": [],
+            "icon": "🪑",
+            "color": "#f3edff"
+        },
+        {
+            "id": "watches",
+            "name": "Watches",
+            "description": "Classic & smart watches",
+            "productIds": [],
+            "icon": "⌚",
+            "color": "#edf9f8"
+        }
+    ]
+}

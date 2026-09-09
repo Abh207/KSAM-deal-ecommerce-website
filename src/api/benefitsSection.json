@@ -1,0 +1,34 @@
+{
+    "section": {
+        "eyebrow": "WHY SHOP WITH US",
+        "title": "Shopping Made Better",
+        "description": "Everything you need for a simple, secure and enjoyable shopping experience."
+    },
+
+    "benefits": [
+        {
+            "id": "shipping",
+            "icon": "🚚",
+            "title": "Free Shipping",
+            "description": "Free delivery on eligible orders."
+        },
+        {
+            "id": "secure",
+            "icon": "🔒",
+            "title": "Secure Payment",
+            "description": "Your payments are protected and secure."
+        },
+        {
+            "id": "returns",
+            "icon": "↩️",
+            "title": "Easy Returns",
+            "description": "Simple and hassle-free return process."
+        },
+        {
+            "id": "support",
+            "icon": "🎧",
+            "title": "24/7 Support",
+            "description": "We're here whenever you need help."
+        }
+    ]
+}

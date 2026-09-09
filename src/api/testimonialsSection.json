@@ -1,0 +1,44 @@
+{
+    "section": {
+        "eyebrow": "CUSTOMER LOVE",
+        "title": "What Our Customers Say",
+        "description": "Real experiences from customers who shop with KSAM Deal.",
+        "autoSlide": true,
+        "slideInterval": 5000
+    },
+
+    "testimonials": [
+        {
+            "id": 1,
+            "name": "Rahul Sharma",
+            "role": "Verified Customer",
+            "avatar": "RS",
+            "rating": 5,
+            "review": "Amazing shopping experience! The product quality was excellent and delivery was much faster than expected."
+        },
+        {
+            "id": 2,
+            "name": "Priya Verma",
+            "role": "Verified Customer",
+            "avatar": "PV",
+            "rating": 5,
+            "review": "I really liked the variety of products. The website is easy to use and my order arrived safely."
+        },
+        {
+            "id": 3,
+            "name": "Arjun Singh",
+            "role": "Verified Customer",
+            "avatar": "AS",
+            "rating": 4,
+            "review": "Good products at reasonable prices. The overall buying experience was smooth and simple."
+        },
+        {
+            "id": 4,
+            "name": "Neha Gupta",
+            "role": "Verified Customer",
+            "avatar": "NG",
+            "rating": 5,
+            "review": "The product looked exactly like the pictures. Customer support was also very helpful."
+        }
+    ]
+}

@@ -1,0 +1,141 @@
+/* =========================================================
+   ANNOUNCEMENT BAR
+========================================================= */
+
+.announcement-bar {
+    width: 100%;
+    min-height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            90deg,
+            #111827,
+            #1f2937,
+            #111827
+        );
+
+    color: #ffffff;
+
+    position: relative;
+    z-index: 1000;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.announcement-content {
+    width: min(1400px, 94%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    padding: 9px 0;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.announcement-icon {
+    font-size: 16px;
+
+    animation:
+        announcementPulse 1.5s infinite;
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.announcement-text {
+    text-align: center;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.announcement-button {
+    border: none;
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    padding: 3px 5px;
+
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.announcement-button:hover {
+    transform: translateX(4px);
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes announcementPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .announcement-content {
+        gap: 7px;
+
+        font-size: 10px;
+
+        padding: 8px 4px;
+    }
+
+    .announcement-icon {
+        font-size: 13px;
+    }
+
+    .announcement-button {
+        font-size: 9px;
+    }
+
+}
