@@ -37,7 +37,7 @@ export default defineConfig({
                 // Dynamic header products
                 headerprod: resolve(
                     __dirname,
-                    "headerprod.html"
+                    "heardeprod.html"
                 )
             }
         }
