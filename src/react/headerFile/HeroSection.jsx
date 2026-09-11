@@ -233,15 +233,12 @@ function HeroSection() {
 
                         <div className="hero-product-shape">
 
-                            <span>
-                                KSAM
-                            </span>
+    <img
+        src={`${import.meta.env.BASE_URL}headerProducts/hero-product19.png`}
+        alt="KSAM Deal featured product"
+    />
 
-                            <strong>
-                                DEAL
-                            </strong>
-
-                        </div>
+</div>
 
                     </div>
 

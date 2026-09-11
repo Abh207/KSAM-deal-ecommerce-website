@@ -797,10 +797,10 @@
     position: relative;
 
     width:
-        210px;
+        230px;
 
     height:
-        270px;
+        290px;
 
     display: flex;
 
@@ -898,6 +898,22 @@
 
 }
 
+
+
+.hero-product-shape img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: inherit;
+
+    margin: 0;
+    padding: 0;
+}
 
 /* =========================================================
    FLOATING CARDS

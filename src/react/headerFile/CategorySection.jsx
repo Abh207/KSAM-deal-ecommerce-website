@@ -64,12 +64,17 @@ function CategorySection({
     }, [products]);
 
     const handleCategoryClick = (category) => {
-        setActiveCategory(category.id);
 
-        if (onCategorySelect) {
-            onCategorySelect(category.id);
-        }
-    };
+    setActiveCategory(category.id);
+
+    if (onCategorySelect) {
+        onCategorySelect(category.id);
+    }
+
+    if (category.link) {
+        window.location.href = category.link;
+    }
+};
 
     return (
         <section className="category-section">
@@ -181,10 +186,10 @@ function CategorySection({
 
                             {/* Arrow */}
                             {categoryData.section.showArrow && (
-                                <span className="category-arrow">
-                                    →
-                                </span>
-                            )}
+    <span className="category-arrow">
+        →
+    </span>
+)}
 
                         </button>
                     );

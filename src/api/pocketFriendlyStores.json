@@ -1,0 +1,33 @@
+{
+    "section": {
+        "title": "Pocket friendly stores",
+        "showArrow": true
+    },
+
+    "stores": [
+        {
+            "id": "under-199",
+            "title": "Top picks under ₹199",
+            "image": "/headerProducts/discount1.png",
+            "link": "./Product.html"
+        },
+        {
+            "id": "under-299",
+            "title": "Top picks under ₹299",
+            "image": "/headerProducts/discount2.png",
+            "link": "./Product.html"
+        },
+        {
+            "id": "under-399",
+            "title": "Top picks under ₹399",
+            "image": "/headerProducts/discount3.png",
+            "link": "./Product.html"
+        },
+        {
+            "id": "under-499",
+            "title": "Top picks under ₹499",
+            "image": "/headerProducts/discount4.png",
+            "link": "./Product.html"
+        }
+    ]
+}

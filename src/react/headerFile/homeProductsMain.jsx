@@ -17,6 +17,7 @@ import BenefitsSection from "./BenefitsSection";
 
 import TestimonialsSection from "./Testimonials";
 
+import PocketFriendlyStores from "./PocketFriendlyStores";
 
 import HomeFooter from "./headerHomeFooter";
 import CategorySection from "./CategorySection";
@@ -1933,6 +1934,7 @@ function HomeProducts() {
 
         </main>
 
+        <PocketFriendlyStores />
         <BenefitsSection />
 
         <TestimonialsSection />

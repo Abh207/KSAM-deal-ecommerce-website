@@ -1,0 +1,236 @@
+/* ========================================
+   POCKET FRIENDLY STORES
+======================================== */
+
+.pocket-friendly-section {
+    width: 100%;
+    max-width: 1400px;
+
+    margin: 60px auto;
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 14px;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.pocket-friendly-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.pocket-friendly-header h2 {
+    margin: 0;
+
+    font-size: 25px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    color: #111111;
+}
+
+.pocket-header-arrow {
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #111111;
+
+    font-size: 34px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.pocket-header-arrow:hover {
+    transform: translateX(5px);
+}
+
+
+/* ========================================
+   GRID
+======================================== */
+
+.pocket-friendly-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+}
+
+
+/* ========================================
+   CARD
+======================================== */
+
+.pocket-store-card {
+    min-width: 0;
+
+    cursor: pointer;
+
+    outline: none;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.pocket-store-card:hover {
+    transform: translateY(-4px);
+}
+
+.pocket-store-card:focus-visible {
+    outline: 3px solid #111111;
+
+    outline-offset: 4px;
+
+    border-radius: 8px;
+}
+
+
+/* ========================================
+   IMAGE
+======================================== */
+
+.pocket-store-image-wrapper {
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    border-radius: 7px;
+
+    background: #f3f3f3;
+}
+
+.pocket-store-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.35s ease;
+}
+
+.pocket-store-card:hover .pocket-store-image {
+    transform: scale(1.04);
+}
+
+
+/* ========================================
+   TITLE
+======================================== */
+
+.pocket-store-title {
+    margin-top: 7px;
+
+    font-size: 17px;
+
+    line-height: 1.35;
+
+    color: #111111;
+
+    font-weight: 500;
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 900px) {
+
+    .pocket-friendly-section {
+        margin: 45px 20px;
+
+        padding: 22px;
+    }
+
+    .pocket-friendly-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 22px 14px;
+    }
+
+    .pocket-friendly-header h2 {
+        font-size: 22px;
+    }
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 500px) {
+
+    .pocket-friendly-section {
+        margin: 35px 12px;
+
+        padding: 15px;
+
+        border-radius: 10px;
+    }
+
+    .pocket-friendly-header {
+        margin-bottom: 12px;
+    }
+
+    .pocket-friendly-header h2 {
+        font-size: 20px;
+    }
+
+    .pocket-header-arrow {
+        width: 32px;
+        height: 32px;
+
+        font-size: 28px;
+    }
+
+    .pocket-friendly-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 22px 10px;
+    }
+
+    .pocket-store-title {
+        font-size: 15px;
+    }
+}

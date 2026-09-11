@@ -10,52 +10,62 @@
 
     "categories": [
         {
+            "id": "watches",
+            "name": "Watches",
+            "description": "Classic & smart watches",
+            "productIds": [],
+            "icon": "⌚",
+            "color": "#edf9f8",
+            "link": "./watchshop.html"
+        },
+        {
             "id": "electronics",
             "name": "Electronics",
             "description": "Smart gadgets & devices",
             "productIds": [],
             "icon": "⚡",
-            "color": "#e8f1ff"
+            "color": "#e8f1ff",
+            "link": "./fashionSpeaker.html"
         },
+
         {
             "id": "fashion",
             "name": "Fashion",
             "description": "Trending styles & clothing",
             "productIds": [],
             "icon": "👕",
-            "color": "#fff0f5"
+            "color": "#fff0f5",
+            "link": "./Product.html"
         },
+
         {
             "id": "beauty",
             "name": "Beauty",
             "description": "Beauty & personal care",
             "productIds": [],
             "icon": "✨",
-            "color": "#fff5e8"
+            "color": "#fff5e8",
+            "link": "./beauty.html"
         },
+
         {
             "id": "home",
             "name": "Home",
             "description": "Everything for your home",
             "productIds": [],
             "icon": "🏠",
-            "color": "#eefbea"
+            "color": "#eefbea",
+            "link": "./index.html"
         },
+
         {
             "id": "chairs",
             "name": "Chairs",
             "description": "Comfortable & stylish chairs",
             "productIds": [],
             "icon": "🪑",
-            "color": "#f3edff"
-        },
-        {
-            "id": "watches",
-            "name": "Watches",
-            "description": "Classic & smart watches",
-            "productIds": [],
-            "icon": "⌚",
-            "color": "#edf9f8"
+            "color": "#f3edff",
+            "link": "./moreChairProd.html"
         }
     ]
 }

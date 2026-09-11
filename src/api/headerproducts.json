@@ -82,5 +82,76 @@
         "stock": 18,
         "badge": "POPULAR",
         "discount": 24
+    },
+    {
+        "id": 2007,
+        "name": "Smart LED Lamp",
+        "price": 1299,
+        "oldPrice": 2499,
+        "category": "Beauty",
+        "image": "headerProducts/dress1.png",
+        "rating": 4,
+        "reviews": 62,
+        "description": "A modern smart LED lamp with adjustable lighting for your home.",
+        "stock": 18,
+        "badge": "POPULAR",
+        "discount": 24
+    },
+    {
+        "id": 2008,
+        "name": "Smart LED Lamp",
+        "price": 1499,
+        "oldPrice": 2499,
+        "category": "Beauty",
+        "image": "headerProducts/dress2.png",
+        "rating": 4,
+        "reviews": 62,
+        "description": "A modern smart LED lamp with adjustable lighting for your home.",
+        "stock": 18,
+        "badge": "POPULAR",
+        "discount": 24
+    },
+    {
+        "id": 2009,
+        "name": "Smart LED Lamp",
+        "price": 1889,
+        "oldPrice": 2499,
+        "category": "Beauty",
+        "image": "headerProducts/dress3.png",
+        "rating": 4,
+        "reviews": 62,
+        "description": "A modern smart LED lamp with adjustable lighting for your home.",
+        "stock": 18,
+        "badge": "POPULAR",
+        "discount": 24
+    },
+    {
+        "id": 2010,
+        "name": "Smart LED Lamp",
+        "price": 1219,
+        "oldPrice": 2499,
+        "category": "Beauty",
+        "image": "headerProducts/dress4.png",
+        "rating": 4,
+        "reviews": 62,
+        "description": "A modern smart LED lamp with adjustable lighting for your home.",
+        "stock": 18,
+        "badge": "POPULAR",
+        "discount": 24
+    },
+    {
+        "id": 2011,
+        "name": "Smart LED Lamp",
+        "price": 1543,
+        "oldPrice": 2499,
+        "category": "Beauty",
+        "image": "headerProducts/dress5.png",
+        "rating": 4,
+        "reviews": 62,
+        "description": "A modern smart LED lamp with adjustable lighting for your home.",
+        "stock": 18,
+        "badge": "POPULAR",
+        "discount": 24
     }
+
 ]
