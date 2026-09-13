@@ -72,35 +72,34 @@ function renderShopCart() {
 
     if (cart.length === 0) {
 
-        container.innerHTML = `
+    container.innerHTML = `
 
-            <div class="shop-empty-cart">
+        <div class="shop-empty-cart">
 
-                <div class="shop-empty-cart-icon">
-                    🛒
-                </div>
-
-                <h2>
-                    Your Cart Is Empty
-                </h2>
-
-                <p>
-                    Add some products from our shop.
-                </p>
-
-                <a href="./shop.html">
-                    Continue Shopping
-                </a>
-
+            <div class="shop-empty-cart-icon">
+                🛒
             </div>
 
-        `;
+            <h2>
+                Your Cart Is Empty
+            </h2>
 
-        updateShopTotals();
+            <p>
+                Add some products from our shop.
+            </p>
 
-        return;
+            <a href="./shop.html">
+                Continue Shopping
+            </a>
 
-    }
+        </div>
+
+    `;
+
+    updateShopTotals();
+
+    return;
+}
 
 
     cart.forEach((product) => {
@@ -208,10 +207,13 @@ function renderShopCart() {
     });
 
 
+
     attachCartEvents();
 
-    updateShopTotals();
+    addProceedToBuyButton();
 
+    updateShopTotals();
+    
 }
 
 
@@ -360,6 +362,137 @@ function removeFromCart(productId) {
 
 }
 
+
+/* =========================================================
+   PROCEED TO BUY
+========================================================= */
+
+// function addProceedToBuyButton() {
+
+//     const cart = getShopCart();
+
+//     const container =
+//         document.querySelector(
+//             "#productCartContainer"
+//         );
+
+//     if (!container || cart.length === 0) {
+//         return;
+//     }
+
+//     const existingButton =
+//         document.querySelector(
+//             ".shop-proceed-to-buy-wrapper"
+//         );
+
+//     if (existingButton) {
+//         return;
+//     }
+
+//     const buttonWrapper =
+//         document.createElement("div");
+
+//     buttonWrapper.className =
+//         "shop-proceed-to-buy-wrapper";
+
+//     buttonWrapper.innerHTML = `
+
+//         <button
+//             class="shop-proceed-to-buy"
+//             type="button"
+//         >
+//             Proceed to Buy
+//         </button>
+
+//     `;
+
+//     container.parentElement.appendChild(
+//         buttonWrapper
+//     );
+
+//     const button =
+//         buttonWrapper.querySelector(
+//             ".shop-proceed-to-buy"
+//         );
+
+//     button.addEventListener(
+//         "click",
+//         () => {
+
+//             const currentCart =
+//                 getShopCart();
+
+//             if (currentCart.length === 0) {
+
+//                 alert(
+//                     "Your cart is empty."
+//                 );
+
+//                 return;
+//             }
+
+//             window.location.href =
+//                 "./checkout.html";
+
+//         }
+//     );
+
+// }
+
+
+
+function addProceedToBuyButton() {
+    const cart = getShopCart();
+
+    const container = document.querySelector("#productCartContainer");
+
+    if (!container || cart.length === 0) {
+        return;
+    }
+
+    // Prevent duplicate button
+    const existingButton = document.querySelector(
+        ".shop-proceed-to-buy-wrapper"
+    );
+
+    if (existingButton) {
+        return;
+    }
+
+    // Create wrapper
+    const buttonWrapper = document.createElement("div");
+
+    buttonWrapper.className = "shop-proceed-to-buy-wrapper";
+
+    buttonWrapper.innerHTML = `
+        <button
+            type="button"
+            class="shop-proceed-to-buy"
+        >
+            🛒 Proceed to Checkout →
+        </button>
+    `;
+
+    // Add button below cart
+    container.parentElement.appendChild(buttonWrapper);
+
+    const button = buttonWrapper.querySelector(
+        ".shop-proceed-to-buy"
+    );
+
+    button.addEventListener("click", () => {
+
+        const currentCart = getShopCart();
+
+        if (currentCart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+
+        // Go to checkout page
+        window.location.href = "./checkout.html";
+    });
+}
 
 /* =========================================================
    UPDATE TOTALS

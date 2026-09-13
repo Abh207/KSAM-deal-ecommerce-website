@@ -1,0 +1,186 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1fff6,
+            #fffdf2
+        );
+
+}
+
+.success-page {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+}
+
+.success-card {
+
+    width: min(
+        550px,
+        100%
+    );
+
+    background: white;
+
+    border-radius: 22px;
+
+    padding: 40px;
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.10);
+
+}
+
+.success-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #16c965;
+
+    color: white;
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+}
+
+.success-card h1 {
+
+    margin:
+        20px 0 8px;
+
+    font-size: 27px;
+
+}
+
+.success-card > p {
+
+    color: #707873;
+
+}
+
+.success-order {
+
+    margin-top: 25px;
+
+    padding: 18px;
+
+    border-radius: 13px;
+
+    background: #f4fff8;
+
+    display: grid;
+
+    gap: 15px;
+
+}
+
+.success-order div {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+}
+
+.success-order span {
+
+    color: #707873;
+
+}
+
+.success-order strong {
+
+    color: #079447;
+
+}
+
+.customer-details {
+
+    margin-top: 20px;
+
+    padding: 18px;
+
+    text-align: left;
+
+    border:
+        1px solid #e0e6e2;
+
+    border-radius: 13px;
+
+}
+
+.customer-details h3 {
+
+    margin-top: 0;
+
+}
+
+.customer-details p {
+
+    margin: 6px 0;
+
+    color: #505752;
+
+}
+
+.success-button {
+
+    width: 100%;
+
+    margin-top: 22px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #0b0d0c;
+
+    color: white;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+}

@@ -1,0 +1,115 @@
+/* =========================================
+   PROCEED TO CHECKOUT BUTTON
+========================================= */
+
+.shop-proceed-to-buy-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 25px 0 35px;
+}
+
+.shop-proceed-to-buy {
+    width: min(500px, 100%);
+    padding: 16px 25px;
+    border: none;
+    border-radius: 12px;
+    background: #16c965;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 20px rgba(22, 201, 101, 0.20);
+}
+
+.shop-proceed-to-buy:hover {
+    transform: translateY(-2px);
+    background: #0fa957;
+    box-shadow: 0 12px 25px rgba(22, 201, 101, 0.28);
+}
+
+.shop-proceed-to-buy:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .shop-proceed-to-buy {
+        width: 100%;
+        font-size: 15px;
+    }
+}
+
+/* =========================================
+   PROCEED TO CHECKOUT BUTTON
+========================================= */
+
+.shop-proceed-to-buy-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.shop-proceed-to-buy {
+    display: block;
+    width: min(500px, 100%);
+    min-height: 55px;
+    padding: 15px 24px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #16c965;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.2;
+
+    text-align: center;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.shop-proceed-to-buy:hover {
+    background: #0fa957;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(22, 201, 101, 0.25);
+}
+
+.shop-proceed-to-buy:active {
+    transform: translateY(0);
+}
+
+.shop-proceed-to-buy:focus {
+    outline: 3px solid rgba(22, 201, 101, 0.25);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+
+    .shop-proceed-to-buy-wrapper {
+        padding: 0 12px;
+        margin: 20px 0;
+    }
+
+    .shop-proceed-to-buy {
+        width: 100%;
+        min-height: 52px;
+        padding: 14px 18px;
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "paymentMethods": [
+        {
+            "id": "upi",
+            "name": "UPI",
+            "shortName": "UPI",
+            "icon": "📱",
+            "description": "Pay instantly using your UPI app",
+            "providers": [
+                "Google Pay",
+                "PhonePe",
+                "Paytm",
+                "BHIM"
+            ],
+            "enabled": true
+        },
+        {
+            "id": "card",
+            "name": "Credit / Debit Card",
+            "shortName": "Card",
+            "icon": "💳",
+            "description": "Visa, Mastercard, RuPay and more",
+            "providers": [
+                "Visa",
+                "Mastercard",
+                "RuPay"
+            ],
+            "enabled": true
+        },
+        {
+            "id": "netbanking",
+            "name": "Net Banking",
+            "shortName": "Net Banking",
+            "icon": "🏦",
+            "description": "Pay securely through your bank",
+            "providers": [
+                "SBI",
+                "HDFC",
+                "ICICI",
+                "Axis"
+            ],
+            "enabled": true
+        },
+        {
+            "id": "cod",
+            "name": "Cash on Delivery",
+            "shortName": "COD",
+            "icon": "💵",
+            "description": "Pay when your order arrives",
+            "providers": [],
+            "enabled": true
+        }
+    ]
+}
