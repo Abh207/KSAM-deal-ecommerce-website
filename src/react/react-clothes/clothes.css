@@ -1,0 +1,5742 @@
+/* =========================================================
+   KSAM DEAL — CLOTHES / FASHION PAGE
+   Theme:
+   BLACK + WHITE + PARROT GREEN + GOLD
+
+   Works with:
+   ClothesMain.jsx
+   ClothesHero.jsx
+   ClothesCard.jsx
+========================================================= */
+
+
+/* =========================================================
+   ROOT VARIABLES
+========================================================= */
+
+:root {
+
+    --clothes-bg: #050505;
+
+    --clothes-bg-secondary: #090b09;
+
+    --clothes-surface: #101310;
+
+    --clothes-surface-2: #151815;
+
+    --clothes-text: #f8faf5;
+
+    --clothes-muted: #919991;
+
+    --clothes-border: rgba(255, 255, 255, 0.10);
+
+    --clothes-border-strong:
+        rgba(255, 255, 255, 0.18);
+
+    --clothes-green: #8ee000;
+
+    --clothes-green-light: #b5ff36;
+
+    --clothes-green-dark: #62a800;
+
+    --clothes-gold: #d7aa42;
+
+    --clothes-white: #ffffff;
+
+    --clothes-black: #050505;
+
+    --clothes-danger: #ff536b;
+
+    --clothes-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.42);
+
+    --clothes-radius: 18px;
+
+}
+
+
+/* =========================================================
+   LIGHT THEME
+========================================================= */
+
+html[data-clothes-theme="light"] {
+
+    --clothes-bg: #f3f5ef;
+
+    --clothes-bg-secondary: #e9ece5;
+
+    --clothes-surface: #ffffff;
+
+    --clothes-surface-2: #e8ebe4;
+
+    --clothes-text: #10130f;
+
+    --clothes-muted: #606860;
+
+    --clothes-border:
+        rgba(0, 0, 0, 0.10);
+
+    --clothes-border-strong:
+        rgba(0, 0, 0, 0.18);
+
+    --clothes-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.12);
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+body {
+
+    margin: 0;
+
+    padding: 0;
+
+    background: var(--clothes-bg);
+
+    color: var(--clothes-text);
+
+    font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    transition:
+        background 0.35s ease,
+        color 0.35s ease;
+
+}
+
+
+button,
+input,
+select,
+textarea {
+
+    font: inherit;
+
+}
+
+
+button {
+
+    cursor: pointer;
+
+}
+
+
+a {
+
+    text-decoration: none;
+
+    color: inherit;
+
+}
+
+
+img {
+
+    display: block;
+
+    max-width: 100%;
+
+}
+
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.clothes-page {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 80% 5%,
+            rgba(142, 224, 0, 0.08),
+            transparent 350px
+        ),
+
+        var(--clothes-bg);
+
+}
+
+
+/* =========================================================
+   TOP ANNOUNCEMENT
+========================================================= */
+
+.clothes-announcement {
+
+    width: 100%;
+
+    height: 38px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    background: #030403;
+
+    color: #ffffff;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
+
+}
+
+
+.clothes-announcement-track {
+
+    width: max-content;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 38px;
+
+    white-space: nowrap;
+
+    animation:
+        clothesAnnouncement 25s
+        linear infinite;
+
+}
+
+
+.clothes-announcement-track span {
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.16em;
+
+}
+
+
+.clothes-announcement-track span:nth-child(4n + 1) {
+
+    color: var(--clothes-green);
+
+}
+
+
+@keyframes clothesAnnouncement {
+
+    from {
+
+        transform: translateX(0);
+
+    }
+
+    to {
+
+        transform: translateX(-45%);
+
+    }
+
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.clothes-navbar {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 80;
+
+    width: 100%;
+
+    min-height: 82px;
+
+    padding:
+        0
+        clamp(18px, 5vw, 80px);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--clothes-bg) 91%,
+            transparent
+        );
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    border-bottom:
+        1px solid var(--clothes-border);
+
+}
+
+
+/* LOGO */
+
+.clothes-logo {
+
+    display: inline-flex;
+
+    align-items: baseline;
+
+    gap: 5px;
+
+    white-space: nowrap;
+
+    font-size: 28px;
+
+    font-weight: 950;
+
+    letter-spacing: -0.08em;
+
+}
+
+
+.clothes-logo strong {
+
+    color: var(--clothes-text);
+
+}
+
+
+.clothes-logo span {
+
+    color: var(--clothes-green);
+
+    font-size: 15px;
+
+    letter-spacing: -0.03em;
+
+}
+
+
+/* NAV LINKS */
+
+.clothes-nav-links {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    margin-right: auto;
+
+}
+
+
+.clothes-nav-links a {
+
+    position: relative;
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.08em;
+
+    color: var(--clothes-text);
+
+}
+
+
+.clothes-nav-links a::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: -8px;
+
+    width: 0;
+
+    height: 2px;
+
+    background: var(--clothes-green);
+
+    transition: width 0.25s ease;
+
+}
+
+
+.clothes-nav-links a:hover {
+
+    color: var(--clothes-green);
+
+}
+
+
+.clothes-nav-links a:hover::after {
+
+    width: 100%;
+
+}
+
+
+/* SEARCH */
+
+.clothes-navbar-search {
+
+    width: min(350px, 27vw);
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid var(--clothes-border);
+
+    border-radius: 12px;
+
+    background: var(--clothes-surface);
+
+}
+
+
+.clothes-navbar-search > i {
+
+    color: var(--clothes-muted);
+
+}
+
+
+.clothes-navbar-search input {
+
+    width: 100%;
+
+    min-width: 0;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: var(--clothes-text);
+
+    font-size: 11px;
+
+}
+
+
+.clothes-navbar-search input::placeholder {
+
+    color: var(--clothes-muted);
+
+}
+
+
+.clothes-navbar-search button {
+
+    width: 25px;
+
+    height: 25px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--clothes-muted);
+
+}
+
+
+/* NAV ACTIONS */
+
+.clothes-nav-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+}
+
+
+/* THEME BUTTON */
+
+.clothes-theme-button {
+
+    width: 45px;
+
+    height: 45px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        1px solid var(--clothes-border);
+
+    border-radius: 50%;
+
+    background: var(--clothes-surface);
+
+}
+
+
+.clothes-theme-button span {
+
+    width: 18px;
+
+    height: 18px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            var(--clothes-green) 0 45%,
+            var(--clothes-gold) 45% 72%,
+            #ffffff 72% 100%
+        );
+
+    box-shadow:
+        0 0 0 5px
+        rgba(142, 224, 0, 0.08);
+
+}
+
+
+/* CART */
+
+.clothes-cart-button {
+
+    position: relative;
+
+    width: 45px;
+
+    height: 45px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        1px solid var(--clothes-green);
+
+    border-radius: 12px;
+
+    background: var(--clothes-green);
+
+    color: #050505;
+
+}
+
+
+.clothes-cart-button b {
+
+    position: absolute;
+
+    right: -6px;
+
+    top: -7px;
+
+    min-width: 20px;
+
+    height: 20px;
+
+    padding: 0 5px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: var(--clothes-gold);
+
+    color: #050505;
+
+    font-size: 9px;
+
+    font-weight: 950;
+
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.clothes-hero {
+
+    position: relative;
+
+    width: min(
+        1500px,
+        calc(100% - 40px)
+    );
+
+    min-height: 650px;
+
+    margin: 25px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        0.88fr
+        1.12fr;
+
+    overflow: hidden;
+
+    border:
+        1px solid var(--clothes-border);
+
+    border-radius: 30px;
+
+    background:
+
+        radial-gradient(
+            circle at 75% 40%,
+            rgba(142, 224, 0, 0.13),
+            transparent 350px
+        ),
+
+        linear-gradient(
+            135deg,
+            #080a08,
+            #101410
+        );
+
+    box-shadow:
+        0 30px 100px
+        rgba(0, 0, 0, 0.45);
+
+}
+
+
+/* GRID BACKGROUND */
+
+.clothes-hero-grid {
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0.17;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.07)
+            1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.07)
+            1px,
+            transparent 1px
+        );
+
+    background-size:
+        50px 50px;
+
+    mask-image:
+        linear-gradient(
+            to right,
+            black,
+            transparent 75%
+        );
+
+}
+
+
+/* LARGE GREEN CIRCLE */
+
+.clothes-hero-circle {
+
+    position: absolute;
+
+    right: 18%;
+
+    top: 12%;
+
+    width: 440px;
+
+    height: 440px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(142, 224, 0, 0.18);
+
+    box-shadow:
+        0 0 100px
+        rgba(142, 224, 0, 0.08);
+
+    animation:
+        heroCircleFloat 6s
+        ease-in-out infinite;
+
+}
+
+
+@keyframes heroCircleFloat {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(-15px)
+            rotate(5deg);
+
+    }
+
+}
+
+
+/* HERO CONTENT */
+
+.clothes-hero-content {
+
+    position: relative;
+
+    z-index: 5;
+
+    padding:
+        clamp(45px, 6vw, 90px);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+
+/* EYEBROW */
+
+.clothes-hero-eyebrow {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: var(--clothes-green);
+
+    font-size: 11px;
+
+    font-weight: 950;
+
+    letter-spacing: 0.18em;
+
+}
+
+
+.clothes-hero-eyebrow-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--clothes-green);
+
+    box-shadow:
+        0 0 0 6px
+        rgba(142,224,0,.08);
+
+    animation:
+        heroDotPulse 1.8s
+        ease-in-out infinite;
+
+}
+
+
+@keyframes heroDotPulse {
+
+    0%,
+    100% {
+
+        transform: scale(1);
+
+    }
+
+    50% {
+
+        transform: scale(1.35);
+
+    }
+
+}
+
+
+/* TITLE */
+
+.clothes-hero-title {
+
+    margin: 22px 0;
+
+    max-width: 700px;
+
+    font-size:
+        clamp(
+            65px,
+            7vw,
+            115px
+        );
+
+    line-height: 0.86;
+
+    letter-spacing: -0.075em;
+
+    font-weight: 950;
+
+}
+
+
+.clothes-hero-title span {
+
+    display: block;
+
+    color: #ffffff;
+
+}
+
+
+.clothes-hero-title strong {
+
+    display: block;
+
+    color: var(--clothes-green);
+
+    font-weight: 950;
+
+}
+
+
+/* DESCRIPTION */
+
+.clothes-hero-description {
+
+    max-width: 520px;
+
+    color: #969e96;
+
+    font-size: 16px;
+
+    line-height: 1.75;
+
+}
+
+
+/* HERO BUTTONS */
+
+.clothes-hero-buttons {
+
+    margin-top: 31px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 11px;
+
+}
+
+
+.clothes-hero-primary,
+.clothes-hero-secondary {
+
+    min-height: 52px;
+
+    padding:
+        0 21px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+
+    font-weight: 950;
+
+    letter-spacing: .04em;
+
+    transition:
+        transform .25s ease,
+        background .25s ease;
+
+}
+
+
+.clothes-hero-primary {
+
+    background: var(--clothes-green);
+
+    color: #050505;
+
+}
+
+
+.clothes-hero-primary:hover {
+
+    transform:
+        translateY(-4px);
+
+    background:
+        var(--clothes-green-light);
+
+}
+
+
+.clothes-hero-secondary {
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    color: #ffffff;
+
+    background:
+        rgba(255,255,255,.03);
+
+}
+
+
+.clothes-hero-secondary:hover {
+
+    transform:
+        translateY(-4px);
+
+    border-color:
+        var(--clothes-green);
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+/* HERO META */
+
+.clothes-hero-meta {
+
+    margin-top: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+}
+
+
+.clothes-hero-meta > div {
+
+    width: 75px;
+
+    height: 75px;
+
+    display: grid;
+
+    place-content: center;
+
+    text-align: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--clothes-green);
+
+    color: #050505;
+
+    transform:
+        rotate(-8deg);
+
+}
+
+
+.clothes-hero-meta strong {
+
+    font-size: 25px;
+
+    line-height: .9;
+
+}
+
+
+.clothes-hero-meta span {
+
+    font-size: 8px;
+
+    font-weight: 950;
+
+    letter-spacing: .1em;
+
+}
+
+
+.clothes-hero-meta p {
+
+    color: #8b938b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+.clothes-hero-meta p b {
+
+    color: #ffffff;
+
+}
+
+
+/* =========================================================
+   HERO VISUAL
+========================================================= */
+
+.clothes-hero-visual {
+
+    position: relative;
+
+    min-height: 650px;
+
+    overflow: hidden;
+
+}
+
+
+/* IMAGE FRAME */
+
+.clothes-hero-image-frame {
+
+    position: absolute;
+
+    inset:
+        55px
+        55px
+        55px
+        45px;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #181c18,
+            #060706
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.4);
+
+}
+
+
+/* IMAGE */
+
+.clothes-hero-image {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    animation:
+        heroImageZoom 4.5s
+        ease-out;
+
+}
+
+
+@keyframes heroImageZoom {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(1.08);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/* IMAGE GRADIENT */
+
+.clothes-hero-image-gradient {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.04),
+            rgba(0,0,0,.50)
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.22),
+            transparent 50%
+        );
+
+}
+
+
+/* FALLBACK */
+
+.clothes-hero-fallback {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: grid;
+
+    place-content: center;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(142,224,0,.16),
+            transparent 250px
+        ),
+
+        #080a08;
+
+}
+
+
+.clothes-hero-fallback span {
+
+    color:
+        var(--clothes-green);
+
+    font-size: 13px;
+
+    font-weight: 950;
+
+    letter-spacing: .2em;
+
+}
+
+
+.clothes-hero-fallback strong {
+
+    font-size:
+        clamp(65px, 8vw, 120px);
+
+    letter-spacing: -.08em;
+
+}
+
+
+.clothes-hero-fallback small {
+
+    color:
+        var(--clothes-gold);
+
+    font-size: 10px;
+
+    letter-spacing: .35em;
+
+}
+
+
+/* IMAGE LABEL */
+
+.clothes-hero-image-label {
+
+    position: absolute;
+
+    z-index: 4;
+
+    top: 20px;
+
+    left: 20px;
+
+    right: 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    font-weight: 950;
+
+    letter-spacing: .2em;
+
+}
+
+
+.clothes-hero-image-label b {
+
+    color: var(--clothes-green);
+
+}
+
+
+/* IMAGE CAPTION */
+
+.clothes-hero-image-caption {
+
+    position: absolute;
+
+    z-index: 4;
+
+    left: 22px;
+
+    bottom: 22px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    color: #ffffff;
+
+}
+
+
+.clothes-hero-image-caption span {
+
+    color: var(--clothes-green);
+
+    font-size: 8px;
+
+    font-weight: 950;
+
+    letter-spacing: .2em;
+
+}
+
+
+.clothes-hero-image-caption strong {
+
+    font-size: 22px;
+
+}
+
+
+/* =========================================================
+   FLOATING DISCOUNT CARD
+========================================================= */
+
+.clothes-hero-floating-card {
+
+    position: absolute;
+
+    z-index: 8;
+
+    background:
+        rgba(8,10,8,.88);
+
+    backdrop-filter:
+        blur(14px);
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.35);
+
+}
+
+
+.clothes-hero-floating-card.discount {
+
+    top: 65px;
+
+    right: 20px;
+
+    width: 110px;
+
+    height: 110px;
+
+    border-radius: 50%;
+
+    display: grid;
+
+    place-content: center;
+
+    text-align: center;
+
+    color: #050505;
+
+    background:
+        var(--clothes-green);
+
+    transform:
+        rotate(8deg);
+
+    animation:
+        discountFloat 4s
+        ease-in-out infinite;
+
+}
+
+
+.clothes-hero-floating-card.discount span {
+
+    font-size: 8px;
+
+    font-weight: 950;
+
+}
+
+
+.clothes-hero-floating-card.discount strong {
+
+    font-size: 31px;
+
+    line-height: .9;
+
+}
+
+
+.clothes-hero-floating-card.discount small {
+
+    font-size: 8px;
+
+    font-weight: 950;
+
+}
+
+
+@keyframes discountFloat {
+
+    0%,
+    100% {
+
+        transform:
+            rotate(8deg)
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            rotate(3deg)
+            translateY(-12px);
+
+    }
+
+}
+
+
+/* STYLE CARD */
+
+.clothes-hero-floating-card.style {
+
+    left: 8px;
+
+    bottom: 90px;
+
+    padding:
+        13px 16px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    border-radius: 13px;
+
+    animation:
+        styleFloat 5s
+        ease-in-out infinite;
+
+}
+
+
+.clothes-hero-floating-card.style > i {
+
+    width: 31px;
+
+    height: 31px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--clothes-green);
+
+    color: #050505;
+
+    font-size: 11px;
+
+}
+
+
+.clothes-hero-floating-card.style div {
+
+    display: grid;
+
+    gap: 3px;
+
+}
+
+
+.clothes-hero-floating-card.style strong {
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    letter-spacing: .08em;
+
+}
+
+
+.clothes-hero-floating-card.style small {
+
+    color: #858d85;
+
+    font-size: 8px;
+
+}
+
+
+@keyframes styleFloat {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(9px);
+
+    }
+
+}
+
+
+/* =========================================================
+   HERO CONTROLS
+========================================================= */
+
+.clothes-hero-controls {
+
+    position: absolute;
+
+    z-index: 10;
+
+    left: 60px;
+
+    bottom: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.clothes-hero-controls > button {
+
+    width: 43px;
+
+    height: 43px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,0,0,.55);
+
+    color: #ffffff;
+
+    transition: .2s ease;
+
+}
+
+
+.clothes-hero-controls > button:hover {
+
+    background:
+        var(--clothes-green);
+
+    color: #050505;
+
+    border-color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-hero-dots {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+
+.clothes-hero-dots button {
+
+    width: 7px;
+
+    height: 7px;
+
+    padding: 0;
+
+    border: 0;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.35);
+
+}
+
+
+.clothes-hero-dots button.active {
+
+    width: 25px;
+
+    background:
+        var(--clothes-green);
+
+}
+
+
+/* SIDE TEXT */
+
+.clothes-hero-side-text {
+
+    position: absolute;
+
+    z-index: 10;
+
+    right: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%)
+        rotate(90deg);
+
+    transform-origin: center;
+
+    color:
+        rgba(255,255,255,.25);
+
+    font-size: 8px;
+
+    font-weight: 950;
+
+    letter-spacing: .3em;
+
+}
+
+
+.clothes-hero-side-text span {
+
+    margin: 0 8px;
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+/* SCROLL INDICATOR */
+
+.clothes-hero-scroll {
+
+    position: absolute;
+
+    z-index: 10;
+
+    left: 60px;
+
+    bottom: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        rgba(255,255,255,.45);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: .15em;
+
+    transform:
+        translateY(100%);
+
+}
+
+
+.clothes-hero-scroll i {
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.clothes-benefits {
+
+    position: relative;
+
+    z-index: 20;
+
+    width:
+        min(
+            1220px,
+            calc(100% - 50px)
+        );
+
+    min-height: 85px;
+
+    margin:
+        -30px auto 0;
+
+    padding:
+        14px 20px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius: 18px;
+
+    background:
+        var(--clothes-surface);
+
+    box-shadow:
+        var(--clothes-shadow);
+
+}
+
+
+.clothes-benefits > div {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap: 13px;
+
+    padding:
+        8px 15px;
+
+    border-right:
+        1px solid
+        var(--clothes-border);
+
+}
+
+
+.clothes-benefits > div:last-child {
+
+    border-right:
+        0;
+
+}
+
+
+.clothes-benefits i {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        20px;
+
+}
+
+
+.clothes-benefits span {
+
+    display:
+        grid;
+
+    gap: 4px;
+
+}
+
+
+.clothes-benefits b {
+
+    font-size:
+        9px;
+
+    letter-spacing:
+        .08em;
+
+}
+
+
+.clothes-benefits small {
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        9px;
+
+}
+
+
+/* =========================================================
+   GENERAL SECTIONS
+========================================================= */
+
+.clothes-category-section,
+.clothes-marquee-section,
+.clothes-products-section {
+
+    width:
+        min(
+            1380px,
+            calc(100% - 50px)
+        );
+
+    margin:
+        110px auto 0;
+
+}
+
+
+.clothes-section-heading {
+
+    display:
+        flex;
+
+    align-items:
+        flex-end;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    margin-bottom:
+        30px;
+
+}
+
+
+.clothes-section-heading > div > span,
+.clothes-products-heading span,
+.clothes-footer-newsletter > span {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        10px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        .18em;
+
+}
+
+
+.clothes-section-heading h2,
+.clothes-products-heading h2 {
+
+    margin:
+        8px 0 0;
+
+    font-size:
+        clamp(
+            40px,
+            4vw,
+            65px
+        );
+
+    line-height:
+        .92;
+
+    letter-spacing:
+        -.06em;
+
+}
+
+
+.clothes-section-heading button {
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--clothes-text);
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+}
+
+
+.clothes-section-heading button i {
+
+    margin-left:
+        7px;
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+/* =========================================================
+   CATEGORY CIRCLES
+========================================================= */
+
+.clothes-category-scroller {
+
+    display:
+        flex;
+
+    gap:
+        clamp(
+            25px,
+            5vw,
+            70px
+        );
+
+    overflow-x:
+        auto;
+
+    padding:
+        8px 5px 20px;
+
+    scrollbar-width:
+        none;
+
+}
+
+
+.clothes-category-scroller::-webkit-scrollbar {
+
+    display:
+        none;
+
+}
+
+
+.clothes-category-item {
+
+    flex:
+        0 0 120px;
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--clothes-text);
+
+    text-align:
+        center;
+
+}
+
+
+.clothes-category-circle {
+
+    width:
+        120px;
+
+    height:
+        120px;
+
+    margin-bottom:
+        13px;
+
+    overflow:
+        hidden;
+
+    position:
+        relative;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        50%;
+
+    background:
+        var(--clothes-surface-2);
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+
+}
+
+
+.clothes-category-circle img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+}
+
+
+.clothes-category-circle > span {
+
+    display:
+        none;
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        40px;
+
+    font-weight:
+        950;
+
+}
+
+
+.clothes-category-circle.image-missing > span {
+
+    display:
+        block;
+
+}
+
+
+.clothes-category-item:hover
+.clothes-category-circle,
+.clothes-category-item.active
+.clothes-category-circle {
+
+    transform:
+        translateY(-8px);
+
+    border-color:
+        var(--clothes-green);
+
+    box-shadow:
+        0 20px 40px
+        rgba(142,224,0,.12);
+
+}
+
+
+.clothes-category-item b {
+
+    font-size:
+        11px;
+
+}
+
+
+/* =========================================================
+   AUTO SCROLL PRODUCT SECTION
+========================================================= */
+
+.clothes-section-heading.compact {
+
+    align-items:
+        flex-end;
+
+}
+
+
+.clothes-section-heading.compact small {
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        10px;
+
+}
+
+
+.clothes-marquee {
+
+    width:
+        100%;
+
+    overflow:
+        hidden;
+
+    padding:
+        18px 0;
+
+    border-block:
+        1px solid
+        var(--clothes-border);
+
+}
+
+
+.clothes-marquee-track {
+
+    width:
+        max-content;
+
+    display:
+        flex;
+
+    gap:
+        14px;
+
+    animation:
+        clothesMarquee
+        42s
+        linear
+        infinite;
+
+}
+
+
+.clothes-marquee:hover
+.clothes-marquee-track {
+
+    animation-play-state:
+        paused;
+
+}
+
+
+@keyframes clothesMarquee {
+
+    from {
+
+        transform:
+            translateX(0);
+
+    }
+
+    to {
+
+        transform:
+            translateX(-50%);
+
+    }
+
+}
+
+
+.clothes-marquee-card {
+
+    width:
+        310px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        95px 1fr;
+
+    gap:
+        13px;
+
+    padding:
+        10px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        14px;
+
+    background:
+        var(--clothes-surface);
+
+}
+
+
+.clothes-marquee-image {
+
+    position:
+        relative;
+
+    height:
+        105px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--clothes-surface-2);
+
+}
+
+
+.clothes-marquee-image img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+}
+
+
+.clothes-marquee-image span {
+
+    position:
+        absolute;
+
+    left:
+        6px;
+
+    bottom:
+        6px;
+
+    padding:
+        4px 6px;
+
+    border-radius:
+        4px;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+    font-size:
+        7px;
+
+    font-weight:
+        950;
+
+}
+
+
+.clothes-marquee-card > div:last-child {
+
+    align-self:
+        center;
+
+    min-width:
+        0;
+
+}
+
+
+.clothes-marquee-card small {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        8px;
+
+    font-weight:
+        950;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.clothes-marquee-card h3 {
+
+    margin:
+        6px 0 9px;
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+    font-size:
+        13px;
+
+}
+
+
+.clothes-marquee-card b {
+
+    font-size:
+        14px;
+
+}
+
+
+/* =========================================================
+   PRODUCT SECTION
+========================================================= */
+
+.clothes-products-section {
+
+    scroll-margin-top:
+        105px;
+
+}
+
+
+.clothes-products-heading {
+
+    display:
+        flex;
+
+    align-items:
+        flex-end;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    margin-bottom:
+        30px;
+
+}
+
+
+.clothes-products-heading > strong {
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        11px;
+
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.clothes-toolbar {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        14px 0;
+
+    border-block:
+        1px solid
+        var(--clothes-border);
+
+}
+
+
+.clothes-filter-pills {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        7px;
+
+}
+
+
+.clothes-filter-pills button,
+.clothes-mobile-filter-button {
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        999px;
+
+    padding:
+        10px 15px;
+
+    background:
+        var(--clothes-surface);
+
+    color:
+        var(--clothes-text);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    transition:
+        .2s ease;
+
+}
+
+
+.clothes-filter-pills button:hover {
+
+    border-color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-filter-pills button.active {
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+    border-color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-toolbar-actions {
+
+    display:
+        flex;
+
+    gap:
+        8px;
+
+}
+
+
+.clothes-sort {
+
+    min-width:
+        160px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        999px;
+
+    padding:
+        10px 14px;
+
+    outline:
+        0;
+
+    background:
+        var(--clothes-surface);
+
+    color:
+        var(--clothes-text);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+}
+
+
+.clothes-mobile-filter-button {
+
+    display:
+        none;
+
+}
+
+
+/* =========================================================
+   SHOP LAYOUT
+========================================================= */
+
+.clothes-shop-layout {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        235px
+        minmax(0, 1fr);
+
+    gap:
+        30px;
+
+    margin-top:
+        28px;
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.clothes-sidebar {
+
+    position:
+        sticky;
+
+    top:
+        110px;
+
+    align-self:
+        start;
+
+    padding:
+        20px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        17px;
+
+    background:
+        var(--clothes-surface);
+
+}
+
+
+.clothes-sidebar-title {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding-bottom:
+        16px;
+
+    border-bottom:
+        1px solid
+        var(--clothes-border);
+
+}
+
+
+.clothes-sidebar-title h3 {
+
+    font-size:
+        12px;
+
+    letter-spacing:
+        .1em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.clothes-sidebar-title button {
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* FILTER BOX */
+
+.clothes-filter-box {
+
+    padding:
+        20px 0;
+
+    border-bottom:
+        1px solid
+        var(--clothes-border);
+
+}
+
+
+.clothes-filter-box h4 {
+
+    margin-bottom:
+        13px;
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        .08em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* RADIO */
+
+.clothes-radio {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        7px 0;
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        10px;
+
+}
+
+
+.clothes-radio input {
+
+    accent-color:
+        var(--clothes-green);
+
+}
+
+
+/* PRICE */
+
+.clothes-price-value {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    margin-bottom:
+        10px;
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        9px;
+
+}
+
+
+.clothes-price-value b {
+
+    color:
+        var(--clothes-text);
+
+}
+
+
+.clothes-filter-box
+input[type="range"] {
+
+    width:
+        100%;
+
+    accent-color:
+        var(--clothes-green);
+
+}
+
+
+/* COLORS */
+
+.clothes-color-options {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        10px;
+
+}
+
+
+.clothes-color-dot {
+
+    width:
+        27px;
+
+    height:
+        27px;
+
+    border:
+        2px solid
+        var(--clothes-surface);
+
+    outline:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        50%;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.clothes-color-dot:hover {
+
+    transform:
+        scale(1.18);
+
+}
+
+
+.clothes-color-black {
+
+    background:
+        #050505;
+
+}
+
+
+.clothes-color-white {
+
+    background:
+        #ffffff;
+
+}
+
+
+.clothes-color-green {
+
+    background:
+        #75c400;
+
+}
+
+
+.clothes-color-blue {
+
+    background:
+        #2d5fb9;
+
+}
+
+
+.clothes-color-brown {
+
+    background:
+        #815332;
+
+}
+
+
+.clothes-color-beige {
+
+    background:
+        #d8c39d;
+
+}
+
+
+/* OFFER BOX */
+
+.clothes-filter-offer {
+
+    margin-top:
+        20px;
+
+    padding:
+        20px;
+
+    border-radius:
+        14px;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+}
+
+
+.clothes-filter-offer span {
+
+    font-size:
+        8px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        .15em;
+
+}
+
+
+.clothes-filter-offer strong {
+
+    display:
+        block;
+
+    margin:
+        11px 0;
+
+    font-size:
+        22px;
+
+    line-height:
+        .9;
+
+    letter-spacing:
+        -.05em;
+
+}
+
+
+.clothes-filter-offer small {
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+.clothes-product-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        16px;
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+.clothes-product-card {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        17px;
+
+    background:
+        var(--clothes-surface);
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+
+}
+
+
+.clothes-product-card:hover {
+
+    transform:
+        translateY(-7px);
+
+    border-color:
+        rgba(142,224,0,.40);
+
+    box-shadow:
+        var(--clothes-shadow);
+
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+.clothes-product-image-wrap {
+
+    position:
+        relative;
+
+    height:
+        350px;
+
+    overflow:
+        hidden;
+
+    background:
+        var(--clothes-surface-2);
+
+}
+
+
+.clothes-product-image {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    transition:
+        transform .6s
+        cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+.clothes-product-card:hover
+.clothes-product-image {
+
+    transform:
+        scale(1.07);
+
+}
+
+
+/* FALLBACK */
+
+.clothes-card-image-fallback {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    display:
+        none;
+
+    place-content:
+        center;
+
+    text-align:
+        center;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(142,224,0,.15),
+            transparent 200px
+        ),
+
+        #080a08;
+
+    color:
+        #ffffff;
+
+}
+
+
+.clothes-product-image-wrap.image-missing
+.clothes-card-image-fallback {
+
+    display:
+        grid;
+
+}
+
+
+.clothes-card-image-fallback span {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        9px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        .2em;
+
+}
+
+
+.clothes-card-image-fallback strong {
+
+    font-size:
+        55px;
+
+    line-height:
+        .9;
+
+    letter-spacing:
+        -.08em;
+
+}
+
+
+.clothes-card-image-fallback small {
+
+    color:
+        var(--clothes-gold);
+
+    font-size:
+        8px;
+
+    letter-spacing:
+        .3em;
+
+}
+
+
+/* BADGE */
+
+.clothes-product-badge {
+
+    position:
+        absolute;
+
+    z-index:
+        3;
+
+    top:
+        12px;
+
+    left:
+        12px;
+
+    padding:
+        7px 9px;
+
+    border-radius:
+        5px;
+
+    background:
+        #050505;
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        7px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        .08em;
+
+}
+
+
+/* WISHLIST */
+
+.clothes-wishlist {
+
+    position:
+        absolute;
+
+    z-index:
+        5;
+
+    top:
+        10px;
+
+    right:
+        10px;
+
+    width:
+        39px;
+
+    height:
+        39px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.94);
+
+    color:
+        #050505;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.clothes-wishlist:hover {
+
+    transform:
+        scale(1.1);
+
+}
+
+
+.clothes-wishlist.active {
+
+    color:
+        #e22e49;
+
+}
+
+
+/* =========================================================
+   IMAGE HOVER OVERLAY
+========================================================= */
+
+.clothes-image-overlay {
+
+    position:
+        absolute;
+
+    z-index:
+        4;
+
+    left:
+        10px;
+
+    right:
+        10px;
+
+    bottom:
+        10px;
+
+    opacity:
+        0;
+
+    transform:
+        translateY(12px);
+
+    transition:
+        .3s ease;
+
+}
+
+
+.clothes-product-card:hover
+.clothes-image-overlay {
+
+    opacity:
+        1;
+
+    transform:
+        translateY(0);
+
+}
+
+
+.clothes-overlay-view {
+
+    width:
+        100%;
+
+    min-height:
+        44px;
+
+    border:
+        0;
+
+    border-radius:
+        10px;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+    font-size:
+        10px;
+
+    font-weight:
+        950;
+
+}
+
+
+.clothes-overlay-view i {
+
+    margin-right:
+        7px;
+
+}
+
+
+/* IMAGE NUMBER */
+
+.clothes-image-number {
+
+    position:
+        absolute;
+
+    z-index:
+        3;
+
+    right:
+        13px;
+
+    bottom:
+        13px;
+
+    color:
+        rgba(255,255,255,.55);
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =========================================================
+   PRODUCT CONTENT
+========================================================= */
+
+.clothes-product-content {
+
+    padding:
+        16px;
+
+}
+
+
+/* TOPLINE */
+
+.clothes-product-topline {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+}
+
+
+.clothes-product-category {
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        8px;
+
+    font-weight:
+        950;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .08em;
+
+}
+
+
+.clothes-stock {
+
+    color:
+        #6fae32;
+
+    font-size:
+        7px;
+
+    font-weight:
+        900;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.clothes-stock.low {
+
+    color:
+        var(--clothes-danger);
+
+}
+
+
+/* PRODUCT NAME */
+
+.clothes-product-name {
+
+    margin:
+        8px 0;
+
+    min-height:
+        37px;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.15;
+
+    letter-spacing:
+        -.02em;
+
+}
+
+
+/* RATING */
+
+.clothes-product-rating {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    font-size:
+        9px;
+
+}
+
+
+.clothes-stars {
+
+    color:
+        var(--clothes-gold);
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.clothes-product-rating strong {
+
+    color:
+        var(--clothes-text);
+
+}
+
+
+.clothes-product-rating > span:last-child {
+
+    color:
+        var(--clothes-muted);
+
+}
+
+
+/* PRICE */
+
+.clothes-price-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        7px;
+
+    margin-top:
+        12px;
+
+}
+
+
+.clothes-current-price {
+
+    font-size:
+        18px;
+
+}
+
+
+.clothes-old-price {
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        10px;
+
+}
+
+
+.clothes-discount {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        8px;
+
+    font-weight:
+        950;
+
+}
+
+
+/* COLOR */
+
+.clothes-product-color {
+
+    display:
+        flex;
+
+    gap:
+        5px;
+
+    margin-top:
+        11px;
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        9px;
+
+}
+
+
+.clothes-product-color strong {
+
+    color:
+        var(--clothes-text);
+
+}
+
+
+/* SIZES */
+
+.clothes-size-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-top:
+        12px;
+
+}
+
+
+.clothes-size-label {
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        8px;
+
+}
+
+
+.clothes-size-list {
+
+    display:
+        flex;
+
+    gap:
+        5px;
+
+    flex-wrap:
+        wrap;
+
+}
+
+
+.clothes-size {
+
+    min-width:
+        27px;
+
+    padding:
+        5px 6px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        5px;
+
+    text-align:
+        center;
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        7px;
+
+    font-weight:
+        900;
+
+}
+
+
+.clothes-more-size {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =========================================================
+   CARD ACTIONS
+========================================================= */
+
+.clothes-card-actions {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr
+        52px;
+
+    gap:
+        7px;
+
+    margin-top:
+        15px;
+
+}
+
+
+.clothes-view-product {
+
+    min-height:
+        43px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        9px;
+
+    background:
+        transparent;
+
+    color:
+        var(--clothes-text);
+
+    font-size:
+        9px;
+
+    font-weight:
+        950;
+
+    transition:
+        .2s ease;
+
+}
+
+
+.clothes-view-product:hover {
+
+    border-color:
+        var(--clothes-green);
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-view-product i {
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-add-cart {
+
+    min-height:
+        43px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        5px;
+
+    border:
+        0;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+    font-size:
+        9px;
+
+    font-weight:
+        950;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.clothes-add-cart:hover {
+
+    transform:
+        scale(1.04);
+
+}
+
+
+.clothes-add-cart span {
+
+    display:
+        none;
+
+}
+
+
+/* LOAD MORE */
+
+.clothes-load-more {
+
+    width:
+        min(
+            300px,
+            100%
+        );
+
+    min-height:
+        52px;
+
+    margin:
+        30px auto 0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        10px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--clothes-surface);
+
+    color:
+        var(--clothes-text);
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+}
+
+
+.clothes-load-more:hover {
+
+    border-color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-load-more i {
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+/* EMPTY */
+
+.clothes-empty-state {
+
+    min-height:
+        350px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    align-content:
+        center;
+
+    padding:
+        30px;
+
+    text-align:
+        center;
+
+    border:
+        1px dashed
+        var(--clothes-border);
+
+    border-radius:
+        17px;
+
+}
+
+
+.clothes-empty-state i {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        40px;
+
+}
+
+
+.clothes-empty-state h3 {
+
+    margin:
+        15px 0 5px;
+
+    font-size:
+        26px;
+
+}
+
+
+.clothes-empty-state p {
+
+    margin-bottom:
+        20px;
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        12px;
+
+}
+
+
+.clothes-empty-state button {
+
+    padding:
+        12px 20px;
+
+    border:
+        0;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =========================================================
+   QUICK VIEW MODAL
+========================================================= */
+
+.clothes-modal-backdrop {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        200;
+
+    padding:
+        25px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    background:
+        rgba(0,0,0,.80);
+
+    backdrop-filter:
+        blur(10px);
+
+}
+
+
+.clothes-product-modal {
+
+    position:
+        relative;
+
+    width:
+        min(
+            900px,
+            100%
+        );
+
+    max-height:
+        90vh;
+
+    overflow:
+        auto;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        20px;
+
+    background:
+        var(--clothes-surface);
+
+    box-shadow:
+        0 40px 120px
+        rgba(0,0,0,.55);
+
+}
+
+
+.clothes-modal-close {
+
+    position:
+        absolute;
+
+    z-index:
+        10;
+
+    top:
+        13px;
+
+    right:
+        13px;
+
+    width:
+        40px;
+
+    height:
+        40px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(0,0,0,.72);
+
+    color:
+        #ffffff;
+
+}
+
+
+.clothes-modal-image {
+
+    position:
+        relative;
+
+    min-height:
+        500px;
+
+    background:
+        var(--clothes-surface-2);
+
+}
+
+
+.clothes-modal-image > img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    min-height:
+        500px;
+
+    object-fit:
+        cover;
+
+}
+
+
+.clothes-modal-image
+.clothes-product-fallback {
+
+    display:
+        none;
+
+}
+
+
+.clothes-modal-image.image-missing
+.clothes-product-fallback {
+
+    display:
+        grid;
+
+}
+
+
+.clothes-modal-content {
+
+    align-self:
+        center;
+
+    padding:
+        50px 40px;
+
+}
+
+
+.clothes-modal-content > span {
+
+    color:
+        var(--clothes-green);
+
+    font-size:
+        9px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        .16em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.clothes-modal-content h2 {
+
+    margin:
+        12px 0;
+
+    font-size:
+        clamp(
+            30px,
+            4vw,
+            48px
+        );
+
+    line-height:
+        .95;
+
+    letter-spacing:
+        -.06em;
+
+}
+
+
+.clothes-modal-rating {
+
+    color:
+        var(--clothes-gold);
+
+    font-size:
+        12px;
+
+}
+
+
+.clothes-modal-rating small {
+
+    margin-left:
+        8px;
+
+    color:
+        var(--clothes-muted);
+
+}
+
+
+.clothes-modal-price {
+
+    margin:
+        24px 0;
+
+    font-size:
+        27px;
+
+    font-weight:
+        950;
+
+}
+
+
+.clothes-modal-price del {
+
+    margin-left:
+        10px;
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+}
+
+
+.clothes-modal-content p {
+
+    color:
+        var(--clothes-muted);
+
+    font-size:
+        12px;
+
+    line-height:
+        1.7;
+
+}
+
+
+.clothes-modal-sizes {
+
+    margin:
+        20px 0;
+
+}
+
+
+.clothes-modal-sizes > b {
+
+    display:
+        block;
+
+    margin-bottom:
+        9px;
+
+    font-size:
+        10px;
+
+}
+
+
+.clothes-modal-sizes > div {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        7px;
+
+}
+
+
+.clothes-modal-sizes span {
+
+    min-width:
+        40px;
+
+    padding:
+        9px 12px;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        7px;
+
+    text-align:
+        center;
+
+    font-size:
+        9px;
+
+}
+
+
+.clothes-modal-cart {
+
+    width:
+        100%;
+
+    min-height:
+        52px;
+
+    border:
+        0;
+
+    border-radius:
+        10px;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+    font-size:
+        11px;
+
+    font-weight:
+        950;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.clothes-footer {
+
+    position:
+        relative;
+
+    margin-top:
+        140px;
+
+    padding:
+        80px
+        max(25px, 5vw)
+        25px;
+
+    background:
+
+        radial-gradient(
+            circle at 78% 10%,
+            rgba(142,224,0,.10),
+            transparent 350px
+        ),
+
+        #030403;
+
+    color:
+        #ffffff;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.09);
+
+}
+
+
+.clothes-footer-top {
+
+    width:
+        min(
+            1380px,
+            100%
+        );
+
+    margin:
+        0 auto;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.5fr
+        .7fr
+        .7fr
+        1.4fr;
+
+    gap:
+        60px;
+
+}
+
+
+.clothes-footer-brand {
+
+    max-width:
+        390px;
+
+}
+
+
+.clothes-footer-logo {
+
+    font-size:
+        35px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -.08em;
+
+}
+
+
+.clothes-footer-logo span {
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-footer-brand p {
+
+    margin:
+        17px 0 22px;
+
+    color:
+        #858d85;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.7;
+
+}
+
+
+/* SOCIAL */
+
+.clothes-socials {
+
+    display:
+        flex;
+
+    gap:
+        8px;
+
+}
+
+
+.clothes-socials a {
+
+    width:
+        39px;
+
+    height:
+        39px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    border-radius:
+        50%;
+
+    color:
+        #ffffff;
+
+    transition:
+        .2s ease;
+
+}
+
+
+.clothes-socials a:hover {
+
+    color:
+        var(--clothes-green);
+
+    border-color:
+        var(--clothes-green);
+
+    transform:
+        translateY(-4px);
+
+}
+
+
+/* FOOTER LINKS */
+
+.clothes-footer-top
+> div:not(.clothes-footer-brand):not(.clothes-footer-newsletter) {
+
+    display:
+        grid;
+
+    align-content:
+        start;
+
+    gap:
+        11px;
+
+}
+
+
+.clothes-footer h3 {
+
+    margin:
+        0 0 8px;
+
+    font-size:
+        12px;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .12em;
+
+}
+
+
+.clothes-footer-top
+> div
+> a {
+
+    color:
+        #858d85;
+
+    font-size:
+        10px;
+
+    transition:
+        .2s ease;
+
+}
+
+
+.clothes-footer-top
+> div
+> a:hover {
+
+    color:
+        var(--clothes-green);
+
+    transform:
+        translateX(4px);
+
+}
+
+
+/* NEWSLETTER */
+
+.clothes-footer-newsletter
+> span {
+
+    display:
+        block;
+
+}
+
+
+.clothes-footer-newsletter h3 {
+
+    margin-top:
+        13px;
+
+    font-size:
+        25px;
+
+    line-height:
+        1.1;
+
+    letter-spacing:
+        -.04em;
+
+    text-transform:
+        none;
+
+}
+
+
+.clothes-footer-newsletter form {
+
+    display:
+        flex;
+
+    margin-top:
+        18px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    border-radius:
+        10px;
+
+}
+
+
+.clothes-footer-newsletter input {
+
+    width:
+        100%;
+
+    min-width:
+        0;
+
+    height:
+        49px;
+
+    padding:
+        0 14px;
+
+    border:
+        0;
+
+    outline:
+        0;
+
+    background:
+        #0c0f0c;
+
+    color:
+        #ffffff;
+
+    font-size:
+        10px;
+
+}
+
+
+.clothes-footer-newsletter button {
+
+    width:
+        55px;
+
+    border:
+        0;
+
+    background:
+        var(--clothes-green);
+
+    color:
+        #050505;
+
+}
+
+
+.clothes-footer-newsletter small {
+
+    display:
+        block;
+
+    margin-top:
+        10px;
+
+    color:
+        #626a62;
+
+    font-size:
+        8px;
+
+}
+
+
+/* FOOTER BOTTOM */
+
+.clothes-footer-bottom {
+
+    width:
+        min(
+            1380px,
+            100%
+        );
+
+    margin:
+        65px auto 0;
+
+    padding-top:
+        18px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.10);
+
+    color:
+        #606760;
+
+    font-size:
+        8px;
+
+    letter-spacing:
+        .08em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   FLOATING BUTTONS
+========================================================= */
+
+.clothes-floating-controls {
+
+    position:
+        fixed;
+
+    z-index:
+        150;
+
+    right:
+        20px;
+
+    bottom:
+        20px;
+
+    display:
+        grid;
+
+    gap:
+        9px;
+
+}
+
+
+.clothes-floating-controls button {
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid
+        var(--clothes-border);
+
+    border-radius:
+        50%;
+
+    background:
+        var(--clothes-surface);
+
+    color:
+        var(--clothes-text);
+
+    box-shadow:
+        0 12px 35px
+        rgba(0,0,0,.28);
+
+}
+
+
+.clothes-floating-theme {
+
+    border-color:
+        var(--clothes-green)
+        !important;
+
+}
+
+
+.clothes-floating-theme i {
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+.clothes-floating-top {
+
+    background:
+        var(--clothes-green)
+        !important;
+
+    color:
+        #050505
+        !important;
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.clothes-toast {
+
+    position:
+        fixed;
+
+    z-index:
+        300;
+
+    right:
+        22px;
+
+    bottom:
+        25px;
+
+    max-width:
+        min(
+            370px,
+            calc(100vw - 40px)
+        );
+
+    padding:
+        14px 18px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    border:
+        1px solid
+        rgba(142,224,0,.28);
+
+    border-radius:
+        11px;
+
+    background:
+        #101410;
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.45);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    animation:
+        toastIn .3s
+        ease-out;
+
+}
+
+
+.clothes-toast i {
+
+    color:
+        var(--clothes-green);
+
+}
+
+
+@keyframes toastIn {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(15px);
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1200px
+========================================================= */
+
+@media (max-width: 1200px) {
+
+
+    .clothes-nav-links {
+
+        gap:
+            15px;
+
+    }
+
+
+    .clothes-product-grid {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+
+    }
+
+
+    .clothes-footer-top {
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 950px
+========================================================= */
+
+@media (max-width: 950px) {
+
+
+    .clothes-navbar {
+
+        flex-wrap:
+            wrap;
+
+        padding:
+            14px 20px;
+
+        gap:
+            12px;
+
+    }
+
+
+    .clothes-nav-links {
+
+        order:
+            3;
+
+        width:
+            100%;
+
+        overflow-x:
+            auto;
+
+        padding-bottom:
+            5px;
+
+    }
+
+
+    .clothes-navbar-search {
+
+        width:
+            min(
+                320px,
+                45vw
+            );
+
+        margin-left:
+            auto;
+
+    }
+
+
+    /* HERO */
+
+    .clothes-hero {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .clothes-hero-content {
+
+        padding:
+            60px 35px 35px;
+
+    }
+
+
+    .clothes-hero-visual {
+
+        min-height:
+            530px;
+
+    }
+
+
+    /* BENEFITS */
+
+    .clothes-benefits {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+    }
+
+
+    .clothes-benefits
+    > div:nth-child(2) {
+
+        border-right:
+            0;
+
+    }
+
+
+    /* SIDEBAR */
+
+    .clothes-shop-layout {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .clothes-sidebar {
+
+        display:
+            none;
+
+        position:
+            static;
+
+    }
+
+
+    .clothes-shop-layout.filters-open
+    .clothes-sidebar {
+
+        display:
+            block;
+
+    }
+
+
+    .clothes-mobile-filter-button {
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        gap:
+            6px;
+
+    }
+
+
+    .clothes-product-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 650px
+========================================================= */
+
+@media (max-width: 650px) {
+
+
+    /* ANNOUNCEMENT */
+
+    .clothes-announcement {
+
+        height:
+            32px;
+
+    }
+
+
+    .clothes-announcement-track {
+
+        gap:
+            22px;
+
+    }
+
+
+    .clothes-announcement-track span {
+
+        font-size:
+            8px;
+
+    }
+
+
+    /* NAV */
+
+    .clothes-logo {
+
+        font-size:
+            23px;
+
+    }
+
+
+    .clothes-navbar-search {
+
+        order:
+            2;
+
+        width:
+            100%;
+
+        margin:
+            0;
+
+    }
+
+
+    .clothes-nav-actions {
+
+        margin-left:
+            auto;
+
+    }
+
+
+    .clothes-theme-button,
+    .clothes-cart-button {
+
+        width:
+            41px;
+
+        height:
+            41px;
+
+    }
+
+
+    /* HERO */
+
+    .clothes-hero {
+
+        width:
+            calc(100% - 20px);
+
+        margin-top:
+            10px;
+
+        border-radius:
+            20px;
+
+    }
+
+
+    .clothes-hero-content {
+
+        padding:
+            50px 23px 30px;
+
+    }
+
+
+    .clothes-hero-title {
+
+        font-size:
+            57px;
+
+    }
+
+
+    .clothes-hero-description {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .clothes-hero-visual {
+
+        min-height:
+            420px;
+
+    }
+
+
+    .clothes-hero-image-frame {
+
+        inset:
+            25px
+            25px
+            45px
+            25px;
+
+    }
+
+
+    .clothes-hero-floating-card.discount {
+
+        width:
+            85px;
+
+        height:
+            85px;
+
+        right:
+            10px;
+
+        top:
+            25px;
+
+    }
+
+
+    .clothes-hero-floating-card.discount strong {
+
+        font-size:
+            25px;
+
+    }
+
+
+    .clothes-hero-floating-card.style {
+
+        left:
+            8px;
+
+        bottom:
+            60px;
+
+    }
+
+
+    .clothes-hero-controls {
+
+        left:
+            35px;
+
+        bottom:
+            18px;
+
+    }
+
+
+    .clothes-hero-scroll,
+    .clothes-hero-side-text {
+
+        display:
+            none;
+
+    }
+
+
+    /* BENEFITS */
+
+    .clothes-benefits {
+
+        width:
+            calc(100% - 28px);
+
+        margin-top:
+            -20px;
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .clothes-benefits > div {
+
+        border-right:
+            0;
+
+        border-bottom:
+            1px solid
+            var(--clothes-border);
+
+    }
+
+
+    .clothes-benefits > div:last-child {
+
+        border-bottom:
+            0;
+
+    }
+
+
+    /* SECTIONS */
+
+    .clothes-category-section,
+    .clothes-marquee-section,
+    .clothes-products-section {
+
+        width:
+            calc(100% - 28px);
+
+        margin-top:
+            75px;
+
+    }
+
+
+    .clothes-section-heading h2,
+    .clothes-products-heading h2 {
+
+        font-size:
+            41px;
+
+    }
+
+
+    /* TOOLBAR */
+
+    .clothes-toolbar {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+
+    .clothes-filter-pills {
+
+        flex-wrap:
+            nowrap;
+
+        overflow-x:
+            auto;
+
+        padding-bottom:
+            5px;
+
+    }
+
+
+    .clothes-filter-pills button {
+
+        flex:
+            0 0 auto;
+
+        white-space:
+            nowrap;
+
+    }
+
+
+    .clothes-toolbar-actions {
+
+        width:
+            100%;
+
+    }
+
+
+    .clothes-sort {
+
+        width:
+            100%;
+
+    }
+
+
+    /* PRODUCTS */
+
+    .clothes-product-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .clothes-product-image-wrap {
+
+        height:
+            460px;
+
+    }
+
+
+    .clothes-add-cart span {
+
+        display:
+            inline;
+
+    }
+
+
+    /* MODAL */
+
+    .clothes-product-modal {
+
+        grid-template-columns:
+            1fr;
+
+        max-height:
+            94vh;
+
+    }
+
+
+    .clothes-modal-image,
+    .clothes-modal-image > img {
+
+        min-height:
+            300px;
+
+        height:
+            300px;
+
+    }
+
+
+    .clothes-modal-content {
+
+        padding:
+            30px 23px;
+
+    }
+
+
+    /* FOOTER */
+
+    .clothes-footer {
+
+        margin-top:
+            85px;
+
+        padding-top:
+            60px;
+
+    }
+
+
+    .clothes-footer-top {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            40px;
+
+    }
+
+
+    .clothes-footer-bottom {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    /* FLOATING */
+
+    .clothes-floating-controls {
+
+        right:
+            13px;
+
+        bottom:
+            13px;
+
+    }
+
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 400px
+========================================================= */
+
+@media (max-width: 400px) {
+
+
+    .clothes-hero-title {
+
+        font-size:
+            49px;
+
+    }
+
+
+    .clothes-hero-buttons {
+
+        display:
+            grid;
+
+    }
+
+
+    .clothes-hero-primary,
+    .clothes-hero-secondary {
+
+        width:
+            100%;
+
+    }
+
+
+    .clothes-product-image-wrap {
+
+        height:
+            390px;
+
+    }
+
+
+    .clothes-section-heading h2,
+    .clothes-products-heading h2 {
+
+        font-size:
+            36px;
+
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            0.001ms
+            !important;
+
+        animation-iteration-count:
+            1
+            !important;
+
+        scroll-behavior:
+            auto
+            !important;
+
+        transition-duration:
+            0.001ms
+            !important;
+
+    }
+
+}
+
+
+
+
+
+/* =========================================
+   HERO IMAGE SIZE — REDUCED
+   ========================================= */
+
+.clothes-hero {
+    grid-template-columns: 1fr 0.78fr;
+}
+
+.clothes-hero-image-frame {
+    height: 620px;
+    min-height: 620px;
+}
+
+.clothes-hero-image-frame img {
+    max-width: 88%;
+    max-height: 88%;
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   HERO OVERLAP FIX
+   ========================================================= */
+
+/* Main hero */
+.clothes-hero {
+    position: relative;
+    min-height: 650px;
+    margin-bottom: 70px;
+    overflow: visible;
+    align-items: center;
+}
+
+/* Right image container */
+.clothes-hero-image-frame {
+    position: relative;
+    height: 560px;
+    min-height: 560px;
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+/* Product image */
+.clothes-hero-image-frame img {
+    width: 100%;
+    height: 100%;
+    max-width: 88%;
+    max-height: 88%;
+    object-fit: contain;
+    object-position: center bottom;
+    display: block;
+    margin: auto;
+}
+
+/* =========================================================
+   FLOATING DISCOUNT CARD
+   ========================================================= */
+
+.clothes-hero-discount {
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    z-index: 10;
+}
+
+/* =========================================================
+   DAILY STYLE FLOATING CARD
+   ========================================================= */
+
+.clothes-hero-floating-style {
+    position: absolute;
+    left: 24px;
+    bottom: 70px;
+    z-index: 30;
+}
+
+/* =========================================================
+   SLIDER CONTROLS
+   ========================================================= */
+
+.clothes-hero-slider-controls {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 25;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* =========================================================
+   SLIDER ARROWS
+   ========================================================= */
+
+.clothes-hero-slider-controls button {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   SIDE YEAR / TEXT
+   ========================================================= */
+
+.clothes-hero-side-text {
+    position: absolute;
+    right: 18px;
+    bottom: 70px;
+    z-index: 15;
+}
+
+/* =========================================================
+   SCROLL INDICATOR
+   ========================================================= */
+
+.clothes-hero-scroll {
+    position: absolute;
+    left: 65px;
+    bottom: 18px;
+    z-index: 20;
+}
+
+/* =========================================================
+   BENEFITS SECTION
+   ========================================================= */
+
+.clothes-benefits {
+    position: relative;
+    z-index: 50;
+    margin-top: 0;
+    transform: none;
+}
+
+/* Prevent hero floating elements from pushing into benefits */
+.clothes-hero + .clothes-benefits {
+    margin-top: 0;
+}
+

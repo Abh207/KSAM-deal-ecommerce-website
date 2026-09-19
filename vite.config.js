@@ -35,7 +35,8 @@ export default defineConfig({
                 watchwishlist: resolve(
                     __dirname,
                     "watchwishlist.html"
-                )
+                ),
+                cloths: resolve(__dirname, "clothes.html"),
             }
         }
     }
