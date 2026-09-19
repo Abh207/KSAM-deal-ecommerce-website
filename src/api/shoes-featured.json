@@ -1,0 +1,56 @@
+{
+  "heroProducts": [
+    {
+      "id": "shoe-001",
+      "name": "Urban Street Runner",
+      "category": "Sneakers",
+      "price": 1499,
+      "oldPrice": 2499,
+      "discount": 40,
+      "rating": 4.7,
+      "reviews": 128,
+      "image": "/products/shoes/shoe1.png",
+      "tag": "KSAM PICK",
+      "description": "Lightweight sneakers designed for everyday street style and comfortable movement."
+    },
+    {
+      "id": "shoe-002",
+      "name": "Velocity Pro Runner",
+      "category": "Running",
+      "price": 1899,
+      "oldPrice": 2999,
+      "discount": 37,
+      "rating": 4.8,
+      "reviews": 214,
+      "image": "/products/shoes/shoe2.png",
+      "tag": "TOP RATED",
+      "description": "Responsive running shoes built for comfortable everyday performance."
+    },
+    {
+      "id": "shoe-005",
+      "name": "Active Sprint X",
+      "category": "Sports",
+      "price": 2199,
+      "oldPrice": 3499,
+      "discount": 37,
+      "rating": 4.9,
+      "reviews": 301,
+      "image": "/products/shoes/shoe5.png",
+      "tag": "HOT DEAL",
+      "description": "Dynamic sports shoes designed for training and active movement."
+    },
+    {
+      "id": "shoe-008",
+      "name": "Mountain Trek Boot",
+      "category": "Boots",
+      "price": 2899,
+      "oldPrice": 4499,
+      "discount": 36,
+      "rating": 4.8,
+      "reviews": 112,
+      "image": "/products/shoes/shoe8.png",
+      "tag": "ADVENTURE",
+      "description": "Rugged outdoor boots with stability and reliable grip."
+    }
+  ]
+}

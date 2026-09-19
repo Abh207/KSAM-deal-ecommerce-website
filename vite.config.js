@@ -29,6 +29,7 @@ export default defineConfig({
     "orderSuccess.html"
 ),
                 Gadgets: resolve(__dirname, "fashionSpeaker.html"),
+                shoes: resolve(__dirname, "shoes.html"),
 
                 Watchshop: resolve(__dirname, "watchshop.html"),
                 watchwishlist: resolve(

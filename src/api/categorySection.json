@@ -27,6 +27,15 @@
             "color": "#e8f1ff",
             "link": "./fashionSpeaker.html"
         },
+        {
+            "id": "Shoes",
+            "name": "Shoes",
+            "description": "Stylish footwear for every occasion",
+            "productIds": [],
+            "icon": "👟",
+            "color": "#f0f8ff",
+            "link": "./shoes.html"
+        },
 
         {
             "id": "fashion",

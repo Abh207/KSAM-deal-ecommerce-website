@@ -790,6 +790,9 @@ function HomeProducts() {
             <HeroSection />
 
 
+           
+
+
 <CategorySection
     products={products}
     onCategorySelect={(category) => {

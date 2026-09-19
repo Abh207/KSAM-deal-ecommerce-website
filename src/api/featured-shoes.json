@@ -1,0 +1,160 @@
+{
+  "categories": [
+    {
+      "id": "men",
+      "name": "Men",
+      "subtitle": "SHOP NOW",
+      "image": "/products/shoes/shoe1.png"
+    },
+    {
+      "id": "women",
+      "name": "Women",
+      "subtitle": "SHOP NOW",
+      "image": "/products/shoes/shoe3.png"
+    },
+    {
+      "id": "kids",
+      "name": "Kids",
+      "subtitle": "SHOP NOW",
+      "image": "/products/shoes/shoe2.png"
+    },
+    {
+      "id": "running",
+      "name": "Running",
+      "subtitle": "SHOP NOW",
+      "image": "/products/shoes/shoe5.png"
+    },
+    {
+      "id": "casual",
+      "name": "Casual",
+      "subtitle": "SHOP NOW",
+      "image": "/products/shoes/shoe7.png"
+    },
+    {
+      "id": "slides",
+      "name": "Slides",
+      "subtitle": "SHOP NOW",
+      "image": "/products/shoes/shoe6.png"
+    }
+  ],
+
+  "products": [
+    {
+      "id": "featured-001",
+      "name": "Urban Air Runner",
+      "category": "Men",
+      "price": 1799,
+      "oldPrice": 2999,
+      "rating": 4.8,
+      "reviews": 248,
+      "image": "/products/shoes/shoe1.png",
+      "colors": [
+        "#111111",
+        "#ffffff",
+        "#b8c2c0"
+      ],
+      "badge": "BESTSELLER"
+    },
+    {
+      "id": "featured-002",
+      "name": "Velocity Max 270",
+      "category": "Running",
+      "price": 2299,
+      "oldPrice": 3499,
+      "rating": 4.7,
+      "reviews": 186,
+      "image": "/products/shoes/shoe2.png",
+      "colors": [
+        "#111111",
+        "#d8d8d8",
+        "#77d99b"
+      ],
+      "badge": "HOT"
+    },
+    {
+      "id": "featured-003",
+      "name": "UltraBoost Street",
+      "category": "Sports",
+      "price": 1999,
+      "oldPrice": 2999,
+      "rating": 4.9,
+      "reviews": 324,
+      "image": "/products/shoes/shoe3.png",
+      "colors": [
+        "#111111",
+        "#eeeeee"
+      ],
+      "badge": "TOP RATED"
+    },
+    {
+      "id": "featured-004",
+      "name": "New Balance Street",
+      "category": "Casual",
+      "price": 1899,
+      "oldPrice": 2799,
+      "rating": 4.6,
+      "reviews": 143,
+      "image": "/products/shoes/shoe4.png",
+      "colors": [
+        "#222222",
+        "#cfcfcf",
+        "#9ae6b4"
+      ],
+      "badge": "TRENDING"
+    },
+    {
+      "id": "featured-005",
+      "name": "Classic High Top",
+      "category": "Casual",
+      "price": 1599,
+      "oldPrice": 2499,
+      "rating": 4.7,
+      "reviews": 201,
+      "image": "/products/shoes/shoe5.png",
+      "colors": [
+        "#111111",
+        "#ffffff",
+        "#8ee0a8"
+      ],
+      "badge": "POPULAR"
+    },
+    {
+      "id": "featured-006",
+      "name": "Old School Canvas",
+      "category": "Casual",
+      "price": 1399,
+      "oldPrice": 1999,
+      "rating": 4.5,
+      "reviews": 97,
+      "image": "/products/shoes/shoe7.png",
+      "colors": [
+        "#111111",
+        "#ffffff",
+        "#b5b5b5"
+      ],
+      "badge": "NEW"
+    }
+  ],
+
+  "promotions": [
+    {
+      "id": "promo-1",
+      "label": "LIMITED DROP",
+      "title": "EXCLUSIVE STYLES.",
+      "subtitle": "LIMITED QUANTITIES.",
+      "button": "SHOP NOW",
+      "theme": "dark",
+      "image": "/products/shoes/shoe5.png"
+    },
+    {
+      "id": "promo-2",
+      "label": "JOIN THE STEP UP CLUB",
+      "title": "GET REWARDS.",
+      "subtitle": "EARLY ACCESS.",
+      "extra": "EXCLUSIVE PERKS.",
+      "button": "JOIN NOW",
+      "theme": "light",
+      "image": "/products/shoes/shoe8.png"
+    }
+  ]
+}
