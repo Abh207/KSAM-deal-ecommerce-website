@@ -81,6 +81,18 @@ function ShoeHero() {
                 <div className="shoe-hero-content">
 
 
+                     {/* KSAM DEAL LOGO */}
+
+    <div className="shoe-hero-logo">
+        <img
+            src={`${import.meta.env.BASE_URL}ksam-deal-logo.png`}
+            alt="KSAM Deal"
+        />
+    </div>
+
+    {/* HERO LABEL */}
+
+
                     <div className="shoe-hero-label">
 
                         <span className="shoe-label-dot">

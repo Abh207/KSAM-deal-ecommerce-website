@@ -693,9 +693,9 @@ useEffect(() => {
                 >
 
                     <img
-                        src="./public/ksam-deal logo.png"
-                        alt="KSAM Deal"
-                    />
+    src={`${import.meta.env.BASE_URL}ksam-deal%20logo.png`}
+    alt="KSAM Deal"
+/>
 
                 </a>
 
