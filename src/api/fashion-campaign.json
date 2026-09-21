@@ -1,0 +1,54 @@
+{
+  "settings": {
+    "autoPlayDelay": 5500
+  },
+
+  "slides": [
+    {
+      "id": "campaign-01",
+      "image": "/products/clothes/fbg1.png",
+      "alt": "Classic oversized black t-shirt fashion campaign",
+      "eyebrow": "NEW SEASON • KSAM DEAL",
+      "smallLabel": "CLASSIC COLLECTION",
+      "title": "Classic Oversized",
+      "description": "Minimal look. Maximum style. Discover everyday pieces designed for effortless fashion.",
+      "discount": 50,
+      "category": "MEN • STREETWEAR"
+    },
+
+    {
+      "id": "campaign-02",
+      "image": "/products/clothes/fbg2.png",
+      "alt": "Premium denim jacket fashion campaign",
+      "eyebrow": "PREMIUM • KSAM DEAL",
+      "smallLabel": "DENIM COLLECTION",
+      "title": "Premium Denim",
+      "description": "Timeless denim pieces created for everyday confidence and modern street style.",
+      "discount": 40,
+      "category": "DENIM • OUTERWEAR"
+    },
+
+    {
+      "id": "campaign-03",
+      "image": "/products/clothes/fbg3.png",
+      "alt": "Floral summer dress fashion campaign",
+      "eyebrow": "NEW COLLECTION • KSAM DEAL",
+      "smallLabel": "WOMEN COLLECTION",
+      "title": "Dresses For Every You",
+      "description": "Elegant, modern and timeless styles designed to make every moment feel special.",
+      "discount": 50,
+      "category": "WOMEN • DRESSES"
+    },
+    {
+      "id": "campaign-04",
+      "image": "/products/clothes/fbg4.png",
+      "alt": "Floral summer dress fashion campaign",
+      "eyebrow": "NEW COLLECTION • KSAM DEAL",
+      "smallLabel": "WOMEN COLLECTION",
+      "title": "Dresses For Every You",
+      "description": "Elegant, modern and timeless styles designed to make every moment feel special.",
+      "discount": 50,
+      "category": "WOMEN • DRESSES"
+    }
+  ]
+}

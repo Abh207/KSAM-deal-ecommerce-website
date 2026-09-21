@@ -7,6 +7,8 @@ import React, {
 import { createRoot } from "react-dom/client";
 
 import ClothesCard from "./ClothesCard";
+
+import FashionCampaign from "./FashionCampaign";
 import ClothesHero from "./ClothesHero";
 
 import clothesData from "../../api/clothesproducts.json";
@@ -1135,6 +1137,9 @@ function ClothesMain() {
                 </div>
 
             </section>
+
+
+            <FashionCampaign />
 
 
             {/* =================================================

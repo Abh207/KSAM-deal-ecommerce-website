@@ -1,0 +1,771 @@
+/* =========================================================
+   KSAM DEAL — FASHION CAMPAIGN
+   ========================================================= */
+
+.fashion-campaign {
+    position: relative;
+    width: calc(100% - 40px);
+    height: 650px;
+    min-height: 650px;
+
+    margin: 40px auto;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 32px;
+
+    background: #050505;
+
+    isolation: isolate;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+
+.fashion-campaign-background {
+    position: absolute;
+    inset: 0;
+
+    overflow: hidden;
+
+    z-index: -3;
+}
+
+.fashion-campaign-slide {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+}
+
+.fashion-campaign-slide.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fashion-campaign-slide img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+    object-position: center;
+
+    transition:
+        transform 6s cubic-bezier(.2,.7,.2,1);
+}
+
+
+/* =========================================================
+   DARK OVERLAY
+   ========================================================= */
+
+.fashion-campaign-overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: -2;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.55) 0%,
+            rgba(0, 0, 0, 0.08) 55%,
+            rgba(0, 0, 0, 0.18) 100%
+        );
+}
+
+
+/* =========================================================
+   TOP AREA
+   ========================================================= */
+
+.fashion-campaign-top {
+    position: absolute;
+
+    top: 30px;
+    left: 35px;
+    right: 35px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 10;
+}
+
+.fashion-campaign-season {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #9cff00;
+
+    text-transform: uppercase;
+}
+
+.campaign-dot {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: #9cff00;
+
+    box-shadow:
+        0 0 0 7px rgba(156, 255, 0, 0.08),
+        0 0 20px rgba(156, 255, 0, 0.6);
+}
+
+
+/* =========================================================
+   COUNTER
+   ========================================================= */
+
+.campaign-counter {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    font-weight: 700;
+}
+
+.counter-line {
+    width: 45px;
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.6);
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.fashion-campaign-content {
+    position: absolute;
+
+    left: 7%;
+
+    bottom: 12%;
+
+    width: min(420px, 40%);
+
+    z-index: 10;
+}
+
+.campaign-mini-label {
+    margin-bottom: 16px;
+
+    color: #9cff00;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+}
+
+.fashion-campaign-content h2 {
+    margin: 0 0 18px;
+
+    font-size: clamp(38px, 5vw, 76px);
+
+    line-height: 0.95;
+
+    font-weight: 900;
+
+    letter-spacing: -3px;
+
+    text-transform: uppercase;
+
+    text-wrap: balance;
+}
+
+.fashion-campaign-content p {
+    max-width: 390px;
+
+    margin: 0 0 28px;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.campaign-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.campaign-shop-button {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 15px 22px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #9cff00;
+
+    color: #050505;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.campaign-shop-button:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 35px rgba(156, 255, 0, 0.25);
+}
+
+.campaign-arrow {
+    font-size: 20px;
+
+    transition: transform 0.3s ease;
+}
+
+.campaign-shop-button:hover .campaign-arrow {
+    transform: translateX(5px);
+}
+
+.campaign-pause-button {
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    color: white;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(10px);
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.campaign-pause-button:hover {
+    background: #9cff00;
+
+    border-color: #9cff00;
+
+    color: #050505;
+}
+
+
+/* =========================================================
+   SALE BADGE
+   ========================================================= */
+
+.campaign-sale-badge {
+    position: absolute;
+
+    top: 48px;
+    right: 50px;
+
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    background: #9cff00;
+
+    color: #050505;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
+
+    z-index: 15;
+
+    transform: rotate(7deg);
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.3);
+
+    animation:
+        campaignBadgeFloat 4s ease-in-out infinite;
+}
+
+.sale-small {
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+.campaign-sale-badge strong {
+    margin: 4px 0;
+
+    font-size: 34px;
+
+    font-weight: 1000;
+}
+
+.sale-off {
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+@keyframes campaignBadgeFloat {
+
+    0%,
+    100% {
+        transform: rotate(7deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(7deg) translateY(-8px);
+    }
+}
+
+
+/* =========================================================
+   BOTTOM INFO
+   ========================================================= */
+
+.campaign-bottom {
+    position: absolute;
+
+    left: 35px;
+    right: 35px;
+    bottom: 28px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 20;
+}
+
+.campaign-bottom-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+}
+
+.campaign-index {
+    color: #9cff00;
+
+    font-size: 18px;
+}
+
+.campaign-bottom-line {
+    width: 55px;
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.4);
+}
+
+
+/* =========================================================
+   ARROWS
+   ========================================================= */
+
+.campaign-controls {
+    display: flex;
+
+    gap: 10px;
+}
+
+.campaign-controls button {
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid rgba(255, 255, 255, 0.4);
+
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.25);
+
+    color: white;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(8px);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+.campaign-controls button:hover {
+    transform: translateY(-3px);
+
+    background: #9cff00;
+
+    color: #050505;
+
+    border-color: #9cff00;
+}
+
+
+/* =========================================================
+   DOTS
+   ========================================================= */
+
+.campaign-dots {
+    position: absolute;
+
+    right: 35px;
+
+    bottom: 105px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+    z-index: 20;
+}
+
+.campaign-dots button {
+    width: 30px;
+    height: 4px;
+
+    padding: 0;
+
+    border: none;
+
+    background: rgba(255, 255, 255, 0.35);
+
+    cursor: pointer;
+
+    transition:
+        width 0.3s ease,
+        background 0.3s ease;
+}
+
+.campaign-dots button.active {
+    width: 50px;
+
+    background: #9cff00;
+}
+
+.campaign-dots button span {
+    display: block;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.campaign-progress {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    z-index: 30;
+}
+
+.campaign-progress-bar {
+    width: 0%;
+    height: 100%;
+
+    background: #9cff00;
+
+    animation-name: campaignProgress;
+
+    animation-timing-function: linear;
+
+    animation-fill-mode: forwards;
+}
+
+.campaign-progress-bar.paused {
+    animation-play-state: paused;
+}
+
+@keyframes campaignProgress {
+
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .fashion-campaign {
+        width: calc(100% - 24px);
+
+        height: 680px;
+
+        min-height: 0;
+
+        border-radius: 24px;
+    }
+
+    .fashion-campaign-content {
+        left: 5%;
+
+        bottom: 14%;
+
+        width: 45%;
+    }
+
+    .fashion-campaign-content h2 {
+        font-size: clamp(34px, 6vw, 60px);
+    }
+
+    .campaign-sale-badge {
+        width: 90px;
+        height: 90px;
+
+        right: 30px;
+    }
+
+    .campaign-sale-badge strong {
+        font-size: 28px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .fashion-campaign {
+        height: 620px;
+
+        min-height: 620px;
+
+        margin: 25px auto;
+
+        border-radius: 20px;
+    }
+
+    .fashion-campaign-slide img {
+        object-position: center;
+    }
+
+    .fashion-campaign-overlay {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.2),
+                rgba(0, 0, 0, 0.78)
+            );
+    }
+
+    .fashion-campaign-content {
+        left: 25px;
+        right: 25px;
+        bottom: 90px;
+
+        width: auto;
+    }
+
+    .campaign-mini-label {
+        font-size: 10px;
+
+        letter-spacing: 2px;
+    }
+
+    .fashion-campaign-content h2 {
+        max-width: 350px;
+
+        font-size: 38px;
+
+        letter-spacing: -1.5px;
+    }
+
+    .fashion-campaign-content p {
+        max-width: 330px;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+    .campaign-sale-badge {
+        top: 70px;
+        right: 20px;
+
+        width: 75px;
+        height: 75px;
+    }
+
+    .campaign-sale-badge strong {
+        font-size: 22px;
+    }
+
+    .sale-small,
+    .sale-off {
+        font-size: 7px;
+    }
+
+    .fashion-campaign-top {
+        top: 22px;
+        left: 22px;
+        right: 22px;
+    }
+
+    .campaign-counter {
+        font-size: 9px;
+    }
+
+    .campaign-bottom {
+        left: 22px;
+        right: 22px;
+        bottom: 20px;
+    }
+
+    .campaign-bottom-info {
+        font-size: 8px;
+    }
+
+    .campaign-dots {
+        right: 20px;
+        bottom: 105px;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .fashion-campaign {
+        height: 590px;
+        min-height: 590px;
+    }
+
+    .fashion-campaign-content h2 {
+        font-size: 32px;
+    }
+
+    .fashion-campaign-content p {
+        display: none;
+    }
+
+    .campaign-shop-button {
+        padding: 13px 17px;
+
+        font-size: 12px;
+    }
+
+    .campaign-pause-button {
+        width: 42px;
+        height: 42px;
+    }
+
+    .campaign-sale-badge {
+        width: 68px;
+        height: 68px;
+    }
+
+    .campaign-controls button {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .fashion-campaign-slide,
+    .fashion-campaign-slide img,
+    .campaign-sale-badge {
+        animation: none !important;
+
+        transition: none !important;
+    }
+}
