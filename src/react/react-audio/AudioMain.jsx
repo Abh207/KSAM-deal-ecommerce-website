@@ -1,202 +1,2435 @@
-import React, {
-    useEffect,
-    useMemo,
-    useState
-} from "react";
+// import React, {
+//     useEffect,
+//     useMemo,
+//     useState
+// } from "react";
 
+// import { createRoot } from "react-dom/client";
+
+// import AudioCard from "./AudioCard";
+// import AudioHero from "./AudioHero";
+
+// import audioData from "../../api/audio-products.json";
+
+// import "./audio.css";
+
+
+// /* =========================================================
+//    CONSTANTS
+// ========================================================= */
+
+// const CART_KEY = "cartProductLS";
+// const WISHLIST_KEY = "audioWishlist";
+// const THEME_KEY = "ksamAudioTheme";
+
+
+// /* =========================================================
+//    IMAGE HELPER
+// ========================================================= */
+
+// const getImagePath = (image) => {
+
+//     if (!image) return "";
+
+//     return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
+// };
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// function AudioMain() {
+
+//     /* -------------------------------------------------------
+//        DATA
+//     ------------------------------------------------------- */
+
+//     const store = audioData.store || {};
+
+//     const products = audioData.products || [];
+
+//     const categories = audioData.categories || [];
+
+//     const features = audioData.featureHighlights || [];
+
+//     const offers = audioData.offers || [];
+
+//     const spotlightIds =
+//         audioData.spotlightProducts || [];
+
+
+//     /* -------------------------------------------------------
+//        THEME
+//     ------------------------------------------------------- */
+
+//     const [theme, setTheme] = useState(() => {
+
+//         return (
+//             localStorage.getItem(THEME_KEY) ||
+//             "dark"
+//         );
+
+//     });
+
+
+//     /* -------------------------------------------------------
+//        SEARCH / FILTER
+//     ------------------------------------------------------- */
+
+//     const [search, setSearch] = useState("");
+
+//     const [activeCategory, setActiveCategory] =
+//         useState("All");
+
+//     const [sortBy, setSortBy] =
+//         useState("featured");
+
+//     const [maxPrice, setMaxPrice] =
+//         useState(Number(store.maxPrice || 15000));
+
+//     const [visibleProducts, setVisibleProducts] =
+//         useState(Number(store.defaultVisibleProducts || 8));
+
+
+//     /* -------------------------------------------------------
+//        WISHLIST
+//     ------------------------------------------------------- */
+
+//     const [wishlist, setWishlist] = useState(() => {
+
+//         try {
+
+//             return JSON.parse(
+//                 localStorage.getItem(WISHLIST_KEY)
+//             ) || [];
+
+//         } catch {
+
+//             return [];
+
+//         }
+
+//     });
+
+
+//     /* -------------------------------------------------------
+//        CART
+//     ------------------------------------------------------- */
+
+//     const [cartCount, setCartCount] =
+//         useState(0);
+
+
+//     /* -------------------------------------------------------
+//        SPOTLIGHT
+//     ------------------------------------------------------- */
+
+//     const [spotlightIndex, setSpotlightIndex] =
+//         useState(0);
+
+
+//     /* -------------------------------------------------------
+//        OFFER
+//     ------------------------------------------------------- */
+
+//     const [offerIndex, setOfferIndex] =
+//         useState(0);
+
+//     const [timeLeft, setTimeLeft] =
+//         useState({
+//             days: 0,
+//             hours: 0,
+//             minutes: 0,
+//             seconds: 0
+//         });
+
+
+//     /* -------------------------------------------------------
+//        MOBILE FILTER
+//     ------------------------------------------------------- */
+
+//     const [mobileFilters, setMobileFilters] =
+//         useState(false);
+
+
+//     /* -------------------------------------------------------
+//        QUICK VIEW
+//     ------------------------------------------------------- */
+
+//     const [selectedProduct, setSelectedProduct] =
+//         useState(null);
+
+
+//     /* -------------------------------------------------------
+//        TOAST
+//     ------------------------------------------------------- */
+
+//     const [toast, setToast] =
+//         useState("");
+
+
+//     /* -------------------------------------------------------
+//        BACK TO TOP
+//     ------------------------------------------------------- */
+
+//     const [showTopButton, setShowTopButton] =
+//         useState(false);
+
+
+//     /* =======================================================
+//        APPLY THEME
+//     ======================================================= */
+
+//     useEffect(() => {
+
+//         document.documentElement.dataset.audioTheme =
+//             theme;
+
+//         localStorage.setItem(
+//             THEME_KEY,
+//             theme
+//         );
+
+//     }, [theme]);
+
+
+//     /* =======================================================
+//        READ CART
+//     ======================================================= */
+
+//     const updateCartCount = () => {
+
+//         try {
+
+//             const cart =
+//                 JSON.parse(
+//                     localStorage.getItem(CART_KEY)
+//                 ) || [];
+
+//             const count =
+//                 cart.reduce(
+//                     (total, item) =>
+//                         total +
+//                         Number(item.quantity || 1),
+//                     0
+//                 );
+
+//             setCartCount(count);
+
+//         } catch {
+
+//             setCartCount(0);
+
+//         }
+
+//     };
+
+
+//     useEffect(() => {
+
+//         updateCartCount();
+
+//         const handleStorage = () => {
+//             updateCartCount();
+//         };
+
+//         window.addEventListener(
+//             "storage",
+//             handleStorage
+//         );
+
+//         const interval =
+//             setInterval(
+//                 updateCartCount,
+//                 1000
+//             );
+
+//         return () => {
+
+//             window.removeEventListener(
+//                 "storage",
+//                 handleStorage
+//             );
+
+//             clearInterval(interval);
+
+//         };
+
+//     }, []);
+
+
+//     /* =======================================================
+//        WISHLIST STORAGE
+//     ======================================================= */
+
+//     useEffect(() => {
+
+//         localStorage.setItem(
+//             WISHLIST_KEY,
+//             JSON.stringify(wishlist)
+//         );
+
+//     }, [wishlist]);
+
+
+//     /* =======================================================
+//        WISHLIST TOGGLE
+//     ======================================================= */
+
+//     const toggleWishlist = (product) => {
+
+//         setWishlist((previous) => {
+
+//             if (previous.includes(product.id)) {
+
+//                 showToast(
+//                     "Removed from wishlist"
+//                 );
+
+//                 return previous.filter(
+//                     (id) => id !== product.id
+//                 );
+
+//             }
+
+//             showToast(
+//                 "Added to wishlist ❤️"
+//             );
+
+//             return [
+//                 ...previous,
+//                 product.id
+//             ];
+
+//         });
+
+//     };
+
+
+//     /* =======================================================
+//        TOAST
+//     ======================================================= */
+
+//     const showToast = (message) => {
+
+//         setToast(message);
+
+//         setTimeout(() => {
+
+//             setToast("");
+
+//         }, 2200);
+
+//     };
+
+
+//     /* =======================================================
+//        ADD TO CART
+//     ======================================================= */
+
+//     const addToCart = (product) => {
+
+//         try {
+
+//             const cart =
+//                 JSON.parse(
+//                     localStorage.getItem(CART_KEY)
+//                 ) || [];
+
+//             const existingIndex =
+//                 cart.findIndex(
+//                     (item) =>
+//                         item.id === product.id
+//                 );
+
+
+//             if (existingIndex !== -1) {
+
+//                 cart[existingIndex].quantity =
+//                     Number(
+//                         cart[existingIndex].quantity || 1
+//                     ) + 1;
+
+//             } else {
+
+//                 cart.push({
+
+//                     id: product.id,
+
+//                     name: product.name,
+
+//                     brand: product.brand,
+
+//                     category: product.category,
+
+//                     price: product.price,
+
+//                     oldPrice: product.oldPrice,
+
+//                     image: product.image,
+
+//                     quantity: 1
+
+//                 });
+
+//             }
+
+
+//             localStorage.setItem(
+//                 CART_KEY,
+//                 JSON.stringify(cart)
+//             );
+
+//             updateCartCount();
+
+//             showToast(
+//                 `${product.name} added to cart`
+//             );
+
+//         } catch {
+
+//             showToast(
+//                 "Unable to add product"
+//             );
+
+//         }
+
+//     };
+
+
+//     /* =======================================================
+//        CATEGORY SELECTION
+//     ======================================================= */
+
+//     const selectCategory = (category) => {
+
+//         setActiveCategory(category);
+
+//         setVisibleProducts(
+//             Number(
+//                 store.defaultVisibleProducts || 8
+//             )
+//         );
+
+//         setTimeout(() => {
+
+//             document
+//                 .querySelector(
+//                     ".audio-products-section"
+//                 )
+//                 ?.scrollIntoView({
+//                     behavior: "smooth",
+//                     block: "start"
+//                 });
+
+//         }, 50);
+
+//     };
+
+
+//     /* =======================================================
+//        SEARCH
+//     ======================================================= */
+
+//     const handleSearch = (event) => {
+
+//         setSearch(
+//             event.target.value
+//         );
+
+//         setVisibleProducts(
+//             Number(
+//                 store.defaultVisibleProducts || 8
+//             )
+//         );
+
+//     };
+
+
+//     /* =======================================================
+//        FILTER PRODUCTS
+//     ======================================================= */
+
+//     const filteredProducts = useMemo(() => {
+
+//         const searchText =
+//             search
+//                 .trim()
+//                 .toLowerCase();
+
+
+//         let result =
+//             products.filter((product) => {
+
+//                 const searchableText = [
+
+//                     product.name,
+
+//                     product.brand,
+
+//                     product.category,
+
+//                     product.color,
+
+//                     product.description,
+
+//                     ...(product.tags || []),
+
+//                     ...(product.features || [])
+
+//                 ]
+//                     .join(" ")
+//                     .toLowerCase();
+
+
+//                 const matchesSearch =
+//                     !searchText ||
+//                     searchableText.includes(
+//                         searchText
+//                     );
+
+
+//                 const matchesCategory =
+//                     activeCategory === "All" ||
+//                     product.category ===
+//                         activeCategory;
+
+
+//                 const matchesPrice =
+//                     Number(product.price) <=
+//                     Number(maxPrice);
+
+
+//                 return (
+//                     matchesSearch &&
+//                     matchesCategory &&
+//                     matchesPrice
+//                 );
+
+//             });
+
+
+//         /* ---------------------------------------------------
+//            SORT
+//         --------------------------------------------------- */
+
+//         if (sortBy === "price-low") {
+
+//             result.sort(
+//                 (a, b) =>
+//                     Number(a.price) -
+//                     Number(b.price)
+//             );
+
+//         }
+
+//         else if (sortBy === "price-high") {
+
+//             result.sort(
+//                 (a, b) =>
+//                     Number(b.price) -
+//                     Number(a.price)
+//             );
+
+//         }
+
+//         else if (sortBy === "rating") {
+
+//             result.sort(
+//                 (a, b) =>
+//                     Number(b.rating) -
+//                     Number(a.rating)
+//             );
+
+//         }
+
+//         else if (sortBy === "discount") {
+
+//             result.sort(
+//                 (a, b) =>
+//                     Number(b.discount) -
+//                     Number(a.discount)
+//             );
+
+//         }
+
+//         else if (sortBy === "newest") {
+
+//             result.sort(
+//                 (a, b) =>
+//                     Number(b.newArrival) -
+//                     Number(a.newArrival)
+//             );
+
+//         }
+
+//         else {
+
+//             result.sort(
+//                 (a, b) =>
+//                     Number(b.featured) -
+//                     Number(a.featured)
+//             );
+
+//         }
+
+
+//         return result;
+
+//     }, [
+//         products,
+//         search,
+//         activeCategory,
+//         maxPrice,
+//         sortBy
+//     ]);
+
+
+//     /* =======================================================
+//        VISIBLE PRODUCT LIST
+//     ======================================================= */
+
+//     const displayedProducts =
+//         filteredProducts.slice(
+//             0,
+//             visibleProducts
+//         );
+
+
+//     /* =======================================================
+//        LOAD MORE
+//     ======================================================= */
+
+//     const loadMore = () => {
+
+//         setVisibleProducts(
+//             (previous) =>
+//                 previous +
+//                 Number(
+//                     store.productsPerLoad || 4
+//                 )
+//         );
+
+//     };
+
+
+//     /* =======================================================
+//        SPOTLIGHT PRODUCT
+//     ======================================================= */
+
+//     const spotlightProducts = useMemo(() => {
+
+//         return spotlightIds
+//             .map((id) =>
+//                 products.find(
+//                     (product) =>
+//                         product.id === id
+//                 )
+//             )
+//             .filter(Boolean);
+
+//     }, [
+//         spotlightIds,
+//         products
+//     ]);
+
+
+//     /* =======================================================
+//        AUTOMATIC SPOTLIGHT CHANGE
+//     ======================================================= */
+
+//     useEffect(() => {
+
+//         if (
+//             spotlightProducts.length <= 1
+//         ) {
+//             return;
+//         }
+
+//         const timer =
+//             setInterval(() => {
+
+//                 setSpotlightIndex(
+//                     (previous) =>
+//                         (
+//                             previous + 1
+//                         ) %
+//                         spotlightProducts.length
+//                 );
+
+//             }, 6000);
+
+
+//         return () => {
+//             clearInterval(timer);
+//         };
+
+//     }, [
+//         spotlightProducts.length
+//     ]);
+
+
+//     /* =======================================================
+//        CURRENT SPOTLIGHT
+//     ======================================================= */
+
+//     const currentSpotlight =
+//         spotlightProducts[
+//             spotlightIndex %
+//             Math.max(
+//                 spotlightProducts.length,
+//                 1
+//             )
+//         ];
+
+
+//     /* =======================================================
+//        OFFER TIMER
+//     ======================================================= */
+
+//     const calculateTimeLeft = (
+//         endTime
+//     ) => {
+
+//         const difference =
+//             new Date(endTime).getTime() -
+//             Date.now();
+
+
+//         if (difference <= 0) {
+
+//             return {
+//                 days: 0,
+//                 hours: 0,
+//                 minutes: 0,
+//                 seconds: 0
+//             };
+
+//         }
+
+
+//         return {
+
+//             days:
+//                 Math.floor(
+//                     difference /
+//                     (1000 * 60 * 60 * 24)
+//                 ),
+
+//             hours:
+//                 Math.floor(
+//                     (
+//                         difference /
+//                         (1000 * 60 * 60)
+//                     ) % 24
+//                 ),
+
+//             minutes:
+//                 Math.floor(
+//                     (
+//                         difference /
+//                         (1000 * 60)
+//                     ) % 60
+//                 ),
+
+//             seconds:
+//                 Math.floor(
+//                     (
+//                         difference /
+//                         1000
+//                     ) % 60
+//                 )
+
+//         };
+
+//     };
+
+
+//     /* =======================================================
+//        UPDATE TIMER
+//     ======================================================= */
+
+//     useEffect(() => {
+
+//         if (!offers.length) {
+//             return;
+//         }
+
+
+//         const updateTimer = () => {
+
+//             const currentOffer =
+//                 offers[
+//                     offerIndex %
+//                     offers.length
+//                 ];
+
+
+//             const remaining =
+//                 calculateTimeLeft(
+//                     currentOffer.endTime
+//                 );
+
+
+//             const isExpired =
+//                 remaining.days === 0 &&
+//                 remaining.hours === 0 &&
+//                 remaining.minutes === 0 &&
+//                 remaining.seconds === 0;
+
+
+//             if (isExpired) {
+
+//                 setOfferIndex(
+//                     (previous) =>
+//                         (
+//                             previous + 1
+//                         ) %
+//                         offers.length
+//                 );
+
+//                 return;
+
+//             }
+
+
+//             setTimeLeft(
+//                 remaining
+//             );
+
+//         };
+
+
+//         updateTimer();
+
+
+//         const timer =
+//             setInterval(
+//                 updateTimer,
+//                 1000
+//             );
+
+
+//         return () => {
+//             clearInterval(timer);
+//         };
+
+//     }, [
+//         offerIndex,
+//         offers
+//     ]);
+
+
+//     /* =======================================================
+//        CURRENT OFFER
+//     ======================================================= */
+
+//     const currentOffer =
+//         offers[
+//             offerIndex %
+//             Math.max(
+//                 offers.length,
+//                 1
+//             )
+//         ];
+
+
+//     /* =======================================================
+//        OFFER PRODUCTS
+//     ======================================================= */
+
+//     const offerProducts =
+//         currentOffer
+//             ? currentOffer.productIds
+//                 .map((id) =>
+//                     products.find(
+//                         (product) =>
+//                             product.id === id
+//                     )
+//                 )
+//                 .filter(Boolean)
+//             : [];
+
+
+//     /* =======================================================
+//        BACK TO TOP
+//     ======================================================= */
+
+//     useEffect(() => {
+
+//         const handleScroll = () => {
+
+//             setShowTopButton(
+//                 window.scrollY > 600
+//             );
+
+//         };
+
+
+//         window.addEventListener(
+//             "scroll",
+//             handleScroll
+//         );
+
+
+//         return () => {
+
+//             window.removeEventListener(
+//                 "scroll",
+//                 handleScroll
+//             );
+
+//         };
+
+//     }, []);
+
+
+//     const scrollToTop = () => {
+
+//         window.scrollTo({
+
+//             top: 0,
+
+//             behavior: "smooth"
+
+//         });
+
+//     };
+
+
+//     /* =======================================================
+//        CART NAVIGATION
+//     ======================================================= */
+
+//     const openCart = () => {
+
+//         window.location.href =
+//             "./addToCart.html";
+
+//     };
+
+
+//     /* =======================================================
+//        RENDER
+//     ======================================================= */
+
+//     return (
+
+//         <div className="audio-page">
+
+
+//             {/* =================================================
+//                 TOP ANNOUNCEMENT
+//             ================================================= */}
+
+//             <div className="audio-announcement">
+
+//                 <div className="audio-announcement-track">
+
+//                     <span>
+//                         FREE DELIVERY ABOVE ₹999
+//                     </span>
+
+//                     <span>•</span>
+
+//                     <span>
+//                         UP TO 60% OFF
+//                     </span>
+
+//                     <span>•</span>
+
+//                     <span>
+//                         PREMIUM AUDIO COLLECTION
+//                     </span>
+
+//                     <span>•</span>
+
+//                     <span>
+//                         KSAM DEAL
+//                     </span>
+
+//                     <span>•</span>
+
+//                     <span>
+//                         FREE DELIVERY ABOVE ₹999
+//                     </span>
+
+//                     <span>•</span>
+
+//                     <span>
+//                         UP TO 60% OFF
+//                     </span>
+
+//                 </div>
+
+//             </div>
+
+
+//             {/* =================================================
+//                 NAVBAR
+//             ================================================= */}
+
+//             <header className="audio-navbar">
+
+//                 <a
+//                     href="./index.html"
+//                     className="audio-logo"
+//                 >
+
+//                     <span className="audio-logo-main">
+//                         KSAM
+//                     </span>
+
+//                     <span className="audio-logo-sub">
+//                         DEAL
+//                     </span>
+
+//                 </a>
+
+
+//                 <nav className="audio-nav">
+
+//                     <a href="#home">
+//                         Home
+//                     </a>
+
+//                     <a href="#categories">
+//                         Categories
+//                     </a>
+
+//                     <a href="#offers">
+//                         Offers
+//                     </a>
+
+//                     <a href="#spotlight">
+//                         Spotlight
+//                     </a>
+
+//                     <a href="#products">
+//                         Products
+//                     </a>
+
+//                 </nav>
+
+
+//                 <div className="audio-nav-actions">
+
+//                     <button
+//                         className="audio-theme-button"
+//                         onClick={() =>
+//                             setTheme(
+//                                 theme === "dark"
+//                                     ? "light"
+//                                     : "dark"
+//                             )
+//                         }
+//                         aria-label="Change theme"
+//                     >
+//                         <i
+//                             className={
+//                                 theme === "dark"
+//                                     ? "fa-solid fa-sun"
+//                                     : "fa-solid fa-moon"
+//                             }
+//                         ></i>
+//                     </button>
+
+
+//                     <button
+//                         className="audio-cart-button"
+//                         onClick={openCart}
+//                     >
+
+//                         <i className="fa-solid fa-bag-shopping"></i>
+
+//                         <span>
+//                             Cart
+//                         </span>
+
+//                         <b>
+//                             {cartCount}
+//                         </b>
+
+//                     </button>
+
+//                 </div>
+
+//             </header>
+
+
+//             {/* =================================================
+//                 HERO
+//             ================================================= */}
+
+//             <main id="home">
+
+//                 <AudioHero
+//                     hero={audioData.hero}
+//                     onExplore={() =>
+//                         document
+//                             .querySelector(
+//                                 "#categories"
+//                             )
+//                             ?.scrollIntoView({
+//                                 behavior: "smooth"
+//                             })
+//                     }
+//                 />
+
+
+//                 {/* =============================================
+//                     AUTO MOVING STRIP
+//                 ============================================= */}
+
+//                 <section className="audio-marquee-section">
+
+//                     <div className="audio-marquee-label">
+//                         <span>
+//                             TRENDING AUDIO
+//                         </span>
+
+//                         <i className="fa-solid fa-arrow-right"></i>
+//                     </div>
+
+
+//                     <div className="audio-marquee">
+
+//                         <div className="audio-marquee-track">
+
+//                             {[
+//                                 ...products,
+//                                 ...products
+//                             ].map(
+//                                 (product, index) => (
+
+//                                     <div
+//                                         className="audio-marquee-card"
+//                                         key={`${product.id}-${index}`}
+//                                     >
+
+//                                         <div className="audio-marquee-image">
+
+//                                             <img
+//                                                 src={getImagePath(
+//                                                     product.image
+//                                                 )}
+//                                                 alt={
+//                                                     product.name
+//                                                 }
+//                                             />
+
+//                                         </div>
+
+//                                         <div>
+
+//                                             <small>
+//                                                 {product.brand}
+//                                             </small>
+
+//                                             <strong>
+//                                                 {product.name}
+//                                             </strong>
+
+//                                         </div>
+
+//                                         <span>
+//                                             {store.currency}
+//                                             {product.price}
+//                                         </span>
+
+//                                     </div>
+
+//                                 )
+//                             )}
+
+//                         </div>
+
+//                     </div>
+
+//                 </section>
+
+
+//                 {/* =============================================
+//                     CATEGORIES
+//                 ============================================= */}
+
+//                 <section
+//                     className="audio-categories-section"
+//                     id="categories"
+//                 >
+
+//                     <div className="audio-section-heading">
+
+//                         <div>
+
+//                             <span>
+//                                 EXPLORE
+//                             </span>
+
+//                             <h2>
+//                                 Find your sound.
+//                             </h2>
+
+//                         </div>
+
+//                         <p>
+//                             Choose the audio experience
+//                             that matches your lifestyle.
+//                         </p>
+
+//                     </div>
+
+
+//                     <div className="audio-category-grid">
+
+//                         <button
+//                             className={
+//                                 activeCategory === "All"
+//                                     ? "active"
+//                                     : ""
+//                             }
+//                             onClick={() =>
+//                                 selectCategory("All")
+//                             }
+//                         >
+
+//                             <i className="fa-solid fa-layer-group"></i>
+
+//                             <strong>
+//                                 All Audio
+//                             </strong>
+
+//                             <small>
+//                                 {products.length} products
+//                             </small>
+
+//                         </button>
+
+
+//                         {categories.map(
+//                             (category) => (
+
+//                                 <button
+//                                     key={category.id}
+//                                     className={
+//                                         activeCategory ===
+//                                         category.name
+//                                             ? "active"
+//                                             : ""
+//                                     }
+//                                     onClick={() =>
+//                                         selectCategory(
+//                                             category.name
+//                                         )
+//                                     }
+//                                 >
+
+//                                     <i
+//                                         className={
+//                                             category.icon
+//                                         }
+//                                     ></i>
+
+//                                     <strong>
+//                                         {category.name}
+//                                     </strong>
+
+//                                     <small>
+//                                         {
+//                                             products.filter(
+//                                                 (product) =>
+//                                                     product.category ===
+//                                                     category.name
+//                                             ).length
+//                                         } products
+//                                     </small>
+
+//                                 </button>
+
+//                             )
+//                         )}
+
+//                     </div>
+
+//                 </section>
+
+
+//                 {/* =============================================
+//                     OFFER SECTION
+//                 ============================================= */}
+
+//                 <section
+//                     className="audio-offer-section"
+//                     id="offers"
+//                 >
+
+//                     <div className="audio-offer-content">
+
+//                         <span className="audio-offer-eyebrow">
+//                             ⚡ LIMITED TIME
+//                         </span>
+
+//                         <h2>
+//                             {currentOffer?.title}
+//                         </h2>
+
+//                         <p>
+//                             {currentOffer?.subtitle}
+//                         </p>
+
+
+//                         <div className="audio-offer-discount">
+//                             {currentOffer?.discount}
+//                         </div>
+
+
+//                         <div className="audio-countdown">
+
+//                             <div>
+//                                 <strong>
+//                                     {String(
+//                                         timeLeft.days
+//                                     ).padStart(2, "0")}
+//                                 </strong>
+
+//                                 <span>
+//                                     DAYS
+//                                 </span>
+//                             </div>
+
+
+//                             <b>:</b>
+
+
+//                             <div>
+//                                 <strong>
+//                                     {String(
+//                                         timeLeft.hours
+//                                     ).padStart(2, "0")}
+//                                 </strong>
+
+//                                 <span>
+//                                     HOURS
+//                                 </span>
+//                             </div>
+
+
+//                             <b>:</b>
+
+
+//                             <div>
+//                                 <strong>
+//                                     {String(
+//                                         timeLeft.minutes
+//                                     ).padStart(2, "0")}
+//                                 </strong>
+
+//                                 <span>
+//                                     MIN
+//                                 </span>
+//                             </div>
+
+
+//                             <b>:</b>
+
+
+//                             <div>
+//                                 <strong>
+//                                     {String(
+//                                         timeLeft.seconds
+//                                     ).padStart(2, "0")}
+//                                 </strong>
+
+//                                 <span>
+//                                     SEC
+//                                 </span>
+//                             </div>
+
+//                         </div>
+
+
+//                         <button
+//                             className="audio-offer-button"
+//                             onClick={() =>
+//                                 document
+//                                     .querySelector(
+//                                         "#products"
+//                                     )
+//                                     ?.scrollIntoView({
+//                                         behavior: "smooth"
+//                                     })
+//                             }
+//                         >
+//                             Shop this offer
+
+//                             <i className="fa-solid fa-arrow-right"></i>
+
+//                         </button>
+
+//                     </div>
+
+
+//                     <div className="audio-offer-products">
+
+//                         {offerProducts.map(
+//                             (product) => (
+
+//                                 <div
+//                                     className="audio-offer-product"
+//                                     key={product.id}
+//                                 >
+
+//                                     <span>
+//                                         -{product.discount}%
+//                                     </span>
+
+//                                     <img
+//                                         src={getImagePath(
+//                                             product.image
+//                                         )}
+//                                         alt={
+//                                             product.name
+//                                         }
+//                                     />
+
+//                                     <strong>
+//                                         {product.name}
+//                                     </strong>
+
+//                                     <div>
+
+//                                         <b>
+//                                             {store.currency}
+//                                             {product.price}
+//                                         </b>
+
+//                                         <del>
+//                                             {store.currency}
+//                                             {product.oldPrice}
+//                                         </del>
+
+//                                     </div>
+
+//                                 </div>
+
+//                             )
+//                         )}
+
+//                     </div>
+
+//                 </section>
+
+
+//                 {/* =============================================
+//                     SPOTLIGHT
+//                 ============================================= */}
+
+//                 {currentSpotlight && (
+
+//                     <section
+//                         className="audio-spotlight-section"
+//                         id="spotlight"
+//                     >
+
+//                         <div className="audio-spotlight-image">
+
+//                             <div className="spotlight-glow"></div>
+
+//                             <img
+//                                 src={getImagePath(
+//                                     currentSpotlight.image
+//                                 )}
+//                                 alt={
+//                                     currentSpotlight.name
+//                                 }
+//                             />
+
+//                             <span className="spotlight-badge">
+//                                 {currentSpotlight.badge}
+//                             </span>
+
+//                         </div>
+
+
+//                         <div className="audio-spotlight-info">
+
+//                             <span>
+//                                 FEATURED SPOTLIGHT
+//                             </span>
+
+//                             <small>
+//                                 {currentSpotlight.brand}
+//                             </small>
+
+//                             <h2>
+//                                 {currentSpotlight.name}
+//                             </h2>
+
+//                             <p>
+//                                 {currentSpotlight.description}
+//                             </p>
+
+
+//                             <div className="spotlight-rating">
+
+//                                 <strong>
+//                                     ★ {currentSpotlight.rating}
+//                                 </strong>
+
+//                                 <span>
+//                                     (
+//                                     {currentSpotlight.reviews}
+//                                     reviews)
+//                                 </span>
+
+//                             </div>
+
+
+//                             <div className="spotlight-price">
+
+//                                 <strong>
+//                                     {store.currency}
+//                                     {currentSpotlight.price}
+//                                 </strong>
+
+//                                 <del>
+//                                     {store.currency}
+//                                     {currentSpotlight.oldPrice}
+//                                 </del>
+
+//                                 <b>
+//                                     {currentSpotlight.discount}%
+//                                     OFF
+//                                 </b>
+
+//                             </div>
+
+
+//                             <div className="spotlight-features">
+
+//                                 {currentSpotlight.features
+//                                     ?.slice(0, 4)
+//                                     .map(
+//                                         (
+//                                             feature,
+//                                             index
+//                                         ) => (
+
+//                                             <div
+//                                                 key={
+//                                                     `${currentSpotlight.id}-${index}`
+//                                                 }
+//                                             >
+
+//                                                 <i className="fa-solid fa-check"></i>
+
+//                                                 <span>
+//                                                     {feature}
+//                                                 </span>
+
+//                                             </div>
+
+//                                         )
+//                                     )}
+
+//                             </div>
+
+
+//                             <div className="spotlight-actions">
+
+//                                 <button
+//                                     onClick={() =>
+//                                         addToCart(
+//                                             currentSpotlight
+//                                         )
+//                                     }
+//                                 >
+//                                     <i className="fa-solid fa-cart-plus"></i>
+
+//                                     Add to cart
+//                                 </button>
+
+
+//                                 <button
+//                                     className="spotlight-wishlist"
+//                                     onClick={() =>
+//                                         toggleWishlist(
+//                                             currentSpotlight
+//                                         )
+//                                     }
+//                                 >
+
+//                                     <i
+//                                         className={
+//                                             wishlist.includes(
+//                                                 currentSpotlight.id
+//                                             )
+//                                                 ? "fa-solid fa-heart"
+//                                                 : "fa-regular fa-heart"
+//                                         }
+//                                     ></i>
+
+//                                 </button>
+
+//                             </div>
+
+
+//                             <div className="spotlight-dots">
+
+//                                 {spotlightProducts.map(
+//                                     (product, index) => (
+
+//                                         <button
+//                                             key={
+//                                                 product.id
+//                                             }
+//                                             className={
+//                                                 index ===
+//                                                 spotlightIndex
+//                                                     ? "active"
+//                                                     : ""
+//                                             }
+//                                             onClick={() =>
+//                                                 setSpotlightIndex(
+//                                                     index
+//                                                 )
+//                                             }
+//                                         ></button>
+
+//                                     )
+//                                 )}
+
+//                             </div>
+
+//                         </div>
+
+//                     </section>
+
+//                 )}
+
+
+//                 {/* =============================================
+//                     FEATURES
+//                 ============================================= */}
+
+//                 <section className="audio-features-section">
+
+//                     <div className="audio-section-heading">
+
+//                         <div>
+
+//                             <span>
+//                                 WHY KSAM AUDIO
+//                             </span>
+
+//                             <h2>
+//                                 Built for better sound.
+//                             </h2>
+
+//                         </div>
+
+//                     </div>
+
+
+//                     <div className="audio-feature-grid">
+
+//                         {features.map(
+//                             (feature, index) => (
+
+//                                 <article
+//                                     key={
+//                                         feature.id
+//                                     }
+//                                     className="audio-feature-card"
+//                                 >
+
+//                                     <div className="audio-feature-number">
+//                                         0{index + 1}
+//                                     </div>
+
+//                                     <div className="audio-feature-icon">
+
+//                                         <i
+//                                             className={
+//                                                 feature.icon
+//                                             }
+//                                         ></i>
+
+//                                     </div>
+
+//                                     <h3>
+//                                         {feature.title}
+//                                     </h3>
+
+//                                     <p>
+//                                         {feature.description}
+//                                     </p>
+
+//                                 </article>
+
+//                             )
+//                         )}
+
+//                     </div>
+
+//                 </section>
+
+
+//                 {/* =============================================
+//                     PRODUCTS
+//                 ============================================= */}
+
+//                 <section
+//                     className="audio-products-section"
+//                     id="products"
+//                 >
+
+//                     <div className="audio-products-heading">
+
+//                         <div>
+
+//                             <span>
+//                                 SHOP AUDIO
+//                             </span>
+
+//                             <h2>
+//                                 Find your next sound.
+//                             </h2>
+
+//                         </div>
+
+
+//                         <div className="audio-product-count">
+//                             {filteredProducts.length}
+//                             {" "}
+//                             products
+//                         </div>
+
+//                     </div>
+
+
+//                     {/* FILTER BAR */}
+
+//                     <div className="audio-filter-bar">
+
+//                         <div className="audio-search">
+
+//                             <i className="fa-solid fa-magnifying-glass"></i>
+
+//                             <input
+//                                 type="text"
+//                                 placeholder="Search earbuds, headphones..."
+//                                 value={search}
+//                                 onChange={handleSearch}
+//                             />
+
+//                             {search && (
+
+//                                 <button
+//                                     onClick={() =>
+//                                         setSearch("")
+//                                     }
+//                                 >
+//                                     ×
+//                                 </button>
+
+//                             )}
+
+//                         </div>
+
+
+//                         <select
+//                             value={sortBy}
+//                             onChange={(event) =>
+//                                 setSortBy(
+//                                     event.target.value
+//                                 )
+//                             }
+//                         >
+
+//                             <option value="featured">
+//                                 Featured
+//                             </option>
+
+//                             <option value="newest">
+//                                 New arrivals
+//                             </option>
+
+//                             <option value="rating">
+//                                 Top rated
+//                             </option>
+
+//                             <option value="discount">
+//                                 Biggest discount
+//                             </option>
+
+//                             <option value="price-low">
+//                                 Price: Low to High
+//                             </option>
+
+//                             <option value="price-high">
+//                                 Price: High to Low
+//                             </option>
+
+//                         </select>
+
+
+//                         <button
+//                             className="audio-mobile-filter-button"
+//                             onClick={() =>
+//                                 setMobileFilters(
+//                                     !mobileFilters
+//                                 )
+//                             }
+//                         >
+
+//                             <i className="fa-solid fa-sliders"></i>
+
+//                             Filters
+
+//                         </button>
+
+//                     </div>
+
+
+//                     {/* FILTER PANEL */}
+
+//                     <div
+//                         className={`audio-filter-panel ${
+//                             mobileFilters
+//                                 ? "open"
+//                                 : ""
+//                         }`}
+//                     >
+
+//                         <div>
+
+//                             <label>
+//                                 Category
+//                             </label>
+
+//                             <select
+//                                 value={
+//                                     activeCategory
+//                                 }
+//                                 onChange={(event) =>
+//                                     selectCategory(
+//                                         event.target.value
+//                                     )
+//                                 }
+//                             >
+
+//                                 <option value="All">
+//                                     All
+//                                 </option>
+
+//                                 {categories.map(
+//                                     (category) => (
+
+//                                         <option
+//                                             key={
+//                                                 category.id
+//                                             }
+//                                             value={
+//                                                 category.name
+//                                             }
+//                                         >
+//                                             {category.name}
+//                                         </option>
+
+//                                     )
+//                                 )}
+
+//                             </select>
+
+//                         </div>
+
+
+//                         <div className="audio-price-filter">
+
+//                             <div>
+
+//                                 <label>
+//                                     Maximum price
+//                                 </label>
+
+//                                 <strong>
+//                                     {store.currency}
+//                                     {maxPrice}
+//                                 </strong>
+
+//                             </div>
+
+//                             <input
+//                                 type="range"
+//                                 min="100"
+//                                 max={
+//                                     Number(
+//                                         store.maxPrice ||
+//                                         15000
+//                                     )
+//                                 }
+//                                 step="100"
+//                                 value={maxPrice}
+//                                 onChange={(event) =>
+//                                     setMaxPrice(
+//                                         Number(
+//                                             event.target.value
+//                                         )
+//                                     )
+//                                 }
+//                             />
+
+//                         </div>
+
+
+//                         <button
+//                             onClick={() => {
+
+//                                 setSearch("");
+
+//                                 setActiveCategory(
+//                                     "All"
+//                                 );
+
+//                                 setMaxPrice(
+//                                     Number(
+//                                         store.maxPrice ||
+//                                         15000
+//                                     )
+//                                 );
+
+//                                 setSortBy(
+//                                     "featured"
+//                                 );
+
+//                             }}
+//                         >
+//                             Reset filters
+//                         </button>
+
+//                     </div>
+
+
+//                     {/* PRODUCT GRID */}
+
+//                     {displayedProducts.length > 0 ? (
+
+//                         <div className="audio-product-grid">
+
+//                             {displayedProducts.map(
+//                                 (product) => (
+
+//                                     <AudioCard
+//                                         key={
+//                                             product.id
+//                                         }
+//                                         product={
+//                                             product
+//                                         }
+//                                         isWishlisted={
+//                                             wishlist.includes(
+//                                                 product.id
+//                                             )
+//                                         }
+//                                         onWishlist={
+//                                             toggleWishlist
+//                                         }
+//                                         onAddToCart={
+//                                             addToCart
+//                                         }
+//                                         onViewProduct={
+//                                             setSelectedProduct
+//                                         }
+//                                     />
+
+//                                 )
+//                             )}
+
+//                         </div>
+
+//                     ) : (
+
+//                         <div className="audio-empty-state">
+
+//                             <i className="fa-solid fa-headphones"></i>
+
+//                             <h3>
+//                                 No audio products found
+//                             </h3>
+
+//                             <p>
+//                                 Try another search or
+//                                 reset your filters.
+//                             </p>
+
+//                             <button
+//                                 onClick={() => {
+
+//                                     setSearch("");
+
+//                                     setActiveCategory(
+//                                         "All"
+//                                     );
+
+//                                     setMaxPrice(
+//                                         Number(
+//                                             store.maxPrice ||
+//                                             15000
+//                                         )
+//                                     );
+
+//                                 }}
+//                             >
+//                                 Reset
+//                             </button>
+
+//                         </div>
+
+//                     )}
+
+
+//                     {/* LOAD MORE */}
+
+//                     {visibleProducts <
+//                         filteredProducts.length && (
+
+//                         <div className="audio-load-more">
+
+//                             <button
+//                                 onClick={
+//                                     loadMore
+//                                 }
+//                             >
+//                                 Load more products
+
+//                                 <i className="fa-solid fa-arrow-down"></i>
+
+//                             </button>
+
+//                         </div>
+
+//                     )}
+
+//                 </section>
+
+//             </main>
+
+
+//             {/* =================================================
+//                 QUICK VIEW MODAL
+//             ================================================= */}
+
+//             {selectedProduct && (
+
+//                 <div
+//                     className="audio-modal"
+//                     onClick={() =>
+//                         setSelectedProduct(
+//                             null
+//                         )
+//                     }
+//                 >
+
+//                     <div
+//                         className="audio-modal-content"
+//                         onClick={(event) =>
+//                             event.stopPropagation()
+//                         }
+//                     >
+
+//                         <button
+//                             className="audio-modal-close"
+//                             onClick={() =>
+//                                 setSelectedProduct(
+//                                     null
+//                                 )
+//                             }
+//                         >
+//                             ×
+//                         </button>
+
+
+//                         <div className="audio-modal-image">
+
+//                             <img
+//                                 src={getImagePath(
+//                                     selectedProduct.image
+//                                 )}
+//                                 alt={
+//                                     selectedProduct.name
+//                                 }
+//                             />
+
+//                         </div>
+
+
+//                         <div className="audio-modal-info">
+
+//                             <small>
+//                                 {
+//                                     selectedProduct.brand
+//                                 }
+//                             </small>
+
+//                             <h2>
+//                                 {
+//                                     selectedProduct.name
+//                                 }
+//                             </h2>
+
+//                             <div className="audio-modal-rating">
+//                                 ★{" "}
+//                                 {
+//                                     selectedProduct.rating
+//                                 }
+//                                 {" "}
+//                                 (
+//                                 {
+//                                     selectedProduct.reviews
+//                                 }
+//                                 )
+//                             </div>
+
+//                             <p>
+//                                 {
+//                                     selectedProduct.description
+//                                 }
+//                             </p>
+
+
+//                             <div className="audio-modal-price">
+
+//                                 <strong>
+//                                     {store.currency}
+//                                     {
+//                                         selectedProduct.price
+//                                     }
+//                                 </strong>
+
+//                                 <del>
+//                                     {store.currency}
+//                                     {
+//                                         selectedProduct.oldPrice
+//                                     }
+//                                 </del>
+
+//                             </div>
+
+
+//                             <div className="audio-modal-specs">
+
+//                                 <div>
+//                                     <span>
+//                                         Battery
+//                                     </span>
+
+//                                     <strong>
+//                                         {
+//                                             selectedProduct.battery
+//                                         }
+//                                     </strong>
+//                                 </div>
+
+//                                 <div>
+//                                     <span>
+//                                         Connectivity
+//                                     </span>
+
+//                                     <strong>
+//                                         {
+//                                             selectedProduct.connectivity
+//                                         }
+//                                     </strong>
+//                                 </div>
+
+//                                 <div>
+//                                     <span>
+//                                         Water resistance
+//                                     </span>
+
+//                                     <strong>
+//                                         {
+//                                             selectedProduct.waterResistance
+//                                         }
+//                                     </strong>
+//                                 </div>
+
+//                                 <div>
+//                                     <span>
+//                                         Stock
+//                                     </span>
+
+//                                     <strong>
+//                                         {
+//                                             selectedProduct.stock
+//                                         }
+//                                     </strong>
+//                                 </div>
+
+//                             </div>
+
+
+//                             <button
+//                                 className="audio-modal-cart"
+//                                 onClick={() => {
+
+//                                     addToCart(
+//                                         selectedProduct
+//                                     );
+
+//                                     setSelectedProduct(
+//                                         null
+//                                     );
+
+//                                 }}
+//                             >
+
+//                                 <i className="fa-solid fa-cart-plus"></i>
+
+//                                 Add to cart
+
+//                             </button>
+
+//                         </div>
+
+//                     </div>
+
+//                 </div>
+
+//             )}
+
+
+//             {/* =================================================
+//                 TOAST
+//             ================================================= */}
+
+//             {toast && (
+
+//                 <div className="audio-toast">
+
+//                     <i className="fa-solid fa-circle-check"></i>
+
+//                     <span>
+//                         {toast}
+//                     </span>
+
+//                 </div>
+
+//             )}
+
+
+//             {/* =================================================
+//                 BACK TO TOP
+//             ================================================= */}
+
+//             {showTopButton && (
+
+//                 <button
+//                     className="audio-back-top"
+//                     onClick={scrollToTop}
+//                     aria-label="Back to top"
+//                 >
+//                     ↑
+//                 </button>
+
+//             )}
+
+
+//             {/* =================================================
+//                 FOOTER
+//             ================================================= */}
+
+//             <footer className="audio-footer">
+
+//                 <div className="audio-footer-main">
+
+//                     <div>
+
+//                         <div className="audio-footer-logo">
+//                             KSAM
+//                             <span>
+//                                 DEAL
+//                             </span>
+//                         </div>
+
+//                         <p>
+//                             Premium audio,
+//                             powerful experiences.
+//                         </p>
+
+//                     </div>
+
+
+//                     <div>
+
+//                         <h4>
+//                             Shop
+//                         </h4>
+
+//                         <a href="#products">
+//                             Earbuds
+//                         </a>
+
+//                         <a href="#products">
+//                             Headphones
+//                         </a>
+
+//                         <a href="#products">
+//                             Speakers
+//                         </a>
+
+//                         <a href="#products">
+//                             Gaming
+//                         </a>
+
+//                     </div>
+
+
+//                     <div>
+
+//                         <h4>
+//                             Help
+//                         </h4>
+
+//                         <a href="./contact.html">
+//                             Contact
+//                         </a>
+
+//                         <a href="./addToCart.html">
+//                             Cart
+//                         </a>
+
+//                         <a href="#offers">
+//                             Offers
+//                         </a>
+
+//                     </div>
+
+
+//                     <div>
+
+//                         <h4>
+//                             KSAM Deal
+//                         </h4>
+
+//                         <p>
+//                             Better products.
+//                             Better prices.
+//                             Better everyday.
+//                         </p>
+
+//                     </div>
+
+//                 </div>
+
+
+//                 <div className="audio-footer-bottom">
+
+//                     <span>
+//                         © {new Date().getFullYear()}
+//                         {" "}
+//                         KSAM Deal. All rights reserved.
+//                     </span>
+
+//                     <span>
+//                         Designed for better sound.
+//                     </span>
+
+//                 </div>
+
+//             </footer>
+
+//         </div>
+
+//     );
+// }
+
+
+// /* =========================================================
+//    MOUNT
+// ========================================================= */
+
+// const rootElement =
+//     document.getElementById(
+//         "audio-root"
+//     );
+
+
+// if (rootElement) {
+
+//     createRoot(
+//         rootElement
+//     ).render(
+//         <AudioMain />
+//     );
+
+// }
+
+
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import AudioCard from "./AudioCard";
-import AudioHero from "./AudioHero";
-
 import audioData from "../../api/audio-products.json";
+import AudioHero from "./AudioHero";
+import AudioCard from "./AudioCard";
 
 import "./audio.css";
 
-
-/* =========================================================
-   CONSTANTS
-========================================================= */
-
 const CART_KEY = "cartProductLS";
 const WISHLIST_KEY = "audioWishlist";
-const THEME_KEY = "ksamAudioTheme";
-
-
-/* =========================================================
-   IMAGE HELPER
-========================================================= */
 
 const getImagePath = (image) => {
-
     if (!image) return "";
 
     return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
 };
 
-
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
-
 function AudioMain() {
 
-    /* -------------------------------------------------------
-       DATA
-    ------------------------------------------------------- */
+    const products = audioData.products || [];
+    const categories = audioData.categories || [];
+    const offers = audioData.offers || [];
+    const features = audioData.featureHighlights || [];
 
     const store = audioData.store || {};
 
-    const products = audioData.products || [];
-
-    const categories = audioData.categories || [];
-
-    const features = audioData.featureHighlights || [];
-
-    const offers = audioData.offers || [];
-
-    const spotlightIds =
-        audioData.spotlightProducts || [];
-
-
-    /* -------------------------------------------------------
-       THEME
-    ------------------------------------------------------- */
-
-    const [theme, setTheme] = useState(() => {
-
-        return (
-            localStorage.getItem(THEME_KEY) ||
-            "dark"
-        );
-
-    });
-
-
-    /* -------------------------------------------------------
-       SEARCH / FILTER
-    ------------------------------------------------------- */
-
     const [search, setSearch] = useState("");
-
-    const [activeCategory, setActiveCategory] =
-        useState("All");
-
-    const [sortBy, setSortBy] =
-        useState("featured");
-
-    const [maxPrice, setMaxPrice] =
-        useState(Number(store.maxPrice || 15000));
-
-    const [visibleProducts, setVisibleProducts] =
-        useState(Number(store.defaultVisibleProducts || 8));
-
-
-    /* -------------------------------------------------------
-       WISHLIST
-    ------------------------------------------------------- */
+    const [category, setCategory] = useState("All");
+    const [sort, setSort] = useState("featured");
+    const [maxPrice, setMaxPrice] = useState(store.maxPrice || 15000);
 
     const [wishlist, setWishlist] = useState(() => {
-
         try {
-
             return JSON.parse(
-                localStorage.getItem(WISHLIST_KEY)
-            ) || [];
-
+                localStorage.getItem(WISHLIST_KEY) || "[]"
+            );
         } catch {
-
             return [];
-
         }
-
     });
 
+    const [cartCount, setCartCount] = useState(0);
 
-    /* -------------------------------------------------------
-       CART
-    ------------------------------------------------------- */
+    const [visibleProducts, setVisibleProducts] = useState(
+        store.defaultVisibleProducts || 8
+    );
 
-    const [cartCount, setCartCount] =
-        useState(0);
+    const [spotlightIndex, setSpotlightIndex] = useState(0);
 
+    const [offerIndex, setOfferIndex] = useState(0);
 
-    /* -------------------------------------------------------
-       SPOTLIGHT
-    ------------------------------------------------------- */
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const [spotlightIndex, setSpotlightIndex] =
-        useState(0);
+    const [toast, setToast] = useState("");
 
-
-    /* -------------------------------------------------------
-       OFFER
-    ------------------------------------------------------- */
-
-    const [offerIndex, setOfferIndex] =
-        useState(0);
-
-    const [timeLeft, setTimeLeft] =
-        useState({
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0
-        });
+    const [showTop, setShowTop] = useState(false);
 
 
-    /* -------------------------------------------------------
-       MOBILE FILTER
-    ------------------------------------------------------- */
-
-    const [mobileFilters, setMobileFilters] =
-        useState(false);
-
-
-    /* -------------------------------------------------------
-       QUICK VIEW
-    ------------------------------------------------------- */
-
-    const [selectedProduct, setSelectedProduct] =
-        useState(null);
-
-
-    /* -------------------------------------------------------
-       TOAST
-    ------------------------------------------------------- */
-
-    const [toast, setToast] =
-        useState("");
-
-
-    /* -------------------------------------------------------
-       BACK TO TOP
-    ------------------------------------------------------- */
-
-    const [showTopButton, setShowTopButton] =
-        useState(false);
-
-
-    /* =======================================================
-       APPLY THEME
-    ======================================================= */
-
-    useEffect(() => {
-
-        document.documentElement.dataset.audioTheme =
-            theme;
-
-        localStorage.setItem(
-            THEME_KEY,
-            theme
-        );
-
-    }, [theme]);
-
-
-    /* =======================================================
-       READ CART
-    ======================================================= */
+    /* =====================================================
+       CART COUNT
+    ===================================================== */
 
     const updateCartCount = () => {
 
@@ -204,25 +2437,20 @@ function AudioMain() {
 
             const cart =
                 JSON.parse(
-                    localStorage.getItem(CART_KEY)
-                ) || [];
-
-            const count =
-                cart.reduce(
-                    (total, item) =>
-                        total +
-                        Number(item.quantity || 1),
-                    0
+                    localStorage.getItem(CART_KEY) || "[]"
                 );
+
+            const count = cart.reduce(
+                (total, item) =>
+                    total + Number(item.quantity || 1),
+                0
+            );
 
             setCartCount(count);
 
         } catch {
-
             setCartCount(0);
-
         }
-
     };
 
 
@@ -230,38 +2458,24 @@ function AudioMain() {
 
         updateCartCount();
 
-        const handleStorage = () => {
-            updateCartCount();
-        };
-
         window.addEventListener(
             "storage",
-            handleStorage
+            updateCartCount
         );
 
-        const interval =
-            setInterval(
-                updateCartCount,
-                1000
-            );
-
         return () => {
-
             window.removeEventListener(
                 "storage",
-                handleStorage
+                updateCartCount
             );
-
-            clearInterval(interval);
-
         };
 
     }, []);
 
 
-    /* =======================================================
-       WISHLIST STORAGE
-    ======================================================= */
+    /* =====================================================
+       WISHLIST
+    ===================================================== */
 
     useEffect(() => {
 
@@ -273,60 +2487,30 @@ function AudioMain() {
     }, [wishlist]);
 
 
-    /* =======================================================
-       WISHLIST TOGGLE
-    ======================================================= */
-
     const toggleWishlist = (product) => {
 
-        setWishlist((previous) => {
+        setWishlist((current) => {
 
-            if (previous.includes(product.id)) {
+            if (current.includes(product.id)) {
 
-                showToast(
-                    "Removed from wishlist"
-                );
+                showMessage("Removed from wishlist");
 
-                return previous.filter(
+                return current.filter(
                     (id) => id !== product.id
                 );
-
             }
 
-            showToast(
-                "Added to wishlist ❤️"
-            );
+            showMessage("Added to wishlist ❤️");
 
-            return [
-                ...previous,
-                product.id
-            ];
+            return [...current, product.id];
 
         });
-
     };
 
 
-    /* =======================================================
-       TOAST
-    ======================================================= */
-
-    const showToast = (message) => {
-
-        setToast(message);
-
-        setTimeout(() => {
-
-            setToast("");
-
-        }, 2200);
-
-    };
-
-
-    /* =======================================================
+    /* =====================================================
        ADD TO CART
-    ======================================================= */
+    ===================================================== */
 
     const addToCart = (product) => {
 
@@ -334,47 +2518,27 @@ function AudioMain() {
 
             const cart =
                 JSON.parse(
-                    localStorage.getItem(CART_KEY)
-                ) || [];
-
-            const existingIndex =
-                cart.findIndex(
-                    (item) =>
-                        item.id === product.id
+                    localStorage.getItem(CART_KEY) || "[]"
                 );
 
+            const existing =
+                cart.find(
+                    (item) => item.id === product.id
+                );
 
-            if (existingIndex !== -1) {
+            if (existing) {
 
-                cart[existingIndex].quantity =
-                    Number(
-                        cart[existingIndex].quantity || 1
-                    ) + 1;
+                existing.quantity =
+                    Number(existing.quantity || 1) + 1;
 
             } else {
 
                 cart.push({
-
-                    id: product.id,
-
-                    name: product.name,
-
-                    brand: product.brand,
-
-                    category: product.category,
-
-                    price: product.price,
-
-                    oldPrice: product.oldPrice,
-
-                    image: product.image,
-
+                    ...product,
                     quantity: 1
-
                 });
 
             }
-
 
             localStorage.setItem(
                 CART_KEY,
@@ -383,584 +2547,299 @@ function AudioMain() {
 
             updateCartCount();
 
-            showToast(
+            showMessage(
                 `${product.name} added to cart`
             );
 
         } catch {
 
-            showToast(
+            showMessage(
                 "Unable to add product"
             );
 
         }
-
     };
 
 
-    /* =======================================================
-       CATEGORY SELECTION
-    ======================================================= */
+    /* =====================================================
+       TOAST
+    ===================================================== */
 
-    const selectCategory = (category) => {
+    const showMessage = (message) => {
 
-        setActiveCategory(category);
-
-        setVisibleProducts(
-            Number(
-                store.defaultVisibleProducts || 8
-            )
-        );
+        setToast(message);
 
         setTimeout(() => {
-
-            document
-                .querySelector(
-                    ".audio-products-section"
-                )
-                ?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-        }, 50);
+            setToast("");
+        }, 2200);
 
     };
 
 
-    /* =======================================================
-       SEARCH
-    ======================================================= */
-
-    const handleSearch = (event) => {
-
-        setSearch(
-            event.target.value
-        );
-
-        setVisibleProducts(
-            Number(
-                store.defaultVisibleProducts || 8
-            )
-        );
-
-    };
-
-
-    /* =======================================================
+    /* =====================================================
        FILTER PRODUCTS
-    ======================================================= */
+    ===================================================== */
 
     const filteredProducts = useMemo(() => {
 
+        let result = [...products];
+
         const searchText =
-            search
-                .trim()
-                .toLowerCase();
+            search.trim().toLowerCase();
 
+        if (searchText) {
 
-        let result =
-            products.filter((product) => {
-
-                const searchableText = [
-
-                    product.name,
-
-                    product.brand,
-
-                    product.category,
-
-                    product.color,
-
-                    product.description,
-
-                    ...(product.tags || []),
-
-                    ...(product.features || [])
-
-                ]
-                    .join(" ")
-                    .toLowerCase();
-
-
-                const matchesSearch =
-                    !searchText ||
-                    searchableText.includes(
-                        searchText
-                    );
-
-
-                const matchesCategory =
-                    activeCategory === "All" ||
-                    product.category ===
-                        activeCategory;
-
-
-                const matchesPrice =
-                    Number(product.price) <=
-                    Number(maxPrice);
-
+            result = result.filter((product) => {
 
                 return (
-                    matchesSearch &&
-                    matchesCategory &&
-                    matchesPrice
+                    product.name
+                        ?.toLowerCase()
+                        .includes(searchText) ||
+
+                    product.brand
+                        ?.toLowerCase()
+                        .includes(searchText) ||
+
+                    product.category
+                        ?.toLowerCase()
+                        .includes(searchText)
                 );
 
             });
+        }
 
 
-        /* ---------------------------------------------------
-           SORT
-        --------------------------------------------------- */
+        if (category !== "All") {
 
-        if (sortBy === "price-low") {
-
-            result.sort(
-                (a, b) =>
-                    Number(a.price) -
-                    Number(b.price)
+            result = result.filter(
+                (product) =>
+                    product.category === category
             );
 
         }
 
-        else if (sortBy === "price-high") {
 
-            result.sort(
-                (a, b) =>
-                    Number(b.price) -
-                    Number(a.price)
-            );
+        result = result.filter(
+            (product) =>
+                Number(product.price) <=
+                Number(maxPrice)
+        );
 
+
+        switch (sort) {
+
+            case "price-low":
+                result.sort(
+                    (a, b) =>
+                        a.price - b.price
+                );
+                break;
+
+            case "price-high":
+                result.sort(
+                    (a, b) =>
+                        b.price - a.price
+                );
+                break;
+
+            case "rating":
+                result.sort(
+                    (a, b) =>
+                        b.rating - a.rating
+                );
+                break;
+
+            case "discount":
+                result.sort(
+                    (a, b) =>
+                        b.discount - a.discount
+                );
+                break;
+
+            case "newest":
+                result.sort(
+                    (a, b) =>
+                        Number(b.newArrival) -
+                        Number(a.newArrival)
+                );
+                break;
+
+            default:
+                result.sort(
+                    (a, b) =>
+                        Number(b.featured) -
+                        Number(a.featured)
+                );
         }
-
-        else if (sortBy === "rating") {
-
-            result.sort(
-                (a, b) =>
-                    Number(b.rating) -
-                    Number(a.rating)
-            );
-
-        }
-
-        else if (sortBy === "discount") {
-
-            result.sort(
-                (a, b) =>
-                    Number(b.discount) -
-                    Number(a.discount)
-            );
-
-        }
-
-        else if (sortBy === "newest") {
-
-            result.sort(
-                (a, b) =>
-                    Number(b.newArrival) -
-                    Number(a.newArrival)
-            );
-
-        }
-
-        else {
-
-            result.sort(
-                (a, b) =>
-                    Number(b.featured) -
-                    Number(a.featured)
-            );
-
-        }
-
 
         return result;
 
     }, [
         products,
         search,
-        activeCategory,
+        category,
         maxPrice,
-        sortBy
+        sort
     ]);
 
 
-    /* =======================================================
-       VISIBLE PRODUCT LIST
-    ======================================================= */
+    /* =====================================================
+       SPOTLIGHT
+    ===================================================== */
 
-    const displayedProducts =
-        filteredProducts.slice(
-            0,
-            visibleProducts
+    const spotlightProducts =
+        products.filter(
+            (product) =>
+                product.featured
         );
 
+    const spotlightProduct =
+        spotlightProducts[
+            spotlightIndex %
+            Math.max(spotlightProducts.length, 1)
+        ] || products[0];
 
-    /* =======================================================
-       LOAD MORE
-    ======================================================= */
-
-    const loadMore = () => {
-
-        setVisibleProducts(
-            (previous) =>
-                previous +
-                Number(
-                    store.productsPerLoad || 4
-                )
-        );
-
-    };
-
-
-    /* =======================================================
-       SPOTLIGHT PRODUCT
-    ======================================================= */
-
-    const spotlightProducts = useMemo(() => {
-
-        return spotlightIds
-            .map((id) =>
-                products.find(
-                    (product) =>
-                        product.id === id
-                )
-            )
-            .filter(Boolean);
-
-    }, [
-        spotlightIds,
-        products
-    ]);
-
-
-    /* =======================================================
-       AUTOMATIC SPOTLIGHT CHANGE
-    ======================================================= */
 
     useEffect(() => {
 
-        if (
-            spotlightProducts.length <= 1
-        ) {
-            return;
-        }
+        if (!spotlightProducts.length) return;
 
         const timer =
             setInterval(() => {
 
                 setSpotlightIndex(
-                    (previous) =>
-                        (
-                            previous + 1
-                        ) %
-                        spotlightProducts.length
+                    (current) =>
+                        current + 1
                 );
 
             }, 6000);
 
+        return () => clearInterval(timer);
 
-        return () => {
-            clearInterval(timer);
-        };
-
-    }, [
-        spotlightProducts.length
-    ]);
+    }, [spotlightProducts.length]);
 
 
-    /* =======================================================
-       CURRENT SPOTLIGHT
-    ======================================================= */
-
-    const currentSpotlight =
-        spotlightProducts[
-            spotlightIndex %
-            Math.max(
-                spotlightProducts.length,
-                1
-            )
-        ];
-
-
-    /* =======================================================
-       OFFER TIMER
-    ======================================================= */
-
-    const calculateTimeLeft = (
-        endTime
-    ) => {
-
-        const difference =
-            new Date(endTime).getTime() -
-            Date.now();
-
-
-        if (difference <= 0) {
-
-            return {
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0
-            };
-
-        }
-
-
-        return {
-
-            days:
-                Math.floor(
-                    difference /
-                    (1000 * 60 * 60 * 24)
-                ),
-
-            hours:
-                Math.floor(
-                    (
-                        difference /
-                        (1000 * 60 * 60)
-                    ) % 24
-                ),
-
-            minutes:
-                Math.floor(
-                    (
-                        difference /
-                        (1000 * 60)
-                    ) % 60
-                ),
-
-            seconds:
-                Math.floor(
-                    (
-                        difference /
-                        1000
-                    ) % 60
-                )
-
-        };
-
-    };
-
-
-    /* =======================================================
-       UPDATE TIMER
-    ======================================================= */
-
-    useEffect(() => {
-
-        if (!offers.length) {
-            return;
-        }
-
-
-        const updateTimer = () => {
-
-            const currentOffer =
-                offers[
-                    offerIndex %
-                    offers.length
-                ];
-
-
-            const remaining =
-                calculateTimeLeft(
-                    currentOffer.endTime
-                );
-
-
-            const isExpired =
-                remaining.days === 0 &&
-                remaining.hours === 0 &&
-                remaining.minutes === 0 &&
-                remaining.seconds === 0;
-
-
-            if (isExpired) {
-
-                setOfferIndex(
-                    (previous) =>
-                        (
-                            previous + 1
-                        ) %
-                        offers.length
-                );
-
-                return;
-
-            }
-
-
-            setTimeLeft(
-                remaining
-            );
-
-        };
-
-
-        updateTimer();
-
-
-        const timer =
-            setInterval(
-                updateTimer,
-                1000
-            );
-
-
-        return () => {
-            clearInterval(timer);
-        };
-
-    }, [
-        offerIndex,
-        offers
-    ]);
-
-
-    /* =======================================================
-       CURRENT OFFER
-    ======================================================= */
+    /* =====================================================
+       OFFER ROTATION
+    ===================================================== */
 
     const currentOffer =
         offers[
             offerIndex %
-            Math.max(
-                offers.length,
-                1
-            )
+            Math.max(offers.length, 1)
         ];
 
 
-    /* =======================================================
-       OFFER PRODUCTS
-    ======================================================= */
+    useEffect(() => {
 
-    const offerProducts =
-        currentOffer
-            ? currentOffer.productIds
-                .map((id) =>
-                    products.find(
-                        (product) =>
-                            product.id === id
-                    )
-                )
-                .filter(Boolean)
-            : [];
+        if (!offers.length) return;
+
+        const timer =
+            setInterval(() => {
+
+                setOfferIndex(
+                    (current) =>
+                        (current + 1) %
+                        offers.length
+                );
+
+            }, 12000);
+
+        return () => clearInterval(timer);
+
+    }, [offers.length]);
 
 
-    /* =======================================================
+    /* =====================================================
        BACK TO TOP
-    ======================================================= */
+    ===================================================== */
 
     useEffect(() => {
 
         const handleScroll = () => {
 
-            setShowTopButton(
+            setShowTop(
                 window.scrollY > 600
             );
 
         };
-
 
         window.addEventListener(
             "scroll",
             handleScroll
         );
 
-
-        return () => {
-
+        return () =>
             window.removeEventListener(
                 "scroll",
                 handleScroll
             );
 
-        };
-
     }, []);
 
 
-    const scrollToTop = () => {
+    const scrollToProducts = () => {
 
-        window.scrollTo({
-
-            top: 0,
-
-            behavior: "smooth"
-
-        });
+        document
+            .getElementById("audio-products")
+            ?.scrollIntoView({
+                behavior: "smooth"
+            });
 
     };
 
 
-    /* =======================================================
-       CART NAVIGATION
-    ======================================================= */
+    const resetFilters = () => {
 
-    const openCart = () => {
-
-        window.location.href =
-            "./addToCart.html";
+        setSearch("");
+        setCategory("All");
+        setSort("featured");
+        setMaxPrice(
+            store.maxPrice || 15000
+        );
+        setVisibleProducts(
+            store.defaultVisibleProducts || 8
+        );
 
     };
 
-
-    /* =======================================================
-       RENDER
-    ======================================================= */
 
     return (
 
         <div className="audio-page">
 
-
             {/* =================================================
-                TOP ANNOUNCEMENT
+                ANNOUNCEMENT BAR
             ================================================= */}
 
             <div className="audio-announcement">
 
-                <div className="audio-announcement-track">
+                <div>
+                    FREE DELIVERY ABOVE ₹999
+                </div>
 
-                    <span>
-                        FREE DELIVERY ABOVE ₹999
-                    </span>
+                <span>•</span>
 
-                    <span>•</span>
+                <div>
+                    30 DAY EASY RETURNS
+                </div>
 
-                    <span>
-                        UP TO 60% OFF
-                    </span>
+                <span>•</span>
 
-                    <span>•</span>
+                <div>
+                    SECURE CHECKOUT
+                </div>
 
-                    <span>
-                        PREMIUM AUDIO COLLECTION
-                    </span>
+                <span>•</span>
 
-                    <span>•</span>
+                <div>
+                    NEW AUDIO COLLECTION
+                </div>
 
-                    <span>
-                        KSAM DEAL
-                    </span>
+                <span>•</span>
 
-                    <span>•</span>
-
-                    <span>
-                        FREE DELIVERY ABOVE ₹999
-                    </span>
-
-                    <span>•</span>
-
-                    <span>
-                        UP TO 60% OFF
-                    </span>
-
+                <div>
+                    FREE DELIVERY ABOVE ₹999
                 </div>
 
             </div>
@@ -974,84 +2853,83 @@ function AudioMain() {
 
                 <a
                     href="./index.html"
-                    className="audio-logo"
+                    className="audio-brand"
                 >
-
-                    <span className="audio-logo-main">
-                        KSAM
-                    </span>
-
-                    <span className="audio-logo-sub">
-                        DEAL
-                    </span>
-
+                    <span>KSAM</span>
+                    <strong>DEAL</strong>
                 </a>
 
 
                 <nav className="audio-nav">
 
-                    <a href="#home">
-                        Home
+                    <a href="#audio-products">
+                        NEW IN
                     </a>
 
-                    <a href="#categories">
-                        Categories
+                    <a href="#audio-categories">
+                        EARBUDS
                     </a>
 
-                    <a href="#offers">
-                        Offers
+                    <a href="#audio-categories">
+                        HEADPHONES
                     </a>
 
-                    <a href="#spotlight">
-                        Spotlight
+                    <a href="#audio-categories">
+                        SPEAKERS
                     </a>
 
-                    <a href="#products">
-                        Products
+                    <a href="#audio-offers">
+                        SALE
                     </a>
 
                 </nav>
 
 
-                <div className="audio-nav-actions">
+                <div className="audio-nav-right">
+
+                    <div className="audio-nav-search">
+
+                        <i className="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            placeholder="Search audio, brands..."
+                            value={search}
+                            onChange={(e) =>
+                                setSearch(e.target.value)
+                            }
+                        />
+
+                    </div>
+
 
                     <button
-                        className="audio-theme-button"
-                        onClick={() =>
-                            setTheme(
-                                theme === "dark"
-                                    ? "light"
-                                    : "dark"
-                            )
-                        }
-                        aria-label="Change theme"
+                        className="audio-nav-icon"
+                        title="Wishlist"
                     >
-                        <i
-                            className={
-                                theme === "dark"
-                                    ? "fa-solid fa-sun"
-                                    : "fa-solid fa-moon"
-                            }
-                        ></i>
+                        <i className="fa-regular fa-heart"></i>
+
+                        {wishlist.length > 0 && (
+                            <span>
+                                {wishlist.length}
+                            </span>
+                        )}
+
                     </button>
 
 
-                    <button
+                    <a
+                        href="./addToCart.html"
                         className="audio-cart-button"
-                        onClick={openCart}
                     >
 
                         <i className="fa-solid fa-bag-shopping"></i>
 
                         <span>
-                            Cart
+                            {cartCount}
                         </span>
 
-                        <b>
-                            {cartCount}
-                        </b>
-
-                    </button>
+                    </a>
 
                 </div>
 
@@ -1062,453 +2940,400 @@ function AudioMain() {
                 HERO
             ================================================= */}
 
-            <main id="home">
-
-                <AudioHero
-                    hero={audioData.hero}
-                    onExplore={() =>
-                        document
-                            .querySelector(
-                                "#categories"
-                            )
-                            ?.scrollIntoView({
-                                behavior: "smooth"
-                            })
-                    }
-                />
+            <AudioHero
+                hero={audioData.hero}
+                onExplore={scrollToProducts}
+            />
 
 
-                {/* =============================================
-                    AUTO MOVING STRIP
-                ============================================= */}
+            {/* =================================================
+                MOVING PRODUCT STRIP
+            ================================================= */}
 
-                <section className="audio-marquee-section">
+            <section className="audio-moving-strip">
 
-                    <div className="audio-marquee-label">
-                        <span>
-                            TRENDING AUDIO
-                        </span>
+                <div className="audio-moving-track">
 
-                        <i className="fa-solid fa-arrow-right"></i>
-                    </div>
+                    {[...products, ...products].map(
+                        (product, index) => (
 
+                            <div
+                                className="audio-moving-item"
+                                key={`${product.id}-${index}`}
+                            >
 
-                    <div className="audio-marquee">
+                                <img
+                                    src={getImagePath(
+                                        product.image
+                                    )}
+                                    alt=""
+                                />
 
-                        <div className="audio-marquee-track">
+                                <div>
 
-                            {[
-                                ...products,
-                                ...products
-                            ].map(
-                                (product, index) => (
+                                    <strong>
+                                        {product.name}
+                                    </strong>
 
-                                    <div
-                                        className="audio-marquee-card"
-                                        key={`${product.id}-${index}`}
-                                    >
+                                    <span>
+                                        ₹
+                                        {Number(
+                                            product.price
+                                        ).toLocaleString(
+                                            "en-IN"
+                                        )}
+                                    </span>
 
-                                        <div className="audio-marquee-image">
+                                </div>
 
-                                            <img
-                                                src={getImagePath(
-                                                    product.image
-                                                )}
-                                                alt={
-                                                    product.name
-                                                }
-                                            />
+                            </div>
 
-                                        </div>
+                        )
+                    )}
 
-                                        <div>
+                </div>
 
-                                            <small>
-                                                {product.brand}
-                                            </small>
-
-                                            <strong>
-                                                {product.name}
-                                            </strong>
-
-                                        </div>
-
-                                        <span>
-                                            {store.currency}
-                                            {product.price}
-                                        </span>
-
-                                    </div>
-
-                                )
-                            )}
-
-                        </div>
-
-                    </div>
-
-                </section>
+            </section>
 
 
-                {/* =============================================
-                    CATEGORIES
-                ============================================= */}
+            {/* =================================================
+                CATEGORIES
+            ================================================= */}
 
-                <section
-                    className="audio-categories-section"
-                    id="categories"
-                >
+            <section
+                className="audio-categories"
+                id="audio-categories"
+            >
 
-                    <div className="audio-section-heading">
+                <div className="audio-section-heading">
 
-                        <div>
+                    <span>
+                        EXPLORE AUDIO
+                    </span>
 
-                            <span>
-                                EXPLORE
-                            </span>
+                    <h2>
+                        Find your sound.
+                    </h2>
 
-                            <h2>
-                                Find your sound.
-                            </h2>
+                    <p>
+                        Choose the audio experience
+                        that matches your lifestyle.
+                    </p>
 
-                        </div>
-
-                        <p>
-                            Choose the audio experience
-                            that matches your lifestyle.
-                        </p>
-
-                    </div>
+                </div>
 
 
-                    <div className="audio-category-grid">
+                <div className="audio-category-list">
 
-                        <button
-                            className={
-                                activeCategory === "All"
-                                    ? "active"
-                                    : ""
-                            }
-                            onClick={() =>
-                                selectCategory("All")
-                            }
-                        >
-
-                            <i className="fa-solid fa-layer-group"></i>
-
-                            <strong>
-                                All Audio
-                            </strong>
-
-                            <small>
-                                {products.length} products
-                            </small>
-
-                        </button>
+                    <button
+                        className={
+                            category === "All"
+                                ? "active"
+                                : ""
+                        }
+                        onClick={() =>
+                            setCategory("All")
+                        }
+                    >
+                        <i className="fa-solid fa-layer-group"></i>
+                        All Audio
+                        <small>
+                            {products.length}
+                        </small>
+                    </button>
 
 
-                        {categories.map(
-                            (category) => (
+                    {categories.map(
+                        (item) => {
+
+                            const count =
+                                products.filter(
+                                    (product) =>
+                                        product.category ===
+                                        item.name
+                                ).length;
+
+                            return (
 
                                 <button
-                                    key={category.id}
+                                    key={item.id}
                                     className={
-                                        activeCategory ===
-                                        category.name
+                                        category ===
+                                        item.name
                                             ? "active"
                                             : ""
                                     }
                                     onClick={() =>
-                                        selectCategory(
-                                            category.name
+                                        setCategory(
+                                            item.name
                                         )
                                     }
                                 >
 
                                     <i
                                         className={
-                                            category.icon
+                                            item.icon
                                         }
                                     ></i>
 
-                                    <strong>
-                                        {category.name}
-                                    </strong>
+                                    {item.name}
 
                                     <small>
-                                        {
-                                            products.filter(
-                                                (product) =>
-                                                    product.category ===
-                                                    category.name
-                                            ).length
-                                        } products
+                                        {count}
                                     </small>
 
                                 </button>
 
-                            )
-                        )}
+                            );
 
-                    </div>
+                        }
+                    )}
 
-                </section>
+                </div>
+
+            </section>
 
 
-                {/* =============================================
-                    OFFER SECTION
-                ============================================= */}
+            {/* =================================================
+                OFFER
+            ================================================= */}
+
+            {currentOffer && (
 
                 <section
-                    className="audio-offer-section"
-                    id="offers"
+                    className="audio-offer"
+                    id="audio-offers"
                 >
 
-                    <div className="audio-offer-content">
+                    <div className="audio-offer-inner">
 
-                        <span className="audio-offer-eyebrow">
-                            ⚡ LIMITED TIME
-                        </span>
+                        <div className="audio-offer-copy">
 
-                        <h2>
-                            {currentOffer?.title}
-                        </h2>
+                            <span className="audio-lime-label">
+                                ⚡ LIMITED TIME
+                            </span>
 
-                        <p>
-                            {currentOffer?.subtitle}
-                        </p>
+                            <h2>
+                                {currentOffer.title}
+                            </h2>
 
+                            <p>
+                                {currentOffer.subtitle}
+                            </p>
 
-                        <div className="audio-offer-discount">
-                            {currentOffer?.discount}
-                        </div>
+                            <strong className="audio-offer-discount">
+                                {currentOffer.discount}
+                            </strong>
 
+                            <div className="audio-countdown">
 
-                        <div className="audio-countdown">
-
-                            <div>
-                                <strong>
-                                    {String(
-                                        timeLeft.days
-                                    ).padStart(2, "0")}
-                                </strong>
-
-                                <span>
-                                    DAYS
-                                </span>
-                            </div>
-
-
-                            <b>:</b>
-
-
-                            <div>
-                                <strong>
-                                    {String(
-                                        timeLeft.hours
-                                    ).padStart(2, "0")}
-                                </strong>
-
-                                <span>
-                                    HOURS
-                                </span>
-                            </div>
-
-
-                            <b>:</b>
-
-
-                            <div>
-                                <strong>
-                                    {String(
-                                        timeLeft.minutes
-                                    ).padStart(2, "0")}
-                                </strong>
-
-                                <span>
-                                    MIN
-                                </span>
-                            </div>
-
-
-                            <b>:</b>
-
-
-                            <div>
-                                <strong>
-                                    {String(
-                                        timeLeft.seconds
-                                    ).padStart(2, "0")}
-                                </strong>
-
-                                <span>
-                                    SEC
-                                </span>
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            className="audio-offer-button"
-                            onClick={() =>
-                                document
-                                    .querySelector(
-                                        "#products"
-                                    )
-                                    ?.scrollIntoView({
-                                        behavior: "smooth"
-                                    })
-                            }
-                        >
-                            Shop this offer
-
-                            <i className="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </div>
-
-
-                    <div className="audio-offer-products">
-
-                        {offerProducts.map(
-                            (product) => (
-
-                                <div
-                                    className="audio-offer-product"
-                                    key={product.id}
-                                >
-
-                                    <span>
-                                        -{product.discount}%
-                                    </span>
-
-                                    <img
-                                        src={getImagePath(
-                                            product.image
-                                        )}
-                                        alt={
-                                            product.name
-                                        }
-                                    />
-
+                                <div>
                                     <strong>
-                                        {product.name}
+                                        100
                                     </strong>
+                                    <span>DAYS</span>
+                                </div>
 
-                                    <div>
+                                <div>
+                                    <strong>
+                                        04
+                                    </strong>
+                                    <span>HOURS</span>
+                                </div>
 
-                                        <b>
-                                            {store.currency}
-                                            {product.price}
-                                        </b>
+                                <div>
+                                    <strong>
+                                        16
+                                    </strong>
+                                    <span>MIN</span>
+                                </div>
 
-                                        <del>
-                                            {store.currency}
-                                            {product.oldPrice}
-                                        </del>
+                                <div>
+                                    <strong>
+                                        49
+                                    </strong>
+                                    <span>SEC</span>
+                                </div>
+
+                            </div>
+
+                            <button
+                                className="audio-lime-button"
+                                onClick={scrollToProducts}
+                            >
+                                Shop this offer
+                                <i className="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </div>
+
+
+                        <div className="audio-offer-products">
+
+                            {products
+                                .filter(
+                                    (product) =>
+                                        currentOffer.productIds?.includes(
+                                            product.id
+                                        )
+                                )
+                                .slice(0, 3)
+                                .map((product) => (
+
+                                    <div
+                                        className="audio-offer-product"
+                                        key={product.id}
+                                    >
+
+                                        <div className="audio-offer-product-image">
+
+                                            <img
+                                                src={getImagePath(
+                                                    product.image
+                                                )}
+                                                alt={product.name}
+                                            />
+
+                                        </div>
+
+                                        <strong>
+                                            {product.name}
+                                        </strong>
+
+                                        <div>
+
+                                            <b>
+                                                ₹
+                                                {Number(
+                                                    product.price
+                                                ).toLocaleString(
+                                                    "en-IN"
+                                                )}
+                                            </b>
+
+                                            <del>
+                                                ₹
+                                                {Number(
+                                                    product.oldPrice
+                                                ).toLocaleString(
+                                                    "en-IN"
+                                                )}
+                                            </del>
+
+                                        </div>
 
                                     </div>
 
-                                </div>
+                                ))}
 
-                            )
-                        )}
+                        </div>
 
                     </div>
 
                 </section>
 
+            )}
 
-                {/* =============================================
-                    SPOTLIGHT
-                ============================================= */}
 
-                {currentSpotlight && (
+            {/* =================================================
+                SPOTLIGHT
+            ================================================= */}
 
-                    <section
-                        className="audio-spotlight-section"
-                        id="spotlight"
-                    >
+            {spotlightProduct && (
+
+                <section className="audio-spotlight">
+
+                    <div className="audio-section-heading light">
+
+                        <span>
+                            FEATURED SPOTLIGHT
+                        </span>
+
+                        <h2>
+                            Built for your sound.
+                        </h2>
+
+                    </div>
+
+
+                    <div className="audio-spotlight-box">
 
                         <div className="audio-spotlight-image">
 
-                            <div className="spotlight-glow"></div>
-
                             <img
                                 src={getImagePath(
-                                    currentSpotlight.image
+                                    spotlightProduct.image
                                 )}
                                 alt={
-                                    currentSpotlight.name
+                                    spotlightProduct.name
                                 }
                             />
-
-                            <span className="spotlight-badge">
-                                {currentSpotlight.badge}
-                            </span>
 
                         </div>
 
 
                         <div className="audio-spotlight-info">
 
-                            <span>
-                                FEATURED SPOTLIGHT
+                            <span className="audio-product-brand">
+                                {spotlightProduct.brand}
                             </span>
 
-                            <small>
-                                {currentSpotlight.brand}
-                            </small>
-
                             <h2>
-                                {currentSpotlight.name}
+                                {spotlightProduct.name}
                             </h2>
 
                             <p>
-                                {currentSpotlight.description}
+                                {spotlightProduct.description}
                             </p>
 
 
-                            <div className="spotlight-rating">
-
-                                <strong>
-                                    ★ {currentSpotlight.rating}
-                                </strong>
+                            <div className="audio-rating">
 
                                 <span>
-                                    (
-                                    {currentSpotlight.reviews}
-                                    reviews)
+                                    ★
                                 </span>
+
+                                <strong>
+                                    {spotlightProduct.rating}
+                                </strong>
+
+                                <small>
+                                    ({spotlightProduct.reviews}
+                                    reviews)
+                                </small>
 
                             </div>
 
 
-                            <div className="spotlight-price">
+                            <div className="audio-spotlight-price">
 
-                                <strong>
-                                    {store.currency}
-                                    {currentSpotlight.price}
-                                </strong>
+                                ₹
+                                {Number(
+                                    spotlightProduct.price
+                                ).toLocaleString(
+                                    "en-IN"
+                                )}
 
                                 <del>
-                                    {store.currency}
-                                    {currentSpotlight.oldPrice}
+                                    ₹
+                                    {Number(
+                                        spotlightProduct.oldPrice
+                                    ).toLocaleString(
+                                        "en-IN"
+                                    )}
                                 </del>
 
                                 <b>
-                                    {currentSpotlight.discount}%
+                                    {spotlightProduct.discount}%
                                     OFF
                                 </b>
 
                             </div>
 
 
-                            <div className="spotlight-features">
+                            <div className="audio-feature-tags">
 
-                                {currentSpotlight.features
+                                {spotlightProduct.features
                                     ?.slice(0, 4)
                                     .map(
                                         (
@@ -1516,19 +3341,11 @@ function AudioMain() {
                                             index
                                         ) => (
 
-                                            <div
-                                                key={
-                                                    `${currentSpotlight.id}-${index}`
-                                                }
+                                            <span
+                                                key={index}
                                             >
-
-                                                <i className="fa-solid fa-check"></i>
-
-                                                <span>
-                                                    {feature}
-                                                </span>
-
-                                            </div>
+                                                ✓ {feature}
+                                            </span>
 
                                         )
                                     )}
@@ -1536,214 +3353,143 @@ function AudioMain() {
                             </div>
 
 
-                            <div className="spotlight-actions">
+                            <div className="audio-spotlight-buttons">
 
                                 <button
+                                    className="audio-lime-button"
                                     onClick={() =>
                                         addToCart(
-                                            currentSpotlight
+                                            spotlightProduct
                                         )
                                     }
                                 >
-                                    <i className="fa-solid fa-cart-plus"></i>
-
+                                    <i className="fa-solid fa-bag-shopping"></i>
                                     Add to cart
                                 </button>
 
 
                                 <button
-                                    className="spotlight-wishlist"
+                                    className="audio-outline-button"
                                     onClick={() =>
                                         toggleWishlist(
-                                            currentSpotlight
+                                            spotlightProduct
                                         )
                                     }
                                 >
-
-                                    <i
-                                        className={
-                                            wishlist.includes(
-                                                currentSpotlight.id
-                                            )
-                                                ? "fa-solid fa-heart"
-                                                : "fa-regular fa-heart"
-                                        }
-                                    ></i>
-
+                                    <i className="fa-regular fa-heart"></i>
                                 </button>
 
                             </div>
 
-
-                            <div className="spotlight-dots">
-
-                                {spotlightProducts.map(
-                                    (product, index) => (
-
-                                        <button
-                                            key={
-                                                product.id
-                                            }
-                                            className={
-                                                index ===
-                                                spotlightIndex
-                                                    ? "active"
-                                                    : ""
-                                            }
-                                            onClick={() =>
-                                                setSpotlightIndex(
-                                                    index
-                                                )
-                                            }
-                                        ></button>
-
-                                    )
-                                )}
-
-                            </div>
-
                         </div>
-
-                    </section>
-
-                )}
-
-
-                {/* =============================================
-                    FEATURES
-                ============================================= */}
-
-                <section className="audio-features-section">
-
-                    <div className="audio-section-heading">
-
-                        <div>
-
-                            <span>
-                                WHY KSAM AUDIO
-                            </span>
-
-                            <h2>
-                                Built for better sound.
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div className="audio-feature-grid">
-
-                        {features.map(
-                            (feature, index) => (
-
-                                <article
-                                    key={
-                                        feature.id
-                                    }
-                                    className="audio-feature-card"
-                                >
-
-                                    <div className="audio-feature-number">
-                                        0{index + 1}
-                                    </div>
-
-                                    <div className="audio-feature-icon">
-
-                                        <i
-                                            className={
-                                                feature.icon
-                                            }
-                                        ></i>
-
-                                    </div>
-
-                                    <h3>
-                                        {feature.title}
-                                    </h3>
-
-                                    <p>
-                                        {feature.description}
-                                    </p>
-
-                                </article>
-
-                            )
-                        )}
 
                     </div>
 
                 </section>
 
-
-                {/* =============================================
-                    PRODUCTS
-                ============================================= */}
-
-                <section
-                    className="audio-products-section"
-                    id="products"
-                >
-
-                    <div className="audio-products-heading">
-
-                        <div>
-
-                            <span>
-                                SHOP AUDIO
-                            </span>
-
-                            <h2>
-                                Find your next sound.
-                            </h2>
-
-                        </div>
+            )}
 
 
-                        <div className="audio-product-count">
+            {/* =================================================
+                FEATURES
+            ================================================= */}
+
+            <section className="audio-features">
+
+                <div className="audio-section-heading">
+
+                    <span>
+                        WHY KSAM AUDIO
+                    </span>
+
+                    <h2>
+                        Better sound.
+                        <br />
+                        Better everyday.
+                    </h2>
+
+                </div>
+
+
+                <div className="audio-feature-grid">
+
+                    {features.map(
+                        (feature, index) => (
+
+                            <div
+                                className="audio-feature"
+                                key={feature.id}
+                            >
+
+                                <small>
+                                    0
+                                    {index + 1}
+                                </small>
+
+                                <div className="audio-feature-icon">
+
+                                    <i
+                                        className={
+                                            feature.icon
+                                        }
+                                    ></i>
+
+                                </div>
+
+                                <h3>
+                                    {feature.title}
+                                </h3>
+
+                                <p>
+                                    {feature.description}
+                                </p>
+
+                            </div>
+
+                        )
+                    )}
+
+                </div>
+
+            </section>
+
+
+            {/* =================================================
+                PRODUCTS
+            ================================================= */}
+
+            <section
+                className="audio-products"
+                id="audio-products"
+            >
+
+                <div className="audio-products-heading">
+
+                    <div>
+
+                        <span>
+                            SHOP AUDIO
+                        </span>
+
+                        <h2>
+                            Find your next sound.
+                        </h2>
+
+                        <p>
                             {filteredProducts.length}
-                            {" "}
-                            products
-                        </div>
+                            {" "}products
+                        </p>
 
                     </div>
 
 
-                    {/* FILTER BAR */}
-
-                    <div className="audio-filter-bar">
-
-                        <div className="audio-search">
-
-                            <i className="fa-solid fa-magnifying-glass"></i>
-
-                            <input
-                                type="text"
-                                placeholder="Search earbuds, headphones..."
-                                value={search}
-                                onChange={handleSearch}
-                            />
-
-                            {search && (
-
-                                <button
-                                    onClick={() =>
-                                        setSearch("")
-                                    }
-                                >
-                                    ×
-                                </button>
-
-                            )}
-
-                        </div>
-
+                    <div className="audio-sort">
 
                         <select
-                            value={sortBy}
-                            onChange={(event) =>
-                                setSortBy(
-                                    event.target.value
+                            value={sort}
+                            onChange={(e) =>
+                                setSort(
+                                    e.target.value
                                 )
                             }
                         >
@@ -1753,298 +3499,299 @@ function AudioMain() {
                             </option>
 
                             <option value="newest">
-                                New arrivals
+                                Newest
                             </option>
 
                             <option value="rating">
-                                Top rated
+                                Top Rated
                             </option>
 
                             <option value="discount">
-                                Biggest discount
+                                Biggest Discount
                             </option>
 
                             <option value="price-low">
-                                Price: Low to High
+                                Price Low
                             </option>
 
                             <option value="price-high">
-                                Price: High to Low
+                                Price High
                             </option>
 
                         </select>
 
+                    </div>
 
-                        <button
-                            className="audio-mobile-filter-button"
-                            onClick={() =>
-                                setMobileFilters(
-                                    !mobileFilters
+                </div>
+
+
+                <div className="audio-filter-row">
+
+                    <div className="audio-main-search">
+
+                        <i className="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            placeholder="Search earbuds, headphones..."
+                            value={search}
+                            onChange={(e) =>
+                                setSearch(
+                                    e.target.value
+                                )
+                            }
+                        />
+
+                    </div>
+
+
+                    <label>
+
+                        Category
+
+                        <select
+                            value={category}
+                            onChange={(e) =>
+                                setCategory(
+                                    e.target.value
                                 )
                             }
                         >
 
-                            <i className="fa-solid fa-sliders"></i>
+                            <option value="All">
+                                All
+                            </option>
 
-                            Filters
-
-                        </button>
-
-                    </div>
-
-
-                    {/* FILTER PANEL */}
-
-                    <div
-                        className={`audio-filter-panel ${
-                            mobileFilters
-                                ? "open"
-                                : ""
-                        }`}
-                    >
-
-                        <div>
-
-                            <label>
-                                Category
-                            </label>
-
-                            <select
-                                value={
-                                    activeCategory
-                                }
-                                onChange={(event) =>
-                                    selectCategory(
-                                        event.target.value
-                                    )
-                                }
-                            >
-
-                                <option value="All">
-                                    All
-                                </option>
-
-                                {categories.map(
-                                    (category) => (
-
-                                        <option
-                                            key={
-                                                category.id
-                                            }
-                                            value={
-                                                category.name
-                                            }
-                                        >
-                                            {category.name}
-                                        </option>
-
-                                    )
-                                )}
-
-                            </select>
-
-                        </div>
-
-
-                        <div className="audio-price-filter">
-
-                            <div>
-
-                                <label>
-                                    Maximum price
-                                </label>
-
-                                <strong>
-                                    {store.currency}
-                                    {maxPrice}
-                                </strong>
-
-                            </div>
-
-                            <input
-                                type="range"
-                                min="100"
-                                max={
-                                    Number(
-                                        store.maxPrice ||
-                                        15000
-                                    )
-                                }
-                                step="100"
-                                value={maxPrice}
-                                onChange={(event) =>
-                                    setMaxPrice(
-                                        Number(
-                                            event.target.value
-                                        )
-                                    )
-                                }
-                            />
-
-                        </div>
-
-
-                        <button
-                            onClick={() => {
-
-                                setSearch("");
-
-                                setActiveCategory(
-                                    "All"
-                                );
-
-                                setMaxPrice(
-                                    Number(
-                                        store.maxPrice ||
-                                        15000
-                                    )
-                                );
-
-                                setSortBy(
-                                    "featured"
-                                );
-
-                            }}
-                        >
-                            Reset filters
-                        </button>
-
-                    </div>
-
-
-                    {/* PRODUCT GRID */}
-
-                    {displayedProducts.length > 0 ? (
-
-                        <div className="audio-product-grid">
-
-                            {displayedProducts.map(
-                                (product) => (
-
-                                    <AudioCard
-                                        key={
-                                            product.id
-                                        }
-                                        product={
-                                            product
-                                        }
-                                        isWishlisted={
-                                            wishlist.includes(
-                                                product.id
-                                            )
-                                        }
-                                        onWishlist={
-                                            toggleWishlist
-                                        }
-                                        onAddToCart={
-                                            addToCart
-                                        }
-                                        onViewProduct={
-                                            setSelectedProduct
-                                        }
-                                    />
-
+                            {categories.map(
+                                (item) => (
+                                    <option
+                                        key={item.id}
+                                        value={item.name}
+                                    >
+                                        {item.name}
+                                    </option>
                                 )
                             )}
 
-                        </div>
+                        </select>
 
-                    ) : (
-
-                        <div className="audio-empty-state">
-
-                            <i className="fa-solid fa-headphones"></i>
-
-                            <h3>
-                                No audio products found
-                            </h3>
-
-                            <p>
-                                Try another search or
-                                reset your filters.
-                            </p>
-
-                            <button
-                                onClick={() => {
-
-                                    setSearch("");
-
-                                    setActiveCategory(
-                                        "All"
-                                    );
-
-                                    setMaxPrice(
-                                        Number(
-                                            store.maxPrice ||
-                                            15000
-                                        )
-                                    );
-
-                                }}
-                            >
-                                Reset
-                            </button>
-
-                        </div>
-
-                    )}
+                    </label>
 
 
-                    {/* LOAD MORE */}
+                    <label className="audio-price-filter">
 
-                    {visibleProducts <
-                        filteredProducts.length && (
+                        Maximum price
 
-                        <div className="audio-load-more">
+                        <strong>
+                            ₹
+                            {Number(
+                                maxPrice
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
+                        </strong>
 
-                            <button
-                                onClick={
-                                    loadMore
+                        <input
+                            type="range"
+                            min="500"
+                            max={
+                                store.maxPrice ||
+                                15000
+                            }
+                            step="100"
+                            value={maxPrice}
+                            onChange={(e) =>
+                                setMaxPrice(
+                                    Number(
+                                        e.target.value
+                                    )
+                                )
+                            }
+                        />
+
+                    </label>
+
+
+                    <button
+                        className="audio-reset"
+                        onClick={resetFilters}
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+
+                <div className="audio-product-grid">
+
+                    {filteredProducts
+                        .slice(
+                            0,
+                            visibleProducts
+                        )
+                        .map((product) => (
+
+                            <AudioCard
+                                key={product.id}
+                                product={product}
+                                isWishlisted={
+                                    wishlist.includes(
+                                        product.id
+                                    )
                                 }
-                            >
-                                Load more products
+                                onWishlist={
+                                    toggleWishlist
+                                }
+                                onAddToCart={
+                                    addToCart
+                                }
+                                onViewProduct={
+                                    setSelectedProduct
+                                }
+                            />
 
-                                <i className="fa-solid fa-arrow-down"></i>
+                        ))}
 
-                            </button>
+                </div>
 
-                        </div>
 
-                    )}
+                {visibleProducts <
+                    filteredProducts.length && (
 
-                </section>
+                    <div className="audio-load-more">
 
-            </main>
+                        <button
+                            onClick={() =>
+                                setVisibleProducts(
+                                    (value) =>
+                                        value +
+                                        (
+                                            store.productsPerLoad ||
+                                            4
+                                        )
+                                )
+                            }
+                        >
+                            Load more products
+                            <i className="fa-solid fa-arrow-down"></i>
+                        </button>
+
+                    </div>
+
+                )}
+
+            </section>
 
 
             {/* =================================================
-                QUICK VIEW MODAL
+                FOOTER
+            ================================================= */}
+
+            <footer className="audio-footer">
+
+                <div className="audio-footer-brand">
+
+                    <a className="audio-brand">
+
+                        <span>
+                            KSAM
+                        </span>
+
+                        <strong>
+                            DEAL
+                        </strong>
+
+                    </a>
+
+                    <p>
+                        Premium audio.
+                        Powerful experiences.
+                        Better everyday.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        SHOP
+                    </h3>
+
+                    <a href="#audio-products">
+                        Earbuds
+                    </a>
+
+                    <a href="#audio-products">
+                        Headphones
+                    </a>
+
+                    <a href="#audio-products">
+                        Speakers
+                    </a>
+
+                    <a href="#audio-products">
+                        Gaming
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        KSAM DEAL
+                    </h3>
+
+                    <a href="./index.html">
+                        Home
+                    </a>
+
+                    <a href="./addToCart.html">
+                        Cart
+                    </a>
+
+                    <a href="#audio-offers">
+                        Offers
+                    </a>
+
+                </div>
+
+            </footer>
+
+
+            <div className="audio-copyright">
+
+                © 2026 KSAM Deal.
+                All rights reserved.
+
+            </div>
+
+
+            {/* =================================================
+                QUICK VIEW
             ================================================= */}
 
             {selectedProduct && (
 
                 <div
-                    className="audio-modal"
+                    className="audio-modal-overlay"
                     onClick={() =>
-                        setSelectedProduct(
-                            null
-                        )
+                        setSelectedProduct(null)
                     }
                 >
 
                     <div
-                        className="audio-modal-content"
-                        onClick={(event) =>
-                            event.stopPropagation()
+                        className="audio-modal"
+                        onClick={(e) =>
+                            e.stopPropagation()
                         }
                     >
 
                         <button
                             className="audio-modal-close"
                             onClick={() =>
-                                setSelectedProduct(
-                                    null
-                                )
+                                setSelectedProduct(null)
                             }
                         >
                             ×
@@ -2065,114 +3812,43 @@ function AudioMain() {
                         </div>
 
 
-                        <div className="audio-modal-info">
+                        <div className="audio-modal-content">
 
-                            <small>
-                                {
-                                    selectedProduct.brand
-                                }
-                            </small>
+                            <span>
+                                {selectedProduct.brand}
+                            </span>
 
                             <h2>
-                                {
-                                    selectedProduct.name
-                                }
+                                {selectedProduct.name}
                             </h2>
 
-                            <div className="audio-modal-rating">
-                                ★{" "}
-                                {
-                                    selectedProduct.rating
-                                }
-                                {" "}
-                                (
-                                {
-                                    selectedProduct.reviews
-                                }
-                                )
-                            </div>
-
                             <p>
-                                {
-                                    selectedProduct.description
-                                }
+                                {selectedProduct.description}
                             </p>
-
 
                             <div className="audio-modal-price">
 
-                                <strong>
-                                    {store.currency}
-                                    {
-                                        selectedProduct.price
-                                    }
-                                </strong>
+                                ₹
+                                {Number(
+                                    selectedProduct.price
+                                ).toLocaleString(
+                                    "en-IN"
+                                )}
 
                                 <del>
-                                    {store.currency}
-                                    {
+                                    ₹
+                                    {Number(
                                         selectedProduct.oldPrice
-                                    }
+                                    ).toLocaleString(
+                                        "en-IN"
+                                    )}
                                 </del>
 
                             </div>
 
 
-                            <div className="audio-modal-specs">
-
-                                <div>
-                                    <span>
-                                        Battery
-                                    </span>
-
-                                    <strong>
-                                        {
-                                            selectedProduct.battery
-                                        }
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>
-                                        Connectivity
-                                    </span>
-
-                                    <strong>
-                                        {
-                                            selectedProduct.connectivity
-                                        }
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>
-                                        Water resistance
-                                    </span>
-
-                                    <strong>
-                                        {
-                                            selectedProduct.waterResistance
-                                        }
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>
-                                        Stock
-                                    </span>
-
-                                    <strong>
-                                        {
-                                            selectedProduct.stock
-                                        }
-                                    </strong>
-                                </div>
-
-                            </div>
-
-
                             <button
-                                className="audio-modal-cart"
+                                className="audio-lime-button"
                                 onClick={() => {
 
                                     addToCart(
@@ -2185,11 +3861,7 @@ function AudioMain() {
 
                                 }}
                             >
-
-                                <i className="fa-solid fa-cart-plus"></i>
-
                                 Add to cart
-
                             </button>
 
                         </div>
@@ -2209,11 +3881,9 @@ function AudioMain() {
 
                 <div className="audio-toast">
 
-                    <i className="fa-solid fa-circle-check"></i>
+                    <i className="fa-solid fa-check"></i>
 
-                    <span>
-                        {toast}
-                    </span>
+                    {toast}
 
                 </div>
 
@@ -2221,125 +3891,24 @@ function AudioMain() {
 
 
             {/* =================================================
-                BACK TO TOP
+                TOP BUTTON
             ================================================= */}
 
-            {showTopButton && (
+            {showTop && (
 
                 <button
-                    className="audio-back-top"
-                    onClick={scrollToTop}
-                    aria-label="Back to top"
+                    className="audio-top-button"
+                    onClick={() =>
+                        window.scrollTo({
+                            top: 0,
+                            behavior: "smooth"
+                        })
+                    }
                 >
                     ↑
                 </button>
 
             )}
-
-
-            {/* =================================================
-                FOOTER
-            ================================================= */}
-
-            <footer className="audio-footer">
-
-                <div className="audio-footer-main">
-
-                    <div>
-
-                        <div className="audio-footer-logo">
-                            KSAM
-                            <span>
-                                DEAL
-                            </span>
-                        </div>
-
-                        <p>
-                            Premium audio,
-                            powerful experiences.
-                        </p>
-
-                    </div>
-
-
-                    <div>
-
-                        <h4>
-                            Shop
-                        </h4>
-
-                        <a href="#products">
-                            Earbuds
-                        </a>
-
-                        <a href="#products">
-                            Headphones
-                        </a>
-
-                        <a href="#products">
-                            Speakers
-                        </a>
-
-                        <a href="#products">
-                            Gaming
-                        </a>
-
-                    </div>
-
-
-                    <div>
-
-                        <h4>
-                            Help
-                        </h4>
-
-                        <a href="./contact.html">
-                            Contact
-                        </a>
-
-                        <a href="./addToCart.html">
-                            Cart
-                        </a>
-
-                        <a href="#offers">
-                            Offers
-                        </a>
-
-                    </div>
-
-
-                    <div>
-
-                        <h4>
-                            KSAM Deal
-                        </h4>
-
-                        <p>
-                            Better products.
-                            Better prices.
-                            Better everyday.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div className="audio-footer-bottom">
-
-                    <span>
-                        © {new Date().getFullYear()}
-                        {" "}
-                        KSAM Deal. All rights reserved.
-                    </span>
-
-                    <span>
-                        Designed for better sound.
-                    </span>
-
-                </div>
-
-            </footer>
 
         </div>
 
@@ -2347,22 +3916,8 @@ function AudioMain() {
 }
 
 
-/* =========================================================
-   MOUNT
-========================================================= */
-
-const rootElement =
-    document.getElementById(
-        "audio-root"
-    );
-
-
-if (rootElement) {
-
-    createRoot(
-        rootElement
-    ).render(
-        <AudioMain />
-    );
-
-}
+createRoot(
+    document.getElementById("audio-root")
+).render(
+    <AudioMain />
+);

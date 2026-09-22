@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, {
+    useState
+} from "react";
+
 
 const getImagePath = (image) => {
+
     if (!image) return "";
 
     return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
+
 };
+
 
 function AudioCard({
     product,
@@ -14,18 +20,19 @@ function AudioCard({
     onViewProduct
 }) {
 
-    const [imageError, setImageError] = useState(false);
-    const [isAdding, setIsAdding] = useState(false);
+    const [adding, setAdding] =
+        useState(false);
 
-    const handleAddToCart = () => {
 
-        setIsAdding(true);
+    const handleAdd = () => {
+
+        setAdding(true);
 
         onAddToCart(product);
 
         setTimeout(() => {
-            setIsAdding(false);
-        }, 700);
+            setAdding(false);
+        }, 800);
 
     };
 
@@ -35,47 +42,39 @@ function AudioCard({
         <article className="audio-product-card">
 
 
-            {/* =================================================
-                IMAGE AREA
-            ================================================= */}
+            {/* IMAGE */}
 
-            <div className="audio-card-image">
-
-
-                {/* Product Badge */}
+            <div className="audio-product-image">
 
                 {product.badge && (
 
-                    <span className="audio-card-badge">
+                    <span className="audio-product-badge">
                         {product.badge}
                     </span>
 
                 )}
 
 
-                {/* Discount */}
-
                 {product.discount && (
 
-                    <span className="audio-card-discount">
+                    <span className="audio-product-discount">
                         -{product.discount}%
                     </span>
 
                 )}
 
 
-                {/* Wishlist */}
-
                 <button
-                    className={`audio-card-wishlist ${
-                        isWishlisted
-                            ? "active"
-                            : ""
-                    }`}
+                    className={
+                        `audio-wishlist ${
+                            isWishlisted
+                                ? "active"
+                                : ""
+                        }`
+                    }
                     onClick={() =>
                         onWishlist(product)
                     }
-                    aria-label="Add to wishlist"
                 >
 
                     <i
@@ -89,61 +88,33 @@ function AudioCard({
                 </button>
 
 
-                {/* Product Image */}
+                <img
+                    src={getImagePath(
+                        product.image
+                    )}
+                    alt={product.name}
+                    loading="lazy"
+                />
 
-                {!imageError ? (
-
-                    <img
-                        src={getImagePath(
-                            product.image
-                        )}
-                        alt={product.name}
-                        loading="lazy"
-                        onError={() =>
-                            setImageError(true)
-                        }
-                    />
-
-                ) : (
-
-                    <div className="audio-card-image-fallback">
-
-                        <i className="fa-solid fa-headphones"></i>
-
-                    </div>
-
-                )}
-
-
-                {/* Hover View Button */}
 
                 <button
-                    className="audio-card-quick-view"
+                    className="audio-view-overlay"
                     onClick={() =>
                         onViewProduct(product)
                     }
                 >
-
-                    <i className="fa-regular fa-eye"></i>
-
-                    View product
-
+                    Quick view
+                    <i className="fa-solid fa-arrow-right"></i>
                 </button>
-
 
             </div>
 
 
-            {/* =================================================
-                PRODUCT INFORMATION
-            ================================================= */}
+            {/* CONTENT */}
 
-            <div className="audio-card-content">
+            <div className="audio-product-content">
 
-
-                {/* Brand + Category */}
-
-                <div className="audio-card-meta">
+                <div className="audio-product-meta">
 
                     <span>
                         {product.brand}
@@ -156,18 +127,14 @@ function AudioCard({
                 </div>
 
 
-                {/* Product Name */}
-
                 <h3>
                     {product.name}
                 </h3>
 
 
-                {/* Rating */}
+                <div className="audio-product-rating">
 
-                <div className="audio-card-rating">
-
-                    <span className="audio-stars">
+                    <span>
                         ★
                     </span>
 
@@ -175,64 +142,47 @@ function AudioCard({
                         {product.rating}
                     </strong>
 
-                    <span>
+                    <small>
                         ({product.reviews})
-                    </span>
+                    </small>
 
                 </div>
 
 
-                {/* Price */}
-
-                <div className="audio-card-price">
+                <div className="audio-product-price">
 
                     <strong>
-                        ₹{product.price.toLocaleString("en-IN")}
+                        ₹
+                        {Number(
+                            product.price
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
                     </strong>
 
                     {product.oldPrice && (
 
                         <del>
-                            ₹{product.oldPrice.toLocaleString("en-IN")}
+                            ₹
+                            {Number(
+                                product.oldPrice
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
                         </del>
 
                     )}
 
-                    {product.discount && (
-
-                        <span>
-                            {product.discount}% OFF
-                        </span>
-
-                    )}
+                    <span>
+                        {product.discount}% OFF
+                    </span>
 
                 </div>
 
 
-                {/* Color */}
-
-                {product.color && (
-
-                    <div className="audio-card-color">
-
-                        <span>
-                            Color
-                        </span>
-
-                        <strong>
-                            {product.color}
-                        </strong>
-
-                    </div>
-
-                )}
-
-
-                {/* Features */}
-
                 {product.features?.length > 0 && (
 
-                    <div className="audio-card-features">
+                    <div className="audio-product-tags">
 
                         {product.features
                             .slice(0, 3)
@@ -243,9 +193,7 @@ function AudioCard({
                                 ) => (
 
                                     <span
-                                        key={
-                                            `${product.id}-feature-${index}`
-                                        }
+                                        key={index}
                                     >
                                         {feature}
                                     </span>
@@ -258,79 +206,50 @@ function AudioCard({
                 )}
 
 
-                {/* Stock */}
+                <div className="audio-stock">
 
-                <div className="audio-card-stock">
+                    <i></i>
 
-                    {product.stock > 0 ? (
-
-                        <>
-
-                            <span className="stock-dot"></span>
-
-                            {product.stock <= 10
-                                ? `Only ${product.stock} left`
-                                : "In stock"}
-
-                        </>
-
-                    ) : (
-
-                        <span className="out-of-stock">
-                            Out of stock
-                        </span>
-
-                    )}
+                    {product.stock <= 10
+                        ? `Only ${product.stock} left`
+                        : "In stock"}
 
                 </div>
 
 
-                {/* Actions */}
-
-                <div className="audio-card-actions">
-
+                <div className="audio-product-actions">
 
                     <button
-                        className="audio-card-cart"
-                        onClick={
-                            handleAddToCart
-                        }
+                        className="audio-add-cart"
+                        onClick={handleAdd}
                         disabled={
                             product.stock <= 0 ||
-                            isAdding
+                            adding
                         }
                     >
 
-                        {isAdding ? (
-
+                        {adding ? (
                             <>
                                 <i className="fa-solid fa-check"></i>
-
                                 Added
                             </>
-
                         ) : (
-
                             <>
-                                <i className="fa-solid fa-cart-plus"></i>
-
+                                <i className="fa-solid fa-bag-shopping"></i>
                                 Add to cart
                             </>
-
                         )}
 
                     </button>
 
 
                     <button
-                        className="audio-card-view"
+                        className="audio-eye-button"
                         onClick={() =>
                             onViewProduct(product)
                         }
                     >
-
                         <i className="fa-regular fa-eye"></i>
-
                     </button>
 
                 </div>
@@ -340,7 +259,7 @@ function AudioCard({
         </article>
 
     );
-
 }
+
 
 export default AudioCard;

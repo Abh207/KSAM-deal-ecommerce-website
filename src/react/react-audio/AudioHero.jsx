@@ -1,348 +1,181 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useEffect,
+    useState
+} from "react";
+
+const getImagePath = (image) => {
+
+    if (!image) return "";
+
+    return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
+};
 
 
-function AudioHero({ hero, onExplore }) {
+function AudioHero({
+    hero,
+    onExplore
+}) {
 
-    const slides = hero?.slides || [];
-
-    const [currentSlide, setCurrentSlide] = useState(0);
-
-    const [isPaused, setIsPaused] = useState(false);
-
-
-    /* =====================================================
-       CURRENT SLIDE
-    ===================================================== */
-
-    const current =
-        slides[
-            currentSlide %
-            Math.max(slides.length, 1)
-        ];
-
-
-    /* =====================================================
-       NEXT SLIDE
-    ===================================================== */
-
-    const nextSlide = () => {
-
-        if (!slides.length) return;
-
-        setCurrentSlide(
-            (previous) =>
-                (previous + 1) %
-                slides.length
-        );
-
-    };
+    const slides =
+        hero?.slides ||
+        hero?.images?.map(
+            (image, index) => ({
+                id: index,
+                image,
+                eyebrow:
+                    "NEW AUDIO COLLECTION",
+                kicker:
+                    "PREMIUM SOUND",
+                title:
+                    "Sound",
+                highlight:
+                    "without limits.",
+                description:
+                    "Discover immersive earbuds, powerful headphones and smart audio devices designed for your everyday sound.",
+                discount:
+                    "60%",
+                category:
+                    "WIRELESS AUDIO"
+            })
+        ) ||
+        [];
 
 
-    /* =====================================================
-       PREVIOUS SLIDE
-    ===================================================== */
+    const [active, setActive] =
+        useState(0);
 
-    const previousSlide = () => {
-
-        if (!slides.length) return;
-
-        setCurrentSlide(
-            (previous) =>
-                (previous - 1 + slides.length) %
-                slides.length
-        );
-
-    };
-
-
-    /* =====================================================
-       AUTOMATIC SLIDER
-    ===================================================== */
 
     useEffect(() => {
 
-        if (
-            slides.length <= 1 ||
-            isPaused
-        ) {
-            return;
-        }
+        if (slides.length <= 1) return;
 
+        const timer =
+            setInterval(() => {
 
-        const timer = setInterval(() => {
+                setActive(
+                    (current) =>
+                        (current + 1) %
+                        slides.length
+                );
 
-            setCurrentSlide(
-                (previous) =>
-                    (previous + 1) %
-                    slides.length
-            );
+            }, 5500);
 
-        }, 5500);
-
-
-        return () => {
-
+        return () =>
             clearInterval(timer);
-
-        };
-
-    }, [
-        slides.length,
-        isPaused
-    ]);
-
-
-    /* =====================================================
-       KEYBOARD CONTROLS
-    ===================================================== */
-
-    useEffect(() => {
-
-        const handleKeyboard = (event) => {
-
-            if (event.key === "ArrowRight") {
-
-                nextSlide();
-
-            }
-
-            if (event.key === "ArrowLeft") {
-
-                previousSlide();
-
-            }
-
-        };
-
-
-        window.addEventListener(
-            "keydown",
-            handleKeyboard
-        );
-
-
-        return () => {
-
-            window.removeEventListener(
-                "keydown",
-                handleKeyboard
-            );
-
-        };
 
     }, [slides.length]);
 
 
-    /* =====================================================
-       IMAGE PATH
-    ===================================================== */
-
-    const getImagePath = (image) => {
-
-        if (!image) return "";
-
-        return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
-
-    };
-
-
-    /* =====================================================
-       EMPTY STATE
-    ===================================================== */
-
-    if (!current) {
+    if (!slides.length) {
 
         return (
 
             <section className="audio-hero">
 
-                <div className="audio-hero-empty">
+                <div className="audio-hero-inner">
 
-                    <span>
-                        KSAM DEAL AUDIO
-                    </span>
+                    <div>
 
-                    <h1>
-                        Premium sound.
-                        <br />
-                        Better everyday.
-                    </h1>
+                        <span className="audio-lime-label">
+                            KSAM DEAL • AUDIO
+                        </span>
 
-                    <p>
-                        Discover earbuds, headphones,
-                        speakers and more.
-                    </p>
+                        <h1>
+                            Premium sound.
+                            <br />
+                            <strong>
+                                Better everyday.
+                            </strong>
+                        </h1>
 
-                    <button
-                        onClick={onExplore}
-                    >
-                        Explore audio
-                    </button>
+                        <p>
+                            Discover earbuds,
+                            headphones, speakers
+                            and more.
+                        </p>
+
+                        <button
+                            className="audio-lime-button"
+                            onClick={onExplore}
+                        >
+                            Explore audio
+                            <i className="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
 
                 </div>
 
             </section>
 
         );
-
     }
 
 
-    /* =====================================================
-       RENDER
-    ===================================================== */
+    const slide =
+        slides[
+            active %
+            slides.length
+        ];
+
 
     return (
 
-        <section
-            className="audio-hero"
-            id="audio-hero"
-            onMouseEnter={() =>
-                setIsPaused(true)
-            }
-            onMouseLeave={() =>
-                setIsPaused(false)
-            }
-        >
-
-            {/* =================================================
-                BACKGROUND DECORATION
-            ================================================= */}
+        <section className="audio-hero">
 
             <div className="audio-hero-grid"></div>
 
-            <div className="audio-hero-glow"></div>
 
-            <div className="audio-hero-circle"></div>
-
-
-            {/* =================================================
-                TOP LABEL
-            ================================================= */}
-
-            <div className="audio-hero-top">
-
-                <div className="audio-hero-eyebrow">
-
-                    <span></span>
-
-                    {current.eyebrow ||
-                        "NEW AUDIO COLLECTION"}
-
-                </div>
+            <div className="audio-hero-inner">
 
 
-                <div className="audio-hero-counter">
-
-                    <strong>
-                        {String(
-                            currentSlide + 1
-                        ).padStart(2, "0")}
-                    </strong>
-
-                    <span>
-                        /
-                    </span>
-
-                    <span>
-                        {String(
-                            slides.length
-                        ).padStart(2, "0")}
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            {/* =================================================
-                HERO CONTENT
-            ================================================= */}
-
-            <div className="audio-hero-content">
-
-
-                {/* =============================================
-                    LEFT SIDE
-                ============================================= */}
+                {/* LEFT */}
 
                 <div className="audio-hero-copy">
 
-                    <span className="audio-hero-kicker">
+                    <span className="audio-lime-label">
 
-                        {current.kicker ||
-                            "PREMIUM SOUND"}
+                        ● {slide.eyebrow ||
+                            "NEW AUDIO COLLECTION"}
 
                     </span>
+
+
+                    <small>
+                        {slide.kicker ||
+                            "PREMIUM SOUND"}
+                    </small>
 
 
                     <h1>
 
-                        {current.title}
+                        {slide.title ||
+                            "Sound"}
 
-                        {current.highlight && (
+                        <br />
 
-                            <span>
-                                {" "}
-                                {current.highlight}
-                            </span>
-
-                        )}
+                        <strong>
+                            {slide.highlight ||
+                                "without limits."}
+                        </strong>
 
                     </h1>
 
 
                     <p>
-                        {current.description}
+                        {slide.description ||
+                            "Discover premium audio products designed for your everyday."}
                     </p>
 
-
-                    {/* =========================================
-                        PRODUCT META
-                    ========================================= */}
-
-                    <div className="audio-hero-meta">
-
-                        {current.meta?.map(
-                            (item, index) => (
-
-                                <div
-                                    key={
-                                        `${current.id}-meta-${index}`
-                                    }
-                                >
-
-                                    <i
-                                        className={
-                                            item.icon ||
-                                            "fa-solid fa-check"
-                                        }
-                                    ></i>
-
-                                    <span>
-                                        {item.text}
-                                    </span>
-
-                                </div>
-
-                            )
-                        )}
-
-                    </div>
-
-
-                    {/* =========================================
-                        BUTTONS
-                    ========================================= */}
 
                     <div className="audio-hero-actions">
 
                         <button
-                            className="audio-hero-shop"
+                            className="audio-lime-button"
                             onClick={onExplore}
                         >
 
-                            {current.buttonText ||
+                            {slide.buttonText ||
                                 "Shop collection"}
 
                             <i className="fa-solid fa-arrow-right"></i>
@@ -351,279 +184,114 @@ function AudioHero({ hero, onExplore }) {
 
 
                         <button
-                            className="audio-hero-play"
-                            onClick={() =>
-                                setIsPaused(
-                                    !isPaused
-                                )
-                            }
-                            aria-label={
-                                isPaused
-                                    ? "Play slider"
-                                    : "Pause slider"
-                            }
+                            className="audio-hero-outline"
+                            onClick={onExplore}
                         >
-
-                            <i
-                                className={
-                                    isPaused
-                                        ? "fa-solid fa-play"
-                                        : "fa-solid fa-pause"
-                                }
-                            ></i>
-
+                            Explore categories
                         </button>
 
                     </div>
 
 
-                    {/* =========================================
-                        COLLECTION LABEL
-                    ========================================= */}
+                    <div className="audio-hero-benefits">
 
-                    <div className="audio-hero-bottom-label">
+                        <span>
+                            <b>
+                                50%
+                            </b>
+                            OFF
+                        </span>
 
-                        <strong>
-                            {String(
-                                currentSlide + 1
-                            ).padStart(2, "0")}
-                        </strong>
+                        <span>
+                            Fresh audio.
+                        </span>
 
-                        <span></span>
-
-                        <small>
-                            {current.category ||
-                                "AUDIO COLLECTION"}
-                        </small>
+                        <span>
+                            Fast delivery.
+                        </span>
 
                     </div>
 
                 </div>
 
 
-                {/* =============================================
-                    RIGHT PRODUCT IMAGE
-                ============================================= */}
+                {/* RIGHT PRODUCT */}
 
-                <div className="audio-hero-visual">
+                <div className="audio-hero-product">
 
-                    <div className="audio-hero-image-frame">
-
-                        {/* Product glow */}
-
-                        <div className="audio-product-glow"></div>
+                    <div className="audio-hero-product-label">
+                        KSAM
+                    </div>
 
 
-                        {/* Product image */}
-
-                        <img
-                            key={
-                                current.image
-                            }
-                            className="audio-hero-product-image"
-                            src={getImagePath(
-                                current.image
-                            )}
-                            alt={
-                                current.title ||
-                                "KSAM Deal Audio"
-                            }
-                        />
+                    <img
+                        src={getImagePath(
+                            slide.image
+                        )}
+                        alt={
+                            slide.title ||
+                            "Audio product"
+                        }
+                    />
 
 
-                        {/* Product shadow */}
+                    <div className="audio-hero-sale">
 
-                        <div className="audio-product-shadow"></div>
+                        UP TO
+                        <strong>
+                            {slide.discount ||
+                                "60%"}
+                        </strong>
+                        OFF
 
                     </div>
 
 
-                    {/* =========================================
-                        SALE BADGE
-                    ========================================= */}
+                    <div className="audio-hero-category">
 
-                    {current.discount && (
+                        <small>
+                            PREMIUM AUDIO
+                        </small>
 
-                        <div className="audio-hero-sale">
+                        <strong>
+                            {slide.category ||
+                                "WIRELESS AUDIO"}
+                        </strong>
 
-                            <span>
-                                UP TO
-                            </span>
-
-                            <strong>
-                                {current.discount}
-                            </strong>
-
-                            <small>
-                                OFF
-                            </small>
-
-                        </div>
-
-                    )}
-
-
-                    {/* =========================================
-                        FLOATING PRODUCT CARD
-                    ========================================= */}
-
-                    {current.floatingCard && (
-
-                        <div className="audio-floating-card">
-
-                            <div className="audio-floating-icon">
-
-                                <i
-                                    className={
-                                        current
-                                            .floatingCard
-                                            .icon ||
-                                        "fa-solid fa-headphones"
-                                    }
-                                ></i>
-
-                            </div>
-
-
-                            <div>
-
-                                <strong>
-                                    {
-                                        current
-                                            .floatingCard
-                                            .title
-                                    }
-                                </strong>
-
-                                <span>
-                                    {
-                                        current
-                                            .floatingCard
-                                            .subtitle
-                                    }
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    )}
+                    </div>
 
                 </div>
 
             </div>
 
 
-            {/* =================================================
-                SLIDER CONTROLS
-            ================================================= */}
+            {/* SLIDER */}
 
             <div className="audio-hero-controls">
 
+                {slides.map(
+                    (_, index) => (
 
-                {/* Progress */}
+                        <button
+                            key={index}
+                            className={
+                                active === index
+                                    ? "active"
+                                    : ""
+                            }
+                            onClick={() =>
+                                setActive(index)
+                            }
+                        ></button>
 
-                <div className="audio-hero-progress">
-
-                    <div
-                        key={currentSlide}
-                        className="audio-hero-progress-bar"
-                    ></div>
-
-                </div>
-
-
-                {/* Dots */}
-
-                <div className="audio-hero-dots">
-
-                    {slides.map(
-                        (slide, index) => (
-
-                            <button
-                                key={
-                                    slide.id ||
-                                    index
-                                }
-                                className={
-                                    index ===
-                                    currentSlide
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() =>
-                                    setCurrentSlide(
-                                        index
-                                    )
-                                }
-                                aria-label={`Go to slide ${
-                                    index + 1
-                                }`}
-                            ></button>
-
-                        )
-                    )}
-
-                </div>
-
-
-                {/* Arrow controls */}
-
-                <div className="audio-hero-arrows">
-
-                    <button
-                        onClick={
-                            previousSlide
-                        }
-                        aria-label="Previous slide"
-                    >
-                        <i className="fa-solid fa-arrow-left"></i>
-                    </button>
-
-                    <button
-                        onClick={
-                            nextSlide
-                        }
-                        aria-label="Next slide"
-                    >
-                        <i className="fa-solid fa-arrow-right"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            {/* =================================================
-                SIDE TEXT
-            ================================================= */}
-
-            <div className="audio-hero-side-text">
-
-                {current.sideText ||
-                    "KSAM DEAL • AUDIO"}
-
-            </div>
-
-
-            {/* =================================================
-                SCROLL INDICATOR
-            ================================================= */}
-
-            <div className="audio-hero-scroll">
-
-                <span>
-                    SCROLL
-                </span>
-
-                <i className="fa-solid fa-arrow-down"></i>
+                    )
+                )}
 
             </div>
 
         </section>
 
     );
-
 }
 
 
