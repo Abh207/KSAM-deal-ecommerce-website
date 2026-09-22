@@ -1,0 +1,619 @@
+{
+  "store": {
+    "name": "KSAM Deal Audio",
+    "currency": "₹",
+    "freeDeliveryAbove": 999,
+    "maxPrice": 15000,
+    "defaultVisibleProducts": 8,
+    "productsPerLoad": 4
+  },
+
+  "hero": {
+    "eyebrow": "KSAM DEAL • AUDIO",
+    "title": "SOUND",
+    "highlight": "WITHOUT LIMITS",
+    "description": "Discover immersive earbuds, powerful headphones and smart audio devices designed for your everyday sound.",
+    "buttonText": "Explore audio",
+    "discount": "UP TO 60% OFF",
+    "images": [
+      "/products/audio/audio1.png",
+      "/products/audio/audio2.png",
+      "/products/audio/audio3.png"
+    ]
+  },
+
+  "categories": [
+    {
+      "id": "cat-01",
+      "name": "Earbuds",
+      "icon": "fa-solid fa-ear-listen"
+    },
+    {
+      "id": "cat-02",
+      "name": "Headphones",
+      "icon": "fa-solid fa-headphones"
+    },
+    {
+      "id": "cat-03",
+      "name": "Neckbands",
+      "icon": "fa-solid fa-headphones-simple"
+    },
+    {
+      "id": "cat-04",
+      "name": "Speakers",
+      "icon": "fa-solid fa-volume-high"
+    },
+    {
+      "id": "cat-05",
+      "name": "Gaming",
+      "icon": "fa-solid fa-gamepad"
+    },
+    {
+      "id": "cat-06",
+      "name": "Accessories",
+      "icon": "fa-solid fa-bolt"
+    }
+  ],
+  "featureHighlights": [
+    {
+      "id": "feature-01",
+      "title": "Active Noise Cancellation",
+      "description": "Block outside noise and focus on your music.",
+      "icon": "fa-solid fa-wave-square"
+    },
+    {
+      "id": "feature-02",
+      "title": "Deep Bass Stereo",
+      "description": "Powerful bass with crystal-clear sound.",
+      "icon": "fa-solid fa-volume-high"
+    },
+    {
+      "id": "feature-03",
+      "title": "Fast Charging",
+      "description": "More playback with less charging time.",
+      "icon": "fa-solid fa-bolt"
+    },
+    {
+      "id": "feature-04",
+      "title": "Crystal Clear Calls",
+      "description": "Clear conversations with advanced microphones.",
+      "icon": "fa-solid fa-microphone"
+    }
+  ],
+
+  "offers": [
+    {
+      "id": "offer-01",
+      "title": "FLASH AUDIO SALE",
+      "subtitle": "Premium sound. Limited price.",
+      "discount": "60% OFF",
+      "endTime": "2026-12-31T23:59:59",
+      "productIds": [
+        "audio-001",
+        "audio-003",
+        "audio-006"
+      ]
+    },
+
+    {
+      "id": "offer-02",
+      "title": "WEEKEND SOUND DROP",
+      "subtitle": "Upgrade your everyday listening.",
+      "discount": "50% OFF",
+      "endTime": "2027-01-15T23:59:59",
+      "productIds": [
+        "audio-002",
+        "audio-004",
+        "audio-008"
+      ]
+    },
+
+    {
+      "id": "offer-03",
+      "title": "PRO AUDIO DAYS",
+      "subtitle": "Premium audio at special prices.",
+      "discount": "45% OFF",
+      "endTime": "2027-02-01T23:59:59",
+      "productIds": [
+        "audio-005",
+        "audio-009",
+        "audio-012"
+      ]
+    }
+  ],
+
+  "spotlightProducts": [
+    "audio-001",
+    "audio-003",
+    "audio-005",
+    "audio-006",
+    "audio-009"
+  ],
+
+  "products": [
+    {
+      "id": "audio-001",
+      "name": "Fire-Boltt Drift TWS",
+      "brand": "Fire-Boltt",
+      "category": "Earbuds",
+      "price": 1499,
+      "oldPrice": 2999,
+      "discount": 50,
+      "rating": 4.7,
+      "reviews": 842,
+      "image": "/products/audio/audio1.png",
+      "badge": "BESTSELLER",
+      "color": "Lilac",
+      "colors": [
+        "Grey",
+        "Lilac",
+        "Navy Blue",
+        "Beige"
+      ],
+      "features": [
+        "Active Noise Cancellation",
+        "100H Playback",
+        "Fast Charge",
+        "Deep Bass",
+        "Bluetooth 5.3"
+      ],
+      "battery": "100 Hours",
+      "connectivity": "Bluetooth 5.3",
+      "waterResistance": "IPX4",
+      "stock": 28,
+      "description": "Premium true wireless earbuds with active noise cancellation, powerful bass and ultra-long playback.",
+      "tags": [
+        "earbuds",
+        "tws",
+        "anc",
+        "bluetooth",
+        "gaming"
+      ],
+      "featured": true,
+      "trending": true,
+      "newArrival": true
+    },
+
+    {
+      "id": "audio-002",
+      "name": "TRIGGR Wireless Earbuds",
+      "brand": "TRIGGR",
+      "category": "Earbuds",
+      "price": 1299,
+      "oldPrice": 2499,
+      "discount": 48,
+      "rating": 4.5,
+      "reviews": 516,
+      "image": "/products/audio/audio2.png",
+      "badge": "TRENDING",
+      "color": "Black",
+      "colors": [
+        "Black",
+        "White"
+      ],
+      "features": [
+        "Touch Control",
+        "ENC Calls",
+        "Comfort Fit",
+        "Low Latency"
+      ],
+      "battery": "50 Hours",
+      "connectivity": "Bluetooth 5.3",
+      "waterResistance": "IPX5",
+      "stock": 34,
+      "description": "Compact wireless earbuds with comfortable fit, touch controls and clear calling.",
+      "tags": [
+        "earbuds",
+        "wireless",
+        "triggr",
+        "touch control",
+        "enc"
+      ],
+      "featured": true,
+      "trending": true,
+      "newArrival": false
+    },
+
+    {
+      "id": "audio-003",
+      "name": "AirMax Pro Wireless Headphones",
+      "brand": "KSAM Audio",
+      "category": "Headphones",
+      "price": 2499,
+      "oldPrice": 4999,
+      "discount": 50,
+      "rating": 4.8,
+      "reviews": 392,
+      "image": "/products/audio/audio3.png",
+      "badge": "PREMIUM",
+      "color": "Rose Gold",
+      "colors": [
+        "Rose Gold",
+        "Black",
+        "Silver"
+      ],
+      "features": [
+        "Active Noise Cancellation",
+        "Spatial Audio",
+        "40H Playback",
+        "Fast Charging"
+      ],
+      "battery": "40 Hours",
+      "connectivity": "Bluetooth 5.4",
+      "waterResistance": "IPX4",
+      "stock": 15,
+      "description": "Premium over-ear wireless headphones with immersive sound and active noise cancellation.",
+      "tags": [
+        "headphones",
+        "anc",
+        "wireless",
+        "premium",
+        "over ear"
+      ],
+      "featured": true,
+      "trending": true,
+      "newArrival": true
+    },
+
+    {
+      "id": "audio-004",
+      "name": "T30 Noise Cancelling Earbuds",
+      "brand": "TALIX",
+      "category": "Earbuds",
+      "price": 1799,
+      "oldPrice": 3499,
+      "discount": 49,
+      "rating": 4.6,
+      "reviews": 271,
+      "image": "/products/audio/audio4.png",
+      "badge": "HOT DEAL",
+      "color": "Navy Blue",
+      "colors": [
+        "Navy Blue",
+        "Black"
+      ],
+      "features": [
+        "Noise Cancelling",
+        "28H Playback",
+        "Bluetooth 6.0",
+        "Low Latency"
+      ],
+      "battery": "28 Hours",
+      "connectivity": "Bluetooth 6.0",
+      "waterResistance": "IPX5",
+      "stock": 22,
+      "description": "Modern noise cancelling earbuds with stable Bluetooth connectivity and balanced sound.",
+      "tags": [
+        "t30",
+        "earbuds",
+        "noise cancelling",
+        "bluetooth 6",
+        "bass"
+      ],
+      "featured": true,
+      "trending": false,
+      "newArrival": true
+    },
+
+    {
+      "id": "audio-005",
+      "name": "Studio Pro ANC Headphones",
+      "brand": "KSAM Studio",
+      "category": "Headphones",
+      "price": 3299,
+      "oldPrice": 5999,
+      "discount": 45,
+      "rating": 4.8,
+      "reviews": 186,
+      "image": "/products/audio/audio5.png",
+      "badge": "PRO",
+      "color": "Black",
+      "colors": [
+        "Black",
+        "Cream"
+      ],
+      "features": [
+        "Adaptive ANC",
+        "Studio Sound",
+        "50H Playback",
+        "Multi Device"
+      ],
+      "battery": "50 Hours",
+      "connectivity": "Bluetooth 5.4",
+      "waterResistance": "IPX4",
+      "stock": 12,
+      "description": "Studio-inspired headphones with powerful drivers, adaptive noise cancellation and long battery life.",
+      "tags": [
+        "studio",
+        "headphones",
+        "anc",
+        "professional",
+        "wireless"
+      ],
+      "featured": true,
+      "trending": false,
+      "newArrival": false
+    },
+
+    {
+      "id": "audio-006",
+      "name": "Gaming X Pro Headset",
+      "brand": "KSAM Gaming",
+      "category": "Gaming",
+      "price": 2199,
+      "oldPrice": 3999,
+      "discount": 45,
+      "rating": 4.7,
+      "reviews": 304,
+      "image": "/products/audio/audio6.png",
+      "badge": "GAMING",
+      "color": "Black",
+      "colors": [
+        "Black",
+        "Green"
+      ],
+      "features": [
+        "7.1 Surround Sound",
+        "Gaming Mic",
+        "Low Latency",
+        "RGB Lighting"
+      ],
+      "battery": "35 Hours",
+      "connectivity": "2.4GHz Wireless",
+      "waterResistance": "None",
+      "stock": 19,
+      "description": "Gaming headset designed for immersive gameplay with surround sound and a responsive microphone.",
+      "tags": [
+        "gaming",
+        "headset",
+        "rgb",
+        "surround sound",
+        "low latency"
+      ],
+      "featured": false,
+      "trending": true,
+      "newArrival": true
+    },
+
+    {
+      "id": "audio-007",
+      "name": "BassBoom Portable Speaker",
+      "brand": "KSAM Sound",
+      "category": "Speakers",
+      "price": 1899,
+      "oldPrice": 3299,
+      "discount": 42,
+      "rating": 4.5,
+      "reviews": 148,
+      "image": "/products/audio/audio7.png",
+      "badge": "BEST VALUE",
+      "color": "Black",
+      "colors": [
+        "Black",
+        "Blue"
+      ],
+      "features": [
+        "360° Sound",
+        "Deep Bass",
+        "20H Playback",
+        "Water Resistant"
+      ],
+      "battery": "20 Hours",
+      "connectivity": "Bluetooth 5.3",
+      "waterResistance": "IPX7",
+      "stock": 31,
+      "description": "Portable Bluetooth speaker delivering powerful bass and room-filling 360-degree sound.",
+      "tags": [
+        "speaker",
+        "bluetooth",
+        "portable",
+        "bass",
+        "outdoor"
+      ],
+      "featured": false,
+      "trending": true,
+      "newArrival": false
+    },
+
+    {
+      "id": "audio-008",
+      "name": "NeckBeat Wireless Neckband",
+      "brand": "KSAM Audio",
+      "category": "Neckbands",
+      "price": 899,
+      "oldPrice": 1599,
+      "discount": 44,
+      "rating": 4.4,
+      "reviews": 227,
+      "image": "/products/audio/audio8.png",
+      "badge": "SALE",
+      "color": "Blue",
+      "colors": [
+        "Blue",
+        "Black",
+        "Red"
+      ],
+      "features": [
+        "Fast Pairing",
+        "30H Playback",
+        "Magnetic Buds",
+        "Clear Calls"
+      ],
+      "battery": "30 Hours",
+      "connectivity": "Bluetooth 5.2",
+      "waterResistance": "IPX5",
+      "stock": 45,
+      "description": "Lightweight wireless neckband with magnetic earbuds and long-lasting battery life.",
+      "tags": [
+        "neckband",
+        "wireless",
+        "bluetooth",
+        "music",
+        "calls"
+      ],
+      "featured": false,
+      "trending": false,
+      "newArrival": false
+    },
+
+    {
+      "id": "audio-009",
+      "name": "Elite QuietComfort Headphones",
+      "brand": "KSAM Elite",
+      "category": "Headphones",
+      "price": 4499,
+      "oldPrice": 7999,
+      "discount": 44,
+      "rating": 4.9,
+      "reviews": 94,
+      "image": "/products/audio/audio9.png",
+      "badge": "ELITE",
+      "color": "Cream",
+      "colors": [
+        "Cream",
+        "Black"
+      ],
+      "features": [
+        "Adaptive ANC",
+        "Premium Drivers",
+        "60H Playback",
+        "Transparency Mode"
+      ],
+      "battery": "60 Hours",
+      "connectivity": "Bluetooth 5.4",
+      "waterResistance": "IPX4",
+      "stock": 8,
+      "description": "Premium noise cancelling headphones created for long listening sessions and travel.",
+      "tags": [
+        "premium",
+        "headphones",
+        "quietcomfort",
+        "anc",
+        "travel"
+      ],
+      "featured": true,
+      "trending": false,
+      "newArrival": true
+    },
+
+    {
+      "id": "audio-010",
+      "name": "MiniPod Compact Earbuds",
+      "brand": "KSAM Mini",
+      "category": "Earbuds",
+      "price": 799,
+      "oldPrice": 1399,
+      "discount": 43,
+      "rating": 4.3,
+      "reviews": 362,
+      "image": "/products/audio/audio10.png",
+      "badge": "POPULAR",
+      "color": "White",
+      "colors": [
+        "White",
+        "Black"
+      ],
+      "features": [
+        "Compact Case",
+        "24H Playback",
+        "Touch Controls",
+        "ENC Calls"
+      ],
+      "battery": "24 Hours",
+      "connectivity": "Bluetooth 5.3",
+      "waterResistance": "IPX4",
+      "stock": 53,
+      "description": "Compact everyday earbuds with reliable connectivity and clear calling.",
+      "tags": [
+        "mini",
+        "earbuds",
+        "compact",
+        "wireless",
+        "budget"
+      ],
+      "featured": false,
+      "trending": true,
+      "newArrival": false
+    },
+
+    {
+      "id": "audio-011",
+      "name": "PartyBox Bass Speaker",
+      "brand": "KSAM Party",
+      "category": "Speakers",
+      "price": 3999,
+      "oldPrice": 6999,
+      "discount": 43,
+      "rating": 4.6,
+      "reviews": 77,
+      "image": "/products/audio/audio11.png",
+      "badge": "PARTY",
+      "color": "Black",
+      "colors": [
+        "Black",
+        "Red"
+      ],
+      "features": [
+        "Power Bass",
+        "RGB Lighting",
+        "12H Playback",
+        "Karaoke Mode"
+      ],
+      "battery": "12 Hours",
+      "connectivity": "Bluetooth 5.3",
+      "waterResistance": "IPX5",
+      "stock": 14,
+      "description": "Powerful party speaker with bass boost, RGB lighting and karaoke functionality.",
+      "tags": [
+        "party",
+        "speaker",
+        "bass",
+        "rgb",
+        "karaoke"
+      ],
+      "featured": false,
+      "trending": true,
+      "newArrival": true
+    },
+
+    {
+      "id": "audio-012",
+      "name": "Pro Creator Wireless Mic",
+      "brand": "KSAM Creator",
+      "category": "Accessories",
+      "price": 2799,
+      "oldPrice": 4999,
+      "discount": 44,
+      "rating": 4.7,
+      "reviews": 119,
+      "image": "/products/audio/audio12.png",
+      "badge": "CREATOR",
+      "color": "Black",
+      "colors": [
+        "Black",
+        "White"
+      ],
+      "features": [
+        "Dual Microphone",
+        "Noise Reduction",
+        "Plug & Play",
+        "Long Battery"
+      ],
+      "battery": "20 Hours",
+      "connectivity": "2.4GHz Wireless",
+      "waterResistance": "None",
+      "stock": 17,
+      "description": "Compact wireless microphone system for creators, reels, interviews and live streaming.",
+      "tags": [
+        "microphone",
+        "creator",
+        "wireless mic",
+        "recording",
+        "streaming"
+      ],
+      "featured": true,
+      "trending": true,
+      "newArrival": true
+    }
+  ]
+}

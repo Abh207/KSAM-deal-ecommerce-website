@@ -20,6 +20,7 @@ export default defineConfig({
                 login: resolve(__dirname, "login.html"),
                 product: resolve(__dirname, "Product.html"),
                 signUp: resolve(__dirname, "signUp.html"),
+                audio: resolve(__dirname, "audio.html"),
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),

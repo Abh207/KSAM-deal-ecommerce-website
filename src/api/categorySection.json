@@ -58,11 +58,11 @@
         },
 
         {
-            "id": "home",
-            "name": "Home",
-            "description": "Everything for your home",
+            "id": "cloths",
+            "name": "Clothing",
+            "description": "Stylish clothing for every occasion",
             "productIds": [],
-            "icon": "🏠",
+            "icon": "👕",
             "color": "#eefbea",
             "link": "./clothes.html"
         },
@@ -75,6 +75,15 @@
             "icon": "🪑",
             "color": "#f3edff",
             "link": "./moreChairProd.html"
+        },
+        {
+            "id": "Speakers",
+            "name": "Speakers",
+            "description": "High-quality sound systems",
+            "productIds": [],
+            "icon": "🔊",
+            "color": "#f0f8ff",
+            "link": "./audio.html"
         }
     ]
 }
