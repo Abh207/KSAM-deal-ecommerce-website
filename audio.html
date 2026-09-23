@@ -2,27 +2,18 @@
 <html lang="en">
 
 <head>
-
+    
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="description"
-        content="KSAM Deal Audio — Premium earbuds, headphones, speakers and gaming audio."
-    >
-
-    <meta
-        name="theme-color"
-        content="#050505"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         KSAM Deal — Audio
     </title>
+    <meta name="description" content="A highly dynamic, modern, premium, and interactive footer for KSAM Deal.">
+    <!-- Google Fonts: Inter for a clean, modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 
     <link
         rel="stylesheet"
@@ -34,7 +25,276 @@
 
 <body>
 
+
     <div id="audio-root"></div>
+    
+    <!-- Placeholder main content to allow scrolling -->
+    <main class="page-content">
+        <div class="hero">
+            <h1>KSAM Deal Premium Experience</h1>
+            <p>Scroll down to explore the ultimate interactive footer.</p>
+        </div>
+    </main>
+
+    <!-- PREMIUM FOOTER -->
+    <footer class="site-footer" id="site-footer">
+        <!-- Interactive Background Blobs -->
+        <div class="footer-bg-blob blob-1"></div>
+        <div class="footer-bg-blob blob-2"></div>
+
+        <!-- 20. Popular Categories Strip -->
+        <div class="popular-categories-strip reveal">
+            <span class="strip-label">Popular Categories:</span>
+            <div class="strip-links">
+                <a href="#">Electronics</a>
+                <span class="divider">|</span>
+                <a href="#">Fashion</a>
+                <span class="divider">|</span>
+                <a href="#">Home</a>
+                <span class="divider">|</span>
+                <a href="#">Accessories</a>
+                <span class="divider">|</span>
+                <a href="#">Beauty</a>
+            </div>
+        </div>
+
+        <!-- Footer Top Border / Wave -->
+        <div class="footer-top-divider"></div>
+
+        <div class="footer-container">
+            
+            <!-- 1. Premium Hero Footer CTA -->
+            <section class="footer-hero reveal">
+                <h2>Ready to discover something amazing?</h2>
+                <p>Join thousands of shoppers and get exclusive deals, new arrivals and special offers.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary">
+                        <span>Explore Products</span>
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <span>Get Exclusive Deals</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 2. Interactive Newsletter -->
+            <section class="footer-newsletter reveal">
+                <div class="newsletter-content">
+                    <h3 class="newsletter-title">Get 10% off your first order</h3>
+                </div>
+                <form id="newsletter-form" class="newsletter-form" novalidate>
+                    <div class="input-group">
+                        <svg class="email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <input type="email" id="email-input" placeholder="Enter your email address" aria-label="Email address" required>
+                        <button type="submit" id="subscribe-btn" aria-label="Subscribe">
+                            <span class="btn-text">Subscribe</span>
+                            <span class="btn-loader" aria-hidden="true">
+                                <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+                            </span>
+                        </button>
+                    </div>
+                    <div id="newsletter-message" class="newsletter-message" aria-live="polite"></div>
+                </form>
+            </section>
+
+            <!-- 3. Live Shopping Statistics -->
+            <section class="footer-stats reveal">
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="10000">0</span>+</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="5000">0</span>+</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="99">0</span>%</div>
+                    <div class="stat-label">Satisfaction</div>
+                </div>
+            </section>
+
+            <!-- 4. Why Shop With Us? -->
+            <section class="footer-features reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">🚚</div>
+                    <h4>Fast Delivery</h4>
+                    <p>Quick and reliable shipping</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h4>Secure Payments</h4>
+                    <p>Protected checkout</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">↩️</div>
+                    <h4>Easy Returns</h4>
+                    <p>Hassle-free returns</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h4>24/7 Support</h4>
+                    <p>We're here whenever you need us</p>
+                </div>
+            </section>
+
+            <div class="footer-divider reveal"></div>
+
+            <!-- MAIN FOOTER COLUMNS -->
+            <div class="footer-main reveal">
+                
+                <!-- 6. Brand Section -->
+                <div class="footer-col brand-col">
+                    <a href="#" class="brand-logo" id="brand-logo" aria-label="KSAM Deal Home">
+                        <!-- Secret Toast Anchor -->
+                        <div id="easter-egg-toast" class="easter-egg-toast">✨ You found a little secret!</div>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>KSAM Deal</span>
+                    </a>
+                    <p class="brand-desc">Your ultimate destination for premium quality products and unbeatable deals.</p>
+                    
+                    <!-- 7. Social Media Interaction -->
+                    <div class="social-follow-text">Follow us & stay inspired</div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram" class="social-icon" data-tooltip="Follow us on Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="#" aria-label="Facebook" class="social-icon" data-tooltip="Join our community">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="#" aria-label="YouTube" class="social-icon" data-tooltip="Watch our latest videos">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.16 1 12 1 12s0 3.84.46 5.58a2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.84 23 12 23 12s0-3.84-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
+                        </a>
+                        <a href="#" aria-label="LinkedIn" class="social-icon" data-tooltip="Connect with us">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                        <a href="#" aria-label="X (Twitter)" class="social-icon" data-tooltip="Follow us on X">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 5. Interactive Footer Navigation -->
+                <div class="footer-col accordion-col">
+                    <h3 class="col-title">Shop</h3>
+                    <ul class="col-links">
+                        <li><a href="#">All Products</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Deals</a></li>
+                        <li><a href="#">Categories</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col accordion-col">
+                    <h3 class="col-title">Customer Support</h3>
+                    <ul class="col-links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col accordion-col">
+                    <h3 class="col-title">Company</h3>
+                    <ul class="col-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col accordion-col">
+                    <h3 class="col-title">Help</h3>
+                    <ul class="col-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Delivery Information</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-divider reveal"></div>
+
+            <!-- 8. Payment Methods & 9. Trust Badges -->
+            <div class="footer-trust-payments reveal">
+                <div class="trust-indicators">
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span>Verified Products</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Secure Checkout</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span>Fast Shipping</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-10.09l5.67-5.67"></path></svg>
+                        <span>Easy Returns</span>
+                    </div>
+                </div>
+
+                <div class="payment-area">
+                    <span class="payment-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 100% Secure Checkout</span>
+                    <div class="payment-methods" aria-label="Payment methods">
+                        <div class="payment-icon" title="Visa">
+                            <svg viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="4" fill="#F4F4F5"/><path d="M15.42 16.489L17.914 7.625h3.94l-2.492 8.864h-3.94zm14.398-8.666c-.662-.323-1.805-.597-3.136-.597-3.418 0-5.83 1.76-5.854 4.28-.026 1.866 1.733 2.91 3.056 3.535 1.353.642 1.815 1.05 1.815 1.62-.023.876-1.077 1.282-2.072 1.282-1.378 0-2.11-.212-3.238-.696l-.454-.207-.549 3.29c.801.358 2.296.669 3.861.684 3.639 0 6.012-1.741 6.04-4.442.028-1.488-1.096-2.613-2.936-3.468-1.21-.597-1.95-.992-1.95-1.597 0-.555.626-1.127 1.957-1.127 1.129-.02 1.942.238 2.536.494l.307.142.618-3.197h-.001z" fill="#1434CB"/></svg>
+                        </div>
+                        <div class="payment-icon" title="Mastercard">
+                            <svg viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="4" fill="#F4F4F5"/><path d="M12.983 17.5c3.037 0 5.5-2.463 5.5-5.5s-2.463-5.5-5.5-5.5-5.5 2.463-5.5 5.5 2.463 5.5 5.5 5.5z" fill="#EB001B"/><path d="M23.983 17.5c3.037 0 5.5-2.463 5.5-5.5s-2.463-5.5-5.5-5.5-5.5 2.463-5.5 5.5 2.463 5.5 5.5 5.5z" fill="#F79E1B"/><path d="M23.983 12c0-1.89-1.01-3.551-2.5-4.425a5.474 5.474 0 0 0 0 8.85c1.49-.874 2.5-2.535 2.5-4.425z" fill="#FF5F00"/></svg>
+                        </div>
+                        <div class="payment-icon" title="American Express">
+                            <svg viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="4" fill="#F4F4F5"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.954 15.65h1.996l-1.385-3.328h-3.23l-1.353 3.328H5.952l3.864-8.918h2.091l.047.383zm-1.846-4.698l-1.077-2.613-1.05 2.613h2.127zm4.721 4.698l3.197-8.918h2.083l1.83 5.753 1.802-5.753h2.092l3.187 8.918h-1.874l-1.258-3.774-1.928 3.774h-1.35l-1.95-3.805-1.282 3.805H14.83zm5.666-6.602l.74 2.51.724-2.51h-1.464zm4.237-1.121v.96h-1.7v.92h2.247v1.012H21.2v.975h1.761v1.012h-2.906v-5.88h2.951v1.001h-1.272zm5.787 5.748L29.356 12.3l-1.099-2.544v3.91h-1.124v-5.88h2.907L31.135 10.3l1.104 2.528v-3.896h1.129v5.88h-2.848z" fill="#006FCF"/></svg>
+                        </div>
+                        <div class="payment-icon" title="UPI">
+                            <svg viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="4" fill="#F4F4F5"/><path d="M12.9 8.2h2.4v4.5c0 1.2.6 1.8 1.8 1.8s1.8-.6 1.8-1.8V8.2h2.4v4.6c0 2.6-1.5 3.9-4.2 3.9s-4.2-1.3-4.2-3.9V8.2zm10.7 0h3.6c2.4 0 3.7 1.2 3.7 3.3 0 2.2-1.3 3.3-3.7 3.3h-1.2v1.9h-2.4V8.2zm2.4 4.8h1c1 0 1.5-.4 1.5-1.4s-.5-1.4-1.5-1.4h-1v2.8zm7.1-4.8h2.4v8.5h-2.4V8.2z" fill="#4B4B4B"/></svg>
+                        </div>
+                        <div class="payment-icon" title="PayPal">
+                            <svg viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="4" fill="#F4F4F5"/><path d="M22.585 9.07c.074.453-.027 1.058-.293 1.777-.52 1.4-1.442 2.378-2.617 2.766-.62.203-1.332.257-2.138.257H15.93a.355.355 0 0 0-.348.293l-1.002 6.326a.17.17 0 0 1-.168.143h-2.316c-.114 0-.197-.107-.18-.219l1.85-11.666a.355.355 0 0 1 .349-.301h4.636c1.17 0 2 .064 2.502.26.793.308 1.255 1 1.332 2.364zm-1.005-1.913a2.911 2.911 0 0 0-1.007-.15H15.93c-.167 0-.31.119-.345.284l-.841 5.305a.17.17 0 0 0 .167.195h1.745c.877 0 1.637-.09 2.22-.382 1.031-.515 1.785-1.611 2.062-3.001a1.295 1.295 0 0 0 .01-.157 1.957 1.957 0 0 0-.369-1.579c-.276-.363-.615-.558-1.004-.515z" fill="#003087"/><path d="M29.697 9.07c.075.453-.026 1.058-.292 1.777-.52 1.4-1.442 2.378-2.617 2.766-.62.203-1.332.257-2.138.257h-1.606a.355.355 0 0 0-.349.293l-1.002 6.326a.17.17 0 0 1-.168.143h-2.315c-.114 0-.198-.107-.18-.219l1.85-11.666a.355.355 0 0 1 .349-.301h4.635c1.171 0 2 .064 2.502.26.794.308 1.255 1 1.331 2.364zm-1.004-1.913a2.91 2.91 0 0 0-1.007-.15h-4.643c-.167 0-.31.119-.345.284l-.841 5.305a.17.17 0 0 0 .167.195h1.745c.877 0 1.637-.09 2.22-.382 1.031-.515 1.785-1.611 2.062-3.001a1.295 1.295 0 0 0 .01-.157 1.957 1.957 0 0 0-.369-1.579c-.276-.363-.615-.558-1.004-.515z" fill="#009CDE"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19. Bottom Bar (Copyright) -->
+            <div class="footer-bottom reveal">
+                <p class="copyright">&copy; <span id="current-year">2026</span> KSAM Deal. All rights reserved.</p>
+                <div class="bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 10. BACK TO TOP BUTTON WITH PROGRESS RING -->
+    <button id="back-to-top" class="back-to-top" aria-label="Scroll back to top">
+        <svg class="progress-ring" width="56" height="56" viewBox="0 0 56 56">
+            <circle class="progress-ring-bg" cx="28" cy="28" r="26" fill="none" stroke-width="2"/>
+            <circle class="progress-ring-circle" cx="28" cy="28" r="26" fill="none" stroke-width="2"/>
+        </svg>
+        <div class="back-to-top-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+        </div>
+    </button>
+
+    <script src="script.js"></script>
 
 
     <script
@@ -43,5 +303,4 @@
     ></script>
 
 </body>
-
 </html>
