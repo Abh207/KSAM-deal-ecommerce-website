@@ -4,6 +4,7 @@ import React, {
 } from "react";
 
 import "./HomeNavbar.css";
+import GlobalSearch from "../global-search/GlobalSearch";
 
 
 const CART_KEY = "cartProductLS";
@@ -251,6 +252,17 @@ function HomeNavbar() {
                             NEW ARRIVALS
                         </button>
 
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                            window.location.href = "./Deals.html";
+                            }}
+                        >
+                            Discounts
+                            
+                        </button>
+
                     </nav>
 
 
@@ -263,7 +275,7 @@ function HomeNavbar() {
 
                         {/* SEARCH */}
 
-                        <button
+                        {/* <button
                             type="button"
                             className="navbar-icon-button"
                             aria-label="Search"
@@ -274,7 +286,9 @@ function HomeNavbar() {
                             }
                         >
                             🔍
-                        </button>
+                        </button> */}
+
+                        <GlobalSearch />
 
 
                         {/* WISHLIST */}

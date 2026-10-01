@@ -24,6 +24,7 @@ export default defineConfig({
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),
+                deals: resolve(__dirname, "Deals.html"),
                 checkout: resolve(__dirname, "checkout.html"),
                 orderSuccess: resolve(
     __dirname,
