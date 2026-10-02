@@ -3,7 +3,9 @@ import { createRoot } from "react-dom/client";
 
 import Deals from "./deals/Deals.jsx";
 
-// import "./deals/deals.css";
+import "./deals/tailwind-generated.css";
+
+import "./deals/deals.css";
 
 const root = document.getElementById("deals-root");
 

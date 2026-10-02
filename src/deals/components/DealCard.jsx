@@ -261,3 +261,4 @@ function DealCard({
 }
 
 export default DealCard;
+

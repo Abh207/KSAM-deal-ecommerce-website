@@ -39,7 +39,7 @@ export default {
                 float:
                     "float 6s ease-in-out infinite",
 
-                pulse-glow:
+                "pulse-glow":
                     "pulse-glow 2s ease-in-out infinite",
 
                 "fade-up":
