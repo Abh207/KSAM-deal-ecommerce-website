@@ -803,3 +803,199 @@
         min-width: 34px;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   KSAM DEAL - MOBILE NAVIGATION
+===================================================== */
+
+.mobile-nav-options {
+    display: none;
+}
+
+
+/* =====================================================
+   MOBILE NAVIGATION
+===================================================== */
+
+@media screen and (max-width: 760px) {
+
+    .mobile-nav-options {
+        display: flex !important;
+
+        width: 100%;
+        max-width: 100%;
+
+        box-sizing: border-box;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        white-space: nowrap;
+
+        gap: 28px;
+
+        padding: 15px 20px;
+
+        background: #ffffff;
+
+        border-bottom: 1px solid #eeeeee;
+
+        position: relative;
+
+        z-index: 10000;
+
+        -webkit-overflow-scrolling: touch;
+
+        scrollbar-width: none;
+    }
+
+
+    /* Hide scrollbar - Chrome */
+    .mobile-nav-options::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    /* Navigation links */
+
+    .mobile-nav-options a {
+
+        flex: 0 0 auto;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        color: #172033;
+
+        text-decoration: none;
+
+        font-family: Arial, sans-serif;
+
+        font-size: 14px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.3px;
+
+        padding: 7px 0;
+
+        position: relative;
+
+        transition:
+            color 0.25s ease,
+            transform 0.25s ease;
+    }
+
+
+    /* Hover */
+
+    .mobile-nav-options a:hover {
+
+        color: #087f4f;
+
+        transform: translateY(-1px);
+    }
+
+
+    /* Active */
+
+    .mobile-nav-options a.active {
+
+        color: #087f4f;
+    }
+
+
+    .mobile-nav-options a.active::after {
+
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+
+        right: 0;
+
+        bottom: 0;
+
+        height: 2px;
+
+        background: #087f4f;
+
+        border-radius: 10px;
+    }
+
+
+    /* DEAL + HOT */
+
+    .mobile-nav-options .deals-nav {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+    }
+
+
+    .mobile-nav-options .deals-nav span {
+
+        background: #111827;
+
+        color: #ffffff;
+
+        font-size: 9px;
+
+        font-weight: 900;
+
+        padding: 4px 6px;
+
+        border-radius: 4px;
+
+        line-height: 1;
+    }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+===================================================== */
+
+@media screen and (max-width: 420px) {
+
+    .mobile-nav-options {
+
+        gap: 24px;
+
+        padding:
+
+            14px 18px;
+    }
+
+
+    .mobile-nav-options a {
+
+        font-size: 13px;
+    }
+}

@@ -385,6 +385,90 @@ function HomeNavbar() {
                 </div>
 
 
+
+
+
+
+
+
+
+
+
+                                {/* =================================================
+                   MOBILE QUICK NAVIGATION
+                ================================================= */}
+
+                <div className="mobile-nav-options">
+
+                    <a
+                        href="#"
+                        className="active"
+                        onClick={(e) => {
+                            e.preventDefault();
+
+                            window.scrollTo({
+                                top: 0,
+                                behavior: "smooth"
+                            });
+
+                            closeMenu();
+                        }}
+                    >
+                        HOME
+                    </a>
+
+                    <a
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            scrollToProducts();
+                        }}
+                    >
+                        PRODUCTS
+                    </a>
+
+                    <a
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            scrollToProducts();
+                        }}
+                    >
+                        CATEGORIES
+                    </a>
+
+                    <a
+                        href="#"
+                        className="deals-nav"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            scrollToProducts();
+                        }}
+                    >
+                        DEALS
+                        <span>HOT</span>
+                    </a>
+
+                    <a
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            scrollToProducts();
+                        }}
+                    >
+                        NEW ARRIVALS
+                    </a>
+
+                    <a
+                        href="./Deals.html"
+                        onClick={() => closeMenu()}
+                    >
+                        DISCOUNTS
+                    </a>
+
+                </div>
+
+
                 {/* =================================================
                    SEARCH PANEL
                 ================================================= */}
