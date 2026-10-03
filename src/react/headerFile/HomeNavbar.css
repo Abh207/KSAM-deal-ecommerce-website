@@ -631,3 +631,175 @@
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   KSAM DEAL - MOBILE NAVBAR WIDTH FIX
+========================================================= */
+
+@media screen and (max-width: 760px) {
+
+    html {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    .home-navbar {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .home-navbar-container {
+        width: 94%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0 auto;
+
+        min-height: 64px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 8px;
+    }
+
+    .home-navbar-logo {
+        max-width: 60%;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .logo-main {
+        font-size: 21px;
+        white-space: nowrap;
+    }
+
+    .logo-sub {
+        font-size: 8px;
+        padding: 4px 6px;
+    }
+
+    .home-navbar-links {
+        display: none;
+    }
+
+    .home-navbar-actions {
+        margin-left: auto;
+
+        display: flex;
+        align-items: center;
+
+        gap: 3px;
+    }
+
+    .navbar-account-button {
+        display: none;
+    }
+
+    .navbar-icon-button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+
+        font-size: 16px;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-navbar-menu {
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        right: 0;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media screen and (max-width: 420px) {
+
+    .home-navbar-container {
+        width: 94%;
+        max-width: 100%;
+        gap: 4px;
+    }
+
+    .home-navbar-logo {
+        max-width: 55%;
+    }
+
+    .logo-main {
+        font-size: 19px;
+    }
+
+    .logo-sub {
+        font-size: 7px;
+        letter-spacing: 1px;
+    }
+
+    .navbar-icon-button,
+    .mobile-menu-button {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+    }
+}

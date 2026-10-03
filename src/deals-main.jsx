@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 
 import Deals from "./deals/Deals.jsx";
 
+// import SupabaseTest from "./deals/SupabaseTest.jsx";
+
 import "./deals/tailwind-generated.css";
 
 import "./deals/deals.css";
@@ -13,6 +15,7 @@ if (root) {
     createRoot(root).render(
         <React.StrictMode>
             <Deals />
+            {/* <SupabaseTest /> */}
         </React.StrictMode>
     );
 }
