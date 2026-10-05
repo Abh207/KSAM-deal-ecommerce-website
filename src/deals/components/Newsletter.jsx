@@ -1808,7 +1808,7 @@ function Newsletter() {
               <div className="ksam-shine"></div>
 
               <img
-                src="./public/products/newsletter-person1.png"
+                src="/KSAM-deal-ecommerce-website/products/newsletter-person1.png"
                 alt="KSAM Deal shopping"
                 className="ksam-image"
               />
