@@ -1,6 +1,7 @@
 import { Menu, X, ShoppingBag, Search, Clock, TrendingUp, ArrowUpRight, Star } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { supabase } from "../../lib/supabase";
 
 /* =====================================================
    DATA
@@ -330,71 +331,154 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
         };
     }, [searchOpen]);
 
-    /* ---------- search ---------- */
-    const runSearch = async (text) => {
-        const q = text.trim();
-        const id = ++requestId.current;
+    const runSearch = async (term = query) => {
+    const q = term.trim();
 
-        if (!q) {
-            setResults([]);
-            setSearched(false);
-            setError("");
+    if (!q) {
+        setResults([]);
+        setError("");
+        setLoading(false);
+        return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+        // ==========================================
+        // 1. SEARCH PRODUCTS FROM SUPABASE DATABASE
+        // ==========================================
+
+        const searchTerm = `%${q}%`;
+
+        const { data: databaseProducts, error: databaseError } =
+            await supabase
+                .from("products")
+                .select(`
+                    id,
+                    name,
+                    description,
+                    image_url,
+                    price,
+                    old_price,
+                    discount,
+                    rating,
+                    reviews,
+                    category_id,
+                    store_id,
+                    product_url,
+                    availability,
+                    external_id,
+                    is_active,
+                    stores (
+                        id,
+                        name
+                    )
+                `)
+                .eq("is_active", true)
+                .or(
+                    `name.ilike.${searchTerm},description.ilike.${searchTerm}`
+                )
+                .order("discount", {
+                    ascending: false,
+                    nullsFirst: false,
+                })
+                .limit(30);
+
+        if (databaseError) {
+            console.error(
+                "Supabase database search error:",
+                databaseError
+            );
+        }
+
+        // ==========================================
+        // 2. DATABASE PRODUCTS FOUND
+        // ==========================================
+
+        if (
+            !databaseError &&
+            databaseProducts &&
+            databaseProducts.length > 0
+        ) {
+            const formattedProducts = databaseProducts.map(
+                (product, index) =>
+                    normalizeProduct(
+                        {
+                            ...product,
+                            store: product.stores?.name || "",
+                        },
+                        index
+                    )
+            );
+
+            setResults(formattedProducts);
             setLoading(false);
             return;
         }
 
-        setLoading(true);
-        setError("");
+        // ==========================================
+        // 3. NO DATABASE RESULTS
+        // FALL BACK TO SERPAPI EDGE FUNCTION
+        // ==========================================
 
-        try {
-            const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-            // No backend configured: filter the demo catalogue so the UI is testable
-            if (!baseUrl) {
-                await new Promise((r) => setTimeout(r, 450));
-                if (id !== requestId.current) return;
-                const words = q.toLowerCase().split(/\s+/);
-                const found = DEMO_PRODUCTS.filter((p) =>
-                    words.some((w) => p.name.toLowerCase().includes(w) || p.store.toLowerCase().includes(w))
-                );
-                setResults((found.length ? found : DEMO_PRODUCTS.slice(0, 8)).map(normalizeProduct));
-                setSearched(true);
-                setLoading(false);
-                return;
-            }
-
-            const headers = { "Content-Type": "application/json" };
-            const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-            if (anonKey) {
-                headers.apikey = anonKey;
-                headers.Authorization = `Bearer ${anonKey}`;
-            }
-
-            const response = await fetch(`${baseUrl}/functions/v1/search-products`, {
-                method: "POST",
-                headers,
-                body: JSON.stringify({ query: q }),
-            });
-
-            const data = await response.json();
-            if (id !== requestId.current) return;
-
-            if (!response.ok || !data.success) {
-                throw new Error(data.error || data.message || "Search failed");
-            }
-
-            setResults((data.products || []).map(normalizeProduct));
-            setSearched(true);
-        } catch (err) {
-            if (id !== requestId.current) return;
-            console.error("KSAM DEAL SEARCH ERROR:", err);
-            setError("Couldn't load products. Please try again.");
+        if (!baseUrl || !anonKey) {
             setResults([]);
-            setSearched(true);
-        } finally {
-            if (id === requestId.current) setLoading(false);
+            setError("Supabase configuration is missing.");
+            setLoading(false);
+            return;
         }
-    };
+
+        const response = await fetch(
+            `${baseUrl}/functions/v1/search-products`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    apikey: anonKey,
+                    Authorization: `Bearer ${anonKey}`,
+                },
+                body: JSON.stringify({
+                    query: q,
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `Search request failed: ${response.status}`
+            );
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(
+                data.error || "External product search failed."
+            );
+        }
+
+        const externalProducts = (data.products || []).map(
+            (product, index) =>
+                normalizeProduct(product, index)
+        );
+
+        setResults(externalProducts);
+    } catch (err) {
+        console.error("Search error:", err);
+
+        setResults([]);
+        setError(
+            err?.message ||
+                "Something went wrong while searching."
+        );
+    } finally {
+        setLoading(false);
+    }
+};
 
     // live search while typing
     useEffect(() => {
