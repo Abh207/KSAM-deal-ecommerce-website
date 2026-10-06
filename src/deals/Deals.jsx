@@ -10,6 +10,10 @@ import Hero
 import Stats
     from "./components/Stats.jsx";
 
+import PromoCarousel
+    from "./components/PromoCarousel.jsx";
+
+
 import Marquee
     from "./components/Marquee.jsx";
 
@@ -357,6 +361,8 @@ function Deals() {
     <Hero />
 
     <Stats />
+
+    <PromoCarousel />
 
     <Marquee />
 

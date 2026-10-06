@@ -1,0 +1,152 @@
+{
+  "section": {
+    "title": "Early deals are live",
+    "intervalMs": 2000
+  },
+  "festival": {
+    "prefix": "Shop early deals now",
+    "name": "Great Indian Festival",
+    "startsLabel": "Starts 8th Oct"
+  },
+  "bankOffer": {
+    "logos": ["SBI Debit Card", "SBI card"],
+    "headline": "10% Instant Discount*",
+    "details": "on Debit/Credit Card & Credit Card EMI"
+  },
+  "cards": [
+    {
+      "id": "headphones",
+      "theme": "orange",
+      "eyebrow": "",
+      "title": "Starting ₹399",
+      "subtitle": "Deals on headphones",
+      "brands": ["realme", "OnePlus", "& more"],
+      "art": "earbuds",
+      "image": { "src": "", "alt": "Earbuds from realme, boAt and OnePlus" },
+      "frame": false,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "ethnicwear",
+      "theme": "red",
+      "title": "Min. 50% off",
+      "subtitle": "Elegant ethnicwear",
+      "brands": ["MYX"],
+      "art": "kurta",
+      "image": { "src": "", "alt": "Embroidered kurtas" },
+      "frame": false,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "zenbook",
+      "theme": "orange",
+      "eyebrow": "Experience Premium",
+      "title": "ASUS Zenbook Ceraluminum Design^",
+      "subtitle": "",
+      "brands": ["ASUS"],
+      "art": "laptop",
+      "image": { "src": "", "alt": "ASUS Zenbook laptop" },
+      "frame": false,
+      "festivalStartsFirst": true,
+      "href": "",
+      "sponsored": true,
+      "footnote": "^May vary by models\n*T&C apply"
+    },
+    {
+      "id": "kitchen",
+      "theme": "green",
+      "title": "Up to 50% off",
+      "subtitle": "Early deals on home & kitchen appliances",
+      "brands": ["Shark", "NINJA", "HAVELLS"],
+      "art": "blender",
+      "image": { "src": "", "alt": "Blender and fresh juices" },
+      "frame": true,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "home-essentials",
+      "theme": "mint",
+      "eyebrow": "Get sale prices now",
+      "title": "Starting ₹199 Home essentials",
+      "subtitle": "",
+      "brands": ["Scotch-Brite", "plantex"],
+      "art": "mop",
+      "image": { "src": "", "alt": "Mop bucket and cleaning tools" },
+      "frame": true,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "pc-accessories",
+      "theme": "orange",
+      "title": "Up to 80% off",
+      "subtitle": "Deals on PC accessories\nBuild your workspace",
+      "brands": [],
+      "art": "workspace",
+      "image": { "src": "", "alt": "Headset, keyboard and mouse" },
+      "frame": false,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C Apply"
+    },
+    {
+      "id": "floral-dress",
+      "theme": "rose",
+      "title": "Min. 40% off",
+      "subtitle": "Festive floral maxi dresses",
+      "brands": ["Women's fashion"],
+      "art": null,
+      "image": { "src": "./assets/fbg1.png", "alt": "Woman in a floral maxi dress" },
+      "frame": true,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "denim-jacket",
+      "theme": "indigo",
+      "title": "Up to 60% off",
+      "subtitle": "Denim jackets & cargos",
+      "brands": ["Men's fashion"],
+      "art": null,
+      "image": { "src": "./assets/fbg2.png", "alt": "Man in a denim jacket" },
+      "frame": true,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "brown-jacket",
+      "theme": "espresso",
+      "title": "Starting ₹799",
+      "subtitle": "Winter-ready overshirts",
+      "brands": ["Men's fashion"],
+      "art": null,
+      "image": { "src": "./assets/fbg3.png", "alt": "Man in a brown corduroy overshirt" },
+      "frame": true,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    },
+    {
+      "id": "striped-sweater",
+      "theme": "espresso",
+      "title": "Min. 30% off",
+      "subtitle": "Cosy knits & wide-leg jeans",
+      "brands": ["Women's fashion"],
+      "art": null,
+      "image": { "src": "./assets/fbg4.png", "alt": "Woman in a striped knit sweater" },
+      "frame": true,
+      "href": "",
+      "sponsored": false,
+      "footnote": "*T&C apply"
+    }
+  ]
+}
