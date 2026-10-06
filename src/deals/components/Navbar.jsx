@@ -331,6 +331,8 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
         };
     }, [searchOpen]);
 
+
+
     const runSearch = async (term = query) => {
     const q = term.trim();
 
@@ -338,97 +340,92 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
         setResults([]);
         setError("");
         setLoading(false);
+        setSearched(false);
         return;
     }
 
     setLoading(true);
     setError("");
+    setSearched(false);
 
     try {
-        // ==========================================
-        // 1. SEARCH PRODUCTS FROM SUPABASE DATABASE
-        // ==========================================
+        // =====================================================
+        // 1. SEARCH KSAM DEAL PRODUCTS FROM SUPABASE
+        // =====================================================
 
         const searchTerm = `%${q}%`;
 
-        const { data: databaseProducts, error: databaseError } =
-            await supabase
-                .from("products")
-                .select(`
+        const {
+            data: databaseProducts,
+            error: databaseError,
+        } = await supabase
+            .from("products")
+            .select(`
+                id,
+                name,
+                description,
+                image_url,
+                price,
+                old_price,
+                discount,
+                rating,
+                reviews,
+                category_id,
+                store_id,
+                product_url,
+                availability,
+                external_id,
+                is_active,
+                stores (
                     id,
-                    name,
-                    description,
-                    image_url,
-                    price,
-                    old_price,
-                    discount,
-                    rating,
-                    reviews,
-                    category_id,
-                    store_id,
-                    product_url,
-                    availability,
-                    external_id,
-                    is_active,
-                    stores (
-                        id,
-                        name
-                    )
-                `)
-                .eq("is_active", true)
-                .or(
-                    `name.ilike.${searchTerm},description.ilike.${searchTerm}`
+                    name
                 )
-                .order("discount", {
-                    ascending: false,
-                    nullsFirst: false,
-                })
-                .limit(30);
+            `)
+            .eq("is_active", true)
+            .or(
+                `name.ilike.${searchTerm},description.ilike.${searchTerm}`
+            )
+            .order("discount", {
+                ascending: false,
+                nullsFirst: false,
+            })
+            .limit(30);
 
         if (databaseError) {
             console.error(
-                "Supabase database search error:",
+                "Supabase search error:",
                 databaseError
             );
         }
 
-        // ==========================================
-        // 2. DATABASE PRODUCTS FOUND
-        // ==========================================
+        const ksamProducts =
+            !databaseError && databaseProducts
+                ? databaseProducts.map((product, index) =>
+                      normalizeProduct(
+                          {
+                              ...product,
+                              store:
+                                  product.stores?.name || "",
+                          },
+                          index
+                      )
+                  )
+                : [];
 
-        if (
-            !databaseError &&
-            databaseProducts &&
-            databaseProducts.length > 0
-        ) {
-            const formattedProducts = databaseProducts.map(
-                (product, index) =>
-                    normalizeProduct(
-                        {
-                            ...product,
-                            store: product.stores?.name || "",
-                        },
-                        index
-                    )
-            );
 
-            setResults(formattedProducts);
-            setLoading(false);
-            return;
-        }
+        // =====================================================
+        // 2. SEARCH EXTERNAL PRODUCTS THROUGH EDGE FUNCTION
+        // =====================================================
 
-        // ==========================================
-        // 3. NO DATABASE RESULTS
-        // FALL BACK TO SERPAPI EDGE FUNCTION
-        // ==========================================
+        const baseUrl =
+            import.meta.env.VITE_SUPABASE_URL;
 
-        const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        const anonKey =
+            import.meta.env.VITE_SUPABASE_ANON_KEY;
 
         if (!baseUrl || !anonKey) {
-            setResults([]);
-            setError("Supabase configuration is missing.");
-            setLoading(false);
+            setResults(ksamProducts);
+            setSearched(true);
             return;
         }
 
@@ -436,11 +433,13 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
             `${baseUrl}/functions/v1/search-products`,
             {
                 method: "POST",
+
                 headers: {
                     "Content-Type": "application/json",
                     apikey: anonKey,
                     Authorization: `Bearer ${anonKey}`,
                 },
+
                 body: JSON.stringify({
                     query: q,
                 }),
@@ -449,43 +448,113 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
 
         if (!response.ok) {
             throw new Error(
-                `Search request failed: ${response.status}`
+                `External search failed: ${response.status}`
             );
         }
 
-        const data = await response.json();
+        const externalData =
+            await response.json();
 
-        if (!data.success) {
+        if (!externalData.success) {
             throw new Error(
-                data.error || "External product search failed."
+                externalData.error ||
+                    "External product search failed."
             );
         }
 
-        const externalProducts = (data.products || []).map(
-            (product, index) =>
-                normalizeProduct(product, index)
+        const externalProducts =
+            (externalData.products || []).map(
+                (product, index) =>
+                    normalizeProduct(product, index)
+            );
+
+
+        // =====================================================
+        // 3. COMBINE KSAM + EXTERNAL PRODUCTS
+        // =====================================================
+
+        const combinedProducts = [
+            ...ksamProducts,
+            ...externalProducts,
+        ];
+
+
+        // =====================================================
+        // 4. REMOVE DUPLICATE PRODUCTS
+        // =====================================================
+
+        const uniqueProducts = [];
+        const seen = new Set();
+
+        for (const product of combinedProducts) {
+
+            const key =
+                product.url !== "#"
+                    ? product.url
+                    : `${product.name}-${product.store}`;
+
+            if (seen.has(key)) {
+                continue;
+            }
+
+            seen.add(key);
+            uniqueProducts.push(product);
+        }
+
+
+        // =====================================================
+        // 5. LIMIT DISPLAY RESULTS
+        // =====================================================
+
+        setResults(
+            uniqueProducts.slice(0, 30)
         );
 
-        setResults(externalProducts);
+        setSearched(true);
+
     } catch (err) {
-        console.error("Search error:", err);
 
-        setResults([]);
-        setError(
-            err?.message ||
-                "Something went wrong while searching."
+        console.error(
+            "KSAM DEAL SEARCH ERROR:",
+            err
         );
+
+        // If external search fails but KSAM products
+        // were found, still show the KSAM products.
+        if (typeof ksamProducts !== "undefined" &&
+            ksamProducts.length > 0) {
+
+            setResults(ksamProducts);
+
+            setError(
+                "Showing KSAM Deal products. External products could not be loaded."
+            );
+
+        } else {
+
+            setResults([]);
+
+            setError(
+                err?.message ||
+                    "Couldn't load products. Please try again."
+            );
+        }
+
+        setSearched(true);
+
     } finally {
+
         setLoading(false);
+
     }
 };
-
+    
     // live search while typing
-    useEffect(() => {
-        if (!searchOpen) return;
-        const t = setTimeout(() => runSearch(query), 350);
-        return () => clearTimeout(t);
-    }, [query, searchOpen]);
+    // useEffect(() => {
+    //     if (!searchOpen) return;
+    //     const t = setTimeout(() => runSearch(query), 350);
+    //     return () => clearTimeout(t);
+    // }, [query, searchOpen]);
 
     const submit = (e) => {
         e.preventDefault();
@@ -784,3 +853,4 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
 }
 
 export default Navbar;
+
