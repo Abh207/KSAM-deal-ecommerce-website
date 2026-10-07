@@ -117,7 +117,7 @@ function PromoCard({ card, festival, bank }) {
 
       <div className="pc__head">
         {card.eyebrow && <p className="pc__eyebrow">{card.eyebrow}</p>}
-        <h3 className="pc__title">{card.title}</h3>
+        <h3 className={`pc__title ${card.title.length > 22 ? "pc__title--long" : ""}`}>{card.title}</h3>
         {card.subtitle && <p className="pc__sub">{lines(card.subtitle)}</p>}
         {card.brands?.length > 0 && (
           <div className="pc__brands">
@@ -220,7 +220,7 @@ export default function PromoCarousel() {
       <div className="promo__glow" />
       <div className="promo__bar">
         <h2>{section.title}</h2>
-        <span className="promo__count">{String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
+        <span className="promo__count"><b>{String(active + 1).padStart(2, "0")}</b><i>/</i><em>{String(N).padStart(2, "0")}</em></span>
       </div>
 
       <div className="promo__stage">
