@@ -225,9 +225,8 @@ export function HeroHead({ paused = false }) {
                 </svg>
               </a>
 
-              <button
-                type="button"
-                onClick={scrollToShowcase}
+              <a
+                href={`${import.meta.env.BASE_URL}shop.html`}
                 className="btn btn-our-products"
                 id="heroOurProductsBtn"
                 aria-label="Explore our full product showcase"
@@ -270,7 +269,7 @@ export function HeroHead({ paused = false }) {
                   <span>Our Products</span>
                   <span className="prod-count-pill">22+</span>
                 </div>
-              </button>
+              </a>
 
               <a
                 href="#showcase"

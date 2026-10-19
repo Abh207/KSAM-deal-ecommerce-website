@@ -132,7 +132,7 @@ function OrderSuccess() {
                     className="success-button"
                     onClick={() => {
                         window.location.href =
-                            "./index.html";
+                            "./shop.html";
                     }}
                 >
                     Continue Shopping →

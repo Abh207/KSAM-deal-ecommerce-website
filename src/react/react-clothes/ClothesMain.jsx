@@ -791,7 +791,7 @@ function ClothesMain() {
                 {/* LOGO */}
 
                 <a
-                    href="./index.html"
+                    href="./shop.html"
                     className="clothes-logo"
                 >
 

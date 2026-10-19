@@ -688,7 +688,7 @@ useEffect(() => {
             <header className="shoes-navbar">
 
                 <a
-                    href="./index.html"
+                    href="./shop.html"
                     className="shoes-logo"
                 >
 
@@ -702,7 +702,7 @@ useEffect(() => {
 
                 <nav>
 
-                    <a href="./index.html">
+                    <a href="./shop.html">
                         Home
                     </a>
 
@@ -1902,7 +1902,7 @@ useEffect(() => {
                             KSAM DEAL
                         </h4>
 
-                        <a href="./index.html">
+                        <a href="./shop.html">
                             Home
                         </a>
 

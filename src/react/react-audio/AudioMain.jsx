@@ -2477,7 +2477,7 @@ function AudioMain() {
             <header className="audio-navbar">
 
                 <a
-                    href="./index.html"
+                    href="./shop.html"
                     className="audio-brand"
                 >
                     <span>KSAM</span>

@@ -256,11 +256,10 @@ function HomeNavbar() {
                         <button
                             type="button"
                             onClick={() => {
-                            window.location.href = "./Deals.html";
+                                window.location.href = import.meta.env.BASE_URL;
                             }}
                         >
                             Discounts
-                            
                         </button>
 
                     </nav>
@@ -460,7 +459,7 @@ function HomeNavbar() {
                     </a>
 
                     <a
-                        href="./Deals.html"
+                        href={import.meta.env.BASE_URL}
                         onClick={() => closeMenu()}
                     >
                         DISCOUNTS

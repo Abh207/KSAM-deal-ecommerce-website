@@ -340,7 +340,7 @@ function ShopHome() {
 
                 <nav className="shop-navigation">
 
-                    <a href="./index.html">
+                    <a href="./shop.html">
                         Home
                     </a>
 
@@ -1132,7 +1132,7 @@ function ShopHome() {
                         Quick Links
                     </h3>
 
-                    <a href="./index.html">
+                    <a href="./shop.html">
                         Home
                     </a>
 

@@ -15,6 +15,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "index.html"),
+                shop: resolve(__dirname, "shop.html"),
 
                 contact: resolve(__dirname, "contact.html"),
                 login: resolve(__dirname, "login.html"),
@@ -24,12 +25,12 @@ export default defineConfig({
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),
-                deals: resolve(__dirname, "Deals.html"),
+
                 checkout: resolve(__dirname, "checkout.html"),
                 orderSuccess: resolve(
-    __dirname,
-    "orderSuccess.html"
-),
+                    __dirname,
+                    "orderSuccess.html"
+                ),
                 Gadgets: resolve(__dirname, "fashionSpeaker.html"),
                 shoes: resolve(__dirname, "shoes.html"),
 

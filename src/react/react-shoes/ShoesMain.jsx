@@ -826,7 +826,7 @@ function ShoesMain() {
             <header className="shoes-navbar">
 
                 <a
-                    href="./index.html"
+                    href="./shop.html"
                     className="shoes-logo"
                 >
 
@@ -840,7 +840,7 @@ function ShoesMain() {
 
                 <nav>
 
-                    <a href="./index.html">
+                    <a href="./shop.html">
                         Home
                     </a>
 
@@ -1916,7 +1916,7 @@ function ShoesMain() {
                             KSAM DEAL
                         </h4>
 
-                        <a href="./index.html">
+                        <a href="./shop.html">
                             Home
                         </a>
 

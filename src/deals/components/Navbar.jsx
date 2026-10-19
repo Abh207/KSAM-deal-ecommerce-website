@@ -1179,7 +1179,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
 
         <div className="kh-nav-mobile-footer">
           <a
-            href="#deals"
+            href={`${import.meta.env.BASE_URL}shop.html`}
             className="kh-nav-mobile-cta"
             onClick={() => setIsMobileNavOpen(false)}
           >

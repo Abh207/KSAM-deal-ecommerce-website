@@ -138,7 +138,7 @@ function WatchShop() {
 
                 <nav className="watch-nav">
 
-                    <a href="./index.html">
+                    <a href="./shop.html">
                         HOME
                     </a>
 
