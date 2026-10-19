@@ -1,7 +1,7 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../lib/supabase";
 
 export async function getDeals() {
-    const { data, error } = await supabase
+    const fetchPromise = supabase
         .from("products")
         .select(`
             *,
@@ -18,8 +18,13 @@ export async function getDeals() {
             ascending: false
         });
 
+    const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out after 8s")), 8000)
+    );
+
+    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+
     if (error) {
-        console.error("Failed to fetch deals:", error);
         throw error;
     }
 

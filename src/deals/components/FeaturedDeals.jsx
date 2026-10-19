@@ -339,7 +339,7 @@ function FeaturedDeals({ onAdd }) {
         } catch (err) {
 
             console.error(
-                "Failed to load deals:",
+                "Failed to fetch deals:",
                 err
             );
 
@@ -756,15 +756,34 @@ function FeaturedDeals({ onAdd }) {
                             mt-12
                             rounded-2xl
                             border
-                            border-red-500/20
-                            bg-red-500/[0.05]
+                            border-white/10
+                            bg-[#0a0a0a]
                             p-10
                             text-center
                         "
                     >
 
+                        <div
+                            className="
+                                mx-auto
+                                flex
+                                h-16
+                                w-16
+                                items-center
+                                justify-center
+                                rounded-2xl
+                                border
+                                border-white/10
+                                bg-white/[0.03]
+                                text-2xl
+                            "
+                        >
+                            ⚡
+                        </div>
+
                         <p
                             className="
+                                mt-4
                                 text-lg
                                 font-bold
                                 text-white
@@ -781,7 +800,7 @@ function FeaturedDeals({ onAdd }) {
                                 text-gray-500
                             "
                         >
-                            {error}
+                            {error || "Unable to load deals right now."}
                         </p>
 
 
@@ -789,6 +808,9 @@ function FeaturedDeals({ onAdd }) {
                             onClick={loadDeals}
                             className="
                                 mt-6
+                                inline-flex
+                                items-center
+                                gap-2
                                 rounded-xl
                                 bg-[#22FF88]
                                 px-6
@@ -799,7 +821,8 @@ function FeaturedDeals({ onAdd }) {
                                 hover:scale-105
                             "
                         >
-                            Try Again
+                            <RefreshCw size={16} />
+                            Retry
                         </button>
 
                     </div>

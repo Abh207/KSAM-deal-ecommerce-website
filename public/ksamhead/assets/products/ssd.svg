@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="ssdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E0F2FE"/><stop offset="100%" stop-color="#BAE6FD"/>
+      </linearGradient>
+    </defs>
+    <rect x="75" y="60" width="130" height="160" rx="24" fill="url(#ssdGrad)" stroke="#0284C7" stroke-width="2.5"/>
+    <circle cx="180" cy="85" r="12" fill="#FFFFFF" stroke="#0284C7" stroke-width="2"/>
+    <line x1="95" y1="120" x2="185" y2="120" stroke="rgba(2,132,199,0.3)" stroke-width="2"/>
+    <line x1="95" y1="135" x2="185" y2="135" stroke="rgba(2,132,199,0.3)" stroke-width="2"/>
+    <line x1="95" y1="150" x2="185" y2="150" stroke="rgba(2,132,199,0.3)" stroke-width="2"/>
+    <line x1="95" y1="165" x2="185" y2="165" stroke="rgba(2,132,199,0.3)" stroke-width="2"/>
+    <text x="140" y="198" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="14" fill="#0284C7">1TB NVMe</text>
+    <rect x="120" y="215" width="40" height="10" rx="3" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+  </svg>

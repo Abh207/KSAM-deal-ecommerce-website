@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Shopping Bag Gradient: #4DFFA3 to #16C86B to #0E9F55 -->
+    <linearGradient id="favBagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4dffa3"/>
+      <stop offset="45%" stop-color="#16c86b"/>
+      <stop offset="100%" stop-color="#0e9f55"/>
+    </linearGradient>
+
+    <!-- Speed Lines Gradient: #4DFFA3 to #16C86B -->
+    <linearGradient id="favSpeedGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="30" y2="0">
+      <stop offset="0%" stop-color="#4dffa3"/>
+      <stop offset="100%" stop-color="#16c86b"/>
+    </linearGradient>
+
+    <!-- Icon Soft Glow Filter (#22FF88 at 35% opacity, blur 10px) -->
+    <filter id="favGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#22ff88" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#favGlow)">
+    <!-- 3 Speed Lines on Left with Dot at Tip of Top Line -->
+    <circle cx="5" cy="27" r="2.2" fill="#4dffa3"/>
+    <rect x="10.5" y="25.5" width="14" height="3" rx="1.5" fill="url(#favSpeedGrad)"/>
+    <rect x="2.5" y="33" width="24" height="3.6" rx="1.8" fill="url(#favSpeedGrad)"/>
+    <rect x="7" y="40.5" width="17" height="3" rx="1.5" fill="url(#favSpeedGrad)"/>
+
+    <!-- Arched Handle -->
+    <path d="M 32 18 C 32 8, 48 8, 48 18" fill="none" stroke="url(#favBagGrad)" stroke-width="3.6" stroke-linecap="round"/>
+
+    <!-- Main Bag Body with Rounded Bottom -->
+    <path d="M 23 18 L 57 18 C 59.8 18, 61.8 20.2, 61.2 23 L 57.8 49.5 C 57.2 52.2, 55 54, 52 54 L 28 54 C 25 54, 22.8 52.2, 22.2 49.5 L 18.8 23 C 18.2 20.2, 20.2 18, 23 18 Z" fill="url(#favBagGrad)" stroke="rgba(255, 255, 255, 0.3)" stroke-width="0.8"/>
+
+    <!-- Glossy Highlight on Top-Left Edge -->
+    <path d="M 23.5 19 L 56.5 19 C 58.2 19, 59.5 20.4, 59 22.2 L 57.5 28 C 50 31, 28 31, 21 28 L 19.5 22.2 C 19 20.4, 20.3 19, 23.5 19 Z" fill="#ffffff" fill-opacity="0.32"/>
+
+    <!-- Two Metallic Eyelet Holes -->
+    <circle cx="32" cy="19.5" r="1.8" fill="#0e9f55" stroke="#4dffa3" stroke-width="0.8"/>
+    <circle cx="48" cy="19.5" r="1.8" fill="#0e9f55" stroke="#4dffa3" stroke-width="0.8"/>
+
+    <!-- White Shopping Cart Glyph Inside Bag (stroke 2.8px, rounded caps) -->
+    <path d="M 26 27 L 31 27 L 36.5 41 L 51 41 L 54.5 31.5 L 33 31.5" fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="37.5" cy="46.5" r="2.6" fill="#ffffff"/>
+    <circle cx="49.5" cy="46.5" r="2.6" fill="#ffffff"/>
+  </g>
+</svg>

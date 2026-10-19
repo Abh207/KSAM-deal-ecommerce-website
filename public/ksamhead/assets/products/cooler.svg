@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <radialGradient id="coolerGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FEF3C7"/><stop offset="100%" stop-color="#FDE68A"/>
+      </radialGradient>
+    </defs>
+    <circle cx="140" cy="140" r="75" fill="url(#coolerGrad)" stroke="#D49A00" stroke-width="3"/>
+    <g stroke="#0284C7" stroke-width="2" fill="rgba(2,132,199,0.2)">
+      <path d="M 140 140 Q 160 90 140 70 Z"/>
+      <path d="M 140 140 Q 190 160 210 140 Z"/>
+      <path d="M 140 140 Q 120 190 140 210 Z"/>
+      <path d="M 140 140 Q 90 120 70 140 Z"/>
+    </g>
+    <circle cx="140" cy="140" r="18" fill="#FFFFFF" stroke="#D49A00" stroke-width="2"/>
+    <circle cx="140" cy="140" r="6" fill="#D49A00"/>
+  </svg>

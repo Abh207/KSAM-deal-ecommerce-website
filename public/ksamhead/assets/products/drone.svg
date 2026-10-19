@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="droneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FEF3C7"/><stop offset="100%" stop-color="#FDE68A"/>
+      </linearGradient>
+    </defs>
+    <polygon points="140,80 180,125 165,185 115,185 100,125" fill="url(#droneGrad)" stroke="#D49A00" stroke-width="2.5"/>
+    <line x1="110" y1="105" x2="60" y2="70" stroke="#D49A00" stroke-width="4" stroke-linecap="round"/>
+    <line x1="170" y1="105" x2="220" y2="70" stroke="#D49A00" stroke-width="4" stroke-linecap="round"/>
+    <line x1="110" y1="165" x2="60" y2="200" stroke="#D49A00" stroke-width="4" stroke-linecap="round"/>
+    <line x1="170" y1="165" x2="220" y2="200" stroke="#D49A00" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="60" cy="70" rx="35" ry="8" stroke="rgba(212,154,0,0.6)" stroke-width="2" fill="none"/>
+    <ellipse cx="220" cy="70" rx="35" ry="8" stroke="rgba(212,154,0,0.6)" stroke-width="2" fill="none"/>
+    <ellipse cx="60" cy="200" rx="35" ry="8" stroke="rgba(212,154,0,0.6)" stroke-width="2" fill="none"/>
+    <ellipse cx="220" cy="200" rx="35" ry="8" stroke="rgba(212,154,0,0.6)" stroke-width="2" fill="none"/>
+    <circle cx="140" cy="140" r="14" fill="#FFFFFF" stroke="#0284C7" stroke-width="2"/>
+    <circle cx="140" cy="140" r="6" fill="#0284C7"/>
+  </svg>

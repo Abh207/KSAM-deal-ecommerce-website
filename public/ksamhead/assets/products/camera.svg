@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="camBody" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FEF3C7"/><stop offset="100%" stop-color="#FDE68A"/>
+      </linearGradient>
+    </defs>
+    <rect x="50" y="80" width="180" height="120" rx="16" fill="url(#camBody)" stroke="#D49A00" stroke-width="2.5"/>
+    <rect x="50" y="80" width="45" height="120" rx="10" fill="#FDE68A" stroke="rgba(212,154,0,0.5)" stroke-width="1.5"/>
+    <rect x="115" y="65" width="50" height="20" rx="4" fill="#FEF3C7" stroke="#D49A00" stroke-width="2"/>
+    <circle cx="145" cy="140" r="48" fill="#FFFFFF" stroke="#D49A00" stroke-width="3"/>
+    <circle cx="145" cy="140" r="36" fill="#E0F2FE" stroke="#0284C7" stroke-width="2"/>
+    <circle cx="145" cy="140" r="18" fill="#2A2924"/>
+    <ellipse cx="138" cy="132" rx="7" ry="4" fill="#FFFFFF" opacity="0.8" transform="rotate(-30 138 132)"/>
+    <circle cx="75" cy="72" r="6" fill="#D49A00"/>
+  </svg>

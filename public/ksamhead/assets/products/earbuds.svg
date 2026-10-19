@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="earCase" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E0F2FE"/><stop offset="100%" stop-color="#BAE6FD"/>
+      </linearGradient>
+    </defs>
+    <rect x="65" y="110" width="150" height="115" rx="36" fill="url(#earCase)" stroke="#0284C7" stroke-width="2.5"/>
+    <line x1="65" y1="150" x2="215" y2="150" stroke="#2A2924" stroke-width="2"/>
+    <circle cx="140" cy="175" r="4" fill="#0284C7"/>
+    <g transform="translate(85, 35)">
+      <ellipse cx="25" cy="25" rx="20" ry="18" fill="#F0F9FF" stroke="#0284C7" stroke-width="2"/>
+      <rect x="20" y="38" width="10" height="32" rx="5" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+      <circle cx="25" cy="62" r="2.5" fill="#D49A00"/>
+    </g>
+    <g transform="translate(150, 45)">
+      <ellipse cx="25" cy="25" rx="20" ry="18" fill="#F0F9FF" stroke="#0284C7" stroke-width="2"/>
+      <rect x="20" y="38" width="10" height="32" rx="5" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+      <circle cx="25" cy="62" r="2.5" fill="#D49A00"/>
+    </g>
+  </svg>

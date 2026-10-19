@@ -4,18 +4,17 @@ import { useEffect, useState } from "react";
 import Navbar
     from "./components/Navbar.jsx";
 
-import Hero
-    from "./components/Hero.jsx";
+import HeroHead
+    from "./components/HeroHead/HeroHead.jsx";
+
+import HeroMarquee
+    from "./components/HeroHead/HeroMarquee.jsx";
 
 import Stats
     from "./components/Stats.jsx";
 
 import PromoCarousel
     from "./components/PromoCarousel.jsx";
-
-
-import Marquee
-    from "./components/Marquee.jsx";
 
 import Features
     from "./components/Features.jsx";
@@ -49,13 +48,9 @@ import CursorGlow
 
 import ScrollProgress
     from "./components/ScrollProgress.jsx";
-
+import { cartStore } from "./store/cartStore.js";
 
 function Deals() {
-
-    const [cartCount, setCartCount] =
-        useState(0);
-
     const [toast, setToast] =
         useState("");
 
@@ -118,16 +113,10 @@ function Deals() {
 
 
     function handleAdd(product) {
-
-        setCartCount(
-            count => count + 1
-        );
-
-
+        cartStore.add(product);
         setToast(
-            `${product.name} added to your deal list`
+            `${product?.name || "Product"} added to your deal list`
         );
-
     }
 
 
@@ -206,7 +195,6 @@ function Deals() {
             <CursorGlow />
 
 <Navbar
-    cartCount={cartCount}
     onViewAll={handleViewAll}
 />
 
@@ -358,13 +346,13 @@ function Deals() {
     )}
 
 
-    <Hero />
+    <HeroHead />
 
     <Stats />
 
     <PromoCarousel />
 
-    <Marquee />
+    <HeroMarquee onAdd={handleAdd} />
 
     <Features />
 

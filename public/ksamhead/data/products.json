@@ -1,0 +1,603 @@
+{
+  "hero": {
+    "mode": "auto",
+    "playbackRate": 0.9,
+    "phoneX": 0.68,
+    "phoneScale": 0.88,
+    "words": [
+      "Titanium Pro",
+      "Ultra Displays",
+      "Smart Watches",
+      "Laptops",
+      "Audio Gear"
+    ],
+    "video": [
+      "assets/video/iphone-explode.webm",
+      "assets/video/iphone-explode.mp4"
+    ],
+    "frames": {
+      "folder": "assets/sequence/product-1/",
+      "frameCount": 111,
+      "filePattern": "frame_{n}.webp",
+      "padLength": 4
+    },
+    "images": [
+      {
+        "id": "blue",
+        "name": "iPhone 15 Pro Blue Titanium",
+        "src": "assets/products/iphone-blue.png",
+        "accent": "blue",
+        "accentHex": "#38bdf8",
+        "price": 799,
+        "oldPrice": 1199,
+        "discount": 33
+      },
+      {
+        "id": "white",
+        "name": "iPhone 15 Pro White Titanium",
+        "src": "assets/products/iphone-white.png",
+        "accent": "green",
+        "accentHex": "#22ff88",
+        "price": 799,
+        "oldPrice": 1199,
+        "discount": 33
+      }
+    ],
+    "hotspots": [
+      {
+        "label": "48MP Triple Camera",
+        "desc": "Photonic Engine & 5X Telephoto OIS",
+        "x": 0.38,
+        "y": 0.22,
+        "side": "left"
+      },
+      {
+        "label": "A17 Pro Bionic Chip",
+        "desc": "3nm Architecture with Hardware Ray Tracing",
+        "x": 0.52,
+        "y": 0.44,
+        "side": "right"
+      },
+      {
+        "label": "MagSafe Wireless",
+        "desc": "Fast 15W Qi2 magnetic alignment",
+        "x": 0.48,
+        "y": 0.65,
+        "side": "left"
+      },
+      {
+        "label": "Grade-5 Titanium Frame",
+        "desc": "Aerospace contour with brushed satin edges",
+        "x": 0.68,
+        "y": 0.5,
+        "side": "right"
+      }
+    ]
+  },
+  "products": [
+    {
+      "id": "prod-iphone-blue",
+      "name": "iPhone 15 Pro Blue Titanium",
+      "category": "Flagship Mobile",
+      "image": "assets/products/iphone-blue.png",
+      "oldPrice": "$1,199",
+      "price": "$799",
+      "discount": "-33%",
+      "rating": "4.9",
+      "accent": "blue",
+      "row": 1,
+      "tags": [
+        "apple",
+        "iphone",
+        "phone",
+        "flagship",
+        "ios",
+        "smartphone",
+        "5g",
+        "titanium",
+        "camera",
+        "a17"
+      ]
+    },
+    {
+      "id": "prod-iphone-white",
+      "name": "iPhone 15 Pro White Titanium",
+      "category": "Flagship Mobile",
+      "image": "assets/products/iphone-white.png",
+      "oldPrice": "$1,199",
+      "price": "$799",
+      "discount": "-33%",
+      "rating": "4.9",
+      "accent": "green",
+      "row": 2,
+      "tags": [
+        "apple",
+        "iphone",
+        "phone",
+        "flagship",
+        "ios",
+        "smartphone",
+        "5g",
+        "titanium",
+        "camera",
+        "a17"
+      ]
+    },
+    {
+      "id": "prod-01",
+      "name": "AeroGlide Carbon Pro Mouse",
+      "category": "Gaming Gear",
+      "image": "assets/products/mouse-01.webp",
+      "oldPrice": "$89",
+      "price": "$49",
+      "discount": "-45%",
+      "rating": "4.9",
+      "accent": "green",
+      "row": 1,
+      "tags": [
+        "mouse",
+        "gaming",
+        "rgb",
+        "carbon",
+        "wireless",
+        "desk",
+        "gear",
+        "aeroglide"
+      ]
+    },
+    {
+      "id": "prod-02",
+      "name": "SoundCore Pulse Active Earbuds",
+      "category": "Audio",
+      "image": "assets/products/earbuds-01.webp",
+      "oldPrice": "$129",
+      "price": "$69",
+      "discount": "-47%",
+      "rating": "4.8",
+      "accent": "blue",
+      "row": 1,
+      "tags": [
+        "earbuds",
+        "audio",
+        "soundcore",
+        "bluetooth",
+        "wireless",
+        "music",
+        "anc",
+        "headphones"
+      ]
+    },
+    {
+      "id": "prod-03",
+      "name": "VaporLite 65W GaN Charger",
+      "category": "Mobile Power",
+      "image": "assets/products/charger-01.webp",
+      "oldPrice": "$59",
+      "price": "$29",
+      "discount": "-51%",
+      "rating": "4.9",
+      "accent": "yellow",
+      "row": 1,
+      "tags": [
+        "charger",
+        "gan",
+        "fast charging",
+        "usb-c",
+        "mobile",
+        "power",
+        "65w",
+        "vaporlite"
+      ]
+    },
+    {
+      "id": "prod-04",
+      "name": "NovaMech 75% Keyboard",
+      "category": "Desk Setup",
+      "image": "assets/products/keyboard-01.webp",
+      "oldPrice": "$159",
+      "price": "$89",
+      "discount": "-44%",
+      "rating": "4.9",
+      "accent": "green",
+      "row": 1,
+      "tags": [
+        "keyboard",
+        "mechanical",
+        "gaming",
+        "rgb",
+        "desk",
+        "setup",
+        "novamech",
+        "switch"
+      ]
+    },
+    {
+      "id": "prod-05",
+      "name": "ViewSonic 27\" 4K Studio Display",
+      "category": "Computing",
+      "image": "assets/products/display-01.webp",
+      "oldPrice": "$499",
+      "price": "$299",
+      "discount": "-40%",
+      "rating": "4.8",
+      "accent": "blue",
+      "row": 1,
+      "tags": [
+        "monitor",
+        "screen",
+        "display",
+        "4k",
+        "viewsonic",
+        "studio",
+        "computing",
+        "desk"
+      ]
+    },
+    {
+      "id": "prod-06",
+      "name": "Phantom X 4K Foldable Drone",
+      "category": "Drones",
+      "image": "assets/products/drone-01.webp",
+      "oldPrice": "$399",
+      "price": "$219",
+      "discount": "-45%",
+      "rating": "4.7",
+      "accent": "yellow",
+      "row": 1,
+      "tags": [
+        "drone",
+        "camera",
+        "4k",
+        "foldable",
+        "video",
+        "aerial",
+        "quadcopter",
+        "phantom"
+      ]
+    },
+    {
+      "id": "prod-07",
+      "name": "BionicFit Health Ring Gen 2",
+      "category": "Wearables",
+      "image": "assets/products/ring-01.webp",
+      "oldPrice": "$229",
+      "price": "$139",
+      "discount": "-39%",
+      "rating": "4.9",
+      "accent": "green",
+      "row": 1,
+      "tags": [
+        "ring",
+        "smart ring",
+        "bionicfit",
+        "health",
+        "fitness",
+        "wearables",
+        "heart rate",
+        "tracker"
+      ]
+    },
+    {
+      "id": "prod-08",
+      "name": "HyperDrive 1TB Rugged NVMe",
+      "category": "Storage",
+      "image": "assets/products/ssd-01.webp",
+      "oldPrice": "$149",
+      "price": "$79",
+      "discount": "-47%",
+      "rating": "4.9",
+      "accent": "blue",
+      "row": 1,
+      "tags": [
+        "ssd",
+        "storage",
+        "nvme",
+        "rugged",
+        "hyperdrive",
+        "1tb",
+        "external",
+        "usb-c"
+      ]
+    },
+    {
+      "id": "prod-09",
+      "name": "PrismLens 4K Mirrorless",
+      "category": "Cameras",
+      "image": "assets/products/camera-01.webp",
+      "oldPrice": "$649",
+      "price": "$419",
+      "discount": "-35%",
+      "rating": "4.8",
+      "accent": "yellow",
+      "row": 1,
+      "tags": [
+        "camera",
+        "mirrorless",
+        "4k",
+        "prismlens",
+        "photo",
+        "video",
+        "lens",
+        "photography"
+      ]
+    },
+    {
+      "id": "prod-10",
+      "name": "PulseArc 10K Magnetic Power",
+      "category": "Mobile Power",
+      "image": "assets/products/powerbank-01.webp",
+      "oldPrice": "$69",
+      "price": "$34",
+      "discount": "-51%",
+      "rating": "4.9",
+      "accent": "green",
+      "row": 1,
+      "tags": [
+        "powerbank",
+        "magsafe",
+        "magnetic",
+        "battery",
+        "pulsearc",
+        "10k",
+        "wireless",
+        "portable"
+      ]
+    },
+    {
+      "id": "prod-11",
+      "name": "Apex Elite Spatial Headset",
+      "category": "Gaming Gear",
+      "image": "assets/products/headset-01.webp",
+      "oldPrice": "$179",
+      "price": "$94",
+      "discount": "-47%",
+      "rating": "4.9",
+      "accent": "blue",
+      "row": 2,
+      "tags": [
+        "headset",
+        "audio",
+        "gaming",
+        "spatial",
+        "apex",
+        "elite",
+        "mic",
+        "headphones"
+      ]
+    },
+    {
+      "id": "prod-12",
+      "name": "Zenith Desktop Air Purifier",
+      "category": "Smart Home",
+      "image": "assets/products/air-01.webp",
+      "oldPrice": "$119",
+      "price": "$64",
+      "discount": "-46%",
+      "rating": "4.8",
+      "accent": "yellow",
+      "row": 2,
+      "tags": [
+        "air",
+        "purifier",
+        "smart home",
+        "zenith",
+        "desktop",
+        "clean",
+        "filter",
+        "home"
+      ]
+    },
+    {
+      "id": "prod-13",
+      "name": "OmniPad Pro 12.9 with Stylus",
+      "category": "Tablets",
+      "image": "assets/products/tablet-01.webp",
+      "oldPrice": "$699",
+      "price": "$449",
+      "discount": "-36%",
+      "rating": "4.9",
+      "accent": "green",
+      "row": 2,
+      "tags": [
+        "tablet",
+        "pad",
+        "omnipad",
+        "stylus",
+        "screen",
+        "computing",
+        "12.9",
+        "draw"
+      ]
+    },
+    {
+      "id": "prod-14",
+      "name": "EchoSphere 360 Spatial Hi-Fi",
+      "category": "Audio",
+      "image": "assets/products/speaker-01.webp",
+      "oldPrice": "$189",
+      "price": "$99",
+      "discount": "-48%",
+      "rating": "4.8",
+      "accent": "blue",
+      "row": 2,
+      "tags": [
+        "speaker",
+        "audio",
+        "echosphere",
+        "spatial",
+        "bluetooth",
+        "hifi",
+        "music",
+        "360"
+      ]
+    },
+    {
+      "id": "prod-15",
+      "name": "Lumina ScreenBar Pro Ambient",
+      "category": "Desk Setup",
+      "image": "assets/products/lightbar-01.webp",
+      "oldPrice": "$79",
+      "price": "$39",
+      "discount": "-51%",
+      "rating": "4.9",
+      "accent": "yellow",
+      "row": 2,
+      "tags": [
+        "lightbar",
+        "lamp",
+        "desk",
+        "lumina",
+        "screenbar",
+        "monitor",
+        "ambient",
+        "eye care"
+      ]
+    },
+    {
+      "id": "prod-16",
+      "name": "StreamCast 4K Ultra Wide",
+      "category": "Streaming",
+      "image": "assets/products/webcam-01.webp",
+      "oldPrice": "$139",
+      "price": "$69",
+      "discount": "-50%",
+      "rating": "4.8",
+      "accent": "green",
+      "row": 2,
+      "tags": [
+        "webcam",
+        "camera",
+        "streamcast",
+        "4k",
+        "ultra wide",
+        "streaming",
+        "video call",
+        "usb"
+      ]
+    },
+    {
+      "id": "prod-17",
+      "name": "TactileWave Haptic VR Grip",
+      "category": "Gaming Gear",
+      "image": "assets/products/vr-01.webp",
+      "oldPrice": "$109",
+      "price": "$59",
+      "discount": "-46%",
+      "rating": "4.7",
+      "accent": "blue",
+      "row": 2,
+      "tags": [
+        "vr",
+        "controller",
+        "tactilewave",
+        "haptic",
+        "gaming",
+        "meta",
+        "grip"
+      ]
+    },
+    {
+      "id": "prod-18",
+      "name": "ThermalGuard MagSafe Cooler",
+      "category": "Mobile Power",
+      "image": "assets/products/cooler-01.webp",
+      "oldPrice": "$49",
+      "price": "$24",
+      "discount": "-51%",
+      "rating": "4.9",
+      "accent": "yellow",
+      "row": 2,
+      "tags": [
+        "cooler",
+        "cooling",
+        "thermalguard",
+        "magsafe",
+        "magnetic",
+        "phone",
+        "gaming",
+        "fan"
+      ]
+    },
+    {
+      "id": "prod-19",
+      "name": "CoreShift Pro RGB Topo Mat",
+      "category": "Desk Setup",
+      "image": "assets/products/deskmat-01.webp",
+      "oldPrice": "$45",
+      "price": "$22",
+      "discount": "-51%",
+      "rating": "4.8",
+      "accent": "green",
+      "row": 2,
+      "tags": [
+        "deskmat",
+        "mat",
+        "mousepad",
+        "coreshift",
+        "rgb",
+        "topo",
+        "desk",
+        "setup"
+      ]
+    },
+    {
+      "id": "prod-20",
+      "name": "VibeTune XLR/USB Studio Mic",
+      "category": "Audio",
+      "image": "assets/products/mic-01.webp",
+      "oldPrice": "$169",
+      "price": "$89",
+      "discount": "-47%",
+      "rating": "4.9",
+      "accent": "blue",
+      "row": 2,
+      "tags": [
+        "mic",
+        "microphone",
+        "vibetune",
+        "audio",
+        "xlr",
+        "usb",
+        "studio",
+        "podcast",
+        "streaming"
+      ]
+    }
+  ],
+  "search": {
+    "trending": [
+      "iPhone 15 Pro",
+      "Wireless Earbuds",
+      "Mechanical Keyboard",
+      "4K Studio Display",
+      "65W GaN Charger",
+      "MagSafe Powerbank"
+    ],
+    "categories": [
+      {
+        "name": "Phones",
+        "icon": "phone"
+      },
+      {
+        "name": "Laptops",
+        "icon": "laptop"
+      },
+      {
+        "name": "Audio",
+        "icon": "headphones"
+      },
+      {
+        "name": "Watches",
+        "icon": "watch"
+      },
+      {
+        "name": "Home",
+        "icon": "home"
+      },
+      {
+        "name": "Fashion",
+        "icon": "tag"
+      }
+    ]
+  }
+}

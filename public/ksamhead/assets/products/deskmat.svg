@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="matGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0E9F55"/><stop offset="50%" stop-color="#0284C7"/><stop offset="100%" stop-color="#D49A00"/>
+      </linearGradient>
+    </defs>
+    <polygon points="40,85 240,85 220,195 20,195" fill="#E8F8F0" stroke="url(#matGlow)" stroke-width="3"/>
+    <g stroke="rgba(14,159,85,0.4)" stroke-width="1.2" fill="none">
+      <ellipse cx="130" cy="140" rx="60" ry="25"/>
+      <ellipse cx="130" cy="140" rx="40" ry="16"/>
+      <ellipse cx="130" cy="140" rx="20" ry="8"/>
+    </g>
+    <text x="130" y="144" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="10" fill="#0E9F55">KSAM PAD</text>
+  </svg>

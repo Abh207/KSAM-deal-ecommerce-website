@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="camPill" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E8F8F0"/><stop offset="100%" stop-color="#D1FAE5"/>
+      </linearGradient>
+    </defs>
+    <rect x="45" y="85" width="190" height="70" rx="35" fill="url(#camPill)" stroke="#0E9F55" stroke-width="2.5"/>
+    <circle cx="140" cy="120" r="26" fill="#FFFFFF" stroke="#0E9F55" stroke-width="2"/>
+    <circle cx="140" cy="120" r="16" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+    <circle cx="140" cy="120" r="7" fill="#2A2924"/>
+    <circle cx="137" cy="116" r="3" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="80" cy="120" r="3" fill="#0E9F55"/>
+    <circle cx="200" cy="120" r="3" fill="#0E9F55"/>
+    <path d="M 125 155 L 125 195 L 155 195 L 155 155" stroke="#0E9F55" stroke-width="2.5" fill="none"/>
+  </svg>

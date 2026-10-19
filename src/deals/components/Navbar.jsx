@@ -1,856 +1,1389 @@
-import { Menu, X, ShoppingBag, Search, Clock, TrendingUp, ArrowUpRight, Star } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { Search, X, Clock, TrendingUp, ArrowUpRight, Star } from "lucide-react";
 import { supabase } from "../../lib/supabase";
+import { useCart, formatPrice, FREE_DELIVERY_THRESHOLD } from "../store/cartStore";
+import "./Navbar.css";
 
 /* =====================================================
-   DATA
+   STATIC DATA & SEARCH DEFAULTS
 ===================================================== */
-
 const LINKS = [
-    ["Home", "#home"],
-    ["Deals", "#deals"],
-    ["How It Works", "#how"],
-    ["Features", "#features"],
-    ["FAQ", "#faq"],
+  ["Home", "#home"],
+  ["Deals", "#deals"],
+  ["How It Works", "#how"],
+  ["Features", "#features"],
+  ["FAQ", "#faq"]
 ];
 
-const TRENDING = ["Headphones", "Smart watch", "Sneakers", "Power bank", "Backpack", "Speaker"];
+const TRENDING = [
+  "Headphones",
+  "Smart watch",
+  "Sneakers",
+  "Power bank",
+  "Backpack",
+  "Speaker"
+];
 
 const CATEGORIES = [
-    ["Electronics", "💻"],
-    ["Fashion", "👕"],
-    ["Home & Kitchen", "🏠"],
-    ["Beauty", "💄"],
-    ["Sports", "⚽"],
-    ["Toys", "🧸"],
+  ["Electronics", "💻"],
+  ["Fashion", "👕"],
+  ["Home & Kitchen", "🏠"],
+  ["Beauty", "💄"],
+  ["Sports", "⚽"],
+  ["Toys", "🧸"]
+];
+
+const SORTS = [
+  ["relevance", "Relevance"],
+  ["low", "Price: Low to High"],
+  ["high", "Price: High to Low"],
+  ["rating", "Top rated"]
+];
+
+const SEARCH_PLACEHOLDERS = [
+  "Search deals...",
+  "Search phones...",
+  "Search laptops...",
+  "Search headphones..."
 ];
 
 const RECENT_KEY = "ksam_recent_searches";
 
 const IMG = (id) => `https://images.unsplash.com/${id}?w=500&auto=format&fit=crop&q=70`;
 
-// Used when VITE_SUPABASE_URL is missing, and for the "Popular deals" row.
 const DEMO_PRODUCTS = [
-    { id: "d1", name: "Wireless Bluetooth Headphones", price: 1499, original_price: 2999, rating: 4.4, store: "Amazon", image: IMG("photo-1505740420928-5e560c06d30e") },
-    { id: "d2", name: "Smart Watch Series 7", price: 2199, original_price: 4999, rating: 4.2, store: "Flipkart", image: IMG("photo-1523275335684-37898b6baf30") },
-    { id: "d3", name: "Running Sneakers Red", price: 1799, original_price: 3499, rating: 4.5, store: "Myntra", image: IMG("photo-1542291026-7eec264c27ff") },
-    { id: "d4", name: "Portable Power Bank 20000mAh", price: 999, original_price: 1999, rating: 4.3, store: "Amazon", image: IMG("photo-1609091839311-d5365f9ff1c5") },
-    { id: "d5", name: "Travel Backpack 40L", price: 1199, original_price: 2499, rating: 4.1, store: "Flipkart", image: IMG("photo-1553062407-98eeb64c6a62") },
-    { id: "d6", name: "Bluetooth Speaker Waterproof", price: 1299, original_price: 2599, rating: 4.6, store: "Amazon", image: IMG("photo-1608043152269-423dbba4e7e6") },
-    { id: "d7", name: "Polarized Sunglasses", price: 599, original_price: 1499, rating: 4.0, store: "Myntra", image: IMG("photo-1572635196237-14b3f281503f") },
-    { id: "d8", name: "Mechanical Gaming Keyboard", price: 2499, original_price: 4499, rating: 4.5, store: "Amazon", image: IMG("photo-1587829741301-dc798b83add3") },
-    { id: "d9", name: "Wireless Gaming Mouse", price: 899, original_price: 1799, rating: 4.3, store: "Flipkart", image: IMG("photo-1527864550417-7fd91fc51a46") },
-    { id: "d10", name: "Laptop 15.6 inch Slim", price: 38999, original_price: 54999, rating: 4.4, store: "Croma", image: IMG("photo-1496181133206-80ce9b88a853") },
-    { id: "d11", name: "Smartphone 5G 128GB", price: 14999, original_price: 19999, rating: 4.3, store: "Flipkart", image: IMG("photo-1511707171634-5f897ff02aa9") },
-    { id: "d12", name: "Mirrorless Digital Camera", price: 42999, original_price: 56999, rating: 4.6, store: "Amazon", image: IMG("photo-1526170375885-4d8ecf77b99f") },
+  { id: "d1", name: "Wireless Bluetooth Headphones", price: 1499, original_price: 2999, rating: 4.4, store: "Amazon", image: IMG("photo-1505740420928-5e560c06d30e") },
+  { id: "d2", name: "Smart Watch Series 7", price: 2199, original_price: 4999, rating: 4.2, store: "Flipkart", image: IMG("photo-1523275335684-37898b6baf30") },
+  { id: "d3", name: "Running Sneakers Red", price: 1799, original_price: 3499, rating: 4.5, store: "Myntra", image: IMG("photo-1542291026-7eec264c27ff") },
+  { id: "d4", name: "Portable Power Bank 20000mAh", price: 999, original_price: 1999, rating: 4.3, store: "Amazon", image: IMG("photo-1609091839311-d5365f9ff1c5") },
+  { id: "d5", name: "Travel Backpack 40L", price: 1199, original_price: 2499, rating: 4.1, store: "Flipkart", image: IMG("photo-1553062407-98eeb64c6a62") },
+  { id: "d6", name: "Bluetooth Speaker Waterproof", price: 1299, original_price: 2599, rating: 4.6, store: "Amazon", image: IMG("photo-1608043152269-423dbba4e7e6") }
 ];
 
 /* =====================================================
-   HELPERS
+   SEARCH HELPERS
 ===================================================== */
-
 const toNumber = (v) => {
-    if (v === null || v === undefined || v === "") return null;
-    if (typeof v === "number") return v;
-    const n = parseFloat(String(v).replace(/[^0-9.]/g, ""));
-    return Number.isNaN(n) ? null : n;
+  if (v === null || v === undefined || v === "") return null;
+  if (typeof v === "number") return v;
+  const n = parseFloat(String(v).replace(/[^0-9.]/g, ""));
+  return Number.isNaN(n) ? null : n;
 };
 
-// Works with your own table AND with SerpApi / Google Shopping style results.
 const normalizeProduct = (p, i) => ({
-    id: p.id ?? p.product_id ?? i,
-    name: p.name ?? p.title ?? "Untitled product",
-    image: p.image ?? p.image_url ?? p.thumbnail ?? p.serpapi_thumbnail ?? "",
-    price: toNumber(p.extracted_price ?? p.price ?? p.sale_price),
-    priceText: typeof p.price === "string" && Number.isNaN(Number(p.price)) ? p.price : null,
-    oldPrice: toNumber(p.extracted_old_price ?? p.original_price ?? p.mrp ?? p.old_price),
-    rating: toNumber(p.rating),
-    store: p.source ?? p.store ?? p.brand ?? "",
-    url: p.product_link ?? p.link ?? p.url ?? p.affiliate_url ?? "#",
+  id: p.id ?? p.product_id ?? `p-${i}`,
+  name: p.name ?? p.title ?? "Untitled product",
+  image: p.image ?? p.image_url ?? p.thumbnail ?? p.serpapi_thumbnail ?? "",
+  price: toNumber(p.extracted_price ?? p.price ?? p.sale_price) ?? 0,
+  oldPrice: toNumber(p.extracted_old_price ?? p.original_price ?? p.mrp ?? p.old_price) ?? 0,
+  rating: toNumber(p.rating),
+  store: p.source ?? p.store ?? p.brand ?? "KSAM Deal",
+  url: p.product_link ?? p.link ?? p.url ?? p.affiliate_url ?? "#"
 });
 
-const formatPrice = (n) => (n === null || n === undefined ? "" : `₹${Number(n).toLocaleString("en-IN")}`);
-
 const emojiFor = (name = "") => {
-    const s = name.toLowerCase();
-    if (/head|ear|audio/.test(s)) return "🎧";
-    if (/watch/.test(s)) return "⌚";
-    if (/shoe|sneaker|run/.test(s)) return "👟";
-    if (/bag|pack/.test(s)) return "🎒";
-    if (/speaker/.test(s)) return "🔊";
-    if (/phone|mobile/.test(s)) return "📱";
-    if (/laptop|computer/.test(s)) return "💻";
-    if (/camera/.test(s)) return "📷";
-    if (/glass/.test(s)) return "🕶️";
-    if (/keyboard|mouse|gaming/.test(s)) return "🎮";
-    if (/shirt|jacket|dress|jeans/.test(s)) return "👕";
-    return "🛍️";
+  const s = name.toLowerCase();
+  if (/head|ear|audio/.test(s)) return "🎧";
+  if (/watch/.test(s)) return "⌚";
+  if (/shoe|sneaker|run/.test(s)) return "👟";
+  if (/bag|pack/.test(s)) return "🎒";
+  if (/speaker/.test(s)) return "🔊";
+  if (/phone|mobile/.test(s)) return "📱";
+  if (/laptop|computer/.test(s)) return "💻";
+  if (/camera/.test(s)) return "📷";
+  if (/glass/.test(s)) return "🕶️";
+  if (/keyboard|mouse|gaming/.test(s)) return "🎮";
+  if (/shirt|jacket|dress|jeans/.test(s)) return "👕";
+  return "🛍️";
 };
 
-// Colourful generated image used when a product photo is missing or broken.
 const placeholderFor = (name = "") => {
-    let h = 0;
-    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
-        <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-        <stop offset='0' stop-color='hsl(${h},70%,28%)'/><stop offset='1' stop-color='hsl(${(h + 60) % 360},70%,14%)'/>
-        </linearGradient></defs>
-        <rect width='200' height='200' fill='url(#g)'/>
-        <text x='100' y='122' font-size='72' text-anchor='middle'>${emojiFor(name)}</text></svg>`;
-    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+    <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+    <stop offset='0' stop-color='hsl(${h},70%,28%)'/><stop offset='1' stop-color='hsl(${(h + 60) % 360},70%,14%)'/>
+    </linearGradient></defs>
+    <rect width='200' height='200' fill='url(#g)'/>
+    <text x='100' y='122' font-size='72' text-anchor='middle'>${emojiFor(name)}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 };
-
-/* =====================================================
-   STYLES (self-contained, no Tailwind needed)
-===================================================== */
-
-const CSS = `
-.ksam-overlay{position:fixed;inset:0;z-index:99999;display:flex;justify-content:center;align-items:flex-start;padding:4.5rem 1rem 1rem;animation:ksamFade .18s ease}
-.ksam-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.ksam-panel{position:relative;width:100%;max-width:62rem;max-height:calc(100vh - 5.5rem);display:flex;flex-direction:column;overflow:hidden;color:#fff;
-  background:linear-gradient(180deg,#0f1512 0%,#080808 100%);border:1px solid rgba(255,255,255,.1);border-radius:22px;
-  box-shadow:0 40px 90px rgba(0,0,0,.85),0 0 0 1px rgba(34,255,136,.07),0 0 80px rgba(34,255,136,.06);animation:ksamPop .22s cubic-bezier(.2,.9,.3,1.1)}
-.ksam-panel *{box-sizing:border-box}
-.ksam-panel button{font:inherit;cursor:pointer}
-.ksam-panel button:focus-visible,.ksam-panel select:focus-visible{outline:2px solid #38BDF8;outline-offset:2px}
-
-.ksam-bar{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
-.ksam-bar-icon{color:#38BDF8;flex-shrink:0}
-.ksam-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-size:1.05rem;font-family:inherit}
-.ksam-input::placeholder{color:#6b7280}
-.ksam-spin{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.15);border-top-color:#22FF88;animation:ksamSpin .7s linear infinite;flex-shrink:0}
-.ksam-iconbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#9ca3af;transition:.15s;flex-shrink:0}
-.ksam-iconbtn:hover{color:#fff;border-color:rgba(255,255,255,.3)}
-.ksam-go{padding:.55rem 1.1rem;border-radius:10px;border:0;background:linear-gradient(135deg,#22FF88,#38BDF8);color:#000;font-weight:800;font-size:.85rem;flex-shrink:0;transition:transform .15s}
-.ksam-go:hover{transform:scale(1.05)}
-
-.ksam-body{overflow-y:auto;padding:1.25rem;scrollbar-width:thin;scrollbar-color:#333 transparent}
-.ksam-sec{margin-bottom:1.75rem}
-.ksam-sec:last-child{margin-bottom:0}
-.ksam-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:0 0 .8rem;font-size:.82rem;font-weight:700;color:#9ca3af}
-.ksam-h span{display:flex;align-items:center;gap:.45rem}
-.ksam-link{background:none;border:0;color:#6b7280;font-size:.75rem}
-.ksam-link:hover{color:#22FF88}
-
-.ksam-chips{display:flex;flex-wrap:wrap;gap:.5rem}
-.ksam-chip{padding:.5rem 1rem;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:#e5e7eb;font-size:.85rem;transition:.15s}
-.ksam-chip:hover{background:#22FF88;border-color:#22FF88;color:#000;transform:translateY(-1px)}
-
-.ksam-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}
-.ksam-cat{display:flex;align-items:center;gap:.75rem;padding:.75rem .9rem;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#e5e7eb;font-size:.9rem;text-align:left;transition:.15s}
-.ksam-cat:hover{border-color:rgba(56,189,248,.6);background:rgba(56,189,248,.08);color:#38BDF8}
-.ksam-cat-ico{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.07);font-size:1.15rem}
-.ksam-cat-arrow{margin-left:auto;color:#6b7280}
-
-.ksam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:.9rem}
-.ksam-card{display:flex;flex-direction:column;padding:0;text-align:left;color:inherit;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);transition:transform .2s,border-color .2s,box-shadow .2s}
-.ksam-card:hover{transform:translateY(-4px);border-color:rgba(34,255,136,.5);box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 24px rgba(34,255,136,.1)}
-.ksam-img{position:relative;aspect-ratio:1/1;overflow:hidden;background:#141414}
-.ksam-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
-.ksam-card:hover .ksam-img img{transform:scale(1.07)}
-.ksam-badge{position:absolute;top:.55rem;left:.55rem;padding:.2rem .5rem;border-radius:8px;background:#FFD60A;color:#000;font-size:.7rem;font-weight:800}
-.ksam-store{position:absolute;bottom:.55rem;left:.55rem;padding:.2rem .55rem;border-radius:999px;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);font-size:.68rem;color:#e5e7eb}
-.ksam-info{display:flex;flex-direction:column;gap:.35rem;flex:1;padding:.75rem .85rem .9rem}
-.ksam-name{margin:0;font-size:.85rem;font-weight:600;line-height:1.3;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.2em}
-.ksam-rate{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:#9ca3af}
-.ksam-price{display:flex;align-items:baseline;gap:.5rem;margin-top:auto}
-.ksam-now{font-size:1.05rem;font-weight:800;color:#22FF88}
-.ksam-was{font-size:.75rem;color:#6b7280;text-decoration:line-through}
-.ksam-cta{margin-top:.35rem;padding:.45rem;border-radius:10px;text-align:center;font-size:.78rem;font-weight:700;color:#22FF88;border:1px solid rgba(34,255,136,.35);transition:.15s}
-.ksam-card:hover .ksam-cta{background:#22FF88;color:#000}
-
-.ksam-sort{display:flex;gap:.4rem;flex-wrap:wrap}
-.ksam-sortbtn{padding:.3rem .7rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#9ca3af;font-size:.75rem;transition:.15s}
-.ksam-sortbtn:hover{color:#fff}
-.ksam-sortbtn.on{background:rgba(56,189,248,.15);border-color:#38BDF8;color:#38BDF8}
-
-.ksam-skel{border-radius:16px;border:1px solid rgba(255,255,255,.06);overflow:hidden;background:rgba(255,255,255,.03)}
-.ksam-shim{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:ksamShim 1.2s infinite}
-.ksam-msg{padding:2.5rem 1rem;text-align:center}
-.ksam-msg strong{display:block;font-size:1rem;margin-bottom:.35rem}
-.ksam-msg p{margin:0;color:#9ca3af;font-size:.88rem}
-.ksam-err{padding:1rem;border-radius:14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:.88rem}
-
-.ksam-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1.25rem;border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.4)}
-.ksam-foot small{color:#6b7280;font-size:.75rem}
-.ksam-all{display:flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:10px;border:0;background:linear-gradient(135deg,#22FF88,#38BDF8);color:#000;font-weight:800;font-size:.85rem}
-
-@media (max-width:640px){
-  .ksam-overlay{padding:0}
-  .ksam-panel{max-height:100vh;height:100%;border-radius:0}
-  .ksam-cats{grid-template-columns:repeat(2,1fr)}
-  .ksam-grid{grid-template-columns:repeat(2,1fr);gap:.7rem}
-  .ksam-go{display:none}
-  .ksam-foot small{display:none}
-  .ksam-all{width:100%;justify-content:center}
-}
-@media (prefers-reduced-motion:reduce){.ksam-overlay,.ksam-panel,.ksam-shim,.ksam-spin{animation:none}}
-@keyframes ksamFade{from{opacity:0}to{opacity:1}}
-@keyframes ksamPop{from{opacity:0;transform:translateY(-14px) scale(.98)}to{opacity:1;transform:none}}
-@keyframes ksamSpin{to{transform:rotate(360deg)}}
-@keyframes ksamShim{to{background-position:-200% 0}}
-`;
-
-/* =====================================================
-   SMALL COMPONENTS
-===================================================== */
 
 function ProductImage({ src, name }) {
-    const [failed, setFailed] = useState(!src);
-    return (
-        <img
-            src={failed ? placeholderFor(name) : src}
-            alt={name}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            onError={() => setFailed(true)}
-        />
-    );
+  const [failed, setFailed] = useState(!src);
+  return (
+    <img
+      src={failed ? placeholderFor(name) : src}
+      alt={name}
+      loading="lazy"
+      referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 function ProductCard({ p, onClick, cta = "View deal" }) {
-    const discount =
-        p.oldPrice && p.price && p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+  const discount =
+    p.oldPrice && p.price && p.oldPrice > p.price
+      ? Math.round((1 - p.price / p.oldPrice) * 100)
+      : 0;
 
-    return (
-        <button type="button" className="ksam-card" onClick={() => onClick(p)}>
-            <div className="ksam-img">
-                <ProductImage src={p.image} name={p.name} />
-                {discount > 0 && <span className="ksam-badge">{discount}% OFF</span>}
-                {p.store && <span className="ksam-store">{p.store}</span>}
-            </div>
+  return (
+    <button type="button" className="ksam-card" onClick={() => onClick(p)}>
+      <div className="ksam-img">
+        <ProductImage src={p.image} name={p.name} />
+        {discount > 0 && <span className="ksam-badge">{discount}% OFF</span>}
+        {p.store && <span className="ksam-store">{p.store}</span>}
+      </div>
 
-            <div className="ksam-info">
-                <h4 className="ksam-name">{p.name}</h4>
+      <div className="ksam-info">
+        <h4 className="ksam-name">{p.name}</h4>
 
-                {p.rating ? (
-                    <span className="ksam-rate">
-                        <Star size={12} fill="#FFD60A" color="#FFD60A" /> {p.rating}
-                    </span>
-                ) : null}
+        {p.rating ? (
+          <span className="ksam-rate">
+            <Star size={12} fill="#FFD60A" color="#FFD60A" /> {p.rating}
+          </span>
+        ) : null}
 
-                <div className="ksam-price">
-                    <span className="ksam-now">{p.priceText || formatPrice(p.price)}</span>
-                    {discount > 0 && <span className="ksam-was">{formatPrice(p.oldPrice)}</span>}
-                </div>
+        <div className="ksam-price">
+          <span className="ksam-now">{formatPrice(p.price)}</span>
+          {discount > 0 && <span className="ksam-was">{formatPrice(p.oldPrice)}</span>}
+        </div>
 
-                <span className="ksam-cta">{cta}</span>
-            </div>
-        </button>
-    );
+        <span className="ksam-cta">{cta}</span>
+      </div>
+    </button>
+  );
 }
 
 /* =====================================================
-   NAVBAR
+   MAIN NAVBAR COMPONENT
 ===================================================== */
+export default function Navbar({ onProductClick, onViewAll }) {
+  // Shared Cart
+  const { items, count, subtotal, savings, setQty, remove } = useCart();
 
-const SORTS = [
-    ["relevance", "Relevance"],
-    ["low", "Price: Low to High"],
-    ["high", "Price: High to Low"],
-    ["rating", "Top rated"],
-];
+  // Navigation State
+  const [activeSection, setActiveSection] = useState("#home");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartBouncing, setCartBouncing] = useState(false);
+  const [badgeRolling, setBadgeRolling] = useState(false);
+  const prevCountRef = useRef(count);
 
-function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
-    const [open, setOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
-    const [query, setQuery] = useState("");
-    const [results, setResults] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [searched, setSearched] = useState(false);
-    const [recent, setRecent] = useState([]);
-    const [sort, setSort] = useState("relevance");
+  // Search Trigger Pill State
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
 
-    const inputRef = useRef(null);
-    const requestId = useRef(0);
+  // Supabase Search Modal State
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [searched, setSearched] = useState(false);
+  const [recent, setRecent] = useState([]);
+  const [sort, setSort] = useState("relevance");
 
-    /* ---------- recent searches ---------- */
-    useEffect(() => {
-        try {
-            setRecent(JSON.parse(localStorage.getItem(RECENT_KEY)) || []);
-        } catch {
-            setRecent([]);
+  const inputRef = useRef(null);
+  const recognitionRef = useRef(null);
+  const mobileDrawerRef = useRef(null);
+  const cartDrawerRef = useRef(null);
+  const cartBtnRef = useRef(null);
+
+  /* --------------------------------------------------------------------------
+     1. Scroll & Sticky Navbar Background
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  /* --------------------------------------------------------------------------
+     2. Active Section Spy via IntersectionObserver
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const sectionIds = ["home", "deals", "how", "features", "faq"];
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (!elements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -40% 0px", threshold: 0 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  /* --------------------------------------------------------------------------
+     3. Rotating Search Placeholder (2.5s)
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIdx((prev) => (prev + 1) % SEARCH_PLACEHOLDERS.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  /* --------------------------------------------------------------------------
+     4. Speech Recognition (Web Speech API)
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setSpeechSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-IN";
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = () => setIsListening(false);
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setQuery(transcript);
+          openSearch();
+          runSearch(transcript);
         }
-    }, []);
+      };
 
-    const saveRecent = (q) => {
-        if (!q) return;
-        const next = [q, ...recent.filter((r) => r.toLowerCase() !== q.toLowerCase())].slice(0, 6);
-        setRecent(next);
+      recognitionRef.current = recognition;
+    }
+    return () => {
+      if (recognitionRef.current) {
         try {
-            localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+          recognitionRef.current.abort();
         } catch {}
+      }
     };
+  }, []);
 
-    const clearRecent = () => {
-        setRecent([]);
-        try {
-            localStorage.removeItem(RECENT_KEY);
-        } catch {}
-    };
+  const handleVoiceSearch = (e) => {
+    e.stopPropagation();
+    if (!recognitionRef.current) return;
+    try {
+      if (isListening) {
+        recognitionRef.current.stop();
+      } else {
+        recognitionRef.current.start();
+      }
+    } catch (err) {
+      setIsListening(false);
+    }
+  };
 
-    /* ---------- open / close ---------- */
-    const openSearch = () => {
-        setOpen(false);
-        setSearchOpen(true);
-    };
+  /* --------------------------------------------------------------------------
+     5. Hotkeys: Ctrl/Cmd+K and '/' to Open Search, Escape to Close
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (searchOpen) closeSearch();
+        if (isCartOpen) setIsCartOpen(false);
+        if (isMobileNavOpen) setIsMobileNavOpen(false);
+      }
 
-    const closeSearch = () => {
-        requestId.current++;
-        setSearchOpen(false);
-        setQuery("");
-        setResults([]);
-        setError("");
-        setSearched(false);
-        setLoading(false);
-        setSort("relevance");
-    };
-
-    useEffect(() => {
-        const onKey = (e) => {
-            if (e.key === "Escape") closeSearch();
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-                e.preventDefault();
-                openSearch();
-            }
-        };
-        window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
-    }, []);
-
-    useEffect(() => {
-        if (!searchOpen) return;
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
-        const t = setTimeout(() => inputRef.current && inputRef.current.focus(), 50);
-        return () => {
-            document.body.style.overflow = prev;
-            clearTimeout(t);
-        };
-    }, [searchOpen]);
-
-
-
-    const runSearch = async (term = query) => {
-    const q = term.trim();
-
-    if (!q) {
-        setResults([]);
-        setError("");
-        setLoading(false);
-        setSearched(false);
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        openSearch();
         return;
+      }
+
+      if (e.key === "/" && !searchOpen && !isCartOpen && !isMobileNavOpen) {
+        const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+        if (tag !== "input" && tag !== "textarea") {
+          e.preventDefault();
+          openSearch();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [searchOpen, isCartOpen, isMobileNavOpen]);
+
+  /* --------------------------------------------------------------------------
+     6. Auto-Close Mobile Nav on Resize >= 1024px
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && isMobileNavOpen) {
+        setIsMobileNavOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isMobileNavOpen]);
+
+  /* --------------------------------------------------------------------------
+     7. Scroll Lock on Modals & Drawers
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const shouldLock = searchOpen || isCartOpen || isMobileNavOpen;
+    const prev = document.body.style.overflow;
+    if (shouldLock) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [searchOpen, isCartOpen, isMobileNavOpen]);
+
+  /* --------------------------------------------------------------------------
+     8. Cart Add Bounce Feedback
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    if (count > prevCountRef.current) {
+      setCartBouncing(true);
+      setBadgeRolling(true);
+      const t1 = setTimeout(() => setCartBouncing(false), 700);
+      const t2 = setTimeout(() => setBadgeRolling(false), 500);
+      prevCountRef.current = count;
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+    prevCountRef.current = count;
+  }, [count]);
+
+  /* --------------------------------------------------------------------------
+     9. Recent Searches Storage
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    try {
+      setRecent(JSON.parse(localStorage.getItem(RECENT_KEY)) || []);
+    } catch {
+      setRecent([]);
+    }
+  }, []);
+
+  const saveRecent = (q) => {
+    if (!q) return;
+    const next = [q, ...recent.filter((r) => r.toLowerCase() !== q.toLowerCase())].slice(0, 6);
+    setRecent(next);
+    try {
+      localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+    } catch {}
+  };
+
+  const clearRecent = () => {
+    setRecent([]);
+    try {
+      localStorage.removeItem(RECENT_KEY);
+    } catch {}
+  };
+
+  /* --------------------------------------------------------------------------
+     10. Search Modal Logic (Supabase + Edge Function + Fallback)
+     -------------------------------------------------------------------------- */
+  const openSearch = () => {
+    setIsMobileNavOpen(false);
+    setIsCartOpen(false);
+    setSearchOpen(true);
+    setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
+  };
+
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setQuery("");
+    setResults([]);
+    setError("");
+    setSearched(false);
+    setLoading(false);
+    setSort("relevance");
+  };
+
+  const runSearch = async (term = query) => {
+    const q = term.trim();
+    if (!q) {
+      setResults([]);
+      setError("");
+      setLoading(false);
+      setSearched(false);
+      return;
     }
 
     setLoading(true);
     setError("");
     setSearched(false);
 
+    let ksamProducts = [];
     try {
-        // =====================================================
-        // 1. SEARCH KSAM DEAL PRODUCTS FROM SUPABASE
-        // =====================================================
+      const searchTerm = `%${q}%`;
+      const supabaseQuery = supabase
+        .from("products")
+        .select(`
+          id,
+          name,
+          description,
+          image_url,
+          price,
+          old_price,
+          discount,
+          rating,
+          reviews,
+          category_id,
+          store_id,
+          product_url,
+          availability,
+          external_id,
+          is_active,
+          stores ( id, name )
+        `)
+        .eq("is_active", true)
+        .or(`name.ilike.${searchTerm},description.ilike.${searchTerm}`)
+        .order("discount", { ascending: false, nullsFirst: false })
+        .limit(30);
 
-        const searchTerm = `%${q}%`;
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out after 8s")), 8000)
+      );
 
-        const {
-            data: databaseProducts,
-            error: databaseError,
-        } = await supabase
-            .from("products")
-            .select(`
-                id,
-                name,
-                description,
-                image_url,
-                price,
-                old_price,
-                discount,
-                rating,
-                reviews,
-                category_id,
-                store_id,
-                product_url,
-                availability,
-                external_id,
-                is_active,
-                stores (
-                    id,
-                    name
-                )
-            `)
-            .eq("is_active", true)
-            .or(
-                `name.ilike.${searchTerm},description.ilike.${searchTerm}`
+      const { data: databaseProducts, error: databaseError } = await Promise.race([
+        supabaseQuery,
+        timeoutPromise
+      ]);
+
+      if (databaseError) {
+        throw databaseError;
+      }
+
+      ksamProducts =
+        databaseProducts
+          ? databaseProducts.map((product, index) =>
+              normalizeProduct(
+                { ...product, store: product.stores?.name || "KSAM Deal" },
+                index
+              )
             )
-            .order("discount", {
-                ascending: false,
-                nullsFirst: false,
-            })
-            .limit(30);
+          : [];
 
-        if (databaseError) {
-            console.error(
-                "Supabase search error:",
-                databaseError
-            );
-        }
+      const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-        const ksamProducts =
-            !databaseError && databaseProducts
-                ? databaseProducts.map((product, index) =>
-                      normalizeProduct(
-                          {
-                              ...product,
-                              store:
-                                  product.stores?.name || "",
-                          },
-                          index
-                      )
-                  )
-                : [];
-
-
-        // =====================================================
-        // 2. SEARCH EXTERNAL PRODUCTS THROUGH EDGE FUNCTION
-        // =====================================================
-
-        const baseUrl =
-            import.meta.env.VITE_SUPABASE_URL;
-
-        const anonKey =
-            import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-        if (!baseUrl || !anonKey) {
-            setResults(ksamProducts);
-            setSearched(true);
-            return;
-        }
-
-        const response = await fetch(
-            `${baseUrl}/functions/v1/search-products`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    apikey: anonKey,
-                    Authorization: `Bearer ${anonKey}`,
-                },
-
-                body: JSON.stringify({
-                    query: q,
-                }),
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(
-                `External search failed: ${response.status}`
-            );
-        }
-
-        const externalData =
-            await response.json();
-
-        if (!externalData.success) {
-            throw new Error(
-                externalData.error ||
-                    "External product search failed."
-            );
-        }
-
-        const externalProducts =
-            (externalData.products || []).map(
-                (product, index) =>
-                    normalizeProduct(product, index)
-            );
-
-
-        // =====================================================
-        // 3. COMBINE KSAM + EXTERNAL PRODUCTS
-        // =====================================================
-
-        const combinedProducts = [
-            ...ksamProducts,
-            ...externalProducts,
-        ];
-
-
-        // =====================================================
-        // 4. REMOVE DUPLICATE PRODUCTS
-        // =====================================================
-
-        const uniqueProducts = [];
-        const seen = new Set();
-
-        for (const product of combinedProducts) {
-
-            const key =
-                product.url !== "#"
-                    ? product.url
-                    : `${product.name}-${product.store}`;
-
-            if (seen.has(key)) {
-                continue;
-            }
-
-            seen.add(key);
-            uniqueProducts.push(product);
-        }
-
-
-        // =====================================================
-        // 5. LIMIT DISPLAY RESULTS
-        // =====================================================
-
-        setResults(
-            uniqueProducts.slice(0, 30)
-        );
-
+      if (!baseUrl || !anonKey) {
+        setResults(ksamProducts);
         setSearched(true);
+        return;
+      }
 
+      let externalProducts = [];
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        const response = await fetch(`${baseUrl}/functions/v1/search-products`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: anonKey,
+            Authorization: `Bearer ${anonKey}`
+          },
+          body: JSON.stringify({ query: q }),
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+
+        if (response.ok) {
+          const externalData = await response.json();
+          if (externalData.success && Array.isArray(externalData.products)) {
+            externalProducts = externalData.products.map((product, index) =>
+              normalizeProduct(product, index)
+            );
+          }
+        }
+      } catch (e) {
+        // External edge search skipped or timed out
+      }
+
+      const combined = [...ksamProducts, ...externalProducts];
+      const unique = [];
+      const seen = new Set();
+      for (const p of combined) {
+        const key = p.url !== "#" ? p.url : `${p.name}-${p.store}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(p);
+        }
+      }
+
+      if (unique.length > 0) {
+        setResults(unique.slice(0, 30));
+        if (ksamProducts.length > 0 && externalProducts.length === 0) {
+          setError("Showing KSAM Deal products. External products could not be loaded.");
+        }
+      } else {
+        const matched = DEMO_PRODUCTS.filter((p) =>
+          p.name.toLowerCase().includes(q.toLowerCase())
+        );
+        setResults((matched.length > 0 ? matched : DEMO_PRODUCTS).map(normalizeProduct));
+        setError("Showing KSAM Deal products.");
+      }
+      setSearched(true);
     } catch (err) {
-
-        console.error(
-            "KSAM DEAL SEARCH ERROR:",
-            err
+      console.error("Failed to fetch deals:", err);
+      if (ksamProducts.length > 0) {
+        setResults(ksamProducts);
+        setError("Showing KSAM Deal products. External products could not be loaded.");
+      } else {
+        const matched = DEMO_PRODUCTS.filter((p) =>
+          p.name.toLowerCase().includes(q.toLowerCase())
         );
-
-        // If external search fails but KSAM products
-        // were found, still show the KSAM products.
-        if (typeof ksamProducts !== "undefined" &&
-            ksamProducts.length > 0) {
-
-            setResults(ksamProducts);
-
-            setError(
-                "Showing KSAM Deal products. External products could not be loaded."
-            );
-
-        } else {
-
-            setResults([]);
-
-            setError(
-                err?.message ||
-                    "Couldn't load products. Please try again."
-            );
-        }
-
-        setSearched(true);
-
+        setResults((matched.length > 0 ? matched : DEMO_PRODUCTS).map(normalizeProduct));
+        setError("Showing KSAM Deal products.");
+      }
+      setSearched(true);
     } finally {
-
-        setLoading(false);
-
+      setLoading(false);
     }
-};
-    
-    // live search while typing
-    // useEffect(() => {
-    //     if (!searchOpen) return;
-    //     const t = setTimeout(() => runSearch(query), 350);
-    //     return () => clearTimeout(t);
-    // }, [query, searchOpen]);
+  };
 
-    const submit = (e) => {
-        e.preventDefault();
-        saveRecent(query.trim());
-        runSearch(query);
-    };
+  const submitSearch = (e) => {
+    e.preventDefault();
+    saveRecent(query.trim());
+    runSearch(query);
+  };
 
-    const pickTerm = (term) => {
-        setQuery(term);
-        saveRecent(term);
-        if (inputRef.current) inputRef.current.focus();
-    };
+  const pickTerm = (term) => {
+    setQuery(term);
+    saveRecent(term);
+    runSearch(term);
+    if (inputRef.current) inputRef.current.focus();
+  };
 
-    const openProduct = (p) => {
-        saveRecent(query.trim());
-        if (onProductClick) {
-            onProductClick(p);
-            closeSearch();
-        } else if (p.url && p.url !== "#") {
-            window.open(p.url, "_blank", "noopener,noreferrer");
-        }
-    };
+  const openProduct = (p) => {
+    saveRecent(query.trim());
+    if (onProductClick) {
+      onProductClick(p);
+      closeSearch();
+    } else if (p.url && p.url !== "#") {
+      window.open(p.url, "_blank", "noopener,noreferrer");
+    }
+  };
 
-    const showIdle = !query.trim();
+  const sortedResults = [...results].sort((a, b) => {
+    if (sort === "low") return (a.price ?? Infinity) - (b.price ?? Infinity);
+    if (sort === "high") return (b.price ?? -1) - (a.price ?? -1);
+    if (sort === "rating") return (b.rating ?? 0) - (a.rating ?? 0);
+    return 0;
+  });
 
-    const sorted = [...results].sort((a, b) => {
-        if (sort === "low") return (a.price ?? Infinity) - (b.price ?? Infinity);
-        if (sort === "high") return (b.price ?? -1) - (a.price ?? -1);
-        if (sort === "rating") return (b.rating ?? 0) - (a.rating ?? 0);
-        return 0;
-    });
+  /* --------------------------------------------------------------------------
+     11. Checkout Navigation
+     -------------------------------------------------------------------------- */
+  const handleProceedToCheckout = () => {
+    if (items.length === 0) return;
+    setIsCartOpen(false);
+    const checkoutUrl = new URL("checkout.html", window.location.href).href;
+    window.location.href = checkoutUrl;
+  };
 
-    /* ---------- search panel ---------- */
-    const searchPanel = (
-        <div className="ksam-overlay" role="dialog" aria-modal="true" aria-label="Search products">
-            <style>{CSS}</style>
-            <div className="ksam-backdrop" onClick={closeSearch} />
+  /* --------------------------------------------------------------------------
+     12. Logo Click: Smooth Scroll to Top + Bounce
+     -------------------------------------------------------------------------- */
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-            <div className="ksam-panel">
-                {/* Input row */}
-                <form className="ksam-bar" onSubmit={submit}>
-                    <Search size={20} className="ksam-bar-icon" />
+  /* --------------------------------------------------------------------------
+     13. Quantity Steppers & Removal Animation
+     -------------------------------------------------------------------------- */
+  const handleMinusQty = (item, rowEl) => {
+    const currentQty = Number(item.quantity || item.qty || 1);
+    if (currentQty > 1) {
+      setQty(item.id, currentQty - 1);
+    } else {
+      handleRemoveItem(item.id, rowEl);
+    }
+  };
 
-                    <input
-                        ref={inputRef}
-                        className="ksam-input"
-                        type="text"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search for products, brands and more..."
-                        autoComplete="off"
-                    />
+  const handlePlusQty = (item) => {
+    const currentQty = Number(item.quantity || item.qty || 1);
+    setQty(item.id, currentQty + 1);
+  };
 
-                    {loading && <span className="ksam-spin" />}
+  const handleRemoveItem = (id, rowEl) => {
+    if (rowEl) {
+      rowEl.classList.add("slide-out");
+      setTimeout(() => {
+        remove(id);
+      }, 300);
+    } else {
+      remove(id);
+    }
+  };
 
-                    {query && !loading && (
-                        <button
-                            type="button"
-                            className="ksam-iconbtn"
-                            aria-label="Clear search"
-                            onClick={() => {
-                                setQuery("");
-                                if (inputRef.current) inputRef.current.focus();
-                            }}
-                        >
-                            <X size={15} />
-                        </button>
-                    )}
+  /* --------------------------------------------------------------------------
+     14. Free Delivery Calculations (Threshold ₹999)
+     -------------------------------------------------------------------------- */
+  const threshold = FREE_DELIVERY_THRESHOLD;
+  const remainingForDelivery = Math.max(0, threshold - subtotal);
+  const deliveryPct = Math.min(100, Math.round((subtotal / threshold) * 100));
 
-                    <button type="submit" className="ksam-go">
-                        Search
-                    </button>
+  /* --------------------------------------------------------------------------
+     15. Search Overlay Modal JSX (Portal to document.body)
+     -------------------------------------------------------------------------- */
+  const searchOverlayPortal = searchOpen && typeof document !== "undefined"
+    ? createPortal(
+        <div
+          className="ksam-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search products"
+        >
+          <div className="ksam-backdrop" onClick={closeSearch} />
 
-                    <button type="button" className="ksam-iconbtn" aria-label="Close search" onClick={closeSearch}>
-                        <X size={16} />
-                    </button>
-                </form>
+          <div className="ksam-panel">
+            {/* Input Row */}
+            <form className="ksam-bar" onSubmit={submitSearch}>
+              <Search size={20} className="ksam-bar-icon" />
 
-                {/* Body */}
-                <div className="ksam-body">
-                    {showIdle && (
-                        <>
-                            {recent.length > 0 && (
-                                <div className="ksam-sec">
-                                    <div className="ksam-h">
-                                        <span>
-                                            <Clock size={14} /> Recent searches
-                                        </span>
-                                        <button type="button" className="ksam-link" onClick={clearRecent}>
-                                            Clear
-                                        </button>
-                                    </div>
-                                    <div className="ksam-chips">
-                                        {recent.map((r) => (
-                                            <button type="button" key={r} className="ksam-chip" onClick={() => pickTerm(r)}>
-                                                {r}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+              <input
+                ref={inputRef}
+                className="ksam-input"
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search for products, brands and more..."
+                autoComplete="off"
+              />
 
-                            <div className="ksam-sec">
-                                <div className="ksam-h">
-                                    <span>
-                                        <TrendingUp size={14} /> Trending now
-                                    </span>
-                                </div>
-                                <div className="ksam-chips">
-                                    {TRENDING.map((t) => (
-                                        <button type="button" key={t} className="ksam-chip" onClick={() => pickTerm(t)}>
-                                            {t}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+              {loading && <span className="ksam-spin" />}
 
-                            <div className="ksam-sec">
-                                <div className="ksam-h">
-                                    <span>Popular deals</span>
-                                </div>
-                                <div className="ksam-grid">
-                                    {DEMO_PRODUCTS.slice(0, 6).map((p, i) => (
-                                        <ProductCard
-                                            key={p.id}
-                                            p={normalizeProduct(p, i)}
-                                            cta="Search similar"
-                                            onClick={(prod) => pickTerm(prod.name.split(" ").slice(0, 2).join(" "))}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
+              {query && !loading && (
+                <button
+                  type="button"
+                  className="ksam-iconbtn"
+                  aria-label="Clear search"
+                  onClick={() => {
+                    setQuery("");
+                    if (inputRef.current) inputRef.current.focus();
+                  }}
+                >
+                  <X size={15} />
+                </button>
+              )}
 
-                            <div className="ksam-sec">
-                                <div className="ksam-h">
-                                    <span>Browse categories</span>
-                                </div>
-                                <div className="ksam-cats">
-                                    {CATEGORIES.map(([c, emoji]) => (
-                                        <button type="button" key={c} className="ksam-cat" onClick={() => pickTerm(c)}>
-                                            <span className="ksam-cat-ico">{emoji}</span>
-                                            {c}
-                                            <ArrowUpRight size={15} className="ksam-cat-arrow" />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    )}
+              <button type="submit" className="ksam-go">
+                Search
+              </button>
 
-                    {!showIdle && loading && results.length === 0 && (
-                        <div className="ksam-grid">
-                            {Array.from({ length: 8 }).map((_, i) => (
-                                <div key={i} className="ksam-skel">
-                                    <div className="ksam-shim" style={{ aspectRatio: "1/1" }} />
-                                    <div style={{ padding: ".8rem" }}>
-                                        <div className="ksam-shim" style={{ height: 12, borderRadius: 6, width: "80%" }} />
-                                        <div className="ksam-shim" style={{ height: 12, borderRadius: 6, width: "40%", marginTop: 8 }} />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+              <button
+                type="button"
+                className="ksam-iconbtn"
+                aria-label="Close search"
+                onClick={closeSearch}
+              >
+                <X size={16} />
+              </button>
+            </form>
 
-                    {!showIdle && error && <div className="ksam-err">{error}</div>}
-
-                    {!showIdle && !loading && !error && searched && results.length === 0 && (
-                        <div className="ksam-msg">
-                            <strong>No products found for "{query.trim()}"</strong>
-                            <p>Check the spelling or try a broader term.</p>
-                        </div>
-                    )}
-
-                    {!showIdle && results.length > 0 && (
-                        <div className="ksam-sec">
-                            <div className="ksam-h" style={{ flexWrap: "wrap" }}>
-                                <span>
-                                    {results.length} result{results.length === 1 ? "" : "s"} for "{query.trim()}"
-                                </span>
-                                <div className="ksam-sort">
-                                    {SORTS.map(([key, label]) => (
-                                        <button
-                                            type="button"
-                                            key={key}
-                                            className={`ksam-sortbtn${sort === key ? " on" : ""}`}
-                                            onClick={() => setSort(key)}
-                                        >
-                                            {label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="ksam-grid">
-                                {sorted.map((p) => (
-                                    <ProductCard key={p.id} p={p} onClick={openProduct} />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Footer */}
-                {!showIdle && results.length > 0 && (
-                    <div className="ksam-foot">
-                        <small>Press Esc to close</small>
-                        <button
-                            type="button"
-                            className="ksam-all"
-                            onClick={() => {
-                                saveRecent(query.trim());
-                                if (onViewAll) onViewAll(query.trim(), sorted);
-                                closeSearch();
-                            }}
-                        >
-                            View all results <ArrowUpRight size={15} />
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-
-    /* ---------- header ---------- */
-    return (
-        <>
-            <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
-                <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
-                    <a href="#home" className="flex items-center gap-2 text-xl font-black text-white">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#22FF88] to-[#38BDF8] text-black">
-                            K
+            {/* Modal Body */}
+            <div className="ksam-body">
+              {!query.trim() && (
+                <>
+                  {recent.length > 0 && (
+                    <div className="ksam-sec">
+                      <div className="ksam-h">
+                        <span>
+                          <Clock size={14} /> Recent searches
                         </span>
-                        KSAM
-                        <span className="text-[#22FF88]">DEAL</span>
-                    </a>
-
-                    <div className="hidden items-center gap-7 lg:flex">
-                        {LINKS.map(([label, href]) => (
-                            <a key={label} href={href} className="text-sm font-medium text-gray-300 transition hover:text-[#22FF88]">
-                                {label}
-                            </a>
+                        <button
+                          type="button"
+                          className="ksam-link"
+                          onClick={clearRecent}
+                        >
+                          Clear
+                        </button>
+                      </div>
+                      <div className="ksam-chips">
+                        {recent.map((r) => (
+                          <button
+                            type="button"
+                            key={r}
+                            className="ksam-chip"
+                            onClick={() => pickTerm(r)}
+                          >
+                            {r}
+                          </button>
                         ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="ksam-sec">
+                    <div className="ksam-h">
+                      <span>
+                        <TrendingUp size={14} /> Trending now
+                      </span>
+                    </div>
+                    <div className="ksam-chips">
+                      {TRENDING.map((t) => (
+                        <button
+                          type="button"
+                          key={t}
+                          className="ksam-chip"
+                          onClick={() => pickTerm(t)}
+                        >
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="ksam-sec">
+                    <div className="ksam-h">
+                      <span>Popular deals</span>
+                    </div>
+                    <div className="ksam-grid">
+                      {DEMO_PRODUCTS.slice(0, 6).map((p, i) => (
+                        <ProductCard
+                          key={p.id}
+                          p={normalizeProduct(p, i)}
+                          cta="Search similar"
+                          onClick={(prod) =>
+                            pickTerm(prod.name.split(" ").slice(0, 2).join(" "))
+                          }
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="ksam-sec">
+                    <div className="ksam-h">
+                      <span>Browse categories</span>
+                    </div>
+                    <div className="ksam-cats">
+                      {CATEGORIES.map(([c, emoji]) => (
+                        <button
+                          type="button"
+                          key={c}
+                          className="ksam-cat"
+                          onClick={() => pickTerm(c)}
+                        >
+                          <span className="ksam-cat-ico">{emoji}</span>
+                          {c}
+                          <ArrowUpRight size={15} className="ksam-cat-arrow" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {query.trim() && loading && results.length === 0 && (
+                <div className="ksam-grid">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="ksam-skel">
+                      <div className="ksam-shim" style={{ aspectRatio: "1/1" }} />
+                      <div style={{ padding: ".8rem" }}>
+                        <div
+                          className="ksam-shim"
+                          style={{ height: 12, borderRadius: 6, width: "80%" }}
+                        />
+                        <div
+                          className="ksam-shim"
+                          style={{
+                            height: 12,
+                            borderRadius: 6,
+                            width: "40%",
+                            marginTop: 8
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {query.trim() && error && <div className="ksam-err">{error}</div>}
+
+              {query.trim() && !loading && !error && searched && results.length === 0 && (
+                <div className="ksam-msg">
+                  <strong>No products found for "{query.trim()}"</strong>
+                  <p>Check the spelling or try a broader term.</p>
+                </div>
+              )}
+
+              {query.trim() && results.length > 0 && (
+                <div className="ksam-sec">
+                  <div className="ksam-h" style={{ flexWrap: "wrap" }}>
+                    <span>
+                      {results.length} result{results.length === 1 ? "" : "s"} for "{query.trim()}"
+                    </span>
+                    <div className="ksam-sort">
+                      {SORTS.map(([key, label]) => (
+                        <button
+                          type="button"
+                          key={key}
+                          className={`ksam-sortbtn${sort === key ? " on" : ""}`}
+                          onClick={() => setSort(key)}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="ksam-grid">
+                    {sortedResults.map((p) => (
+                      <ProductCard key={p.id} p={p} onClick={openProduct} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            {query.trim() && results.length > 0 && (
+              <div className="ksam-foot">
+                <small>Press Esc to close</small>
+                <button
+                  type="button"
+                  className="ksam-all"
+                  onClick={() => {
+                    saveRecent(query.trim());
+                    if (onViewAll) onViewAll(query.trim(), sortedResults);
+                    closeSearch();
+                  }}
+                >
+                  View all results <ArrowUpRight size={15} />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
+
+  /* =====================================================
+     RENDER NAVBAR
+  ===================================================== */
+  return (
+    <>
+      <header className={`kh-nav-header${isScrolled ? " kh-nav-scrolled" : ""}`} id="navbar">
+        <div className="kh-nav-container">
+
+          {/* 1. Animated KSAM Deal Inline SVG Logo Lockup */}
+          <a
+            href="#home"
+            className="kh-nav-brand"
+            id="navBrandLogo"
+            aria-label="KSAM Deal - Home"
+            onClick={handleLogoClick}
+          >
+            <svg
+              className="kh-nav-brand-svg"
+              viewBox="0 0 252 44"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="KSAM Deal"
+            >
+              <defs>
+                <linearGradient id="khNavLogoBagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#4dffa3" />
+                  <stop offset="45%" stopColor="#16c86b" />
+                  <stop offset="100%" stopColor="#0e9f55" />
+                </linearGradient>
+
+                <linearGradient id="khNavLogoSpeedGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="30" y2="0">
+                  <stop offset="0%" stopColor="#4dffa3" />
+                  <stop offset="100%" stopColor="#16c86b" />
+                </linearGradient>
+
+                <linearGradient id="khNavLogoKsamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="100%" stopColor="#b8ffd9" />
+                </linearGradient>
+
+                <linearGradient id="khNavLogoDealGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#22ff88" />
+                  <stop offset="100%" stopColor="#38bdf8" />
+                </linearGradient>
+
+                <linearGradient id="khNavLogoLeafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="100%" stopColor="#7cff9b" />
+                </linearGradient>
+
+                <linearGradient id="khNavLogoSweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="45%" stopColor="white" stopOpacity="0" />
+                  <stop offset="50%" stopColor="white" stopOpacity="0.85" />
+                  <stop offset="55%" stopColor="white" stopOpacity="0" />
+                  <stop offset="100%" stopColor="white" stopOpacity="0" />
+                </linearGradient>
+
+                <filter id="khNavLogoIconGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#22ff88" floodOpacity="0.35" />
+                </filter>
+
+                <filter id="khNavLogoTextShadow" x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" floodColor="#000000" floodOpacity="0.65" />
+                </filter>
+
+                <linearGradient id="khNavCartIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#22ff88" />
+                  <stop offset="100%" stopColor="#38bdf8" />
+                </linearGradient>
+
+                <mask id="khNavLogoSweepMask">
+                  <g fontFamily="'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif" fontSize="28" fontWeight="800" fill="#ffffff">
+                    <text x="64" y="35">k</text>
+                    <text x="82.3" y="35">s</text>
+                    <text x="98.9" y="35">a</text>
+                    <text x="117.2" y="35">m</text>
+                    <text x="144.8" y="35">d</text>
+                    <text x="163" y="35">e</text>
+                    <text x="181.3" y="35">a</text>
+                    <text x="199.5" y="35">l</text>
+                  </g>
+                </mask>
+              </defs>
+
+              {/* Icon Group: Speed Lines + Bag + Cart */}
+              <g className="kh-nav-logo-icon-wrap" filter="url(#khNavLogoIconGlow)">
+                <g className="kh-nav-logo-speed-lines">
+                  <circle className="kh-nav-speed-dot" cx="4" cy="19.5" r="2.1" fill="#4dffa3" />
+                  <rect className="kh-nav-speed-line sl-1" x="9" y="18" width="13.5" height="3" rx="1.5" fill="url(#khNavLogoSpeedGrad)" />
+                  <rect className="kh-nav-speed-line sl-2" x="1.5" y="24.5" width="23.5" height="3.5" rx="1.75" fill="url(#khNavLogoSpeedGrad)" />
+                  <rect className="kh-nav-speed-line sl-3" x="5.5" y="31" width="16.5" height="3" rx="1.5" fill="url(#khNavLogoSpeedGrad)" />
+                </g>
+
+                <g className="kh-nav-logo-bag-body">
+                  <path className="kh-nav-bag-handle" d="M 32 10.5 C 32 3.5, 46 3.5, 46 10.5" fill="none" stroke="url(#khNavLogoBagGrad)" strokeWidth="2.8" strokeLinecap="round" />
+                  <path className="kh-nav-bag-tote" d="M 25 10.5 L 53 10.5 C 55.5 10.5, 57.2 12.5, 56.7 15 L 53.8 32 C 53.2 34.2, 51.2 35.5, 48.8 35.5 L 29.2 35.5 C 26.8 35.5, 24.8 34.2, 24.2 32 L 21.3 15 C 20.8 12.5, 22.5 10.5, 25 10.5 Z" fill="url(#khNavLogoBagGrad)" stroke="rgba(255, 255, 255, 0.28)" strokeWidth="0.8" />
+                  <path className="kh-nav-bag-gloss" d="M 25.2 11.5 L 52.8 11.5 C 54.5 11.5, 55.5 12.8, 55 14.5 L 53.8 19.5 C 47.5 22, 27.5 22, 23 19.5 L 22.2 14.5 C 21.7 12.8, 22.7 11.5, 25.2 11.5 Z" fill="#ffffff" fillOpacity="0.32" />
+                  <circle cx="32" cy="12" r="1.6" fill="#0e9f55" stroke="#4dffa3" strokeWidth="0.8" />
+                  <circle cx="46" cy="12" r="1.6" fill="#0e9f55" stroke="#4dffa3" strokeWidth="0.8" />
+
+                  <g className="kh-nav-logo-cart">
+                    <path className="kh-nav-cart-basket" d="M 26 17.5 L 30 17.5 L 34.5 29 L 47.5 29 L 50.5 21.5 L 32 21.5" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <g className="kh-nav-cart-wheel-left" transform="translate(35.5, 33.5)">
+                      <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
+                      <circle cx="0.7" cy="0" r="0.65" fill="#16c86b" />
+                    </g>
+                    <g className="kh-nav-cart-wheel-right" transform="translate(46, 33.5)">
+                      <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
+                      <circle cx="0.7" cy="0" r="0.65" fill="#16c86b" />
+                    </g>
+                  </g>
+                </g>
+              </g>
+
+              {/* Wordmark: "ksamdeal" */}
+              <g className="kh-nav-logo-wordmark" filter="url(#khNavLogoTextShadow)" fontFamily="'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif" fontSize="28" fontWeight="800">
+                <text className="kh-nav-logo-letter" x="64" y="35" fill="url(#khNavLogoKsamGrad)">k</text>
+                <text className="kh-nav-logo-letter" x="82.3" y="35" fill="url(#khNavLogoKsamGrad)">s</text>
+                <text className="kh-nav-logo-letter" x="98.9" y="35" fill="url(#khNavLogoKsamGrad)">a</text>
+                <text className="kh-nav-logo-letter" x="117.2" y="35" fill="url(#khNavLogoKsamGrad)">m</text>
+                <text className="kh-nav-logo-letter" x="144.8" y="35" fill="url(#khNavLogoDealGrad)">d</text>
+                <text className="kh-nav-logo-letter" x="163" y="35" fill="url(#khNavLogoDealGrad)">e</text>
+                <text className="kh-nav-logo-letter" x="181.3" y="35" fill="url(#khNavLogoDealGrad)">a</text>
+                <text className="kh-nav-logo-letter" x="199.5" y="35" fill="url(#khNavLogoDealGrad)">l</text>
+              </g>
+
+              {/* Leaf Anchor Attached to 'l' */}
+              <g className="kh-nav-logo-leaf-anchor" transform="translate(208.5, 16)">
+                <g className="kh-nav-logo-leaf-wrap">
+                  <path className="kh-nav-leaf-stem" d="M 0 0 C 2 -3, 4 -5.5, 7.5 -8" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" />
+                  <path className="kh-nav-leaf-blade-main" d="M 7.5 -8 C 6 -14, 16 -18, 22.5 -13.5 C 22.5 -7, 14 -3, 7.5 -8 Z" fill="url(#khNavLogoLeafGrad)" />
+                  <path className="kh-nav-leaf-vein" d="M 7.5 -8 Q 14 -12, 20.5 -13.5" fill="none" stroke="#ffffff" strokeWidth="0.9" opacity="0.8" strokeLinecap="round" />
+                  <path className="kh-nav-leaf-blade-sub" d="M 5 -6 C 1.5 -8.5, -1 -13.5, 3 -14.5 C 6 -13.5, 7 -8.5, 5 -6 Z" fill="url(#khNavLogoLeafGrad)" />
+                </g>
+              </g>
+
+              {/* Light Sweep */}
+              <rect className="kh-nav-logo-shine-bar" x="60" y="6" width="154" height="32" fill="url(#khNavLogoSweepGrad)" mask="url(#khNavLogoSweepMask)" pointerEvents="none" />
+            </svg>
+          </a>
+
+          {/* 2. Centered Desktop Navigation Links with Active Underline */}
+          <nav className="kh-nav-menu" aria-label="Primary Navigation">
+            <ul className="kh-nav-links">
+              {LINKS.map(([label, href]) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    className={`kh-nav-link${activeSection === href ? " kh-nav-active" : ""}`}
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* 3. Actions Cluster: Search Pill Trigger, Cart Button, Hamburger */}
+          <div className="kh-nav-actions">
+
+            {/* Pill Search Trigger (Opens Supabase Search Overlay) */}
+            <div
+              className="kh-nav-search-box"
+              onClick={openSearch}
+              role="button"
+              tabIndex={0}
+              aria-label="Open search dialog"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openSearch();
+                }
+              }}
+            >
+              <Search size={16} className="kh-nav-search-icon" />
+              <span className="kh-nav-search-placeholder">
+                {SEARCH_PLACEHOLDERS[placeholderIdx]}
+              </span>
+              <kbd className="kh-nav-search-kbd" aria-hidden="true">/</kbd>
+              {speechSupported && (
+                <button
+                  type="button"
+                  className={`kh-nav-search-mic-btn${isListening ? " listening" : ""}`}
+                  onClick={handleVoiceSearch}
+                  aria-label="Voice search"
+                  title="Search by voice"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Colorful 48px Animated Cart Button */}
+            <div className="kh-nav-cart-btn-wrap">
+              <button
+                ref={cartBtnRef}
+                type="button"
+                className={`kh-nav-cart-btn${count > 0 ? " has-items" : ""}${cartBouncing ? " kh-nav-cart-bounce" : ""}`}
+                data-ksam-cart
+                aria-label={`View shopping cart with ${count} items`}
+                onClick={() => setIsCartOpen(true)}
+              >
+                <div className="kh-nav-cart-conic-ring" aria-hidden="true" />
+                <div className="kh-nav-cart-inner">
+                  <svg
+                    className="kh-nav-cart-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="url(#khNavCartIconGrad)"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 8h12l1.5 13H4.5L6 8z" />
+                    <path d="M9 8V5a3 3 0 0 1 6 0v3" />
+                  </svg>
+                </div>
+                <span className={`kh-nav-cart-badge${badgeRolling ? " roll" : ""}`} aria-live="polite">
+                  {count}
+                </span>
+              </button>
+
+              <div className="kh-nav-cart-tooltip">
+                {count} item{count === 1 ? "" : "s"} • {formatPrice(subtotal)}
+              </div>
+            </div>
+
+            {/* Hamburger Button (<1024px) */}
+            <button
+              type="button"
+              className={`kh-nav-hamburger-btn${isMobileNavOpen ? " is-active" : ""}`}
+              onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+              aria-label={isMobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileNavOpen}
+              aria-controls="khMobileNavDrawer"
+            >
+              <span className="kh-nav-hamburger-box" aria-hidden="true">
+                <span className="kh-nav-hamburger-line line-top" />
+                <span className="kh-nav-hamburger-line line-mid" />
+                <span className="kh-nav-hamburger-line line-bot" />
+              </span>
+            </button>
+
+          </div>
+        </div>
+      </header>
+
+      {/* 4. Mobile Navigation Drawer (<1024px) */}
+      <div
+        className={`kh-nav-mobile-backdrop${isMobileNavOpen ? " is-open" : ""}`}
+        onClick={() => setIsMobileNavOpen(false)}
+        aria-hidden="true"
+      />
+      <aside
+        id="khMobileNavDrawer"
+        ref={mobileDrawerRef}
+        className={`kh-nav-mobile-drawer${isMobileNavOpen ? " is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation Menu"
+      >
+        <div className="kh-nav-mobile-header">
+          <span className="kh-nav-mobile-title">Menu</span>
+          <button
+            type="button"
+            className="kh-nav-mobile-close-btn"
+            onClick={() => setIsMobileNavOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <nav className="kh-nav-mobile-menu">
+          <ul className="kh-nav-mobile-list">
+            {LINKS.map(([label, href]) => (
+              <li key={label} className="kh-nav-mobile-item">
+                <a
+                  href={href}
+                  className={`kh-nav-mobile-link${activeSection === href ? " kh-nav-active" : ""}`}
+                  onClick={() => setIsMobileNavOpen(false)}
+                >
+                  <span className="kh-nav-mobile-dot" />
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="kh-nav-mobile-footer">
+          <a
+            href="#deals"
+            className="kh-nav-mobile-cta"
+            onClick={() => setIsMobileNavOpen(false)}
+          >
+            <span>Our Products</span>
+            <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </aside>
+
+      {/* 5. Mini Cart Drawer Sliding from Right */}
+      <div
+        className={`kh-nav-cart-backdrop${isCartOpen ? " is-open" : ""}`}
+        onClick={() => setIsCartOpen(false)}
+        aria-hidden="true"
+      />
+      <aside
+        ref={cartDrawerRef}
+        className={`kh-nav-cart-drawer${isCartOpen ? " is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping Cart Drawer"
+      >
+        {/* Drawer Header */}
+        <div className="kh-nav-cart-drawer-header">
+          <div className="kh-nav-cart-drawer-title-group">
+            <h2 className="kh-nav-cart-drawer-title">Your Cart</h2>
+            <span className="kh-nav-cart-drawer-count-badge">
+              {count} {count === 1 ? "item" : "items"}
+            </span>
+          </div>
+          <button
+            type="button"
+            className="kh-nav-cart-drawer-close-btn"
+            onClick={() => setIsCartOpen(false)}
+            aria-label="Close cart drawer"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Free Delivery Bar (Threshold ₹999) */}
+        <div className="kh-nav-cart-delivery-box">
+          <div className="kh-nav-cart-delivery-text">
+            {subtotal >= threshold ? (
+              <span>🎉 <strong style={{ color: "#22ff88" }}>You've unlocked FREE Express Delivery!</strong></span>
+            ) : (
+              <span>
+                Add <strong className="kh-nav-cart-delivery-needed">{formatPrice(remainingForDelivery)}</strong> more for <span style={{ color: "#22ff88" }}>FREE Express Delivery</span>
+              </span>
+            )}
+          </div>
+          <div className="kh-nav-cart-delivery-track">
+            <div
+              className={`kh-nav-cart-delivery-fill${subtotal >= threshold ? " complete" : ""}`}
+              style={{ width: `${deliveryPct}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Item Rows / Empty State */}
+        {items.length === 0 ? (
+          <div className="kh-nav-cart-empty-state">
+            <div className="kh-nav-cart-empty-icon-wrap" aria-hidden="true">
+              <svg className="kh-nav-cart-empty-bag-svg" viewBox="0 0 100 100" fill="none">
+                <path d="M 32 38 C 32 20, 68 20, 68 38" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+                <rect x="20" y="38" width="60" height="50" rx="12" stroke="currentColor" strokeWidth="5" />
+                <line x1="38" y1="56" x2="62" y2="56" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                <circle cx="50" cy="70" r="3.5" fill="currentColor" />
+              </svg>
+            </div>
+            <h3 className="kh-nav-cart-empty-title">Your cart is empty</h3>
+            <p className="kh-nav-cart-empty-desc">
+              Discover handpicked flagship tech deals with up to 70% instant savings.
+            </p>
+            <button
+              type="button"
+              className="kh-nav-cart-empty-browse-btn"
+              onClick={() => {
+                setIsCartOpen(false);
+                const el = document.getElementById("deals") || document.getElementById("showcase");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Browse Products
+            </button>
+          </div>
+        ) : (
+          <div className="kh-nav-cart-drawer-items" role="list">
+            {items.map((item) => {
+              const itemQty = Number(item.quantity || item.qty || 1);
+              return (
+                <div
+                  key={item.id}
+                  id={`cart-row-${item.id}`}
+                  className="kh-nav-cart-item-row"
+                >
+                  <img
+                    src={item.image || placeholderFor(item.name)}
+                    alt={item.name}
+                    className="kh-nav-cart-item-thumb"
+                    onError={(e) => {
+                      e.currentTarget.src = placeholderFor(item.name);
+                    }}
+                  />
+                  <div className="kh-nav-cart-item-info">
+                    <div className="kh-nav-cart-item-name" title={item.name}>
+                      {item.name}
+                    </div>
+                    <div className="kh-nav-cart-item-price">
+                      <span>{formatPrice(item.price)}</span>
+                      {item.oldPrice && item.oldPrice > item.price ? (
+                        <span className="kh-nav-cart-item-oldprice">
+                          {formatPrice(item.oldPrice)}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="kh-nav-cart-item-actions">
+                    <div className="kh-nav-cart-qty-stepper">
+                      <button
+                        type="button"
+                        className="kh-nav-cart-stepper-btn"
+                        onClick={(e) => {
+                          const row = e.currentTarget.closest(".kh-nav-cart-item-row");
+                          handleMinusQty(item, row);
+                        }}
+                        aria-label="Decrease quantity"
+                      >
+                        -
+                      </button>
+                      <span className="kh-nav-cart-stepper-qty">{itemQty}</span>
+                      <button
+                        type="button"
+                        className="kh-nav-cart-stepper-btn"
+                        onClick={() => handlePlusQty(item)}
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <button
-                            type="button"
-                            onClick={openSearch}
-                            aria-label="Search products"
-                            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-2.5 text-gray-300 transition hover:border-[#38BDF8]/50 hover:text-[#38BDF8] md:py-2.5 md:pl-3 md:pr-4"
-                        >
-                            <Search size={19} />
-                            <span className="hidden text-sm md:inline">Search products...</span>
-                        </button>
+                    <button
+                      type="button"
+                      className="kh-nav-cart-item-remove-btn"
+                      onClick={(e) => {
+                        const row = e.currentTarget.closest(".kh-nav-cart-item-row");
+                        handleRemoveItem(item.id, row);
+                      }}
+                      aria-label={`Remove ${item.name} from cart`}
+                      title="Remove item"
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-                        <button
-                            type="button"
-                            aria-label="Cart"
-                            className="relative rounded-xl bg-[#22FF88] p-2.5 text-black transition hover:scale-105"
-                        >
-                            <ShoppingBag size={19} />
-                            {cartCount > 0 && (
-                                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#FFD60A] px-1 text-xs font-black">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </button>
+        {/* Cart Drawer Footer */}
+        <div className="kh-nav-cart-drawer-footer">
+          <div className="kh-nav-cart-summary-line">
+            <span>Subtotal</span>
+            <span className="kh-nav-cart-summary-val">{formatPrice(subtotal)}</span>
+          </div>
 
-                        <button
-                            type="button"
-                            onClick={() => setOpen(!open)}
-                            aria-label="Menu"
-                            className="rounded-xl border border-white/10 p-2.5 text-white lg:hidden"
-                        >
-                            {open ? <X /> : <Menu />}
-                        </button>
-                    </div>
-                </nav>
+          {savings > 0 && (
+            <div className="kh-nav-cart-summary-line kh-nav-cart-savings-line">
+              <span>Instant Savings</span>
+              <span className="kh-nav-cart-savings-val">-{formatPrice(savings)}</span>
+            </div>
+          )}
 
-                {open && (
-                    <div className="border-t border-white/10 bg-[#050505] px-5 py-5 lg:hidden">
-                        <div className="flex flex-col gap-5">
-                            {LINKS.map(([label, href]) => (
-                                <a key={label} href={href} onClick={() => setOpen(false)} className="text-gray-200 hover:text-[#22FF88]">
-                                    {label}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </header>
+          <div className="kh-nav-cart-summary-line">
+            <span>Express Delivery</span>
+            <span className="kh-nav-cart-shipping-val">
+              {subtotal >= threshold ? "FREE" : "₹49"}
+            </span>
+          </div>
 
-            {searchOpen && createPortal(searchPanel, document.body)}
-        </>
-    );
+          <div className="kh-nav-cart-total-line">
+            <span>Total</span>
+            <span className="kh-nav-cart-total-val">
+              {formatPrice(subtotal >= threshold ? subtotal : subtotal + (subtotal > 0 ? 49 : 0))}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className="kh-nav-cart-checkout-btn"
+            disabled={items.length === 0}
+            onClick={handleProceedToCheckout}
+          >
+            <span className="kh-nav-checkout-shine" aria-hidden="true" />
+            <span>Proceed to Checkout</span>
+            <ArrowUpRight size={18} />
+          </button>
+        </div>
+      </aside>
+
+      {/* Supabase Search Overlay Portal */}
+      {searchOverlayPortal}
+    </>
+  );
 }
-
-export default Navbar;
-

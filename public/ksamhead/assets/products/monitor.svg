@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+    <defs>
+      <linearGradient id="monArt" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E0F2FE"/><stop offset="50%" stop-color="#BAE6FD"/><stop offset="100%" stop-color="#7DD3FC"/>
+      </linearGradient>
+    </defs>
+    <rect x="35" y="45" width="210" height="135" rx="10" fill="#FFFFFF" stroke="#0284C7" stroke-width="2.5"/>
+    <rect x="42" y="52" width="196" height="121" rx="6" fill="url(#monArt)"/>
+    <path d="M 42 130 Q 90 90 140 120 T 238 95 L 238 173 L 42 173 Z" fill="#0284C7" fill-opacity="0.35"/>
+    <circle cx="170" cy="90" r="14" fill="#D49A00" opacity="0.9"/>
+    <path d="M 130 180 L 126 215 L 154 215 L 150 180 Z" fill="#F4F5F7" stroke="#0284C7" stroke-width="1.5"/>
+    <rect x="95" y="215" width="90" height="10" rx="4" fill="#E0F2FE" stroke="#0284C7" stroke-width="2"/>
+  </svg>
