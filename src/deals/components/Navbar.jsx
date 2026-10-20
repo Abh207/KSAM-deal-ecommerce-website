@@ -192,35 +192,50 @@ export default function Navbar({ onProductClick, onViewAll }) {
   // User Profile & Auth State
   const [userSession, setUserSession] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const userSessionRef = useRef(null);
 
-  const fetchProfileData = useCallback(async (currentSession) => {
+  const fetchProfileData = useCallback(async (currentSession, force = false) => {
     try {
       const sess = currentSession !== undefined ? currentSession : await getSession();
       setUserSession(sess);
+      userSessionRef.current = sess;
       if (sess?.user?.id) {
-        const prof = await getProfile();
+        const prof = await getProfile(force);
         setUserProfile(prof);
       } else {
         setUserProfile(null);
       }
     } catch (e) {
-      console.warn("[Navbar] Auth check error:", e);
+      // never throw
     }
   }, []);
 
   useEffect(() => {
+    let active = true;
+
+    // Fetch initial profile
     fetchProfileData();
 
-    const sub = onAuthChange((_event, session) => {
-      fetchProfileData(session);
+    // Subscribe to auth changes: fires once after sign-in / auth change
+    const sub = onAuthChange((event, session) => {
+      if (!active) return;
+      if (event === "INITIAL_SESSION") {
+        if (!userSessionRef.current && session) {
+          fetchProfileData(session);
+        }
+        return;
+      }
+      fetchProfileData(session, event === "USER_UPDATED" || event === "SIGNED_IN");
     });
 
     const handleAvatarUpdated = () => {
-      fetchProfileData();
+      if (!active) return;
+      fetchProfileData(undefined, true);
     };
     window.addEventListener("ksam:avatar-updated", handleAvatarUpdated);
 
     return () => {
+      active = false;
       if (sub && typeof sub.unsubscribe === "function") {
         sub.unsubscribe();
       }
@@ -616,6 +631,9 @@ export default function Navbar({ onProductClick, onViewAll }) {
     if (onProductClick) {
       onProductClick(p);
       closeSearch();
+    } else if (p.id && !String(p.id).startsWith("p-") && !String(p.id).startsWith("demo-")) {
+      const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+      window.location.href = `${base}deal.html?id=${encodeURIComponent(p.id)}`;
     } else if (p.url && p.url !== "#") {
       window.open(p.url, "_blank", "noopener,noreferrer");
     }
@@ -1275,6 +1293,16 @@ export default function Navbar({ onProductClick, onViewAll }) {
               >
                 <span className="kh-nav-mobile-dot" style={{ background: "#38bdf8" }} />
                 {userSession ? "My Profile" : "Sign In / Profile"}
+              </a>
+            </li>
+            <li className="kh-nav-mobile-item">
+              <a
+                href={`${BASE_URL}contact-us.html`}
+                className="kh-nav-mobile-link"
+                onClick={() => setIsMobileNavOpen(false)}
+              >
+                <span className="kh-nav-mobile-dot" style={{ background: "#22ff88" }} />
+                Contact Us
               </a>
             </li>
           </ul>

@@ -1,0 +1,619 @@
+/* ==========================================================================
+   KSAM DEAL - DESIGN TOKEN SYSTEM
+   Scoped strictly under .kx-page to guarantee zero regression on protected pages.
+   ========================================================================== */
+
+/* Dark Theme Tokens (Default) */
+.kx-page,
+.kx-page[data-theme="dark"] {
+  /* Color Palette */
+  --kx-base: #07090b;
+  --kx-surface-1: #0d1114;
+  --kx-surface-2: #141a1f;
+  --kx-surface-3: #1c242b;
+  --kx-surface-glass: rgba(13, 17, 20, 0.75);
+  
+  --kx-border: rgba(255, 255, 255, 0.08);
+  --kx-border-subtle: rgba(255, 255, 255, 0.04);
+  --kx-border-hover: rgba(255, 255, 255, 0.18);
+  
+  --kx-text: #f4f7f5;
+  --kx-text-muted: #98a3a0;
+  --kx-text-dim: #606d69;
+  --kx-text-inverse: #07090b;
+  
+  /* Primary & Accent System */
+  --kx-accent: #22ff88;
+  --kx-accent-highlight: #b6ff3b;
+  --kx-accent-glow: rgba(34, 255, 136, 0.28);
+  --kx-accent-soft: rgba(34, 255, 136, 0.10);
+  --kx-accent-border: rgba(34, 255, 136, 0.35);
+  --kx-accent-text: #07090b;
+  
+  /* Secondary Semantic Accents */
+  --kx-cyan: #38bdf8;
+  --kx-cyan-soft: rgba(56, 189, 248, 0.12);
+  --kx-yellow: #ffd60a;
+  --kx-yellow-soft: rgba(255, 214, 10, 0.12);
+  --kx-red: #ef4444;
+  --kx-red-soft: rgba(239, 68, 68, 0.12);
+
+  /* Shadows (Multi-layered Depth) */
+  --kx-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --kx-shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --kx-shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+  --kx-shadow-glow: 0 0 32px -4px var(--kx-accent-glow);
+
+  /* Glassmorphism */
+  --kx-backdrop-blur: blur(16px);
+  --kx-glass-border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* Light Theme Tokens */
+.kx-page[data-theme="light"] {
+  --kx-base: #f6f8f5;
+  --kx-surface-1: #ffffff;
+  --kx-surface-2: #edf2ed;
+  --kx-surface-3: #e2e8e2;
+  --kx-surface-glass: rgba(255, 255, 255, 0.82);
+
+  --kx-border: rgba(8, 20, 12, 0.10);
+  --kx-border-subtle: rgba(8, 20, 12, 0.05);
+  --kx-border-hover: rgba(8, 20, 12, 0.22);
+
+  --kx-text: #0c1410;
+  --kx-text-muted: #5a675f;
+  --kx-text-dim: #84938a;
+  --kx-text-inverse: #ffffff;
+
+  /* WCAG AA Compliant Forest Accent on Light */
+  --kx-accent: #0e9f55;
+  --kx-accent-highlight: #0b8044;
+  --kx-accent-glow: rgba(14, 159, 85, 0.25);
+  --kx-accent-soft: rgba(14, 159, 85, 0.08);
+  --kx-accent-border: rgba(14, 159, 85, 0.35);
+  --kx-accent-text: #ffffff;
+
+  --kx-cyan: #0284c7;
+  --kx-cyan-soft: rgba(2, 132, 199, 0.10);
+  --kx-yellow: #ca8a04;
+  --kx-yellow-soft: rgba(202, 138, 4, 0.12);
+  --kx-red: #dc2626;
+  --kx-red-soft: rgba(220, 38, 38, 0.10);
+
+  --kx-shadow-sm: 0 2px 6px rgba(12, 20, 16, 0.05);
+  --kx-shadow-md: 0 8px 24px -4px rgba(12, 20, 16, 0.08), 0 2px 6px rgba(12, 20, 16, 0.04);
+  --kx-shadow-lg: 0 16px 40px -8px rgba(12, 20, 16, 0.12), 0 4px 12px rgba(12, 20, 16, 0.06);
+  --kx-shadow-glow: 0 0 28px -4px var(--kx-accent-glow);
+
+  --kx-backdrop-blur: blur(16px);
+  --kx-glass-border: 1px solid rgba(8, 20, 12, 0.08);
+}
+
+/* User Accent Overrides (Mapped cleanly to --kx-accent tokens) */
+.kx-page[data-accent="blue"] {
+  --kx-accent: #38bdf8;
+  --kx-accent-highlight: #7dd3fc;
+  --kx-accent-glow: rgba(56, 189, 248, 0.32);
+  --kx-accent-soft: rgba(56, 189, 248, 0.10);
+  --kx-accent-border: rgba(56, 189, 248, 0.35);
+  --kx-accent-text: #07090b;
+}
+
+.kx-page[data-theme="light"][data-accent="blue"] {
+  --kx-accent: #0284c7;
+  --kx-accent-highlight: #0369a1;
+  --kx-accent-glow: rgba(2, 132, 199, 0.25);
+  --kx-accent-soft: rgba(2, 132, 199, 0.08);
+  --kx-accent-border: rgba(2, 132, 199, 0.35);
+  --kx-accent-text: #ffffff;
+}
+
+.kx-page[data-accent="yellow"] {
+  --kx-accent: #ffd60a;
+  --kx-accent-highlight: #fef08a;
+  --kx-accent-glow: rgba(255, 214, 10, 0.32);
+  --kx-accent-soft: rgba(255, 214, 10, 0.12);
+  --kx-accent-border: rgba(255, 214, 10, 0.4);
+  --kx-accent-text: #07090b;
+}
+
+.kx-page[data-theme="light"][data-accent="yellow"] {
+  --kx-accent: #ca8a04;
+  --kx-accent-highlight: #a16207;
+  --kx-accent-glow: rgba(202, 138, 4, 0.25);
+  --kx-accent-soft: rgba(202, 138, 4, 0.10);
+  --kx-accent-border: rgba(202, 138, 4, 0.35);
+  --kx-accent-text: #ffffff;
+}
+
+/* Base Dimensions, Timing & Radii */
+.kx-page {
+  /* Durations & Easings */
+  --kx-dur-fast: 160ms;
+  --kx-dur-base: 280ms;
+  --kx-dur-slow: 600ms;
+  --kx-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --kx-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Radius Scale */
+  --kx-r-sm: 8px;
+  --kx-r-md: 12px;
+  --kx-r-lg: 20px;
+  --kx-r-xl: 28px;
+  --kx-r-full: 9999px;
+
+  /* Typography Fluid Scale */
+  --kx-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --kx-font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --kx-text-display: clamp(36px, 5.5vw, 76px);
+  --kx-text-h1: clamp(28px, 4vw, 52px);
+  --kx-text-h2: clamp(22px, 3vw, 36px);
+  --kx-text-h3: clamp(18px, 2.2vw, 24px);
+  --kx-text-body: 15.5px;
+  --kx-text-sm: 13px;
+  --kx-text-xs: 11px;
+
+  /* Global Page Settings */
+  background-color: var(--kx-base);
+  color: var(--kx-text);
+  font-family: var(--kx-font-sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--kx-dur-base) ease, color var(--kx-dur-base) ease;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   BUTTON SYSTEM (.kx-btn, .kx-btn--*)
+   ========================================================================== */
+.kx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--kx-font-sans);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  outline: none;
+  border-radius: var(--kx-r-md);
+  transition: all var(--kx-dur-fast) var(--kx-ease-out);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.kx-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--kx-base), 0 0 0 4px var(--kx-accent);
+}
+
+.kx-btn:active {
+  transform: scale(0.98);
+}
+
+.kx-btn:disabled,
+.kx-btn.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button Sizes */
+.kx-btn--sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: var(--kx-text-xs);
+  border-radius: var(--kx-r-sm);
+}
+
+.kx-btn--md {
+  height: 44px;
+  padding: 0 20px;
+  font-size: var(--kx-text-sm);
+  border-radius: var(--kx-r-md);
+}
+
+.kx-btn--lg {
+  height: 52px;
+  padding: 0 28px;
+  font-size: var(--kx-text-body);
+  border-radius: var(--kx-r-lg);
+}
+
+.kx-btn--icon {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--kx-r-md);
+}
+
+.kx-btn--icon.kx-btn--sm {
+  width: 36px;
+  height: 36px;
+}
+
+/* Button Variants */
+.kx-btn--primary {
+  background: linear-gradient(135deg, var(--kx-accent) 0%, var(--kx-accent-highlight) 100%);
+  color: var(--kx-accent-text);
+  box-shadow: 0 4px 20px -2px var(--kx-accent-glow);
+}
+
+.kx-btn--primary:hover {
+  box-shadow: 0 6px 28px 0px var(--kx-accent-glow);
+  transform: translateY(-1.5px);
+}
+
+.kx-btn--secondary {
+  background: var(--kx-surface-2);
+  color: var(--kx-text);
+  border-color: var(--kx-border);
+}
+
+.kx-btn--secondary:hover {
+  background: var(--kx-surface-3);
+  border-color: var(--kx-border-hover);
+  transform: translateY(-1px);
+}
+
+.kx-btn--outline {
+  background: transparent;
+  color: var(--kx-text);
+  border-color: var(--kx-border);
+}
+
+.kx-btn--outline:hover {
+  border-color: var(--kx-accent);
+  color: var(--kx-accent);
+  background: var(--kx-accent-soft);
+}
+
+.kx-btn--ghost {
+  background: transparent;
+  color: var(--kx-text-muted);
+}
+
+.kx-btn--ghost:hover {
+  color: var(--kx-text);
+  background: var(--kx-surface-2);
+}
+
+.kx-btn--danger {
+  background: var(--kx-red-soft);
+  color: var(--kx-red);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.kx-btn--danger:hover {
+  background: var(--kx-red);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.35);
+}
+
+/* ==========================================================================
+   INPUTS & FORM CONTROLS (.kx-input, .kx-input-group)
+   ========================================================================== */
+.kx-input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.kx-input,
+.kx-select,
+.kx-textarea {
+  width: 100%;
+  height: 52px;
+  background: var(--kx-surface-1);
+  border: 1px solid var(--kx-border);
+  border-radius: var(--kx-r-md);
+  color: var(--kx-text);
+  font-size: var(--kx-text-body);
+  font-family: var(--kx-font-sans);
+  padding: 16px 16px 4px 16px;
+  outline: none;
+  transition: all var(--kx-dur-fast) var(--kx-ease-out);
+  box-sizing: border-box;
+}
+
+.kx-textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 18px 16px;
+  resize: vertical;
+}
+
+.kx-input:focus,
+.kx-select:focus,
+.kx-textarea:focus {
+  border-color: var(--kx-accent);
+  box-shadow: 0 0 0 3px var(--kx-accent-glow);
+  background: var(--kx-surface-2);
+}
+
+.kx-input:read-only {
+  background: var(--kx-surface-2);
+  color: var(--kx-text-dim);
+  cursor: not-allowed;
+  border-color: var(--kx-border-subtle);
+}
+
+/* Floating Label Behavior */
+.kx-label {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  font-size: var(--kx-text-body);
+  color: var(--kx-text-muted);
+  pointer-events: none;
+  transition: all var(--kx-dur-fast) var(--kx-ease-out);
+  transform-origin: left top;
+}
+
+.kx-input:focus ~ .kx-label,
+.kx-input:not(:placeholder-shown) ~ .kx-label,
+.kx-select:focus ~ .kx-label,
+.kx-select:valid ~ .kx-label {
+  transform: translateY(-9px) scale(0.75);
+  color: var(--kx-accent);
+  font-weight: 700;
+}
+
+/* Error and Status feedback */
+.kx-input-group.has-error .kx-input {
+  border-color: var(--kx-red);
+  box-shadow: 0 0 0 3px var(--kx-red-soft);
+}
+
+.kx-input-group.has-error .kx-label {
+  color: var(--kx-red);
+}
+
+.kx-input-feedback {
+  margin-top: 6px;
+  font-size: var(--kx-text-xs);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kx-input-feedback.is-error {
+  color: var(--kx-red);
+}
+
+.kx-input-feedback.is-success {
+  color: var(--kx-accent);
+}
+
+/* ==========================================================================
+   CARDS, SURFACES & CONTAINERS
+   ========================================================================== */
+.kx-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.kx-container-narrow {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.kx-card {
+  background: var(--kx-surface-1);
+  border: 1px solid var(--kx-border);
+  border-radius: var(--kx-r-lg);
+  padding: 32px;
+  box-shadow: var(--kx-shadow-md);
+  transition: all var(--kx-dur-base) var(--kx-ease-out);
+  position: relative;
+}
+
+.kx-card--hoverable:hover {
+  border-color: var(--kx-border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--kx-shadow-lg);
+}
+
+.kx-card--glass {
+  background: var(--kx-surface-glass);
+  backdrop-filter: var(--kx-backdrop-blur);
+  -webkit-backdrop-filter: var(--kx-backdrop-blur);
+  border: var(--kx-glass-border);
+}
+
+.kx-eyebrow {
+  font-family: var(--kx-font-display);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--kx-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   SCOPED AUTH PAGES REDESIGN (login.html and signUp.html under .kx-page)
+   ========================================================================== */
+.kx-page.signUpBody,
+.kx-page .SignUpMainTag {
+  background: var(--kx-base) !important;
+  color: var(--kx-text);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.kx-page .signUPmain {
+  padding: 40px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.kx-page .contcontainerMain {
+  background: var(--kx-surface-1) !important;
+  border: 1px solid var(--kx-border) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--kx-shadow-lg), 0 0 50px rgba(0, 0, 0, 0.5) !important;
+  overflow: hidden;
+  max-width: 980px;
+  width: 100%;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.kx-page .signUpform {
+  background: transparent !important;
+  color: var(--kx-text);
+}
+
+.kx-page .signupHead {
+  color: var(--kx-text) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+}
+
+.kx-page .signUpPara {
+  color: var(--kx-text-muted) !important;
+}
+
+.kx-page .signForm label {
+  color: var(--kx-text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.kx-page .signForm input[type="text"],
+.kx-page .signForm input[type="email"],
+.kx-page .signForm input[type="password"] {
+  background: var(--kx-surface-2) !important;
+  border: 1px solid var(--kx-border) !important;
+  color: var(--kx-text) !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  outline: none !important;
+  transition: all 200ms ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.kx-page .signForm input[type="text"]:focus,
+.kx-page .signForm input[type="email"]:focus,
+.kx-page .signForm input[type="password"]:focus {
+  border-color: var(--kx-accent) !important;
+  box-shadow: 0 0 20px var(--kx-accent-glow) !important;
+}
+
+.kx-page #signButton {
+  background: linear-gradient(135deg, var(--kx-accent) 0%, var(--kx-accent-highlight) 100%) !important;
+  color: #07090b !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+  border-radius: 12px !important;
+  padding: 14px 20px !important;
+  border: none !important;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px var(--kx-accent-glow) !important;
+  width: 100%;
+}
+
+.kx-page #signButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--kx-accent-glow) !important;
+}
+
+.kx-page .appGoogle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.kx-page .appGoogle .apple,
+.kx-page .appGoogle .googl {
+  background: var(--kx-surface-2) !important;
+  border: 1px solid var(--kx-border) !important;
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+
+.kx-page .appGoogle .apple:hover,
+.kx-page .appGoogle .googl:hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: var(--kx-surface-3) !important;
+}
+
+.kx-page .appGoogle a {
+  color: var(--kx-text) !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.kx-page .forgotPassword a {
+  color: var(--kx-text-muted) !important;
+  font-size: 12px !important;
+  transition: color 200ms ease;
+}
+
+.kx-page .forgotPassword a:hover {
+  color: var(--kx-accent) !important;
+}
+
+.kx-page .signUplastContfirstTest {
+  color: var(--kx-text-muted) !important;
+}
+
+.kx-page .signUplastContfirstTest a {
+  color: var(--kx-accent) !important;
+  font-weight: 700;
+}
+
+.kx-page .signUpterm a {
+  color: var(--kx-text-dim) !important;
+}
+
+.kx-page .signUpterm a:hover {
+  color: var(--kx-text) !important;
+}
+
+.kx-page .signUpimg {
+  background: var(--kx-surface-2) !important;
+  border-left: 1px solid var(--kx-border);
+  overflow: hidden;
+}
+
+.kx-page .signUpimg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  filter: contrast(1.05);
+}

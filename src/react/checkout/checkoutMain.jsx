@@ -21,6 +21,16 @@ import { requireAuth } from "../../auth/auth.js";
 
 const CART_KEY = "cartProductLS";
 
+const getImagePath = (image) => {
+    if (!image) return "";
+    if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const clean = image.replace(/^\/+/, "");
+    if (image.startsWith(normalizedBase)) return image;
+    return `${normalizedBase}${clean}`;
+};
+
 
 /* =========================================================
    GET CART
@@ -1903,14 +1913,20 @@ const handleProcessPayment = () => {
 
 
                                                 <img
-                                                    src={
-                                                        product.image ||
-                                                        ""
-                                                    }
-                                                    alt={
-                                                        product.name ||
-                                                        "Product"
-                                                    }
+                                                    src={getImagePath(product.image)}
+                                                    alt={product.name || "Product"}
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = "none";
+                                                        if (e.currentTarget.parentElement) {
+                                                            e.currentTarget.parentElement.style.background = "#18181b";
+                                                            e.currentTarget.parentElement.style.display = "flex";
+                                                            e.currentTarget.parentElement.style.alignItems = "center";
+                                                            e.currentTarget.parentElement.style.justifyContent = "center";
+                                                            e.currentTarget.parentElement.style.color = "#a1a1aa";
+                                                            e.currentTarget.parentElement.style.fontSize = "10px";
+                                                            e.currentTarget.parentElement.style.fontWeight = "bold";
+                                                        }
+                                                    }}
                                                 />
 
 

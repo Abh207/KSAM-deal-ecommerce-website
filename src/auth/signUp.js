@@ -129,10 +129,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
+        const emailRedirectUrl = new URL(`${BASE_URL}email-verified.html`, window.location.origin).href;
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
+            emailRedirectTo: emailRedirectUrl,
             data: {
               full_name: fullName,
               name: fullName
@@ -183,11 +185,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = nextTarget;
           }, 800);
         } else {
-          showMessage("Account created! Check your email to confirm your account before signing in.", "success");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Check Your Email";
-          }
+          showMessage("Account created! Redirecting to email verification...", "success");
+          setTimeout(() => {
+            window.location.href = `${BASE_URL}verify-email.html?email=${encodeURIComponent(email)}&next=${encodeURIComponent(nextTarget)}`;
+          }, 600);
         }
       } catch (err) {
         console.error("[Auth] Unexpected sign up error:", err);

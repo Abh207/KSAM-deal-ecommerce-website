@@ -2,6 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { requireAuth } from "../../auth/auth.js";
 import "./ProductCard.css";
 
+const getImagePath = (image) => {
+    if (!image) return "";
+    if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const clean = image.replace(/^\/+/, "");
+    if (image.startsWith(normalizedBase)) return image;
+    return `${normalizedBase}${clean}`;
+};
+
 function ProductCard({ product, onProductClick }) {
 
     const cardRef = useRef(null);
@@ -166,9 +176,18 @@ function ProductCard({ product, onProductClick }) {
                 {/* PRODUCT IMAGE */}
 
                 <img
-                    src={product.image}
+                    src={getImagePath(product.image)}
                     alt={product.name}
                     className="watch-product-image"
+                    onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                        const fb = document.createElement("div");
+                        fb.style.cssText = "width:100%;height:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;text-align:center;padding:10px;border-radius:12px;";
+                        fb.textContent = product.name || "Watch";
+                        if (e.currentTarget.parentElement) {
+                            e.currentTarget.parentElement.appendChild(fb);
+                        }
+                    }}
                 />
 
             </div>

@@ -30,6 +30,15 @@ function ShoeCard({
                     src={getImagePath(product.image)}
                     alt={product.name}
                     className="shoe-card-image"
+                    onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                        const fb = document.createElement("div");
+                        fb.style.cssText = "width:100%;height:100%;min-height:180px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;text-align:center;padding:10px;border-radius:12px;";
+                        fb.textContent = product.name || "Shoes";
+                        if (e.currentTarget.parentElement) {
+                            e.currentTarget.parentElement.appendChild(fb);
+                        }
+                    }}
                 />
 
 

@@ -41,6 +41,17 @@ export default defineConfig({
                 ),
                 cloths: resolve(__dirname, "clothes.html"),
                 profile: resolve(__dirname, "profile.html"),
+                deal: resolve(__dirname, "deal.html"),
+                forgotPassword: resolve(__dirname, "forgot-password.html"),
+                resetPassword: resolve(__dirname, "reset-password.html"),
+                verifyEmail: resolve(__dirname, "verify-email.html"),
+                emailVerified: resolve(__dirname, "email-verified.html"),
+                sessionExpired: resolve(__dirname, "session-expired.html"),
+                accessDenied: resolve(__dirname, "access-denied.html"),
+                contactUs: resolve(__dirname, "contact-us.html"),
+                privacyPolicy: resolve(__dirname, "privacy-policy.html"),
+                terms: resolve(__dirname, "terms.html"),
+                affiliateDisclosure: resolve(__dirname, "affiliate-disclosure.html"),
             }
         }
     }

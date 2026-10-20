@@ -1,10 +1,21 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { createRoot } from "react-dom/client";
-import { User, MapPin, Sliders, Shield, ShieldAlert, Sparkles } from "lucide-react";
+import {
+  LayoutDashboard,
+  User,
+  MapPin,
+  Bell,
+  Clock,
+  Shield,
+  Sliders,
+  Palette,
+  HelpCircle,
+  AlertTriangle
+} from "lucide-react";
 
 import { supabase } from "../lib/supabase";
 import { getSession, requireAuth, onAuthChange, BASE_URL } from "../auth/auth.js";
-import { useCart } from "../deals/store/cartStore.js";
+import { getPriceAlerts, getRecentlyViewed } from "../deals/services/accountActivityService.js";
 
 import Navbar from "../deals/components/Navbar.jsx";
 import Newsletter from "../deals/components/Newsletter.jsx";
@@ -12,34 +23,54 @@ import Footer from "../deals/components/Footer.jsx";
 import Toast from "../deals/components/Toast.jsx";
 
 import HeaderBanner from "./components/HeaderBanner.jsx";
+import OverviewTab from "./components/OverviewTab.jsx";
 import PersonalInfoTab from "./components/PersonalInfoTab.jsx";
 import AddressesTab from "./components/AddressesTab.jsx";
-import PreferencesTab from "./components/PreferencesTab.jsx";
+import PriceAlertsTab from "./components/PriceAlertsTab.jsx";
+import RecentlyViewedTab from "./components/RecentlyViewedTab.jsx";
 import SecurityTab from "./components/SecurityTab.jsx";
-import PrivacyTab from "./components/PrivacyTab.jsx";
+import NotificationsTab from "./components/NotificationsTab.jsx";
+import AppearanceTab from "./components/AppearanceTab.jsx";
+import HelpLegalTab from "./components/HelpLegalTab.jsx";
+import DangerZoneTab from "./components/DangerZoneTab.jsx";
 import SaveBar from "./components/SaveBar.jsx";
 import AvatarModal from "./components/AvatarModal.jsx";
 
 import "../deals/tailwind-generated.css";
 import "../deals/deals.css";
 import "./profile.css";
+import "../styles/kx-tokens.css";
+import "../styles/kx-motion.css";
 
 const TABS = [
-  { id: "personal", label: "Personal Info", icon: User },
+  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "profile", label: "Edit Profile", icon: User },
   { id: "addresses", label: "Addresses", icon: MapPin },
-  { id: "preferences", label: "Preferences", icon: Sliders },
+  { id: "alerts", label: "Price Alerts", icon: Bell },
+  { id: "recent", label: "Recently Viewed", icon: Clock },
   { id: "security", label: "Security", icon: Shield },
-  { id: "privacy", label: "Privacy", icon: ShieldAlert }
+  { id: "notifications", label: "Notifications", icon: Sliders },
+  { id: "theme", label: "Appearance", icon: Palette },
+  { id: "help", label: "Help & Legal", icon: HelpCircle },
+  { id: "danger", label: "Danger Zone", icon: AlertTriangle, isDanger: true }
 ];
 
 export function ProfileApp() {
-  const { count: cartCount } = useCart();
-
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
   const [addresses, setAddresses] = useState([]);
-  const [activeTab, setActiveTab] = useState("personal");
+  const [alerts, setAlerts] = useState([]);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
+
+  // Active tab with URL hash support
+  const getInitialTab = () => {
+    const hash = window.location.hash.replace("#", "").toLowerCase();
+    const valid = TABS.find((t) => t.id === hash);
+    return valid ? valid.id : "overview";
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab);
 
   // Form data for dirty state tracking
   const [formData, setFormData] = useState({
@@ -58,28 +89,27 @@ export function ProfileApp() {
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const [toast, setToast] = useState("");
 
-  // Tab animated underline indicator
-  const tabsListRef = useRef(null);
-  const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
+  // Sync tab with URL hash
+  const handleSelectTab = (tabId) => {
+    setActiveTab(tabId);
+    window.history.replaceState(null, "", `#${tabId}`);
+  };
 
-  // Update underline position when activeTab changes
   useEffect(() => {
-    if (!tabsListRef.current) return;
-    const activeEl = tabsListRef.current.querySelector(`.ks-tab-btn[data-tab="${activeTab}"]`);
-    if (activeEl) {
-      setUnderlineStyle({
-        left: activeEl.offsetLeft,
-        width: activeEl.offsetWidth
-      });
-    }
-  }, [activeTab, loading]);
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace("#", "").toLowerCase();
+      const match = TABS.find((t) => t.id === hash);
+      if (match) setActiveTab(match.id);
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
-  // Load session and profile data
+  // Load session, profile, addresses, alerts, and recently viewed
   const loadData = useCallback(async () => {
     try {
       const currentSession = await getSession();
       if (!currentSession?.user?.id) {
-        // Enforce sign-in gate
         requireAuth({ returnTo: `${BASE_URL}profile.html` });
         return;
       }
@@ -88,14 +118,13 @@ export function ProfileApp() {
       const userId = currentSession.user.id;
 
       // 1. Fetch Profile
-      let { data: profileData, error: profileErr } = await supabase
+      let { data: profileData } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .maybeSingle();
 
-      // If profile row doesn't exist yet, insert a basic record
-      if (!profileData && !profileErr) {
+      if (!profileData) {
         const newProf = {
           id: userId,
           email: currentSession.user.email,
@@ -111,7 +140,6 @@ export function ProfileApp() {
 
       setProfile(profileData);
 
-      // Form data sync
       const formPayload = {
         full_name: profileData?.full_name || "",
         email: profileData?.email || currentSession.user.email || "",
@@ -134,6 +162,14 @@ export function ProfileApp() {
         .order("created_at", { ascending: false });
 
       setAddresses(addressesData || []);
+
+      // 3. Fetch Price Alerts
+      const alertsData = await getPriceAlerts(userId);
+      setAlerts(alertsData || []);
+
+      // 4. Fetch Recently Viewed
+      const recentData = await getRecentlyViewed(userId);
+      setRecentlyViewed(recentData || []);
     } catch (err) {
       console.error("[Profile load error]", err);
     } finally {
@@ -144,7 +180,6 @@ export function ProfileApp() {
   useEffect(() => {
     loadData();
 
-    // Subscribe to auth state changes
     const sub = onAuthChange((_event, currentSession) => {
       if (!currentSession) {
         requireAuth({ returnTo: `${BASE_URL}profile.html` });
@@ -188,14 +223,12 @@ export function ProfileApp() {
     return Math.min(100, score);
   }, [formData, profile?.avatar_url, addresses.length]);
 
-  // Handle form changes
   const handleFieldChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value
     }));
 
-    // Clear inline error if field was fixed
     if (errors[field]) {
       setErrors((prev) => {
         const next = { ...prev };
@@ -205,7 +238,6 @@ export function ProfileApp() {
     }
   };
 
-  // Discard changes
   const handleDiscard = () => {
     if (initialData) {
       setFormData(JSON.parse(JSON.stringify(initialData)));
@@ -213,11 +245,10 @@ export function ProfileApp() {
     }
   };
 
-  // Save changes to Supabase
+  // Save changes to database and sync auth user
   const handleSaveChanges = async () => {
     if (!session?.user?.id) return;
 
-    // Validate phone if entered
     const newErrors = {};
     if (formData.phone && !/^[6-9]\d{9}$/.test(formData.phone.trim())) {
       newErrors.phone = "Enter a valid 10-digit mobile number.";
@@ -240,6 +271,14 @@ export function ProfileApp() {
         preferences: formData.preferences || {}
       };
 
+      // 1. Sync full_name with Supabase Auth metadata
+      if (formData.full_name.trim()) {
+        await supabase.auth.updateUser({
+          data: { full_name: formData.full_name.trim() }
+        });
+      }
+
+      // 2. Update profiles table
       const { data, error } = await supabase
         .from("profiles")
         .update(updatePayload)
@@ -249,33 +288,73 @@ export function ProfileApp() {
 
       if (error) throw error;
 
+      // 3. Re-read row and update UI
       setProfile(data);
-      setInitialData(JSON.parse(JSON.stringify(formData)));
-      setToast("Profile changes saved successfully!");
+      const syncedPayload = {
+        full_name: data.full_name || "",
+        email: data.email || session.user.email || "",
+        phone: data.phone || "",
+        date_of_birth: data.date_of_birth || "",
+        gender: data.gender || "",
+        marketing_opt_in: !!data.marketing_opt_in,
+        preferences: data.preferences || {}
+      };
+      setFormData(syncedPayload);
+      setInitialData(JSON.parse(JSON.stringify(syncedPayload)));
 
-      // Update avatar or navbar if name changed
+      const timeStr = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+      setToast(`Saved to your account at ${timeStr}`);
+
+      // Dispatch event so Navbar avatar and name update instantly
       window.dispatchEvent(
         new CustomEvent("ksam:avatar-updated", { detail: { profile: data } })
       );
     } catch (err) {
       console.error("[Profile save error]", err);
       setToast(err.message || "Failed to save profile changes.");
+      // Rollback to initialData on error
+      if (initialData) {
+        setFormData(JSON.parse(JSON.stringify(initialData)));
+      }
     } finally {
       setIsSaving(false);
     }
   };
 
+  // Remove photo handler
+  const handleRemoveAvatar = async () => {
+    if (!session?.user?.id) return;
+    try {
+      const filePath = `${session.user.id}/avatar.webp`;
+      await supabase.storage.from("avatars").remove([filePath]);
+
+      const { data } = await supabase
+        .from("profiles")
+        .update({ avatar_url: null })
+        .eq("id", session.user.id)
+        .select()
+        .single();
+
+      setProfile(data);
+      setToast("Photo removed successfully");
+      window.dispatchEvent(
+        new CustomEvent("ksam:avatar-updated", { detail: { avatar_url: null } })
+      );
+    } catch (err) {
+      console.error("[Remove avatar error]", err);
+      setToast("Failed to remove photo.");
+    }
+  };
+
   return (
-    <div className="ks-profile-page">
-      {/* Navbar with brand avatar button */}
+    <div className="kx-page ks-profile-page">
       <Navbar />
 
-      {/* Main Profile View */}
       {loading ? (
         <main className="ks-profile-body" style={{ maxWidth: 1200, width: "100%", margin: "0 auto", padding: "60px 24px" }}>
-          <div className="ks-skel" style={{ height: 180, marginBottom: 24 }} />
-          <div className="ks-skel" style={{ height: 48, width: 340, marginBottom: 24 }} />
-          <div className="ks-skel" style={{ height: 320 }} />
+          <div className="ks-skel" style={{ height: 180, marginBottom: 24, borderRadius: 24 }} />
+          <div className="ks-skel" style={{ height: 48, width: 340, marginBottom: 24, borderRadius: 12 }} />
+          <div className="ks-skel" style={{ height: 380, borderRadius: 24 }} />
         </main>
       ) : (
         <>
@@ -284,16 +363,18 @@ export function ProfileApp() {
             profile={profile}
             session={session}
             addressesCount={addresses.length}
-            cartCount={cartCount}
+            alertsCount={alerts.length}
+            recentCount={recentlyViewed.length}
             completeness={completeness}
             onOpenAvatarModal={() => setAvatarModalOpen(true)}
+            onNavigateTab={handleSelectTab}
           />
 
-          {/* Body Section with Tabs */}
+          {/* Main Layout: Sticky Desktop Sidebar + Responsive Content */}
           <main className="ks-profile-body">
-            {/* Tabs Header */}
-            <div className="ks-tabs-wrapper">
-              <nav className="ks-tabs-list" ref={tabsListRef} role="tablist" aria-label="Profile Sections">
+            {/* Mobile Horizontal Pill Tabs Bar (< 1024px) */}
+            <div className="ks-mobile-tabs-bar">
+              <div className="ks-mobile-pill-list" role="tablist" aria-label="Profile Sections">
                 {TABS.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -301,68 +382,128 @@ export function ProfileApp() {
                     <button
                       type="button"
                       key={tab.id}
-                      data-tab={tab.id}
-                      className={`ks-tab-btn${isActive ? " is-active" : ""}`}
-                      onClick={() => setActiveTab(tab.id)}
+                      onClick={() => handleSelectTab(tab.id)}
+                      className={`ks-mobile-pill-btn${isActive ? " is-active" : ""}`}
                       role="tab"
                       aria-selected={isActive}
-                      tabIndex={isActive ? 0 : -1}
                     >
-                      <Icon size={16} />
+                      <Icon size={14} />
                       <span>{tab.label}</span>
                     </button>
                   );
                 })}
-              </nav>
-              {/* Sliding underline */}
-              <div
-                className="ks-tab-underline"
-                style={{
-                  left: underlineStyle.left,
-                  width: underlineStyle.width
-                }}
-                aria-hidden="true"
-              />
+              </div>
             </div>
 
-            {/* Active Tab Panel */}
-            <div className="ks-tab-container">
-              {activeTab === "personal" && (
-                <PersonalInfoTab
-                  formData={formData}
-                  errors={errors}
-                  onChange={handleFieldChange}
-                />
-              )}
+            <div className="ks-profile-layout">
+              {/* Desktop Sticky Left Sidebar (>= 1024px) */}
+              <aside className="ks-profile-sidebar" aria-label="Account Hub Navigation">
+                {TABS.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      type="button"
+                      key={tab.id}
+                      onClick={() => handleSelectTab(tab.id)}
+                      className={`ks-sidebar-btn${isActive ? " is-active" : ""}${tab.isDanger ? " is-danger" : ""}`}
+                    >
+                      <Icon size={17} />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </aside>
 
-              {activeTab === "addresses" && (
-                <AddressesTab
-                  addresses={addresses}
-                  userId={session?.user?.id}
-                  onReloadAddresses={loadData}
-                  onShowToast={(msg) => setToast(msg)}
-                />
-              )}
+              {/* Active Tab Panel Content */}
+              <div className="ks-tab-container flex-1 min-w-0">
+                {activeTab === "overview" && (
+                  <OverviewTab
+                    profile={profile}
+                    session={session}
+                    addresses={addresses}
+                    alerts={alerts}
+                    recentlyViewed={recentlyViewed}
+                    completeness={completeness}
+                    onNavigateTab={handleSelectTab}
+                    onOpenAvatarModal={() => setAvatarModalOpen(true)}
+                  />
+                )}
 
-              {activeTab === "preferences" && (
-                <PreferencesTab
-                  preferences={formData.preferences}
-                  onChange={handleFieldChange}
-                />
-              )}
+                {activeTab === "profile" && (
+                  <PersonalInfoTab
+                    formData={formData}
+                    errors={errors}
+                    onChange={handleFieldChange}
+                    session={session}
+                    profile={profile}
+                    onOpenAvatarModal={() => setAvatarModalOpen(true)}
+                    onRemoveAvatar={handleRemoveAvatar}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
 
-              {activeTab === "security" && (
-                <SecurityTab onShowToast={(msg) => setToast(msg)} />
-              )}
+                {activeTab === "addresses" && (
+                  <AddressesTab
+                    addresses={addresses}
+                    userId={session?.user?.id}
+                    onReloadAddresses={loadData}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
 
-              {activeTab === "privacy" && (
-                <PrivacyTab
-                  profile={profile}
-                  userId={session?.user?.id}
-                  onShowToast={(msg) => setToast(msg)}
-                  onReloadProfile={loadData}
-                />
-              )}
+                {activeTab === "alerts" && (
+                  <PriceAlertsTab
+                    alerts={alerts}
+                    onReloadAlerts={loadData}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
+
+                {activeTab === "recent" && (
+                  <RecentlyViewedTab
+                    items={recentlyViewed}
+                    userId={session?.user?.id}
+                    onReloadHistory={loadData}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
+
+                {activeTab === "security" && (
+                  <SecurityTab
+                    session={session}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
+
+                {activeTab === "notifications" && (
+                  <NotificationsTab
+                    preferences={formData.preferences}
+                    marketingOptIn={formData.marketing_opt_in}
+                    userId={session?.user?.id}
+                    onChangePreference={handleFieldChange}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
+
+                {activeTab === "theme" && (
+                  <AppearanceTab
+                    preferences={formData.preferences}
+                    userId={session?.user?.id}
+                    onChangePreference={handleFieldChange}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
+
+                {activeTab === "help" && <HelpLegalTab />}
+
+                {activeTab === "danger" && (
+                  <DangerZoneTab
+                    session={session}
+                    onShowToast={(msg) => setToast(msg)}
+                  />
+                )}
+              </div>
             </div>
           </main>
         </>
@@ -388,11 +529,8 @@ export function ProfileApp() {
         }}
       />
 
-      {/* Deals Page Newsletter & Footer Components */}
       <Newsletter />
       <Footer />
-
-      {/* Toast Notification */}
       <Toast message={toast} onClose={() => setToast("")} />
     </div>
   );

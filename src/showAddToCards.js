@@ -262,12 +262,23 @@ const showCartProduct = () => {
 
 
         if (image) {
+            const rawSrc = product.image || "";
+            const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+            const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+            const clean = rawSrc.replace(/^\/+/, "");
+            image.src = rawSrc.startsWith("http") || rawSrc.startsWith("data:")
+                ? rawSrc
+                : (rawSrc.startsWith(normalizedBase) ? rawSrc : `${normalizedBase}${clean}`);
 
-            image.src =
-                product.image;
-
-            image.alt =
-                product.name;
+            image.alt = product.name || "Product";
+            image.onerror = function() {
+                this.onerror = null;
+                this.style.display = "none";
+                const fallback = document.createElement("div");
+                fallback.style.cssText = "width:100%;height:100%;min-height:90px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;border-radius:8px;text-align:center;padding:6px;";
+                fallback.textContent = (product.name || "Product").slice(0, 20);
+                if (this.parentElement) this.parentElement.appendChild(fallback);
+            };
         }
 
 

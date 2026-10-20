@@ -598,10 +598,17 @@ function Footer() {
             <LinkGroup order={1} shown={linksShown} title="Customer Care"
               links={[
                 { name: "My Account", href: `${import.meta.env.BASE_URL}profile.html` },
-                "Track Order", "Shipping", "Returns", "FAQs", "Contact"
+                { name: "Contact Us", href: `${import.meta.env.BASE_URL}contact-us.html` },
+                { name: "FAQs", href: `${import.meta.env.BASE_URL}#faq` },
+                "Track Order", "Shipping", "Returns"
               ]} />
-            <LinkGroup order={2} shown={linksShown} title="Company" className="ks-span2"
-              links={["About", "Careers", "Blog", "Sustainability"]} />
+            <LinkGroup order={2} shown={linksShown} title="Legal & Policy" className="ks-span2"
+              links={[
+                { name: "Privacy Policy", href: `${import.meta.env.BASE_URL}privacy-policy.html` },
+                { name: "Terms & Conditions", href: `${import.meta.env.BASE_URL}terms.html` },
+                { name: "Affiliate Disclosure", href: `${import.meta.env.BASE_URL}affiliate-disclosure.html` },
+                "About", "Sustainability"
+              ]} />
           </div>
         </div>
 
@@ -632,10 +639,14 @@ function Footer() {
 
         {/* BOTTOM BAR */}
         <div className="ks-bottom text-xs text-white/35">
+          <p className="max-w-3xl leading-relaxed text-white/40">
+            <strong className="text-white/60">Affiliate Disclosure:</strong> KSAM Deal is a deal-discovery platform. When you click through to merchant stores and make a purchase, we may earn an affiliate commission at no additional cost to you. Product prices, discounts, and stock availability are subject to change on the store website.
+          </p>
           <p>© {new Date().getFullYear()} KSAM Deal. All rights reserved.</p>
           <div className="ks-bottom-links">
-            <a href="#" className="transition hover:text-[#22FF88]">Privacy Policy</a>
-            <a href="#" className="transition hover:text-[#22FF88]">Terms</a>
+            <a href={`${import.meta.env.BASE_URL}privacy-policy.html`} className="transition hover:text-[#22FF88]">Privacy Policy</a>
+            <a href={`${import.meta.env.BASE_URL}terms.html`} className="transition hover:text-[#22FF88]">Terms</a>
+            <a href={`${import.meta.env.BASE_URL}affiliate-disclosure.html`} className="transition hover:text-[#22FF88]">Affiliate Disclosure</a>
             <a href="#" className="transition hover:text-[#22FF88]">Cookie Settings</a>
             <select defaultValue="INR" aria-label="Currency" className="cursor-pointer bg-transparent text-white/45 outline-none">
               <option value="INR" className="bg-black text-white">₹ INR</option>

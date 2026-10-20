@@ -130,13 +130,24 @@ function renderShopCart() {
             product.id;
 
 
+function resolveCartImage(src) {
+    if (!src) return "";
+    if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:")) return src;
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const clean = src.replace(/^\/+/, "");
+    if (src.startsWith(normalizedBase)) return src;
+    return `${normalizedBase}${clean}`;
+}
+
         card.innerHTML = `
 
             <div class="shop-cart-image">
 
                 <img
-                    src="${product.image || ""}"
+                    src="${resolveCartImage(product.image)}"
                     alt="${product.name || "Product"}"
+                    onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:11px;font-weight:700;text-align:center;padding:4px;border-radius:8px;\\'>${(product.name || 'Product').slice(0, 18)}</div>';"
                 >
 
             </div>

@@ -349,15 +349,26 @@ function Deals() {
                                 </div>
 
 
-                                {/* View Deal */}
-                                <a
-                                    href={product.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="search-product-button"
-                                >
-                                    View Deal ↗
-                                </a>
+                                {/* Actions */}
+                                <div className="mt-3 flex items-center gap-2">
+                                    {product.id && !String(product.id).startsWith("p-") && !String(product.id).startsWith("demo-") ? (
+                                        <a
+                                            href={`${import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/"}deal.html?id=${encodeURIComponent(product.id)}`}
+                                            className="search-product-button"
+                                        >
+                                            View details ↗
+                                        </a>
+                                    ) : (
+                                        <a
+                                            href={product.url}
+                                            target="_blank"
+                                            rel="sponsored noopener noreferrer"
+                                            className="search-product-button"
+                                        >
+                                            View Deal ↗
+                                        </a>
+                                    )}
+                                </div>
 
                             </div>
 

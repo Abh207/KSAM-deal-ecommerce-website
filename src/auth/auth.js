@@ -36,10 +36,47 @@ export function getStoredSessionSync() {
 // Initialise memory cache from storage if present
 cachedSession = getStoredSessionSync();
 
+let cachedProfile = null;
+let profilePromise = null;
+let hasWarnedProfileError = false;
+
+export function clearProfileCache() {
+  cachedProfile = null;
+  profilePromise = null;
+  hasWarnedProfileError = false;
+}
+
 // Listen to Supabase auth events to keep cache updated
-supabase.auth.onAuthStateChange((_event, session) => {
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session?.user?.id !== cachedSession?.user?.id || event === "SIGNED_OUT") {
+    clearProfileCache();
+  }
   cachedSession = session;
+
+  // On protected pages (e.g. profile.html), handle session expiry
+  if (typeof window !== "undefined") {
+    const path = window.location.pathname;
+    const isProtected = path.endsWith("profile.html");
+    if (isProtected) {
+      if (event === "TOKEN_REFRESH_FAILED") {
+        redirectToSessionExpired(window.location.href);
+      } else if (event === "SIGNED_OUT") {
+        // If user was signed out unexpectedly while on profile page
+        redirectToSessionExpired(window.location.href);
+      }
+    }
+  }
 });
+
+export function redirectToSessionExpired(returnTo = null) {
+  const next = validateReturnTo(returnTo || window.location.href) || `${BASE_URL}profile.html`;
+  window.location.href = `${BASE_URL}session-expired.html?next=${encodeURIComponent(next)}`;
+}
+
+export function redirectToAccessDenied(returnTo = null) {
+  const next = validateReturnTo(returnTo || window.location.href) || `${BASE_URL}index.html`;
+  window.location.href = `${BASE_URL}access-denied.html?next=${encodeURIComponent(next)}`;
+}
 
 /**
  * Validate returnTo / next parameter.
@@ -120,23 +157,70 @@ export function onAuthChange(cb) {
 
 /**
  * Fetches user profile from public.profiles
+ * Resilient: returns a fallback profile on error, logs ONE short warning per session,
+ * caches per session, and never throws.
  */
-export async function getProfile() {
-  const session = cachedSession || (await getSession());
-  if (!session?.user?.id) return null;
+export async function getProfile(forceRefresh = false) {
+  try {
+    const session = cachedSession || (await getSession());
+    if (!session?.user?.id) {
+      cachedProfile = null;
+      return null;
+    }
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", session.user.id)
-    .single();
+    const user = session.user;
+    const buildFallback = () => ({
+      id: user.id,
+      email: user.email || "",
+      full_name: user.user_metadata?.full_name || user.user_metadata?.name || "",
+      avatar_url: user.user_metadata?.avatar_url || null,
+      created_at: user.created_at || null,
+      is_fallback: true
+    });
 
-  if (error) {
-    console.warn("[Auth] getProfile error:", error.message);
+    if (!forceRefresh && cachedProfile && cachedProfile.id === user.id) {
+      return cachedProfile;
+    }
+
+    if (profilePromise) {
+      return profilePromise;
+    }
+
+    profilePromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (error) {
+          if (!hasWarnedProfileError) {
+            hasWarnedProfileError = true;
+            console.warn("[Auth] Profiles table not available or request failed, using fallback profile:", error.message || error);
+          }
+          cachedProfile = buildFallback();
+          return cachedProfile;
+        }
+
+        cachedProfile = data || buildFallback();
+        return cachedProfile;
+      } catch (err) {
+        if (!hasWarnedProfileError) {
+          hasWarnedProfileError = true;
+          console.warn("[Auth] getProfile error, using fallback profile:", err?.message || err);
+        }
+        cachedProfile = buildFallback();
+        return cachedProfile;
+      } finally {
+        profilePromise = null;
+      }
+    })();
+
+    return profilePromise;
+  } catch (err) {
     return null;
   }
-
-  return data;
 }
 
 /**
@@ -200,6 +284,7 @@ export function requireAuth(pendingAction = null) {
  */
 export async function signOut() {
   cachedSession = null;
+  clearProfileCache();
   clearPendingAction();
   const { error } = await supabase.auth.signOut();
   if (error) {
