@@ -10,6 +10,11 @@
     overflow-x: hidden;
   }
 
+  /* Slimmer top scroll progress bar */
+  div.fixed.left-0.right-0.top-0 {
+    height: 2px !important;
+  }
+
   /* ------------------------------------------------------------
      1. SECTION HEADERS TIGHTENING (Stats, Features, Pricing)
   ------------------------------------------------------------ */
@@ -201,10 +206,10 @@
     line-height: 1.25 !important;
   }
   .ft-section .ft-text {
-    font-size: 11.5px !important;
+    font-size: 12px !important;
     line-height: 1.4 !important;
     display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
+    -webkit-line-clamp: 3 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
   }
@@ -218,7 +223,7 @@
   .ft-section .ft-vis-search {
     padding: 0.35rem 0.6rem !important;
     min-height: 2.1rem !important;
-    font-size: 12px !important;
+    font-size: 10.5px !important;
     gap: 0.5rem !important;
   }
   .ft-section .ft-vis-search svg {
@@ -229,7 +234,7 @@
     gap: 0.3rem !important;
   }
   .ft-section .ft-bar-row {
-    grid-template-columns: 2.8rem 1fr 2.8rem !important;
+    grid-template-columns: 2.6rem 1fr 2.6rem !important;
     gap: 0.35rem !important;
     font-size: 10.5px !important;
   }
@@ -256,7 +261,7 @@
   }
   .ft-section .ft-toast {
     padding: 0.35rem 0.6rem !important;
-    font-size: 11px !important;
+    font-size: 10.5px !important;
   }
   .ft-section .ft-avatar {
     width: 2rem !important;
@@ -272,7 +277,7 @@
     gap: 0.25rem !important;
   }
 
-  /* Grid layout for Features: 2 + wide + 2 + 1 balanced (no empty holes) */
+  /* Grid layout for Features: rows of 2, then wide card, then rows of 2 */
   /* Items: 1 (Search), 2 (Compare), 3 (Savings), 4 (Alerts), 5 (Stores - index 4), 6 (Smart - index 5) */
   .ft-section .ft-grid > div:nth-child(1) { order: 1; }
   .ft-section .ft-grid > div:nth-child(2) { order: 2; }
@@ -407,7 +412,241 @@
   }
 
   /* ------------------------------------------------------------
-     5. TABLET REFINEMENT (640px to 1023px)
+     5. FEATURED DEALS SECTION (Product Grid & Toolbar)
+  ------------------------------------------------------------ */
+  #deals {
+    padding: 3.5rem 0 !important;
+  }
+  #deals > div {
+    padding: 0 1rem !important;
+  }
+  #deals h2 {
+    font-size: clamp(26px, 7vw, 40px) !important;
+    line-height: 1.15 !important;
+    margin-top: 0.75rem !important;
+  }
+  #deals p.max-w-2xl {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    margin-top: 0.75rem !important;
+  }
+
+  /* Toolbar: Status & Refresh deals on one line */
+  #deals .mt-8.flex {
+    margin-top: 1.25rem !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+  #deals .mt-8.flex > div {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    gap: 0.5rem !important;
+  }
+  #deals .mt-8.flex button {
+    font-size: 12px !important;
+    padding: 0.35rem 0.75rem !important;
+    min-height: 36px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Category Filter Chips: horizontal scroll with hidden scrollbar and edge fade */
+  #deals .mt-10.flex {
+    margin-top: 1rem !important;
+    padding-bottom: 0.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 90%, transparent 100%) !important;
+    mask-image: linear-gradient(90deg, #000 0%, #000 90%, transparent 100%) !important;
+  }
+  #deals .mt-10.flex::-webkit-scrollbar {
+    display: none !important;
+  }
+  #deals .mt-10.flex button {
+    padding: 0.4rem 0.85rem !important;
+    font-size: 12px !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Product Grid: 2 columns on phones, 12px gap */
+  #deals .mt-12.grid,
+  #deals .grid {
+    margin-top: 1.25rem !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    padding-bottom: 5.5rem !important; /* Prevents floating scroll-to-top from covering buttons */
+  }
+
+  /* Compact Product Card */
+  #deals article {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    animation: dealCardEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+  #deals article:active {
+    transform: scale(0.98) !important;
+  }
+
+  /* Entrance stagger for product cards */
+  #deals article:nth-child(1) { animation-delay: 0.05s; }
+  #deals article:nth-child(2) { animation-delay: 0.1s; }
+  #deals article:nth-child(3) { animation-delay: 0.15s; }
+  #deals article:nth-child(4) { animation-delay: 0.2s; }
+  #deals article:nth-child(5) { animation-delay: 0.25s; }
+  #deals article:nth-child(6) { animation-delay: 0.3s; }
+  #deals article:nth-child(7) { animation-delay: 0.35s; }
+  #deals article:nth-child(8) { animation-delay: 0.4s; }
+
+  /* Image Area: fixed aspect-ratio 1 / 1, object-fit: contain */
+  #deals article > div:first-child {
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    max-height: none !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px !important;
+    background: #111 !important;
+    overflow: hidden !important;
+  }
+  #deals article > div:first-child img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Badges inside Image Area corners */
+  #deals article > div:first-child > span:nth-of-type(1) {
+    left: 6px !important;
+    top: 6px !important;
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    border-radius: 999px !important;
+  }
+  #deals article > div:first-child > span:nth-of-type(2) {
+    right: 6px !important;
+    top: 6px !important;
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    border-radius: 999px !important;
+  }
+
+  /* Card Body & Content */
+  #deals article > div:last-child {
+    padding: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    flex: 1 !important;
+  }
+
+  /* Category & Rating Row */
+  #deals article > div:last-child > div:first-child {
+    margin-bottom: 0.35rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  #deals article > div:last-child > div:first-child > span:first-child {
+    font-size: 10px !important;
+    letter-spacing: 0.05em !important;
+  }
+  #deals article > div:last-child > div:first-child > span:last-child {
+    font-size: 11px !important;
+    gap: 0.2rem !important;
+  }
+  #deals article > div:last-child > div:first-child > span:last-child svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  /* Product Name */
+  #deals article h3 {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.4rem !important;
+    min-height: 2.1rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Price & Add to Cart button row */
+  #deals article .text-2xl {
+    font-size: 17px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+  }
+  #deals article del {
+    font-size: 11px !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Green "+" Button */
+  #deals article button[aria-label^="Add"] {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    border-radius: 10px !important;
+    position: relative !important;
+  }
+  #deals article button[aria-label^="Add"]::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: -4px !important; /* 36px + 8px = 44px tap target */
+  }
+  #deals article button[aria-label^="Add"]:active {
+    transform: scale(0.92) !important;
+  }
+  #deals article button[aria-label^="Add"] svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* Blue "View Original Deal" Button */
+  #deals article > div:last-child > button:last-child {
+    width: 100% !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 0 0.5rem !important;
+    font-size: 12px !important;
+    margin-top: 0.5rem !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
+  #deals article > div:last-child > button:last-child:active {
+    transform: scale(0.95) !important;
+  }
+  #deals article > div:last-child > button:last-child svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+
+  /* ------------------------------------------------------------
+     6. TABLET REFINEMENT (640px to 1023px)
   ------------------------------------------------------------ */
   @media (min-width: 640px) {
     .st-section .st-inner {
@@ -418,6 +657,9 @@
       width: 48px !important;
       height: 48px !important;
     }
+    .ft-section .ft-grid {
+      gap: 16px !important;
+    }
     .ft-section .ft-article {
       padding: 18px !important;
     }
@@ -425,23 +667,36 @@
       flex: 0 0 calc((100% - 12px) / 2) !important;
       width: calc((100% - 12px) / 2) !important;
     }
+    #deals article > div:first-child {
+      aspect-ratio: 4 / 3 !important;
+    }
   }
 
-  /* Tablet 900px to 1023px */
+  /* Tablet from 768px: FeaturedDeals product grid has 3 columns */
+  @media (min-width: 768px) {
+    #deals .mt-12.grid,
+    #deals .grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 14px !important;
+      padding-bottom: 3rem !important;
+    }
+  }
+
+  /* Tablet from 900px: Features has 3 columns with featured card spanning all columns */
   @media (min-width: 900px) {
     .ft-section .ft-grid {
       grid-template-columns: repeat(3, 1fr) !important;
     }
-    .ft-section .ft-grid > div:nth-child(5) {
-      grid-column: span 2 !important;
-    }
-    .ft-section .ft-grid > div:nth-child(6) {
-      grid-column: span 1 !important;
-    }
+    .ft-section .ft-grid > div:nth-child(1) { order: 1 !important; grid-column: auto !important; }
+    .ft-section .ft-grid > div:nth-child(2) { order: 2 !important; grid-column: auto !important; }
+    .ft-section .ft-grid > div:nth-child(3) { order: 3 !important; grid-column: auto !important; }
+    .ft-section .ft-grid > div:nth-child(5) { order: 4 !important; grid-column: 1 / -1 !important; }
+    .ft-section .ft-grid > div:nth-child(4) { order: 5 !important; grid-column: auto !important; }
+    .ft-section .ft-grid > div:nth-child(6) { order: 6 !important; grid-column: auto !important; }
   }
 
   /* ------------------------------------------------------------
-     6. PHONES BELOW 480px & BELOW 360px
+     7. PHONES BELOW 480px & BELOW 360px
   ------------------------------------------------------------ */
   @media (max-width: 480px) {
     .ft-section .ft-link {
@@ -467,6 +722,29 @@
     .pr-section .pr-grid > div {
       flex: 0 0 88% !important;
       width: 88% !important;
+    }
+    #deals .mt-12.grid,
+    #deals .grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Animation keyframe */
+  @keyframes dealCardEnter {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #deals article {
+      animation: none !important;
+      transition: none !important;
     }
   }
 }
