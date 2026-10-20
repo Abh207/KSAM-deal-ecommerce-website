@@ -6,6 +6,7 @@ import Header from "./Header.jsx";
 import ProductCard from "./ProductCard.jsx";
 import Countdown from "./Countdown.jsx";
 import Toast from "./Toast.jsx";
+import { requireAuth } from "../auth/auth.js";
 
 import "./BeautyHome.css";
 
@@ -128,6 +129,9 @@ const BeautyHome = () => {
     // Add product to cart
     // -----------------------------
     const handleAddToCart = (product, quantity) => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
         const cartProducts = getCartProducts();
 

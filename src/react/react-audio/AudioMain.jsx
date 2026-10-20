@@ -10,6 +10,7 @@ import AudioCard from "./AudioCard";
 import AudioHero from "./AudioHero";
 
 import audioData from "../../api/audio-products.json";
+import { requireAuth } from "../../auth/auth.js";
 
 import "./audio.css";
 
@@ -2113,6 +2114,9 @@ function AudioMain() {
 
 
     const toggleWishlist = (product) => {
+        if (!requireAuth({ type: "wishlist", product })) {
+            return;
+        }
 
         setWishlist((current) => {
 
@@ -2138,6 +2142,9 @@ function AudioMain() {
     ===================================================== */
 
     const addToCart = (product) => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
         try {
 

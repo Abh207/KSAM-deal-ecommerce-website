@@ -1,3 +1,5 @@
+import "./auth/auth.js";
+
 const greenBeautyProducts = [
 
     {
@@ -320,6 +322,8 @@ function gbDisplayProducts(productList) {
 
                 <button
                     class="gb-add-cart"
+                    data-requires-auth="true"
+                    data-auth-action="add_to_cart"
                     data-product-id="${product.id}"
                 >
                     🛒 Add to Cart

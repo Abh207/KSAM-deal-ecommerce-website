@@ -40,6 +40,7 @@ export default defineConfig({
                     "watchwishlist.html"
                 ),
                 cloths: resolve(__dirname, "clothes.html"),
+                profile: resolve(__dirname, "profile.html"),
             }
         }
     }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { requireAuth } from "../../auth/auth.js";
 import "./ProductPopup.css";
 
 function ProductPopup({ product, onClose, onCartUpdate }) {
@@ -57,6 +58,9 @@ function ProductPopup({ product, onClose, onCartUpdate }) {
     ========================================= */
 
     const addToCart = () => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
         const existingCart =
             JSON.parse(

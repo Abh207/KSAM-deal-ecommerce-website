@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { requireAuth } from "../../auth/auth.js";
 import "./ProductCard.css";
 
 function ProductCard({ product, onProductClick }) {
@@ -33,6 +34,9 @@ function ProductCard({ product, onProductClick }) {
     ========================================= */
 
     const toggleWishlist = () => {
+        if (!requireAuth({ type: "wishlist", product })) {
+            return;
+        }
 
         const wishlist =
             JSON.parse(

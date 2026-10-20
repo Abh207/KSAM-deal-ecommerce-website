@@ -11,6 +11,7 @@ import "./checkout.css";
 
 
 import paymentData from "../../api/paymentMethods.json";
+import { requireAuth } from "../../auth/auth.js";
 
 
 
@@ -422,6 +423,9 @@ const handlePaymentSelect = (paymentId) => {
 
 
 const handleProcessPayment = () => {
+    if (!requireAuth({ type: "place_order" })) {
+        return;
+    }
 
     if (!selectedPayment) {
 

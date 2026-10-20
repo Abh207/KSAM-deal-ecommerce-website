@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-
+import { requireAuth } from "../../auth/auth.js";
 import "./ProductCard.css";
 
 
@@ -172,6 +172,10 @@ function ProductCard({
         event.stopPropagation();
 
         if (stock <= 0) {
+            return;
+        }
+
+        if (!requireAuth({ type: "add_to_cart", product })) {
             return;
         }
 

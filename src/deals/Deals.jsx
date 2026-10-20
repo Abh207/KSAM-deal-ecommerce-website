@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { requireAuth, getPendingAction, clearPendingAction, getStoredSessionSync } from "../auth/auth.js";
 
 
 import Navbar
@@ -49,6 +50,7 @@ import CursorGlow
 import ScrollProgress
     from "./components/ScrollProgress.jsx";
 import { cartStore } from "./store/cartStore.js";
+import "./responsive-cards.css";
 
 function Deals() {
     const [toast, setToast] =
@@ -111,8 +113,31 @@ function Deals() {
 
     }, [toast]);
 
+    useEffect(() => {
+        const pending = getPendingAction();
+        const hasSession = Boolean(getStoredSessionSync());
+        if (pending && hasSession) {
+            if (pending.pending?.type === "add_to_cart" && pending.pending.product) {
+                cartStore.add(pending.pending.product);
+                setToast(
+                    `${pending.pending.product.name || "Product"} added to your deal list`
+                );
+            } else if (pending.pending?.type === "checkout") {
+                const checkoutUrl = new URL("checkout.html", window.location.href).href;
+                window.location.href = checkoutUrl;
+            } else if (pending.pending?.type === "pricing") {
+                setToast(
+                    `Membership ${pending.pending.planName || "plan"} selected!`
+                );
+            }
+            clearPendingAction();
+        }
+    }, []);
 
     function handleAdd(product) {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
         cartStore.add(product);
         setToast(
             `${product?.name || "Product"} added to your deal list`

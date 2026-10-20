@@ -11,6 +11,7 @@ import { createRoot } from "react-dom/client";
 
 
 import ShoeCard from "./ShoeCard";
+import { requireAuth } from "../auth/auth.js";
 
 import shoesData from "../api/shoes-products.json";
 
@@ -447,6 +448,10 @@ useEffect(() => {
     const handleWishlist =
         (product) => {
 
+            if (!requireAuth({ type: "wishlist", product })) {
+                return;
+            }
+
             setWishlist((current) => {
 
                 if (
@@ -490,6 +495,10 @@ useEffect(() => {
 
     const handleAddToCart =
         (product) => {
+
+            if (!requireAuth({ type: "add_to_cart", product })) {
+                return;
+            }
 
             try {
 

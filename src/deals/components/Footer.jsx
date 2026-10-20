@@ -212,16 +212,21 @@ function LinkGroup({ title, links, shown, order, className = "" }) {
         {title}
       </h4>
       <ul className="ks-list">
-        {links.map((link, i) => (
-          <li key={link}
-            className={`transition-all duration-700 ${shown ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}`}
-            style={{ transitionDelay: shown ? `${order * 120 + i * 70}ms` : "0ms" }}>
-            <a href="#" className="group flex w-fit items-center gap-2 text-[15px] text-white/45 transition-all duration-300 hover:translate-x-1.5 hover:text-[#22FF88]">
-              {link}
-              <span className="h-px w-0 bg-[#22FF88] transition-all duration-300 group-hover:w-5" />
-            </a>
-          </li>
-        ))}
+        {links.map((link, i) => {
+          const isObj = typeof link === "object" && link !== null;
+          const label = isObj ? link.name : link;
+          const href = isObj ? link.href : "#";
+          return (
+            <li key={label}
+              className={`transition-all duration-700 ${shown ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}`}
+              style={{ transitionDelay: shown ? `${order * 120 + i * 70}ms` : "0ms" }}>
+              <a href={href} className="group flex w-fit items-center gap-2 text-[15px] text-white/45 transition-all duration-300 hover:translate-x-1.5 hover:text-[#22FF88]">
+                {label}
+                <span className="h-px w-0 bg-[#22FF88] transition-all duration-300 group-hover:w-5" />
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -591,7 +596,10 @@ function Footer() {
             <LinkGroup order={0} shown={linksShown} title="Shop"
               links={["Categories", "New Arrivals", "Best Sellers", "Sale"]} />
             <LinkGroup order={1} shown={linksShown} title="Customer Care"
-              links={["Track Order", "Shipping", "Returns", "FAQs", "Contact"]} />
+              links={[
+                { name: "My Account", href: `${import.meta.env.BASE_URL}profile.html` },
+                "Track Order", "Shipping", "Returns", "FAQs", "Contact"
+              ]} />
             <LinkGroup order={2} shown={linksShown} title="Company" className="ks-span2"
               links={["About", "Careers", "Blog", "Sustainability"]} />
           </div>

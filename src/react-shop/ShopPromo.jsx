@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { requireAuth } from "../auth/auth.js";
 import "./ShopPromo.css";
 
 const promoProducts = [
@@ -133,6 +134,9 @@ function ShopPromo() {
     ========================= */
 
     const addToCart = (product) => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
         try {
 

@@ -48,10 +48,16 @@
                                     <label for="password">
                                         Password
                                     </label>
-                                    <input type="password" name="password" id="password">
+                                    <input type="password" name="password" id="password" required>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.125rem;">
+                                    <input type="checkbox" id="termsAgree" name="terms" required style="width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: #25db25;">
+                                    <label for="termsAgree" style="margin: 0; font-size: 0.75rem; color: #777; cursor: pointer;">
+                                        I agree to the <a href="#" style="color: #222; font-weight: 600; text-decoration: underline;">Terms and Privacy Policy</a>
+                                    </label>
                                 </div>
                                 <div>
-                                    <button id="signButton">
+                                    <button id="signButton" type="submit">
                                         Submit
                                     </button>
                                 </div>
@@ -91,5 +97,6 @@
             </div>
         </div>
     </main>
+    <script type="module" src="./src/auth/signUp.js"></script>
 </body>
 </html>

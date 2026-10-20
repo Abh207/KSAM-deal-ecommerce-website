@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Mail,
   ArrowRight,
@@ -9,24 +9,44 @@ import {
   Zap,
   TrendingDown,
 } from "lucide-react";
+import { supabase } from "../../lib/supabase.js";
+import { getSession } from "../../auth/auth.js";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    getSession().then((session) => {
+      if (session?.user?.email) {
+        setEmail(session.user.email);
+      }
+    });
+  }, []);
 
-    if (!email || !email.includes("@")) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+
+    if (!trimmed || !trimmed.includes("@")) {
       setMessage("Please enter a valid email address.");
       setIsSubscribed(false);
       return;
     }
 
+    try {
+      const session = await getSession();
+      await supabase.from("newsletter_subscribers").insert({
+        email: trimmed,
+        user_id: session?.user?.id || null
+      });
+    } catch (err) {
+      console.warn("[Newsletter] note:", err);
+    }
+
     setMessage("You're officially on the KSAM Deal list! 🔥");
     setIsSubscribed(true);
-    setEmail("");
   };
 
   return (

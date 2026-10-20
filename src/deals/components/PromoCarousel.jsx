@@ -101,6 +101,14 @@ const ART = { earbuds: Earbuds, kurta: Kurta, laptop: Laptop, blender: Blender, 
 
 /* ---------- Card ---------- */
 
+const resolvePromoImg = (src) => {
+  if (!src) return "";
+  if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:")) return src;
+  const base = (import.meta.env?.BASE_URL || "/").replace(/\/+$/, "");
+  const clean = src.replace(/^\.?\/+/, "").replace(/^assets\//, "products/clothes/");
+  return `${base}/${clean}`;
+};
+
 function PromoCard({ card, festival, bank }) {
   const Art = card.art ? ART[card.art] : null;
   const lines = (t) => (t || "").split("\n").map((l, k) => <span key={k}>{l}<br /></span>);
@@ -129,7 +137,7 @@ function PromoCard({ card, festival, bank }) {
       <div className={`pc__visual ${card.frame ? "pc__visual--frame" : ""}`}>
         <div className="pc__float">
           {card.image?.src
-            ? <img src={card.image.src} alt={card.image.alt || ""} loading="lazy" draggable="false" />
+            ? <img src={resolvePromoImg(card.image.src)} alt={card.image.alt || ""} loading="eager" draggable="false" />
             : Art && <Art />}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { resolveAsset } from "./useHeroHead.js";
 import { useMarquee } from "./useMarquee.js";
+import { requireAuth } from "../../../auth/auth.js";
 
 function burstSparks(originX, originY) {
   const colors = ["#22ff88", "#38bdf8", "#ffd60a"];
@@ -57,6 +58,20 @@ function ProductCard({ product, onAdd }) {
 
   const handleAddClick = (e) => {
     e.stopPropagation();
+
+    const productPayload = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      oldPrice: product.oldPrice,
+      image: imgSrc,
+      category: product.category,
+      store: product.store || "KSAM Deal"
+    };
+
+    if (!requireAuth({ type: "add_to_cart", product: productPayload })) {
+      return;
+    }
 
     // Visual button feedback
     const btn = e.currentTarget;

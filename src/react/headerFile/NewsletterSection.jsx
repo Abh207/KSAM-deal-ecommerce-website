@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import newsletterData from "../../api/newsletterSection.json";
+import { supabase } from "../../lib/supabase.js";
+import { getSession } from "../../auth/auth.js";
 import "./NewsletterSection.css";
 
 function NewsletterSection() {
@@ -9,7 +11,15 @@ function NewsletterSection() {
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        getSession().then((session) => {
+            if (session?.user?.email) {
+                setEmail(session.user.email);
+            }
+        });
+    }, []);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const trimmedEmail = email.trim();
@@ -29,10 +39,16 @@ function NewsletterSection() {
             return;
         }
 
-        /*
-         * Save subscribed email locally.
-         * This can later be connected to a backend/email service.
-         */
+        try {
+            const session = await getSession();
+            await supabase.from("newsletter_subscribers").insert({
+                email: trimmedEmail,
+                user_id: session?.user?.id || null
+            });
+        } catch (err) {
+            console.warn("[Newsletter] insert note:", err);
+        }
+
         const subscribers =
             JSON.parse(
                 localStorage.getItem("ksamNewsletterSubscribers") || "[]"

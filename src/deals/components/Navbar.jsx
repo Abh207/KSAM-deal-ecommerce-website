@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Search, X, Clock, TrendingUp, ArrowUpRight, Star } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { useCart, formatPrice, FREE_DELIVERY_THRESHOLD } from "../store/cartStore";
+import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL } from "../../auth/auth.js";
 import "./Navbar.css";
 
 /* =====================================================
@@ -187,6 +188,45 @@ export default function Navbar({ onProductClick, onViewAll }) {
   const [searched, setSearched] = useState(false);
   const [recent, setRecent] = useState([]);
   const [sort, setSort] = useState("relevance");
+
+  // User Profile & Auth State
+  const [userSession, setUserSession] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+
+  const fetchProfileData = useCallback(async (currentSession) => {
+    try {
+      const sess = currentSession !== undefined ? currentSession : await getSession();
+      setUserSession(sess);
+      if (sess?.user?.id) {
+        const prof = await getProfile();
+        setUserProfile(prof);
+      } else {
+        setUserProfile(null);
+      }
+    } catch (e) {
+      console.warn("[Navbar] Auth check error:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProfileData();
+
+    const sub = onAuthChange((_event, session) => {
+      fetchProfileData(session);
+    });
+
+    const handleAvatarUpdated = () => {
+      fetchProfileData();
+    };
+    window.addEventListener("ksam:avatar-updated", handleAvatarUpdated);
+
+    return () => {
+      if (sub && typeof sub.unsubscribe === "function") {
+        sub.unsubscribe();
+      }
+      window.removeEventListener("ksam:avatar-updated", handleAvatarUpdated);
+    };
+  }, [fetchProfileData]);
 
   const inputRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -589,10 +629,38 @@ export default function Navbar({ onProductClick, onViewAll }) {
   });
 
   /* --------------------------------------------------------------------------
-     11. Checkout Navigation
+     11. User Profile Navigation & Initials Helper
+     -------------------------------------------------------------------------- */
+  const getInitials = (profile, session) => {
+    if (profile?.full_name && profile.full_name.trim()) {
+      const parts = profile.full_name.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      }
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    const email = profile?.email || session?.user?.email || "";
+    if (email) {
+      return email[0].toUpperCase();
+    }
+    return "U";
+  };
+
+  const handleUserClick = (e) => {
+    e.preventDefault();
+    if (userSession) {
+      window.location.href = `${BASE_URL}profile.html`;
+    } else {
+      requireAuth({ returnTo: `${BASE_URL}profile.html` });
+    }
+  };
+
+  /* --------------------------------------------------------------------------
+     12. Checkout Navigation
      -------------------------------------------------------------------------- */
   const handleProceedToCheckout = () => {
     if (items.length === 0) return;
+    if (!requireAuth({ type: "checkout" })) return;
     setIsCartOpen(false);
     const checkoutUrl = new URL("checkout.html", window.location.href).href;
     window.location.href = checkoutUrl;
@@ -929,39 +997,10 @@ export default function Navbar({ onProductClick, onViewAll }) {
                   <stop offset="100%" stopColor="#7cff9b" />
                 </linearGradient>
 
-                <linearGradient id="khNavLogoSweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="white" stopOpacity="0" />
-                  <stop offset="45%" stopColor="white" stopOpacity="0" />
-                  <stop offset="50%" stopColor="white" stopOpacity="0.85" />
-                  <stop offset="55%" stopColor="white" stopOpacity="0" />
-                  <stop offset="100%" stopColor="white" stopOpacity="0" />
-                </linearGradient>
-
-                <filter id="khNavLogoIconGlow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#22ff88" floodOpacity="0.35" />
-                </filter>
-
-                <filter id="khNavLogoTextShadow" x="-10%" y="-10%" width="120%" height="120%">
-                  <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" floodColor="#000000" floodOpacity="0.65" />
-                </filter>
-
                 <linearGradient id="khNavCartIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#22ff88" />
                   <stop offset="100%" stopColor="#38bdf8" />
                 </linearGradient>
-
-                <mask id="khNavLogoSweepMask">
-                  <g fontFamily="'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif" fontSize="28" fontWeight="800" fill="#ffffff">
-                    <text x="64" y="35">k</text>
-                    <text x="82.3" y="35">s</text>
-                    <text x="98.9" y="35">a</text>
-                    <text x="117.2" y="35">m</text>
-                    <text x="144.8" y="35">d</text>
-                    <text x="163" y="35">e</text>
-                    <text x="181.3" y="35">a</text>
-                    <text x="199.5" y="35">l</text>
-                  </g>
-                </mask>
               </defs>
 
               {/* Icon Group: Speed Lines + Bag + Cart */}
@@ -1016,8 +1055,6 @@ export default function Navbar({ onProductClick, onViewAll }) {
                 </g>
               </g>
 
-              {/* Light Sweep */}
-              <rect className="kh-nav-logo-shine-bar" x="60" y="6" width="154" height="32" fill="url(#khNavLogoSweepGrad)" mask="url(#khNavLogoSweepMask)" pointerEvents="none" />
             </svg>
           </a>
 
@@ -1114,6 +1151,56 @@ export default function Navbar({ onProductClick, onViewAll }) {
               </div>
             </div>
 
+            {/* User Profile / Auth Avatar Button (44px circle, 40px on mobile) */}
+            <div className="kh-nav-avatar-wrap">
+              <button
+                type="button"
+                className={`kh-nav-avatar-btn${userSession ? " is-authenticated" : " is-guest"}`}
+                onClick={handleUserClick}
+                aria-label={userSession ? "Open your profile" : "Sign in to KSAM Deal"}
+              >
+                {userSession ? (
+                  <>
+                    <div className="kh-nav-avatar-ring" aria-hidden="true" />
+                    <div className="kh-nav-avatar-inner">
+                      {userProfile?.avatar_url ? (
+                        <img
+                          src={userProfile.avatar_url}
+                          alt={userProfile.full_name || "Profile avatar"}
+                          className="kh-nav-avatar-img"
+                        />
+                      ) : (
+                        <div className="kh-nav-avatar-initials">
+                          {getInitials(userProfile, userSession)}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className="kh-nav-avatar-guest-inner">
+                    <svg
+                      className="kh-nav-avatar-silhouette"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+
+              <div className="kh-nav-avatar-tooltip" role="tooltip">
+                {userSession ? (userProfile?.full_name || "Profile") : "Sign in"}
+              </div>
+            </div>
+
             {/* Hamburger Button (<1024px) */}
             <button
               type="button"
@@ -1174,6 +1261,22 @@ export default function Navbar({ onProductClick, onViewAll }) {
                 </a>
               </li>
             ))}
+            <li className="kh-nav-mobile-item">
+              <a
+                href={`${BASE_URL}profile.html`}
+                className="kh-nav-mobile-link"
+                onClick={(e) => {
+                  setIsMobileNavOpen(false);
+                  if (!userSession) {
+                    e.preventDefault();
+                    requireAuth({ returnTo: `${BASE_URL}profile.html` });
+                  }
+                }}
+              >
+                <span className="kh-nav-mobile-dot" style={{ background: "#38bdf8" }} />
+                {userSession ? "My Profile" : "Sign In / Profile"}
+              </a>
+            </li>
           </ul>
         </nav>
 

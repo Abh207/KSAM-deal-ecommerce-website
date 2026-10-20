@@ -12,6 +12,7 @@ import FashionCampaign from "./FashionCampaign";
 import ClothesHero from "./ClothesHero";
 
 import clothesData from "../../api/clothesproducts.json";
+import { requireAuth } from "../../auth/auth.js";
 
 import "./clothes.css";
 
@@ -360,6 +361,9 @@ function ClothesMain() {
     ====================================================== */
 
     const toggleWishlist = (product) => {
+        if (!requireAuth({ type: "wishlist", product })) {
+            return;
+        }
 
         setWishlist((currentWishlist) => {
 
@@ -405,6 +409,9 @@ function ClothesMain() {
     ====================================================== */
 
     const addToCart = (product) => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
         const currentCart =
             readLocalStorage(

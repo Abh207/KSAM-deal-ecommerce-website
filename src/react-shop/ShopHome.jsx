@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ShopPromo from "./ShopPromo.jsx";
+import { requireAuth } from "../auth/auth.js";
 
 import ShopProductCard from "./ShopProductCard.jsx";
 import shopProducts from "./shopProducts.json";
@@ -122,6 +123,9 @@ function ShopHome() {
     ----------------------------------------------------- */
 
     const addToCart = (product) => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
     try {
 

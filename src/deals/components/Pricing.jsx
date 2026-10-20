@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { requireAuth } from "../../auth/auth.js";
 
 /* ============================================================
    DATA
@@ -233,7 +234,12 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly }) {
           {/* CTA */}
           <button
             type="button"
-            onClick={() => onSelect(isSelected ? null : name)}
+            onClick={() => {
+              if (!requireAuth({ type: "pricing", planName: name })) {
+                return;
+              }
+              onSelect(isSelected ? null : name);
+            }}
             aria-pressed={isSelected}
             className={`pr-cta group/btn relative flex w-full items-center justify-center overflow-hidden rounded-2xl border text-sm font-black transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22FF88] active:scale-[0.97] ${
               popular || isSelected
@@ -268,6 +274,60 @@ function Pricing() {
     const s = e.currentTarget.style;
     s.setProperty("--px", `${(e.clientX / window.innerWidth - 0.5) * 60}px`);
     s.setProperty("--py", `${(e.clientY / window.innerHeight - 0.5) * 40}px`);
+  };
+
+  const [activePlanIdx, setActivePlanIdx] = useState(1);
+
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const card = el.firstElementChild;
+      if (!card) return;
+      const step = card.offsetWidth + 12;
+      const idx = Math.min(plans.length - 1, Math.max(0, Math.round(el.scrollLeft / step)));
+      setActivePlanIdx(idx);
+    };
+
+    el.addEventListener("scroll", onScroll, { passive: true });
+
+    // Center on Deal Hunter plan on mobile/tablet
+    const timer = setTimeout(() => {
+      if (window.innerWidth < 1024) {
+        const card = el.children[1];
+        if (card) {
+          const left = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+          el.scrollLeft = Math.max(0, left);
+          setActivePlanIdx(1);
+        }
+      }
+    }, 100);
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const handleGridScroll = (e) => {
+    const el = e.currentTarget;
+    if (!el || el.clientWidth === 0) return;
+    const card = el.firstElementChild;
+    const step = card ? card.offsetWidth + 12 : el.scrollWidth / plans.length;
+    const idx = Math.min(plans.length - 1, Math.max(0, Math.round(el.scrollLeft / step)));
+    setActivePlanIdx(idx);
+  };
+
+  const scrollToPlan = (idx) => {
+    if (!gridRef.current) return;
+    const el = gridRef.current;
+    const card = el.children[idx];
+    if (card) {
+      const left = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+      el.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+      setActivePlanIdx(idx);
+    }
   };
 
   return (
@@ -310,10 +370,23 @@ function Pricing() {
         </div>
 
         {/* Plans */}
-        <div ref={gridRef} className="pr-grid grid items-stretch">
+        <div ref={gridRef} onScroll={handleGridScroll} className="pr-grid grid items-stretch">
           {plans.map((plan, i) => (
             <PlanCard key={plan.name} plan={plan} index={i} shown={gridShown}
               selected={selected} onSelect={setSelected} yearly={yearly} />
+          ))}
+        </div>
+
+        {/* Dot indicators for horizontal scroll on mobile/tablet */}
+        <div className="pr-dots" aria-label="Plan indicators">
+          {plans.map((p, i) => (
+            <button
+              key={p.name}
+              type="button"
+              onClick={() => scrollToPlan(i)}
+              aria-label={`Show ${p.name} plan`}
+              className={`pr-dot ${activePlanIdx === i ? "pr-dot-active" : ""}`}
+            />
           ))}
         </div>
 
@@ -388,6 +461,7 @@ function Pricing() {
         .pr-section .pr-notes { margin-top: 4rem; gap: 1rem 2.5rem; }
         .pr-b110 { filter: blur(110px); }
         .pr-b120 { filter: blur(120px); }
+        .pr-dots { display: none; }
         @media (min-width: 640px) {
           .pr-section { padding: 9rem 0; }
           .pr-section .pr-wrap { padding: 0 2rem; }

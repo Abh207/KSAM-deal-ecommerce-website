@@ -11,6 +11,8 @@ import {
     getSearchImagePath
 } from "./productSearchIndex";
 
+import { requireAuth } from "../../auth/auth.js";
+
 import "./global-search.css";
 
 
@@ -189,6 +191,9 @@ function GlobalSearch() {
        ===================================================== */
 
     const addToCart = (product) => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
 
         try {
 

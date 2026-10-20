@@ -8,6 +8,7 @@ import React, {
 
 import AnnouncementBar from "./AnnouncementBar";
 import HomeNavbar from "./HomeNavbar";
+import { requireAuth } from "../../auth/auth.js";
 
 import NewsletterSection from "./NewsletterSection";
 
@@ -457,6 +458,10 @@ function HomeProducts() {
     const toggleWishlist =
         (productId) => {
 
+            if (!requireAuth({ type: "wishlist", productId })) {
+                return;
+            }
+
             let updatedWishlist;
 
 
@@ -593,6 +598,10 @@ function HomeProducts() {
 
     const addToCart =
         (product, productQuantity = 1) => {
+
+            if (!requireAuth({ type: "add_to_cart", product })) {
+                return;
+            }
 
             const cart =
                 getStorage(

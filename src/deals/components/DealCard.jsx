@@ -1,10 +1,20 @@
 import { ExternalLink, Star, Plus } from "lucide-react";
+import { requireAuth } from "../../auth/auth.js";
 
 
 function DealCard({
     product,
     onAdd
 }) {
+
+    const handleAdd = () => {
+        if (!requireAuth({ type: "add_to_cart", product })) {
+            return;
+        }
+        if (onAdd) {
+            onAdd(product);
+        }
+    };
 
     const openDeal = () => {
 
@@ -197,7 +207,7 @@ function DealCard({
 
 
                     <button
-                        onClick={() => onAdd(product)}
+                        onClick={handleAdd}
                         aria-label={`Add ${product.name}`}
                         className="
                             flex

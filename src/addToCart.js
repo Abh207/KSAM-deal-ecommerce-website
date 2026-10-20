@@ -66,10 +66,15 @@
 import { getCartProductFromLS } from "./getCartProducts.js";
 import { showToast } from "./showToast.js";
 import { updateCartValue } from "./updateCartValue.js";
+import { requireAuth } from "./auth/auth.js";
 
 
 export const addToCart =
     (event, id, stock) => {
+
+    if (!requireAuth({ type: "add_to_cart", productId: id })) {
+        return false;
+    }
 
     /* =========================================
        GET CURRENT CART
