@@ -259,15 +259,17 @@ export default function AddressesTab({
 
       {/* Address Cards Grid */}
       {addresses.length === 0 ? (
-        <div className="ks-empty-state">
-          <div className="ks-empty-icon">
+        <div className="ks-empty-state-stack">
+          <div className="ks-empty-state-icon bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">
             <MapPin size={28} />
           </div>
-          <h3 className="ks-empty-title">No addresses saved yet</h3>
-          <p className="ks-empty-desc">
-            Add your primary shipping address so your orders arrive quickly and accurately.
-          </p>
-          <button type="button" className="ks-btn-primary" onClick={handleAddNew}>
+          <div className="max-w-md mx-auto space-y-1">
+            <h3 className="text-base font-bold text-white">No addresses saved yet</h3>
+            <p className="text-xs text-gray-400">
+              Add your primary shipping pin code so you can easily check deal shipping eligibility and speed.
+            </p>
+          </div>
+          <button type="button" className="ks-btn-primary ks-empty-state-btn" onClick={handleAddNew}>
             <Plus size={16} />
             <span>Add Delivery Address</span>
           </button>
@@ -340,6 +342,19 @@ export default function AddressesTab({
               </div>
             </div>
           ))}
+
+          {/* Dedicated "Add Address" Card inside the Grid */}
+          <button
+            type="button"
+            onClick={handleAddNew}
+            className="ks-address-card flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/15 hover:border-[#38BDF8]/50 bg-white/[0.01] hover:bg-white/[0.03] transition-all cursor-pointer min-h-[220px] text-center group rounded-2xl"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+              <Plus size={22} />
+            </div>
+            <h4 className="text-sm font-bold text-white group-hover:text-[#38BDF8] transition">Add Another Address</h4>
+            <p className="text-xs text-gray-500 mt-1 max-w-[200px]">Save office, warehouse or home addresses for 1-click checkout</p>
+          </button>
         </div>
       )}
 

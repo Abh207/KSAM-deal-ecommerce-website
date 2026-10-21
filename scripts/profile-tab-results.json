@@ -1,0 +1,158 @@
+[
+  {
+    "width": 360,
+    "docW": 360,
+    "winW": 360,
+    "hasOverflow": false,
+    "headerRect": {
+      "top": 1050.21875,
+      "height": 161.046875
+    },
+    "navH": 64,
+    "emailOverlap": false,
+    "helperSizes": [
+      "12.5px",
+      "12.5px"
+    ],
+    "helperSizeOk": true,
+    "phoneChipOk": true,
+    "headerBorderBottom": "0px",
+    "dpdpHeight": 28,
+    "dpdpOk": true,
+    "colorScheme": "dark",
+    "headingLs": "-0.208px",
+    "avatarW": 112,
+    "cameraW": 36,
+    "formGridAlign": "start"
+  },
+  {
+    "width": 390,
+    "docW": 390,
+    "winW": 390,
+    "hasOverflow": false,
+    "headerRect": {
+      "top": 1001.71875,
+      "height": 161.046875
+    },
+    "navH": 64,
+    "emailOverlap": false,
+    "helperSizes": [
+      "12.5px",
+      "12.5px"
+    ],
+    "helperSizeOk": true,
+    "phoneChipOk": true,
+    "headerBorderBottom": "0px",
+    "dpdpHeight": 28,
+    "dpdpOk": true,
+    "colorScheme": "dark",
+    "headingLs": "-0.208px",
+    "avatarW": 112,
+    "cameraW": 36,
+    "formGridAlign": "start"
+  },
+  {
+    "width": 768,
+    "docW": 768,
+    "winW": 768,
+    "hasOverflow": false,
+    "headerRect": {
+      "top": 779,
+      "height": 124.109375
+    },
+    "navH": 64,
+    "emailOverlap": false,
+    "helperSizes": [
+      "12.5px",
+      "12.5px"
+    ],
+    "helperSizeOk": true,
+    "phoneChipOk": true,
+    "headerBorderBottom": "0px",
+    "dpdpHeight": 28,
+    "dpdpOk": true,
+    "colorScheme": "dark",
+    "headingLs": "-0.21504px",
+    "avatarW": 112,
+    "cameraW": 36,
+    "formGridAlign": "start"
+  },
+  {
+    "width": 1024,
+    "docW": 1024,
+    "winW": 1024,
+    "hasOverflow": false,
+    "headerRect": {
+      "top": 726,
+      "height": 133.4375
+    },
+    "navH": 72,
+    "emailOverlap": false,
+    "helperSizes": [
+      "12.5px",
+      "12.5px"
+    ],
+    "helperSizeOk": true,
+    "phoneChipOk": true,
+    "headerBorderBottom": "0px",
+    "dpdpHeight": 28,
+    "dpdpOk": true,
+    "colorScheme": "dark",
+    "headingLs": "-0.28672px",
+    "avatarW": 112,
+    "cameraW": 36,
+    "formGridAlign": "start"
+  },
+  {
+    "width": 1366,
+    "docW": 1366,
+    "winW": 1366,
+    "hasOverflow": false,
+    "headerRect": {
+      "top": 726,
+      "height": 134.640625
+    },
+    "navH": 72,
+    "emailOverlap": false,
+    "helperSizes": [
+      "12.5px",
+      "12.5px"
+    ],
+    "helperSizeOk": true,
+    "phoneChipOk": true,
+    "headerBorderBottom": "0px",
+    "dpdpHeight": 28,
+    "dpdpOk": true,
+    "colorScheme": "dark",
+    "headingLs": "-0.296px",
+    "avatarW": 112,
+    "cameraW": 36,
+    "formGridAlign": "start"
+  },
+  {
+    "width": 1920,
+    "docW": 1920,
+    "winW": 1920,
+    "hasOverflow": false,
+    "headerRect": {
+      "top": 726,
+      "height": 134.640625
+    },
+    "navH": 72,
+    "emailOverlap": false,
+    "helperSizes": [
+      "12.5px",
+      "12.5px"
+    ],
+    "helperSizeOk": true,
+    "phoneChipOk": true,
+    "headerBorderBottom": "0px",
+    "dpdpHeight": 28,
+    "dpdpOk": true,
+    "colorScheme": "dark",
+    "headingLs": "-0.296px",
+    "avatarW": 112,
+    "cameraW": 36,
+    "formGridAlign": "start"
+  }
+]

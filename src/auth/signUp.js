@@ -13,6 +13,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     signInLink.href = `./login.html?next=${encodeURIComponent(nextTarget)}`;
   }
 
+  // Show "Back to profile" link when next=profile.html
+  if (nextTarget && nextTarget.includes("profile.html")) {
+    const header = document.querySelector(".headpara");
+    if (header && !document.getElementById("backToProfileLink")) {
+      const backLink = document.createElement("a");
+      backLink.id = "backToProfileLink";
+      backLink.href = nextTarget;
+      backLink.textContent = "← Back to Profile";
+      backLink.style.cssText = `
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 0.75rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--kx-accent, #22ff88);
+        text-decoration: none;
+        transition: opacity 0.2s;
+      `;
+      header.insertBefore(backLink, header.firstChild);
+    }
+  }
+
   // If already logged in, redirect immediately
   const existingSession = await getSession();
   if (existingSession?.user) {

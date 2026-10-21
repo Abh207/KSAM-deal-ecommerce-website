@@ -1,13 +1,16 @@
-import { HelpCircle, Mail, Shield, Scale, Info, ExternalLink, MessageSquare, Clock } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Mail, Shield, Scale, Info, MessageSquare, ChevronRight } from "lucide-react";
+import gsap from "gsap";
 import { BASE_URL } from "../../auth/auth.js";
+import { respectReducedMotion } from "../../lib/motion.js";
 
-const LEGAL_ITEMS = [
+const LEGAL_CARDS = [
   {
     id: "contact",
     title: "Contact Support",
     desc: "Have an inquiry, feedback, or need assistance? Reach out to our team directly.",
     icon: Mail,
-    color: "#22FF88",
+    tone: "green",
     url: `${BASE_URL}contact-us.html`,
     action: "Open Contact Form"
   },
@@ -16,7 +19,7 @@ const LEGAL_ITEMS = [
     title: "Privacy Policy",
     desc: "Read our comprehensive data policy compliant with Indian DPDP Act 2023.",
     icon: Shield,
-    color: "#38BDF8",
+    tone: "blue",
     url: `${BASE_URL}privacy-policy.html`,
     action: "View Privacy Policy"
   },
@@ -25,7 +28,7 @@ const LEGAL_ITEMS = [
     title: "Terms & Conditions",
     desc: "Understand our user terms, deal aggregation disclaimers, and platform guidelines.",
     icon: Scale,
-    color: "#FFD60A",
+    tone: "yellow",
     url: `${BASE_URL}terms.html`,
     action: "View Terms"
   },
@@ -34,94 +37,116 @@ const LEGAL_ITEMS = [
     title: "Affiliate Disclosure",
     desc: "Full transparency on how KSAM Deal sustains operations via referral links at ₹0 extra cost.",
     icon: Info,
-    color: "#a855f7",
+    tone: "purple",
     url: `${BASE_URL}affiliate-disclosure.html`,
     action: "Read Disclosure"
-  },
-  {
-    id: "faq",
-    title: "Frequently Asked Questions",
-    desc: "Instant answers on coupon validation, deal refreshes, and outbound order fulfillment.",
-    icon: HelpCircle,
-    color: "#ec4899",
-    url: `${BASE_URL}#faq`,
-    action: "Browse FAQs"
   }
 ];
 
 export default function HelpLegalTab() {
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    if (respectReducedMotion() || !panelRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const banner = panelRef.current.querySelector(".kx-help-featured-banner");
+      const cards = panelRef.current.querySelectorAll(".kx-spot");
+      const tl = gsap.timeline();
+
+      if (banner) {
+        tl.fromTo(
+          banner,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
+        );
+      }
+      if (cards.length > 0) {
+        tl.fromTo(
+          cards,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.32, stagger: 0.05, ease: "power2.out" },
+          "-=0.15"
+        );
+      }
+    }, panelRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="ks-tab-panel" role="tabpanel" aria-label="Help & Legal Information">
-      <div className="ks-card">
-        <div className="ks-card-header">
-          <h2 className="ks-card-title">
-            <HelpCircle size={20} color="#38BDF8" />
-            <span>Help, Support & Legal Documentation</span>
-          </h2>
-          <p className="ks-card-desc">
-            Access our compliance terms, transparency statements, and official customer assistance channels.
-          </p>
-        </div>
-
-        {/* Support Highlights Banner */}
-        <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/20 shrink-0">
-              <MessageSquare size={22} />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-white">Need Dedicated Assistance?</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Our support team typically responds to tickets in under 24 hours.
-              </p>
-            </div>
+    <div
+      ref={panelRef}
+      className="ks-tab-panel"
+      role="tabpanel"
+      aria-label="Help & Legal Information"
+    >
+      {/* 1. Wide Featured Assistance Banner */}
+      <div className="kx-help-featured-banner">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/25 shrink-0">
+            <MessageSquare size={22} />
           </div>
-
-          <a
-            href={`${BASE_URL}contact-us.html`}
-            className="shrink-0 rounded-xl bg-gradient-to-r from-[#22FF88] to-[#38BDF8] px-5 py-2.5 text-xs font-black text-black hover:opacity-90 transition"
-          >
-            Get Help Now
-          </a>
+          <div>
+            <h3 className="text-base font-bold text-white tracking-[-0.01em]">
+              Need Dedicated Assistance?
+            </h3>
+            <p className="text-[13.5px] text-[#98A3A0] mt-0.5 leading-[1.55]">
+              Our support team typically responds to tickets in under 24 hours.
+            </p>
+          </div>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {LEGAL_ITEMS.map((item) => {
+        <a
+          href={`${BASE_URL}contact-us.html`}
+          className="shrink-0 rounded-xl bg-gradient-to-r from-[#22FF88] to-[#38BDF8] px-6 py-3 text-xs font-black text-black hover:opacity-90 transition shadow-lg inline-flex items-center justify-center"
+        >
+          Get Help Now
+        </a>
+      </div>
+
+      {/* 2. Four Legal Cards in a 2x2 Spotlight Grid */}
+      <div className="kx-spot-list">
+        <div className="kx-spot-grid-2x2">
+          {LEGAL_CARDS.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.id}
-                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0a0a0a] p-5 transition-all hover:border-white/20"
+                className="kx-spot"
+                data-tone={item.tone}
+                tabIndex={0}
               >
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div
-                      className="flex h-10 w-10 items-center justify-center rounded-xl"
-                      style={{
-                        backgroundColor: `${item.color}15`,
-                        color: item.color,
-                        border: `1px solid ${item.color}30`
-                      }}
-                    >
-                      <Icon size={20} />
+                <div className="flex flex-col justify-between h-full w-full relative z-10">
+                  <div>
+                    {/* Header with 12px gap to icon tile */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <div
+                        className={`kx-spot-icon-tile kx-spot-icon-tile--${item.tone}`}
+                      >
+                        <Icon size={20} />
+                      </div>
+                      <h4 className="text-[17px] font-[650] text-[#F4F7F5] tracking-[-0.01em] leading-snug">
+                        {item.title}
+                      </h4>
                     </div>
-                    <h3 className="text-sm font-bold text-white group-hover:text-[#22FF88] transition">
-                      {item.title}
-                    </h3>
-                  </div>
-                  <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                    {item.desc}
-                  </p>
-                </div>
 
-                <a
-                  href={item.url}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#38BDF8] hover:text-white transition"
-                >
-                  <span>{item.action}</span>
-                  <ExternalLink size={13} />
-                </a>
+                    {/* Description max 70ch */}
+                    <p className="text-[14px] text-[#98A3A0] leading-[1.55] max-w-[70ch] m-0">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  {/* Action Link with 6px gap to chevron that nudges 3px on hover */}
+                  <a
+                    href={item.url}
+                    className="kx-card-link"
+                    aria-label={`${item.action} for ${item.title}`}
+                  >
+                    <span>{item.action}</span>
+                    <ChevronRight size={14} className="kx-chevron-nudge" />
+                  </a>
+                </div>
               </div>
             );
           })}

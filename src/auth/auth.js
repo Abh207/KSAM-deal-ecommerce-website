@@ -87,7 +87,9 @@ export function validateReturnTo(targetUrl) {
 
   try {
     const origin = window.location.origin;
-    const resolved = new URL(targetUrl, origin);
+    const normalizedBase = BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`;
+    const baseHref = new URL(normalizedBase, origin).href;
+    const resolved = new URL(targetUrl, baseHref);
 
     // Same-origin check
     if (resolved.origin !== origin) {
@@ -95,7 +97,6 @@ export function validateReturnTo(targetUrl) {
     }
 
     // Must be inside base path
-    const normalizedBase = BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`;
     const cleanPath = resolved.pathname;
 
     if (!cleanPath.startsWith(normalizedBase) && cleanPath !== normalizedBase.slice(0, -1)) {

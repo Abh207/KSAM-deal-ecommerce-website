@@ -1,0 +1,101 @@
+{
+  "helpTab": {
+    "hasOpenHeader": true,
+    "noDuplicateHeaderCard": true,
+    "hasFeaturedBanner": true,
+    "bannerHasContactLink": true,
+    "has2x2Grid": true,
+    "cardCount": 4,
+    "tones": [
+      "green",
+      "blue",
+      "yellow",
+      "purple"
+    ],
+    "linksPreserved": true
+  },
+  "dangerTab": {
+    "hasOpenHeader": true,
+    "hasIntroBar": true,
+    "noHeavyOuterBox": true,
+    "hasRedSpotlightCard": true,
+    "hasBlueSessionCard": true,
+    "hasOutlineDeleteButton": true,
+    "modal": {
+      "modalRendered": true,
+      "submitInitiallyDisabled": true,
+      "hasCloseButton": true
+    }
+  },
+  "appearanceTab": {
+    "hasOpenHeader": true,
+    "themeCardCount": 3,
+    "hasPreviews": true,
+    "swatchCount": 3,
+    "isRadiogroup": true,
+    "cardsHaveRadioRole": true
+  },
+  "themeApplication": {
+    "docTheme": "light",
+    "pageTheme": "light",
+    "storedTheme": "light",
+    "bodyBg": "rgb(248, 250, 252)",
+    "cardBg": "rgb(255, 255, 255)",
+    "isLightApplied": true,
+    "afterReload": {
+      "docTheme": "light",
+      "pageTheme": "light",
+      "persisted": true
+    }
+  },
+  "sidebar": {
+    "sidebarWidth": 800,
+    "hasDangerItem": true,
+    "activePillHasDangerClass": true
+  },
+  "viewports": {
+    "360px-mobile": {
+      "windowWidth": 360,
+      "bodyScrollWidth": 360,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 360
+    },
+    "390px-mobile": {
+      "windowWidth": 390,
+      "bodyScrollWidth": 390,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 390
+    },
+    "768px-tablet": {
+      "windowWidth": 768,
+      "bodyScrollWidth": 768,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 768
+    },
+    "1024px-desktop": {
+      "windowWidth": 1024,
+      "bodyScrollWidth": 1024,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248
+    },
+    "1366px-desktop": {
+      "windowWidth": 1366,
+      "bodyScrollWidth": 1366,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248
+    },
+    "1920px-fhd": {
+      "windowWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248
+    },
+    "2560px-qhd": {
+      "windowWidth": 2560,
+      "bodyScrollWidth": 2560,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248
+    }
+  },
+  "pageShell": {}
+}

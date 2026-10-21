@@ -1,17 +1,55 @@
-import { useState } from "react";
-import { ShieldAlert, Trash2, LogOut, AlertTriangle, X, Check, Lock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ShieldAlert, Trash2, LogOut, AlertTriangle, X, Lock } from "lucide-react";
+import gsap from "gsap";
 import { supabase } from "../../lib/supabase";
 import { signOut, BASE_URL } from "../../auth/auth.js";
+import { respectReducedMotion } from "../../lib/motion.js";
 
 export default function DangerZoneTab({
   session,
-  onShowToast
+  onShowToast,
+  onModalStateChange
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    if (onModalStateChange) {
+      onModalStateChange(modalOpen);
+    }
+  }, [modalOpen, onModalStateChange]);
+
+  useEffect(() => {
+    if (respectReducedMotion() || !panelRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const intro = panelRef.current.querySelector(".kx-danger-intro-bar");
+      const cards = panelRef.current.querySelectorAll(".kx-spot");
+      const tl = gsap.timeline();
+
+      if (intro) {
+        tl.fromTo(
+          intro,
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+        );
+      }
+      if (cards.length > 0) {
+        tl.fromTo(
+          cards,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.32, stagger: 0.08, ease: "power2.out" },
+          "-=0.15"
+        );
+      }
+    }, panelRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -66,7 +104,10 @@ export default function DangerZoneTab({
       localStorage.removeItem("ksam_recently_viewed");
 
       // 4. Redirect with goodbye toast message
-      sessionStorage.setItem("ksam_toast", "Your account and all associated data have been permanently deleted. Goodbye!");
+      sessionStorage.setItem(
+        "ksam_toast",
+        "Your account and all associated data have been permanently deleted. Goodbye!"
+      );
       window.location.href = `${BASE_URL}index.html`;
     } catch (err) {
       console.error("[Account deletion error]", err);
@@ -77,85 +118,102 @@ export default function DangerZoneTab({
   };
 
   return (
-    <div className="ks-tab-panel" role="tabpanel" aria-label="Danger Zone">
-      {/* Danger Zone Container */}
-      <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-4 text-red-400">
-          <ShieldAlert size={24} />
-          <h2 className="text-xl font-bold text-white">Danger Zone</h2>
-        </div>
+    <div
+      ref={panelRef}
+      className="ks-tab-panel"
+      role="tabpanel"
+      aria-label="Danger Zone"
+    >
+      {/* 1. Open Intro Block with 3px red-amber left accent bar (max 70ch) */}
+      <div className="kx-danger-intro-bar">
+        The actions in this section are destructive and permanent. Account deletion cannot be undone. All saved delivery addresses, price alert subscriptions, personalized preferences, and activity history will be immediately erased under Indian DPDP Act 2023.
+      </div>
 
-        <p className="text-xs text-gray-300 mb-6 leading-relaxed">
-          The actions in this section are destructive and permanent. Account deletion cannot be undone. All saved data, addresses, price alert subscriptions, and wishlist records will be immediately erased.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="space-y-4">
-          {/* Delete Account Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-red-500/20 bg-black/40">
-            <div>
-              <h3 className="text-sm font-bold text-white">Delete Account Permanently</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
+      <div className="kx-spot-list flex flex-col gap-6">
+        {/* 2. Destructive Spotlight Card (Red Tone) */}
+        <div className="kx-spot" data-tone="red" tabIndex={0}>
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--red">
+              <AlertTriangle size={22} />
+            </div>
+            <div className="kx-spot-text-wrap">
+              <h4 className="kx-spot-title text-red-400">
+                Delete Account Permanently
+              </h4>
+              <p className="kx-spot-desc">
                 Permanently purge your account credentials, avatar, addresses, alerts, and activity history.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setConfirmText("");
-                setPassword("");
-                setError("");
-                setModalOpen(true);
-              }}
-              className="shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition"
-            >
-              <Trash2 size={15} />
-              <span>Delete My Account</span>
-            </button>
           </div>
 
-          {/* Sign Out Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-white/10 bg-black/40">
-            <div>
-              <h3 className="text-sm font-bold text-white">Log Out</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Sign out of this browser session. You can sign back in at any time.
+          <button
+            type="button"
+            onClick={() => {
+              setConfirmText("");
+              setPassword("");
+              setError("");
+              setModalOpen(true);
+            }}
+            className="kx-btn-danger-outline"
+            aria-haspopup="dialog"
+          >
+            <Trash2 size={15} />
+            <span>Delete My Account</span>
+          </button>
+        </div>
+
+        {/* 3. Calm Session Management Spotlight Card (Blue Tone, 24px gap) */}
+        <div className="kx-spot" data-tone="blue" tabIndex={0}>
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--blue">
+              <LogOut size={20} />
+            </div>
+            <div className="kx-spot-text-wrap">
+              <h4 className="kx-spot-title">Active Browser Session</h4>
+              <p className="kx-spot-desc">
+                Sign out of this browser session. You can sign back in at any time with your credentials.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition"
-            >
-              <LogOut size={15} />
-              <span>Sign Out</span>
-            </button>
           </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="ks-btn-secondary shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition"
+          >
+            <LogOut size={15} />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Restyled Confirmation Modal with 24px radius & blurred backdrop */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+          className="kx-modal-backdrop"
           role="dialog"
           aria-modal="true"
+          aria-labelledby="delete-dialog-title"
         >
-          <div className="relative w-full max-w-lg rounded-2xl border border-red-500/40 bg-[#0a0a0a] p-6 sm:p-8 shadow-2xl">
+          <div className="kx-modal-card">
             <button
+              type="button"
               onClick={() => setModalOpen(false)}
-              className="absolute right-4 top-4 text-gray-400 hover:text-white"
+              className="absolute right-5 top-5 text-gray-400 hover:text-white transition"
+              aria-label="Close dialog"
             >
               <X size={18} />
             </button>
 
             <div className="flex items-center gap-3 text-red-400 mb-3">
               <AlertTriangle size={24} />
-              <h3 className="text-lg font-bold text-white">Permanently Delete Account?</h3>
+              <h3 id="delete-dialog-title" className="text-lg font-bold text-white tracking-[-0.01em]">
+                Permanently Delete Account?
+              </h3>
             </div>
 
-            <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-3.5 text-xs text-red-200 mb-5 leading-relaxed">
-              <p className="font-bold mb-1">What will be permanently deleted:</p>
+            <div className="rounded-2xl border border-red-500/25 bg-red-500/10 p-4 text-xs text-red-200 mb-5 leading-relaxed">
+              <p className="font-bold mb-1.5 text-white">What will be permanently deleted:</p>
               <ul className="list-disc pl-4 space-y-1 text-red-300">
                 <li>Your customer profile, name, phone, and birthdate</li>
                 <li>All saved delivery addresses</li>
@@ -167,7 +225,7 @@ export default function DangerZoneTab({
 
             <form onSubmit={handleDeleteAccount} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">
+                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Type <span className="font-black text-red-400">DELETE</span> to confirm
                 </label>
                 <input
@@ -176,12 +234,12 @@ export default function DangerZoneTab({
                   placeholder="DELETE"
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2.5 text-sm font-bold text-white focus:border-red-500 focus:outline-none"
+                  className="w-full rounded-xl border border-[rgba(148,163,184,0.20)] bg-[#080D15] px-3.5 py-2.5 text-sm font-bold text-[#E2E8F0] focus:border-red-500 focus:outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">
+                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Current Password
                 </label>
                 <input
@@ -190,12 +248,12 @@ export default function DangerZoneTab({
                   placeholder="Enter your account password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:outline-none"
+                  className="w-full rounded-xl border border-[rgba(148,163,184,0.20)] bg-[#080D15] px-3.5 py-2.5 text-sm text-[#E2E8F0] focus:border-red-500 focus:outline-none transition"
                 />
               </div>
 
               {error && (
-                <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-2.5 text-xs text-red-400">
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-2.5 text-xs text-red-400">
                   {error}
                 </div>
               )}
@@ -204,14 +262,14 @@ export default function DangerZoneTab({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:bg-white/10"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || confirmText !== "DELETE" || !password}
-                  className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-black text-white disabled:opacity-40 transition"
+                  className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-black text-white disabled:opacity-40 transition shadow-lg"
                 >
                   {loading ? "Deleting Forever..." : "Permanently Delete"}
                 </button>

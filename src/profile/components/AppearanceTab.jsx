@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { Moon, Sun, Monitor, Palette, Check } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Moon, Sun, Monitor, Check } from "lucide-react";
+import gsap from "gsap";
 import { supabase } from "../../lib/supabase";
 import {
   getThemePreference,
@@ -7,17 +8,36 @@ import {
   getAccentPreference,
   setAccentPreference
 } from "../../lib/theme.js";
+import { respectReducedMotion } from "../../lib/motion.js";
 
 const THEMES = [
-  { id: "dark", label: "Dark Theme", desc: "Default sleek contrast with deep blacks", icon: Moon },
-  { id: "light", label: "Light Theme", desc: "Clean bright look for daylight browsing", icon: Sun },
-  { id: "auto", label: "System Auto", desc: "Synchronize with your OS display mode", icon: Monitor }
+  {
+    id: "dark",
+    label: "Dark Theme",
+    desc: "Default sleek contrast with deep blacks",
+    icon: Moon,
+    previewClass: "kx-mini-preview--dark"
+  },
+  {
+    id: "light",
+    label: "Light Theme",
+    desc: "Clean bright look for daylight browsing",
+    icon: Sun,
+    previewClass: "kx-mini-preview--light"
+  },
+  {
+    id: "auto",
+    label: "System Auto",
+    desc: "Synchronize with your OS display mode",
+    icon: Monitor,
+    previewClass: "kx-mini-preview--auto"
+  }
 ];
 
 const ACCENTS = [
-  { id: "green", name: "Neon Green", color: "#22FF88", border: "rgba(34, 255, 136, 0.4)" },
-  { id: "blue", name: "Sky Cyan", color: "#38BDF8", border: "rgba(56, 189, 248, 0.4)" },
-  { id: "yellow", name: "Electric Yellow", color: "#FFD60A", border: "rgba(255, 214, 10, 0.4)" }
+  { id: "green", name: "Neon Green", color: "#22FF88" },
+  { id: "blue", name: "Sky Cyan", color: "#38BDF8" },
+  { id: "yellow", name: "Electric Yellow", color: "#FFD60A" }
 ];
 
 export default function AppearanceTab({
@@ -29,10 +49,39 @@ export default function AppearanceTab({
   const [currentTheme, setCurrentTheme] = useState(getThemePreference());
   const [currentAccent, setCurrentAccent] = useState(getAccentPreference());
   const [saving, setSaving] = useState(false);
+  const panelRef = useRef(null);
 
   useEffect(() => {
     setCurrentTheme(getThemePreference());
     setCurrentAccent(getAccentPreference());
+  }, []);
+
+  useEffect(() => {
+    if (respectReducedMotion() || !panelRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const themeCards = panelRef.current.querySelectorAll(".kx-theme-card");
+      const accentBlock = panelRef.current.querySelector(".kx-accent-section");
+      const tl = gsap.timeline();
+
+      if (themeCards.length > 0) {
+        tl.fromTo(
+          themeCards,
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.32, stagger: 0.06, ease: "power2.out" }
+        );
+      }
+      if (accentBlock) {
+        tl.fromTo(
+          accentBlock,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
+          "-=0.15"
+        );
+      }
+    }, panelRef);
+
+    return () => ctx.revert();
   }, []);
 
   const handleSelectTheme = async (themeId) => {
@@ -87,85 +136,130 @@ export default function AppearanceTab({
     }
   };
 
-  return (
-    <div className="ks-tab-panel" role="tabpanel" aria-label="Appearance & Display Preferences">
-      {/* Theme Mode Card */}
-      <div className="ks-card">
-        <div className="ks-card-header">
-          <h2 className="ks-card-title">
-            <Palette size={20} color="#38BDF8" />
-            <span>Theme Preferences</span>
-          </h2>
-          <p className="ks-card-desc">
-            Customize your visual experience across KSAM Deal's account hub, legal, and auth pages.
-          </p>
-        </div>
+  // Keyboard arrow navigation for role="radiogroup"
+  const handleThemeKeyDown = (e, index) => {
+    let nextIndex = null;
+    const total = THEMES.length;
 
-        <div className="grid gap-4 sm:grid-cols-3 mb-8">
-          {THEMES.map((t) => {
-            const Icon = t.icon;
-            const isSelected = currentTheme === t.id;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      nextIndex = (index + 1) % total;
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      nextIndex = (index - 1 + total) % total;
+    }
+
+    if (nextIndex !== null) {
+      const nextTheme = THEMES[nextIndex];
+      handleSelectTheme(nextTheme.id);
+      const nextBtn = panelRef.current?.querySelector(
+        `[data-theme-option="${nextTheme.id}"]`
+      );
+      if (nextBtn) nextBtn.focus();
+    }
+  };
+
+  return (
+    <div
+      ref={panelRef}
+      className="ks-tab-panel"
+      role="tabpanel"
+      aria-label="Appearance & Display Preferences"
+    >
+      {/* 1. Theme Mode Options (3-col selectable cards with CSS mini preview) */}
+      <div
+        className="kx-theme-grid"
+        role="radiogroup"
+        aria-label="Theme Selection"
+      >
+        {THEMES.map((t, idx) => {
+          const Icon = t.icon;
+          const isSelected = currentTheme === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              role="radio"
+              data-theme-option={t.id}
+              aria-checked={isSelected}
+              tabIndex={isSelected ? 0 : -1}
+              onClick={() => handleSelectTheme(t.id)}
+              onKeyDown={(e) => handleThemeKeyDown(e, idx)}
+              className={`kx-theme-card ${isSelected ? "is-selected" : ""}`}
+            >
+              {/* Top: CSS Mini Layout Preview */}
+              <div className={`kx-mini-preview ${t.previewClass}`} aria-hidden="true">
+                <div className="kx-mini-side" />
+                <div className="kx-mini-body">
+                  <div className="kx-mini-line" />
+                  <div className="kx-mini-block" />
+                </div>
+              </div>
+
+              {/* Bottom: Typography and Selection Indicator */}
+              <div className="flex items-center justify-between gap-2 w-full mt-auto">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Icon size={14} className={isSelected ? "text-[#22FF88]" : "text-gray-400"} />
+                    <h4 className="text-sm font-bold text-white tracking-[-0.01em]">
+                      {t.label}
+                    </h4>
+                  </div>
+                  <p className="text-[11.5px] text-[#98A3A0] mt-0.5 line-clamp-1">
+                    {t.desc}
+                  </p>
+                </div>
+
+                {isSelected && (
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#22FF88] text-black shrink-0">
+                    <Check size={12} strokeWidth={3} />
+                  </div>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 2. Brand Accent Color Section (24px space from theme grid) */}
+      <div className="kx-accent-section mt-6">
+        <h3 className="text-sm font-bold text-white tracking-[-0.01em] mb-1">
+          Brand Accent Color
+        </h3>
+        <p className="text-[13.5px] text-[#98A3A0] leading-[1.55] mb-3">
+          Select the primary highlight color for buttons, active indicators, and focus rings.
+        </p>
+
+        <div className="kx-swatch-list">
+          {ACCENTS.map((accent) => {
+            const isSelected = currentAccent === accent.id;
             return (
               <button
-                key={t.id}
+                key={accent.id}
                 type="button"
-                onClick={() => handleSelectTheme(t.id)}
-                className={`flex flex-col items-start p-4 rounded-2xl border text-left transition-all ${
-                  isSelected
-                    ? "border-[#22FF88] bg-[#22FF88]/10 shadow-[0_0_20px_rgba(34,255,136,.12)]"
-                    : "border-white/10 bg-white/[0.02] hover:border-white/20"
-                }`}
+                onClick={() => handleSelectAccent(accent.id)}
+                className={`kx-swatch-chip ${isSelected ? "is-selected" : ""}`}
+                aria-label={`Select ${accent.name} accent`}
+                aria-pressed={isSelected}
               >
-                <div className="flex w-full items-center justify-between mb-3">
-                  <div className={`p-2.5 rounded-xl ${isSelected ? "bg-[#22FF88] text-black" : "bg-white/5 text-gray-400"}`}>
-                    <Icon size={18} />
-                  </div>
-                  {isSelected && <Check size={16} className="text-[#22FF88]" />}
+                <div
+                  className="kx-swatch-circle"
+                  style={{ backgroundColor: accent.color }}
+                >
+                  {isSelected && (
+                    <Check size={18} className="text-black font-black" strokeWidth={3} />
+                  )}
                 </div>
-                <h4 className="text-sm font-bold text-white mb-1">{t.label}</h4>
-                <p className="text-xs text-gray-400">{t.desc}</p>
+                <span>{accent.name}</span>
               </button>
             );
           })}
         </div>
+      </div>
 
-        {/* Accent Color Picker */}
-        <div>
-          <h3 className="text-sm font-bold text-white mb-2">Brand Accent Color</h3>
-          <p className="text-xs text-gray-400 mb-4">
-            Select the primary highlight color for buttons, active indicators, and focus rings.
-          </p>
-
-          <div className="flex flex-wrap gap-4">
-            {ACCENTS.map((accent) => {
-              const isSelected = currentAccent === accent.id;
-              return (
-                <button
-                  key={accent.id}
-                  type="button"
-                  onClick={() => handleSelectAccent(accent.id)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl border transition-all ${
-                    isSelected
-                      ? "border-white/40 bg-white/10 shadow-lg"
-                      : "border-white/10 bg-white/[0.02] hover:border-white/20"
-                  }`}
-                >
-                  <span
-                    className="h-5 w-5 rounded-full flex items-center justify-center border border-white/20"
-                    style={{ backgroundColor: accent.color }}
-                  >
-                    {isSelected && <Check size={12} className="text-black font-black" />}
-                  </span>
-                  <span className="text-xs font-bold text-white">{accent.name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="mt-8 rounded-xl border border-white/5 bg-white/[0.02] p-3 text-[11px] text-gray-400">
-          <strong className="text-white">Note:</strong> Light theme is currently available for Account Hub, Authentication, Contact, and Legal pages. Catalog deals discovery pages maintain the signature dark theme.
-        </div>
+      {/* 3. Information Note Block */}
+      <div className="mt-8 rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-xs text-[#98A3A0] leading-[1.55]">
+        <strong className="text-white">Note:</strong> Light theme is currently available for Account Hub, Authentication, Contact, and Legal pages. Catalog deals discovery pages maintain the signature dark theme.
       </div>
     </div>
   );

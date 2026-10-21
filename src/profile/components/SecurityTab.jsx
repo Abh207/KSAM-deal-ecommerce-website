@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Shield, Key, LogOut, Eye, EyeOff, AlertCircle, CheckCircle2, Lock, Smartphone, Mail, Globe } from "lucide-react";
+import { Shield, Key, LogOut, Eye, EyeOff, AlertCircle, CheckCircle2, Lock, Smartphone, Mail, Globe, ArrowRight } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { signOut, BASE_URL } from "../../auth/auth.js";
 
@@ -112,17 +112,17 @@ export default function SecurityTab({ session, onShowToast }) {
   };
 
   // Connected Sign-in Methods
-  const identities = session?.user?.identities || [];
   const providers = session?.user?.app_metadata?.providers || ["email"];
 
   return (
-    <div className="ks-tab-panel space-y-6" role="tabpanel" aria-label="Security & Authentication">
+    <div className="space-y-6" role="tabpanel" aria-label="Security & Authentication">
       {/* Change Password Card */}
       <div className="ks-card">
-        <div className="ks-card-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        {/* Header with non-floating Forgot Password link */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
           <div>
-            <h2 className="ks-card-title">
-              <Key size={20} color="#22FF88" />
+            <h2 className="ks-card-title text-base">
+              <Key size={18} color="#22FF88" />
               <span>Change Password</span>
             </h2>
             <p className="ks-card-desc">
@@ -132,7 +132,7 @@ export default function SecurityTab({ session, onShowToast }) {
 
           <a
             href={`${BASE_URL}forgot-password.html`}
-            className="text-xs font-bold text-[#38BDF8] hover:underline"
+            className="text-xs font-bold text-[#38BDF8] hover:underline self-start sm:self-auto shrink-0"
           >
             Forgot your password?
           </a>
@@ -141,58 +141,62 @@ export default function SecurityTab({ session, onShowToast }) {
         <form onSubmit={handlePasswordChange} className="space-y-4 max-w-lg">
           {/* Current Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">
+            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
               Current Password
             </label>
-            <div className="relative">
+            <div className="ks-password-input-wrap">
               <input
                 type={showCurrent ? "text" : "password"}
                 required
                 placeholder="Enter current password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2.5 text-sm text-white focus:border-[#22FF88] focus:outline-none"
+                className="ks-password-input"
+                autoComplete="current-password"
               />
               <button
                 type="button"
                 onClick={() => setShowCurrent(!showCurrent)}
-                className="absolute right-3 top-3 text-gray-400 hover:text-white"
+                className="ks-password-eye-btn"
+                aria-label={showCurrent ? "Hide password" : "Show password"}
                 tabIndex={-1}
               >
-                {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
           {/* New Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">
+            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
               New Password (min 8 chars, letters & numbers)
             </label>
-            <div className="relative">
+            <div className="ks-password-input-wrap">
               <input
                 type={showNew ? "text" : "password"}
                 required
                 placeholder="Enter new password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2.5 text-sm text-white focus:border-[#22FF88] focus:outline-none"
+                className="ks-password-input"
+                autoComplete="new-password"
               />
               <button
                 type="button"
                 onClick={() => setShowNew(!showNew)}
-                className="absolute right-3 top-3 text-gray-400 hover:text-white"
+                className="ks-password-eye-btn"
+                aria-label={showNew ? "Hide password" : "Show password"}
                 tabIndex={-1}
               >
-                {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
 
-            {/* Strength Meter */}
+            {/* Strength Meter under new password */}
             {newPassword && (
-              <div className="mt-2 space-y-1">
+              <div className="mt-2.5 space-y-1.5">
                 <div className="flex justify-between text-[11px]">
-                  <span className="text-gray-400">Strength:</span>
+                  <span className="text-gray-400">Password Strength:</span>
                   <span style={{ color: strength.color, fontWeight: 700 }}>
                     {strength.label}
                   </span>
@@ -212,39 +216,41 @@ export default function SecurityTab({ session, onShowToast }) {
 
           {/* Confirm New Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">
+            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
               Confirm New Password
             </label>
-            <div className="relative">
+            <div className="ks-password-input-wrap">
               <input
                 type={showConfirm ? "text" : "password"}
                 required
                 placeholder="Re-enter new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2.5 text-sm text-white focus:border-[#22FF88] focus:outline-none"
+                className="ks-password-input"
+                autoComplete="new-password"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-3 top-3 text-gray-400 hover:text-white"
+                className="ks-password-eye-btn"
+                aria-label={showConfirm ? "Hide password" : "Show password"}
                 tabIndex={-1}
               >
-                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-2.5 text-xs text-red-400">
-              <AlertCircle size={14} className="shrink-0" />
+            <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400">
+              <AlertCircle size={15} className="shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="flex items-center gap-2 rounded-xl border border-[#22FF88]/30 bg-[#22FF88]/10 p-2.5 text-xs text-[#22FF88]">
-              <CheckCircle2 size={14} className="shrink-0" />
+            <div className="flex items-center gap-2 rounded-xl border border-[#22FF88]/30 bg-[#22FF88]/10 p-3 text-xs text-[#22FF88]">
+              <CheckCircle2 size={15} className="shrink-0" />
               <span>{success}</span>
             </div>
           )}
@@ -253,9 +259,10 @@ export default function SecurityTab({ session, onShowToast }) {
             <button
               type="submit"
               disabled={loading || !newPassword || !confirmPassword}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#22FF88] to-[#38BDF8] text-xs font-black text-black hover:opacity-90 disabled:opacity-50 transition"
+              className="ks-btn-primary"
             >
-              {loading ? "Verifying & Updating..." : "Update Password"}
+              <Key size={14} />
+              <span>{loading ? "Verifying & Updating..." : "Update Password"}</span>
             </button>
           </div>
         </form>
@@ -275,35 +282,37 @@ export default function SecurityTab({ session, onShowToast }) {
 
         <div className="space-y-3">
           {providers.includes("email") && (
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-white/5 bg-white/[0.02]">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#22FF88]/10 text-[#22FF88]">
-                  <Mail size={16} />
+            <div className="ks-connected-row">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/20 shrink-0">
+                  <Mail size={18} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h4 className="text-xs font-bold text-white">Email & Password</h4>
-                  <p className="text-[11px] text-gray-400">{session?.user?.email}</p>
+                  <p className="text-[11px] text-gray-400 truncate">{session?.user?.email}</p>
                 </div>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#22FF88]/15 text-[#22FF88]">
-                Active
+              <span className="ks-status-pill is-active shrink-0">
+                <span className="ks-status-dot" />
+                <span>Active</span>
               </span>
             </div>
           )}
 
           {providers.filter((p) => p !== "email").map((provider) => (
-            <div key={provider} className="flex items-center justify-between p-3.5 rounded-xl border border-white/5 bg-white/[0.02]">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#38BDF8]/10 text-[#38BDF8]">
-                  <Globe size={16} />
+            <div key={provider} className="ks-connected-row">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20 shrink-0">
+                  <Globe size={18} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h4 className="text-xs font-bold text-white capitalize">{provider} OAuth</h4>
                   <p className="text-[11px] text-gray-400">Third-party social authentication</p>
                 </div>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#38BDF8]/15 text-[#38BDF8]">
-                Linked
+              <span className="ks-status-pill is-linked shrink-0">
+                <span className="ks-status-dot" />
+                <span>Linked</span>
               </span>
             </div>
           ))}
@@ -316,10 +325,10 @@ export default function SecurityTab({ session, onShowToast }) {
           <div>
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
               <LogOut size={16} className="text-amber-400" />
-              Sign Out from All Devices
+              <span>Sign Out from All Devices</span>
             </h3>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Revoke active refresh tokens on all computers, tablets, and phones where you are signed in.
+            <p className="text-xs text-gray-400 mt-1 max-w-lg">
+              Revoke active refresh tokens on all computers, tablets, and mobile browsers where you are currently signed in.
             </p>
           </div>
 
@@ -327,7 +336,7 @@ export default function SecurityTab({ session, onShowToast }) {
             type="button"
             disabled={signingOutAll}
             onClick={handleSignOutAll}
-            className="shrink-0 px-4 py-2 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-bold text-amber-400 transition"
+            className="shrink-0 px-4 py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-bold text-amber-400 transition cursor-pointer"
           >
             {signingOutAll ? "Signing out..." : "Sign Out Everywhere"}
           </button>

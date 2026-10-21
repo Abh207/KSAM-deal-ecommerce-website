@@ -5,24 +5,62 @@
    ========================================================================== */
 
 :root {
-  --ks-brand-green: #22FF88;
-  --ks-brand-blue: #38BDF8;
-  --ks-brand-yellow: #FFD60A;
-  --ks-bg-deep: #030508;
-  --ks-surface: #0a0f19;
-  --ks-surface-card: #0d1524;
-  --ks-surface-hover: #121d31;
-  --ks-border: rgba(255, 255, 255, 0.08);
-  --ks-border-glow: rgba(34, 255, 136, 0.28);
-  --ks-text-main: #f8fafc;
-  --ks-text-muted: #94a3b8;
-  --ks-text-dim: #64748b;
+  /* KSAM Deal Sophisticated Dark Theme System */
+  --ks-bg-primary: #05070B;
+  --ks-bg-secondary: #0A0F17;
+  --ks-surface-card: #0D1420;
+  --ks-surface-elevated: #111827;
+  --ks-surface-input: #080D15;
+  --ks-primary-green: #2DFFB2;
+  --ks-secondary-green: #25C9F7;
+  --ks-cyan-accent: #26D9F8;
+  --ks-purple-accent: #8B7CFF;
+  
+  /* Text Color Hierarchy */
+  --ks-text-main: #F1F5F9;
+  --ks-text-heading: #F1F5F9;
+  --ks-text-secondary: #DCE6F2;
+  --ks-text-body: #C0CAD8;
+  --ks-text-muted: #98A6BA;
+  --ks-text-dim: #748399;
+  --ks-text-label: #A8B5C7;
+  --ks-text-placeholder: #748399;
+  --ks-text-disabled: #657185;
+  --ks-text-important: #E5FFF5;
+  
+  --ks-border: rgba(148, 163, 184, 0.14);
+  --ks-border-subtle: rgba(148, 163, 184, 0.08);
+  --ks-border-green: rgba(45, 255, 178, 0.22);
+  --ks-border-glow: rgba(45, 255, 178, 0.32);
+
+  /* Signature Gradients */
+  --ks-gradient-primary: linear-gradient(135deg, #2DFFB2, #25C9F7);
+  --ks-gradient-card: radial-gradient(circle at top right, rgba(0, 255, 170, 0.08), transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%);
+  --ks-gradient-elevated: linear-gradient(135deg, #111827, #0D1420);
+  --ks-gradient-heading: linear-gradient(90deg, #2DFFB2 0%, #26D9F8 50%, #8B7CFF 100%);
+  --ks-glow-radial: radial-gradient(circle, rgba(45, 255, 178, 0.12), transparent 70%);
+
+  --ks-shadow-card: 0 12px 35px rgba(0, 0, 0, 0.45);
+  --ks-shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.55);
+  --ks-shadow-green-glow: 0 12px 40px rgba(45, 255, 178, 0.12);
+
+  /* Seamless token aliases */
+  --ks-neon-green: #2DFFB2;
+  --ks-emerald: #2DFFB2;
+  --ks-cyan: #26D9F8;
+  --ks-brand-green: #2DFFB2;
+  --ks-brand-blue: #26D9F8;
+  --ks-bg-deep: #05070B;
+  --ks-surface: #0A0F17;
+  --ks-surface-hover: #111827;
+  --kx-accent: #2DFFB2;
+  --kx-cyan: #26D9F8;
 }
 
-/* Page Container */
+/* Page Container with Ambient Backdrop */
 .ks-profile-page {
   min-height: 100vh;
-  background-color: var(--ks-bg-deep);
+  background-color: transparent;
   color: var(--ks-text-main);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   display: flex;
@@ -413,17 +451,27 @@
    FORM SECTIONS & FLOATING LABELS
    -------------------------------------------------------------------------- */
 .ks-card {
-  background: var(--ks-surface);
-  border: 1px solid var(--ks-border);
-  border-radius: 18px;
+  background: var(--ks-gradient-card, linear-gradient(145deg, rgba(17, 25, 37, 0.96), rgba(9, 13, 20, 0.98)));
+  border: 1px solid var(--ks-border, rgba(148, 163, 184, 0.22));
+  border-radius: 20px;
   padding: 28px;
   margin-bottom: 24px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.25s ease;
+  box-shadow: var(--ks-shadow-card, 0 12px 35px rgba(0, 0, 0, 0.18));
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .ks-card {
+    padding: 20px 18px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+  }
 }
 
 .ks-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(148, 163, 184, 0.35);
 }
 
 .ks-card-header {
@@ -432,20 +480,21 @@
 
 .ks-card-title {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 20px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 19px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--ks-text-main, #FFFFFF);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  letter-spacing: -0.01em;
 }
 
 .ks-card-desc {
-  margin: 6px 0 0;
-  color: var(--ks-text-muted);
+  margin: 8px 0 0;
+  color: var(--ks-text-muted, #CBD5E1);
   font-size: 13.5px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .ks-form-grid {
@@ -630,70 +679,91 @@
 .ks-btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 11px 22px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--ks-brand-green), var(--ks-brand-blue));
-  color: #05070a;
-  font-weight: 800;
+  background: var(--ks-gradient-primary, linear-gradient(135deg, #00F5A0 0%, #00C982 50%, #25C8FF 100%)) !important;
+  color: #050708 !important;
+  font-weight: 700;
   font-size: 14px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 18px rgba(34, 255, 136, 0.3);
+  box-shadow: 0 0 20px rgba(0, 245, 160, 0.28);
   text-decoration: none;
 }
 
 .ks-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 255, 136, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(0, 245, 160, 0.45);
+}
+
+.ks-btn-primary:active {
+  transform: scale(0.98);
 }
 
 .ks-btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .ks-btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 11px 20px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: var(--ks-surface-elevated, #111925);
+  color: var(--ks-text-main, #F8FAFC);
   font-weight: 600;
   font-size: 14px;
-  border: 1px solid var(--ks-border);
+  border: 1px solid var(--ks-border, rgba(148, 163, 184, 0.18));
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .ks-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #182232;
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #ffffff;
+}
+
+.ks-btn-secondary:active {
+  transform: scale(0.98);
 }
 
 .ks-btn-danger {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 11px 20px;
   border-radius: 12px;
   background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
+  color: #ef4444;
   font-weight: 600;
   font-size: 14px;
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  border: 1px solid rgba(239, 68, 68, 0.28);
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .ks-btn-danger:hover {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: rgba(239, 68, 68, 0.6);
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #ffffff;
 }
+
+.ks-btn-danger:active {
+  transform: scale(0.98);
+}
+
 
 .ks-address-grid {
   display: grid;
@@ -702,25 +772,28 @@
 }
 
 .ks-address-card {
-  background: var(--ks-surface);
-  border: 1px solid var(--ks-border);
-  border-radius: 18px;
-  padding: 24px;
+  background: var(--ks-gradient-card, linear-gradient(145deg, rgba(17, 25, 37, 0.96), rgba(9, 13, 20, 0.98)));
+  border: 1px solid var(--ks-border, rgba(148, 163, 184, 0.22));
+  border-radius: 20px;
+  padding: 24px 28px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.25s ease;
+  box-shadow: var(--ks-shadow-card, 0 12px 35px rgba(0, 0, 0, 0.18));
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  box-sizing: border-box;
 }
 
 .ks-address-card:hover {
-  border-color: rgba(34, 255, 136, 0.35);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
+  border-color: rgba(0, 245, 160, 0.35);
+  box-shadow: var(--ks-shadow-elevated, 0 16px 40px rgba(0, 0, 0, 0.25)), 0 0 20px rgba(0, 245, 160, 0.08);
 }
 
 .ks-address-card.is-default {
-  border-color: rgba(34, 255, 136, 0.45);
-  background: linear-gradient(180deg, rgba(34, 255, 136, 0.04) 0%, var(--ks-surface) 100%);
+  border-color: rgba(0, 245, 160, 0.45);
+  background: linear-gradient(145deg, rgba(0, 245, 160, 0.06) 0%, rgba(17, 25, 37, 0.98) 60%);
 }
 
 .ks-address-card-header {
@@ -766,7 +839,7 @@
 
 .ks-address-phone {
   font-size: 13.5px;
-  color: var(--ks-text-muted);
+  color: var(--ks-text-muted, #CBD5E1);
   margin: 0 0 12px 0;
   display: flex;
   align-items: center;
@@ -775,7 +848,7 @@
 
 .ks-address-lines {
   font-size: 13.5px;
-  color: #cbd5e1;
+  color: #E2E8F0;
   line-height: 1.55;
   margin: 0 0 20px 0;
   flex: 1;
@@ -793,7 +866,7 @@
 .ks-address-act-btn {
   background: transparent;
   border: none;
-  color: var(--ks-text-muted);
+  color: var(--ks-text-muted, #CBD5E1);
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
@@ -1393,4 +1466,3660 @@
     box-shadow: 0 0 15px rgba(34, 255, 136, 0.3);
   }
 }
+
+/* ==========================================================================
+   IMMERSIVE LONG SCROLLING ACCOUNT HUB ENHANCEMENTS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. HERO SECTION (~70vh Full-Width, Mesh, Grain, Lamplight Blend)
+   -------------------------------------------------------------------------- */
+.ks-hero-section {
+  position: relative;
+  width: 100%;
+  min-height: clamp(520px, 70vh, 760px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--kx-border, rgba(255, 255, 255, 0.08));
+  overflow: hidden;
+}
+
+.ks-hero-cover-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.ks-hero-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  opacity: 0.22;
+  filter: contrast(1.15) saturate(1.1) brightness(0.9);
+  mix-blend-mode: luminosity;
+  transform: scale(1.04);
+  transition: transform 12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ks-hero-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(7, 9, 11, 0.25) 0%, rgba(7, 9, 11, 0.72) 75%, rgba(6, 8, 12, 0.9) 100%);
+}
+
+.ks-hero-content-wrapper {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 24px 32px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.ks-signed-out-gate .ks-hero-content-wrapper {
+  flex-direction: column !important;
+  text-align: center;
+}
+
+.ks-hero-main-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+/* Avatar Column */
+.ks-hero-avatar-col {
+  display: flex;
+  justify-content: center;
+}
+
+.ks-avatar-ring-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ks-avatar-circle {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  background: var(--kx-surface-1, #0d1114);
+  border: 3px solid var(--kx-base, #07090b);
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ks-avatar-circle:hover {
+  transform: scale(1.06);
+}
+
+.ks-avatar-badge-pct {
+  position: absolute;
+  bottom: -4px;
+  right: 0;
+  background: var(--kx-surface-2, #141a1f);
+  border: 1.5px solid var(--kx-accent, #22ff88);
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: 'Space Grotesk', sans-serif;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+}
+
+/* Meta Column */
+.ks-hero-meta-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ks-hero-title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.8rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.ks-hero-name-highlight {
+  color: #2DFFB2;
+  background: linear-gradient(90deg, #2DFFB2 0%, #26D9F8 50%, #8B7CFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ks-hero-prompt-btn {
+  background: none;
+  border: none;
+  color: #F1F5F9;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ks-hero-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #C0CAD8;
+}
+
+.ks-hero-email {
+  font-weight: 500;
+  color: #DCE6F2;
+}
+
+.ks-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ks-badge-pill.verified {
+  background: rgba(45, 255, 178, 0.12);
+  color: #2DFFB2;
+  border: 1px solid rgba(45, 255, 178, 0.3);
+}
+
+.ks-badge-pill.unverified {
+  background: rgba(255, 214, 10, 0.12);
+  color: #FFD60A;
+  border: 1px solid rgba(255, 214, 10, 0.3);
+}
+
+.ks-badge-pill.member-since {
+  background: rgba(13, 20, 32, 0.6);
+  color: #C0CAD8;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.ks-hero-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.ks-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2DFFB2 0%, #25C9F7 100%) !important;
+  color: #05070B !important;
+  font-size: 13.5px;
+  font-weight: 800;
+  font-family: 'Space Grotesk', sans-serif;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(45, 255, 178, 0.32);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.ks-btn-primary:hover {
+  background: linear-gradient(135deg, #38FFBC 0%, #30D2FF 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(45, 255, 178, 0.45);
+}
+
+.ks-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 14px;
+  background: #0D1420 !important;
+  border: 1px solid rgba(148, 163, 184, 0.16) !important;
+  color: #DCE6F2 !important;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.ks-btn-secondary:hover {
+  background: #111827 !important;
+  border-color: rgba(45, 255, 178, 0.3) !important;
+  color: #F1F5F9 !important;
+  transform: translateY(-2px);
+}
+
+/* Stats Column (4 Animated Stat Cards) */
+.ks-hero-stats-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.ks-hero-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top right, rgba(0, 255, 170, 0.05), transparent 50%), linear-gradient(135deg, #0D1420 0%, #111827 100%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  color: inherit;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.ks-hero-stat-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(45, 255, 178, 0.35) !important;
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.6), 0 0 20px -4px rgba(45, 255, 178, 0.22);
+}
+
+.ks-stat-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ks-stat-icon-wrap.icon-addresses {
+  background: rgba(38, 217, 248, 0.12);
+  color: #25C9F7;
+  border: 1px solid rgba(38, 217, 248, 0.25);
+}
+
+.ks-stat-icon-wrap.icon-alerts {
+  background: rgba(255, 214, 10, 0.12);
+  color: #FFD60A;
+  border: 1px solid rgba(255, 214, 10, 0.25);
+}
+
+.ks-stat-icon-wrap.icon-recent {
+  background: rgba(45, 255, 178, 0.12);
+  color: #2DFFB2;
+  border: 1px solid rgba(45, 255, 178, 0.25);
+}
+
+.ks-stat-icon-wrap.icon-completeness {
+  background: rgba(139, 124, 255, 0.12);
+  color: #A78BFA;
+  border: 1px solid rgba(139, 124, 255, 0.25);
+}
+
+.ks-stat-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ks-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #F1F5F9;
+  line-height: 1.15;
+}
+
+.ks-stat-tag {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #98A6BA;
+  margin-top: 3px;
+}
+
+.ks-stat-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ks-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.ks-stat-tag {
+  font-size: 11px;
+  color: var(--kx-text-muted, #CBD5E1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Marquee Strip */
+.ks-hero-marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  padding: 12px 0;
+  background: rgba(7, 9, 11, 0.7);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 2;
+}
+
+.ks-hero-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  width: max-content;
+  animation: ksMarqueeScroll 28s linear infinite;
+  will-change: transform;
+}
+
+.ks-hero-marquee-wrap.is-paused .ks-hero-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes ksMarqueeScroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.ks-hero-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+}
+
+.ks-marquee-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--kx-accent, #22ff88);
+  box-shadow: 0 0 8px var(--kx-accent, #22ff88);
+}
+
+/* --------------------------------------------------------------------------
+   2. STICKY SECTION NAV (Glass bar with sliding indicator)
+   -------------------------------------------------------------------------- */
+.ks-sticky-nav {
+  position: sticky;
+  top: 72px;
+  z-index: 40;
+  width: 100%;
+  background: var(--kx-surface-glass, rgba(13, 17, 20, 0.8));
+  backdrop-filter: var(--kx-backdrop-blur, blur(16px));
+  -webkit-backdrop-filter: var(--kx-backdrop-blur, blur(16px));
+  border-bottom: 1px solid var(--kx-border, rgba(255, 255, 255, 0.16));
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+  .ks-sticky-nav {
+    top: 64px;
+  }
+}
+
+.ks-sticky-nav-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px 16px;
+}
+
+.ks-sticky-nav-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ks-sticky-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ks-sticky-nav-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.ks-nav-active-pill {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 999px;
+  background: var(--kx-accent, #22ff88);
+  box-shadow: 0 2px 14px rgba(34, 255, 136, 0.4);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ks-nav-pill-btn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kx-text-muted, #CBD5E1);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  outline: none;
+}
+
+.ks-nav-pill-btn:hover {
+  color: #ffffff;
+}
+
+.ks-nav-pill-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--kx-accent, #22ff88);
+}
+
+.ks-nav-pill-btn.is-active {
+  color: #07090b !important;
+  font-weight: 800;
+}
+
+.ks-nav-pill-btn.is-danger {
+  color: rgba(239, 68, 68, 0.85);
+}
+
+.ks-nav-pill-btn.is-danger:hover {
+  color: #ef4444;
+}
+
+/* --------------------------------------------------------------------------
+   3. SECTION BANDS & ALTERNATING BACKGROUND TREATMENTS
+   -------------------------------------------------------------------------- */
+.ks-sections-scroll-container {
+  width: 100%;
+}
+
+.ks-section-band {
+  width: 100%;
+  padding: clamp(48px, 6vw, 84px) 24px;
+  position: relative;
+  overflow: hidden;
+  scroll-margin-top: 130px;
+}
+
+@media (max-width: 768px) {
+  .ks-section-band {
+    scroll-margin-top: 110px;
+    padding: 40px 16px;
+  }
+}
+
+.ks-section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.ks-section-header {
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.ks-section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kx-accent, #22ff88);
+  margin-bottom: 8px;
+}
+
+.ks-section-title {
+  margin: 0 0 8px 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.ks-section-desc {
+  margin: 0;
+  font-size: clamp(13px, 1.2vw, 15px);
+  color: var(--kx-text-muted, #98a3a0);
+  max-width: 680px;
+  line-height: 1.5;
+}
+
+/* Alternating Section Background Styles */
+.ks-band--mesh {
+  background: radial-gradient(circle at 10% 20%, rgba(34, 255, 136, 0.05) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+              var(--kx-base, #07090b);
+  border-bottom: 1px solid var(--kx-border-subtle, rgba(255, 255, 255, 0.04));
+}
+
+.ks-band--grid {
+  background-color: var(--kx-surface-1, #0d1114);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  border-bottom: 1px solid var(--kx-border-subtle, rgba(255, 255, 255, 0.04));
+}
+
+.ks-band--solid {
+  background-color: var(--kx-base, #07090b);
+  border-bottom: 1px solid var(--kx-border-subtle, rgba(255, 255, 255, 0.04));
+}
+
+.ks-band--spotlight {
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 60%),
+              var(--kx-surface-1, #0d1114);
+  border-bottom: 1px solid var(--kx-border-subtle, rgba(255, 255, 255, 0.04));
+}
+
+.ks-band--danger {
+  background: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.05) 0%, transparent 70%),
+              rgba(239, 68, 68, 0.02);
+  border-top: 1px solid rgba(239, 68, 68, 0.2);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   4. BUG FIXES (Checklist overlap & Empty state spacing)
+   -------------------------------------------------------------------------- */
+/* Fix 1: Checklist rows proper flex/grid without absolute positioning */
+.ks-checklist-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.ks-checklist-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ks-checklist-icon-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ks-checklist-text-col {
+  min-width: 0;
+}
+
+.ks-checklist-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+}
+
+.ks-checklist-desc {
+  font-size: 12px;
+  color: var(--kx-text-muted, #98a3a0);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ks-checklist-action-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .ks-checklist-row {
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+  }
+  .ks-checklist-action-col {
+    grid-column: 2 / 3;
+    justify-content: flex-start;
+    margin-top: 6px;
+  }
+}
+
+/* Fix 2: Vertical stack in empty states with guaranteed spacing */
+.ks-empty-state-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 56px 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--kx-border, rgba(255, 255, 255, 0.08));
+  gap: 16px;
+}
+
+.ks-empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.ks-empty-state-btn {
+  margin-top: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   5. SIGNED-OUT GATE STATE STYLES
+   -------------------------------------------------------------------------- */
+.ks-signed-out-gate {
+  width: 100%;
+}
+
+.ks-gate-preview-container {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+}
+
+.ks-gate-preview-blur {
+  filter: blur(10px);
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ks-gate-preview-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(7, 9, 11, 0.5) 0%, #07090b 90%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE BREAKPOINT TUNING (360px - 2560px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .ks-hero-main-row {
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+  }
+  .ks-hero-stats-col {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .ks-hero-main-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 24px;
+  }
+  .ks-hero-avatar-col {
+    justify-content: center;
+  }
+  .ks-hero-meta-col {
+    align-items: center;
+  }
+  .ks-hero-meta-strip {
+    justify-content: center;
+  }
+  .ks-hero-actions-row {
+    justify-content: center;
+  }
+  .ks-hero-stats-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .ks-hero-stats-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1920px) {
+  .ks-hero-content-wrapper,
+  .ks-section-inner,
+  .ks-sticky-nav-inner {
+    max-width: 1320px;
+  }
+}
+
+/* ==========================================================================
+   PHASE 1 CSS BUG FIXES
+   ========================================================================== */
+
+/* 1. Security Password Inputs & Autofill Fix */
+.ks-password-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.ks-password-input {
+  width: 100% !important;
+  height: 48px !important;
+  background-color: #0D1114 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  padding: 0 48px 0 16px !important;
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.ks-password-input::placeholder {
+  color: #94A3B8 !important;
+}
+
+.ks-password-input:focus {
+  border-color: var(--kx-accent, #22FF88) !important;
+  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.18) !important;
+  outline: none !important;
+}
+
+/* Browser autofill dark fix */
+.ks-password-input:-webkit-autofill,
+.ks-password-input:-webkit-autofill:hover,
+.ks-password-input:-webkit-autofill:focus,
+.ks-password-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0D1114 inset !important;
+  box-shadow: 0 0 0 1000px #0D1114 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+.ks-password-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  z-index: 2;
+}
+
+.ks-password-eye-btn:hover {
+  color: #ffffff;
+}
+
+/* 2. Connected Sign-In Methods row */
+.ks-connected-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px !important;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  gap: 16px;
+}
+
+.ks-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ks-status-pill.is-active {
+  background: rgba(34, 255, 136, 0.12);
+  color: #22FF88;
+  border: 1px solid rgba(34, 255, 136, 0.3);
+}
+
+.ks-status-pill.is-linked {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.ks-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* 3. Edit Profile Two-Column Layout */
+.ks-profile-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  width: 100%;
+}
+
+.ks-profile-edit-grid > * {
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  .ks-profile-edit-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Photo Card */
+.ks-photo-card {
+  background: var(--kx-surface-1, #0d1114);
+  border: 1px solid var(--kx-border, rgba(255, 255, 255, 0.08));
+  border-radius: 24px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.ks-avatar-anchor-wrap {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 16px auto;
+  flex-shrink: 0;
+}
+
+.ks-avatar-anchor-circle {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000000;
+  border: 3px solid rgba(34, 255, 136, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 24px rgba(34, 255, 136, 0.2);
+}
+
+.ks-avatar-anchor-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--kx-accent, #22FF88);
+  color: #07090b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--kx-surface-1, #0d1114);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+  z-index: 5;
+}
+
+.ks-avatar-anchor-btn:hover {
+  transform: scale(1.12);
+  background: var(--kx-accent-highlight, #B6FF3B);
+}
+
+.ks-photo-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.ks-photo-email {
+  font-size: 13px;
+  color: var(--kx-text-muted, #98a3a0);
+  margin: 0 0 20px 0;
+  word-break: break-all;
+}
+
+.ks-photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.ks-photo-specs-note {
+  font-size: 11.5px;
+  color: var(--kx-text-dim, #606d69);
+  margin-top: 16px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Edit Profile Form Card */
+.ks-profile-form-card {
+  background: var(--kx-surface-1, #0d1114);
+  border: 1px solid var(--kx-border, rgba(255, 255, 255, 0.08));
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 640px) {
+  .ks-profile-form-card {
+    padding: 20px 16px;
+  }
+}
+
+.ks-profile-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .ks-profile-form-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.ks-grid-full {
+  grid-column: 1 / -1;
+}
+
+/* Proper +91 Phone Input Group */
+.ks-phone-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ks-phone-group-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.ks-phone-combined-input {
+  display: flex;
+  align-items: center;
+  background-color: #0D1114;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  height: 48px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.ks-phone-combined-input:focus-within {
+  border-color: var(--kx-accent, #22FF88);
+  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.18);
+}
+
+.ks-phone-prefix-chip {
+  padding: 0 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--kx-accent, #22FF88);
+  background: rgba(34, 255, 136, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.ks-phone-number-field {
+  flex: 1;
+  height: 100%;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 16px !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.ks-phone-number-field::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Autofill for phone number */
+.ks-phone-number-field:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #0D1114 inset !important;
+  box-shadow: 0 0 0 1000px #0D1114 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* 4. One-Section-At-A-Time Layout & Navigation */
+.ks-account-hub-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .ks-account-hub-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    max-width: 1240px;
+    margin: 0 auto;
+    gap: 32px;
+    padding: 36px 24px 80px;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Sidebar wrapper */
+.ks-hub-sidebar {
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .ks-hub-sidebar {
+    position: sticky;
+    top: 72px;
+    z-index: 40;
+    width: 100%;
+    background: var(--kx-surface-glass, rgba(13, 17, 20, 0.88));
+    backdrop-filter: var(--kx-backdrop-blur, blur(16px));
+    -webkit-backdrop-filter: var(--kx-backdrop-blur, blur(16px));
+    border-bottom: 1px solid var(--kx-border, rgba(255, 255, 255, 0.16));
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav {
+    position: static;
+    background: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .ks-hub-sidebar {
+    top: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ks-hub-sidebar {
+    position: sticky;
+    top: 96px;
+    z-index: 30;
+    width: 260px;
+    align-self: start;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav {
+    position: static;
+    background: #0a0f19;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 20px;
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+    padding: 8px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav-inner {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav-scroll {
+    overflow: visible;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav-track {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 4px;
+    padding: 0;
+    position: relative;
+  }
+
+  .ks-hub-sidebar .ks-nav-active-pill {
+    position: absolute;
+    left: 0;
+    border-radius: 12px;
+    background: rgba(34, 255, 136, 0.12);
+    border: 1px solid rgba(34, 255, 136, 0.35);
+    box-shadow: 0 0 20px rgba(34, 255, 136, 0.15);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-align: left;
+    background: transparent;
+    border: none;
+    z-index: 2;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active {
+    color: var(--kx-accent, #22FF88) !important;
+    font-weight: 700;
+    background: transparent !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger {
+    color: rgba(239, 68, 68, 0.85);
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger.is-active {
+    color: #ef4444 !important;
+  }
+}
+
+/* Tab Count Badge */
+.ks-nav-count-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #E2E8F0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  margin-left: auto;
+}
+
+.ks-nav-pill-btn.is-active .ks-nav-count-badge {
+  background: rgba(34, 255, 136, 0.2);
+  color: #22FF88;
+  border-color: rgba(34, 255, 136, 0.4);
+}
+
+/* Active Panel Main Area */
+.ks-hub-content {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 600px;
+  scroll-margin-top: 130px;
+  outline: none;
+}
+
+@media (max-width: 1023px) {
+  .ks-hub-content {
+    padding: 24px 16px 64px;
+    scroll-margin-top: 130px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ks-hub-content {
+    max-width: 920px;
+    padding: 0;
+    scroll-margin-top: 100px;
+  }
+}
+
+/* Panel Header Band */
+.ks-panel-header-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px;
+  min-height: 96px;
+  border-radius: 24px;
+  background: radial-gradient(circle at 12% 20%, rgba(0, 245, 160, 0.12) 0%, transparent 55%), #0D121B;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ks-panel-header-band.is-danger-band {
+  background: radial-gradient(circle at 12% 20%, rgba(239, 68, 68, 0.16) 0%, transparent 60%), #0D121B;
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.ks-panel-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.ks-panel-heading {
+  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #F8FAFC;
+  line-height: 1.3;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.ks-panel-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: #94A3B8;
+  margin: 0;
+  max-width: 680px;
+}
+
+.ks-panel-header-art {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.15) 0%, rgba(37, 200, 255, 0.1) 100%);
+  border: 1px solid rgba(0, 245, 160, 0.25);
+}
+
+@media (max-width: 640px) {
+  .ks-panel-header-band {
+    padding: 16px;
+    margin-bottom: 16px;
+    min-height: auto;
+  }
+}
+
+/* Panel Transition Animation */
+.ks-tab-transition-in {
+  animation: ksTabSlideUpFade 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes ksTabSlideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ks-tab-transition-in {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Unsaved Changes Modal */
+.ks-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ks-unsaved-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #0a0f19;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  animation: ksModalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ksModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ks-unsaved-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  outline: none;
+}
+
+.ks-unsaved-btn--stay {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.ks-unsaved-btn--stay:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.ks-unsaved-btn--discard {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+}
+
+.ks-unsaved-btn--discard:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.ks-unsaved-btn--save {
+  background: var(--kx-accent, #22FF88);
+  border: 1px solid var(--kx-accent, #22FF88);
+  color: #05070a;
+}
+
+.ks-unsaved-btn--save:hover {
+  background: #1de077;
+  box-shadow: 0 4px 16px rgba(34, 255, 136, 0.35);
+}
+
+/* ==========================================================================
+   REFINED SIDEBAR & COMPACT OVERVIEW PANEL (Phase 1 & Phase 2)
+   ========================================================================== */
+
+/* 1. Layout & Sidebar refinement */
+@media (min-width: 1024px) {
+  .ks-account-hub-layout {
+    grid-template-columns: 248px minmax(0, 1fr) !important;
+    gap: 20px !important;
+    padding: 24px 20px 64px !important;
+  }
+
+  .ks-hub-sidebar {
+    width: 248px !important;
+    top: 88px !important;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav {
+    padding: 8px !important;
+    border-radius: 16px !important;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav-track {
+    gap: 4px !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn {
+    height: 44px !important;
+    padding: 0 12px !important;
+    gap: 12px !important;
+    border-radius: 12px !important;
+    font-size: 13.5px !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-active-pill {
+    border-radius: 12px !important;
+    background: rgba(34, 255, 136, 0.12) !important;
+    border: 1px solid rgba(34, 255, 136, 0.3) !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .ks-hub-sidebar .ks-nav-pill-btn {
+    height: 40px !important;
+    padding: 0 14px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* 2. Overview Panel - Spacing & Structure */
+.ks-overview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Welcome Card (Merged Heading & Completeness) */
+.ks-overview-welcome-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: radial-gradient(circle at top right, rgba(0, 255, 170, 0.08), transparent 45%), linear-gradient(135deg, #0A0F17, #101827) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  padding: 24px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 640px) {
+  .ks-overview-welcome-card {
+    padding: 16px;
+  }
+}
+
+.ks-welcome-ambient-glow {
+  position: absolute;
+  top: -60px;
+  left: 20%;
+  width: 280px;
+  height: 120px;
+  background: rgba(45, 255, 178, 0.08);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.ks-welcome-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .ks-welcome-grid {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+}
+
+.ks-welcome-left-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.ks-overview-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2DFFB2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.ks-overview-heading {
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  background: linear-gradient(90deg, #2DFFB2 0%, #26D9F8 50%, #8B7CFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0 0 6px 0;
+}
+
+.ks-welcome-lead {
+  font-size: 15px;
+  font-weight: 700;
+  color: #DCE6F2;
+  letter-spacing: 0;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+}
+
+.ks-overview-body-desc {
+  font-size: 13.5px;
+  color: #C0CAD8;
+  line-height: 1.6;
+  letter-spacing: 0;
+  margin: 0;
+  max-width: 680px;
+}
+
+/* Completeness Stat Box */
+.ks-welcome-right-col {
+  flex-shrink: 0;
+}
+
+.ks-completeness-stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #080D15;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  padding: 12px 18px;
+  border-radius: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 768px) {
+  .ks-completeness-stat-box {
+    align-items: flex-end;
+  }
+}
+
+.ks-completeness-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #A8B5C7;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.ks-completeness-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ks-completeness-percent {
+  font-size: 26px;
+  font-weight: 900;
+  color: #2DFFB2;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.ks-completeness-fraction {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #98A6BA;
+  letter-spacing: 0;
+}
+
+/* Real 6px Progress Bar */
+.ks-completeness-progress-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.14);
+  margin-top: 18px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.ks-completeness-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2DFFB2 0%, #26D9F8 50%, #8B7CFF 100%);
+  transition: width 0.3s ease;
+}
+
+/* 3. Checklist Card */
+.ks-checklist-card {
+  background: radial-gradient(circle at top right, rgba(0, 255, 170, 0.05), transparent 45%), linear-gradient(135deg, #0D1420 0%, #111827 100%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  border-radius: 20px !important;
+  padding: 22px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
+}
+
+@media (max-width: 640px) {
+  .ks-checklist-card {
+    padding: 16px !important;
+  }
+}
+
+.ks-checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ks-card-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+  margin: 0 0 2px 0;
+  line-height: 1.25;
+}
+
+.ks-card-section-desc {
+  font-size: 12.5px;
+  color: #98A6BA;
+  letter-spacing: 0;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.ks-checklist-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #2DFFB2;
+  background: rgba(45, 255, 178, 0.1);
+  border: 1px solid rgba(45, 255, 178, 0.25);
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.ks-checklist-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Clean 3-column row without divider lines */
+.ks-compact-checklist-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #080D15;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.ks-compact-checklist-row:hover {
+  background: #0D1420;
+  border-color: rgba(45, 255, 178, 0.3);
+  transform: translateX(2px);
+}
+
+.ks-compact-checklist-row.is-done {
+  border-color: rgba(45, 255, 178, 0.22);
+  background: rgba(45, 255, 178, 0.03);
+}
+
+.ks-checklist-col-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: center;
+}
+
+.ks-check-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.ks-check-circle--done {
+  background: #2DFFB2;
+  color: #05070B;
+}
+
+.ks-check-circle--pending {
+  border: 1.5px solid #657185;
+  color: #C0CAD8;
+  background: transparent;
+}
+
+.ks-checklist-col-text {
+  min-width: 0;
+}
+
+.ks-checklist-item-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+  margin: 0 0 2px 0;
+  line-height: 1.3;
+}
+
+.ks-checklist-item-title.is-crossed {
+  color: #98A6BA;
+  text-decoration: line-through;
+}
+
+.ks-checklist-item-desc {
+  font-size: 12px;
+  color: #98A6BA;
+  letter-spacing: 0;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.ks-checklist-col-action {
+  flex-shrink: 0;
+}
+
+.ks-checklist-done-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #2DFFB2;
+}
+
+.ks-checklist-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #2DFFB2;
+  background: rgba(45, 255, 178, 0.1);
+  border: 1px solid rgba(45, 255, 178, 0.25);
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.ks-checklist-action-btn:hover {
+  background: #2DFFB2;
+  color: #05070B;
+  box-shadow: 0 0 16px rgba(45, 255, 178, 0.35);
+}
+
+/* 4. Two-Column Live Strips */
+.ks-overview-two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .ks-overview-two-col-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ks-alerts-card,
+.ks-recent-card {
+  background: radial-gradient(circle at top right, rgba(0, 255, 170, 0.05), transparent 45%), linear-gradient(135deg, #0D1420 0%, #111827 100%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  border-radius: 20px !important;
+  padding: 22px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .ks-alerts-card,
+  .ks-recent-card {
+    padding: 16px !important;
+  }
+}
+
+/* Rebuilt Flex Row Header */
+.ks-overview-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.ks-overview-header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ks-overview-header-icon--alert {
+  background: rgba(255, 214, 10, 0.12);
+  border: 1px solid rgba(255, 214, 10, 0.25);
+  color: #FFD60A;
+}
+
+.ks-overview-header-icon--recent {
+  background: rgba(38, 217, 248, 0.12);
+  border: 1px solid rgba(38, 217, 248, 0.25);
+  color: #25C9F7;
+}
+
+.ks-overview-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ks-overview-card-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.ks-overview-card-subtitle {
+  font-size: 12.5px;
+  color: #98A6BA;
+  letter-spacing: 0;
+  margin: 0;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ks-overview-view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #A8B5C7;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.ks-overview-view-all-link:hover {
+  color: #2DFFB2;
+  background: rgba(45, 255, 178, 0.08);
+}
+
+.ks-overview-view-all-link:hover .ks-chevron-nudge {
+  transform: translateX(2px);
+}
+
+.ks-chevron-nudge {
+  transition: transform 0.2s ease;
+}
+
+/* Empty States: compact vertical stack, max height 220px, 12px gaps */
+.ks-empty-state-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  max-height: 220px;
+  padding: 16px 12px;
+  min-height: 180px;
+}
+
+.ks-empty-icon-tile {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ks-empty-icon-tile--yellow {
+  background: rgba(255, 214, 10, 0.08);
+  border: 1px solid rgba(255, 214, 10, 0.2);
+  color: #FFD60A;
+}
+
+.ks-empty-icon-tile--blue {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #38BDF8;
+}
+
+.ks-empty-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 320px;
+}
+
+.ks-empty-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.ks-empty-desc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.55;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+/* 40px Outline Pill Button */
+.ks-outline-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f8fafc;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ks-outline-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+
+.ks-outline-pill-btn:focus-visible {
+  outline: 2px solid var(--kx-accent, #22FF88);
+  outline-offset: 2px;
+}
+
+/* Non-empty Item Rows */
+.ks-overview-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ks-overview-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s ease, border-color 0.15s ease;
+  text-decoration: none;
+}
+
+.ks-overview-item-row--link:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.ks-overview-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.ks-overview-item-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
+}
+
+.ks-overview-item-thumb--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #CBD5E1;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ks-overview-item-meta {
+  min-width: 0;
+}
+
+.ks-overview-item-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.ks-overview-item-prices {
+  font-size: 11.5px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.ks-active-status-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(34, 255, 136, 0.12);
+  color: #22FF88;
+  border: 1px solid rgba(34, 255, 136, 0.3);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   EDIT PROFILE TAB (Phase 1, 2, 3: Layout, Spacing, Floating Fields, Motion)
+   ========================================================================== */
+
+/* 1. Scroll Margins for Header Clipping Prevention */
+.ks-hub-sidebar,
+.ks-hub-content,
+[role="tabpanel"],
+.ks-profile-edit-grid {
+  scroll-margin-top: 88px; /* 72px navbar + 16px */
+}
+
+@media (max-width: 768px) {
+  .ks-hub-sidebar,
+  .ks-hub-content,
+  [role="tabpanel"],
+  .ks-profile-edit-grid {
+    scroll-margin-top: 80px; /* 64px navbar + 16px */
+  }
+}
+
+/* 2. Two-Column Profile Edit Grid */
+.ks-profile-edit-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .ks-profile-edit-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* 3. Left Avatar Card (Sticky on desktop, horizontal on tablet) */
+.ks-photo-card {
+  background: var(--kx-surface-1, #0D1114);
+  border: 1px solid var(--kx-border, rgba(255, 255, 255, 0.08));
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .ks-photo-card {
+    position: sticky;
+    top: 88px; /* 72px navbar + 16px */
+    z-index: 10;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  /* Tablet Horizontal Layout */
+  .ks-photo-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 24px;
+    padding: 20px;
+  }
+
+  .ks-photo-card-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .ks-photo-user-meta {
+    margin-top: 0 !important;
+  }
+
+  .ks-photo-actions {
+    margin-top: 0 !important;
+    margin-left: auto;
+    flex-direction: row !important;
+    width: auto !important;
+  }
+
+  .ks-photo-specs-note {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ks-photo-card {
+    padding: 16px;
+  }
+}
+
+/* 112px Avatar with thin green ring */
+.ks-avatar-anchor-wrap {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.ks-avatar-anchor-circle {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 2px solid var(--kx-accent, #22FF88);
+  box-shadow: 0 0 16px rgba(34, 255, 136, 0.22);
+  background: #000000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ks-avatar-anchor-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--kx-surface-2, #141a1f);
+  border: 1.5px solid var(--kx-border-hover, rgba(255, 255, 255, 0.25));
+  color: var(--kx-accent, #22FF88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  z-index: 2;
+}
+
+.ks-avatar-anchor-btn:hover {
+  background: var(--kx-surface-3, #1c242b);
+  border-color: var(--kx-accent, #22FF88);
+  transform: scale(1.06);
+}
+
+.ks-avatar-anchor-btn:active {
+  transform: scale(0.96);
+}
+
+.ks-photo-user-meta {
+  margin-top: 14px;
+  width: 100%;
+  min-width: 0;
+}
+
+.ks-photo-name {
+  font-size: 18px;
+  font-weight: 650;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.ks-photo-email {
+  font-size: 14px;
+  color: var(--kx-text-muted, #94a3b8);
+  margin-top: 4px;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.ks-photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.ks-photo-primary-btn {
+  height: 44px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  background: var(--kx-accent, #22FF88);
+  color: #030508;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.ks-photo-primary-btn:hover {
+  background: #1de077;
+  box-shadow: 0 0 20px rgba(34, 255, 136, 0.35);
+}
+
+.ks-photo-primary-btn:active {
+  transform: scale(0.98);
+}
+
+.ks-photo-ghost-btn {
+  height: 38px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--kx-text-muted, #CBD5E1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.ks-photo-ghost-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.ks-photo-ghost-btn:active {
+  transform: scale(0.98);
+}
+
+.ks-photo-specs-note {
+  font-size: 12.5px;
+  color: var(--kx-text-muted, #CBD5E1);
+  line-height: 1.45;
+  margin-top: 12px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+/* 4. Right Personal Details Form Card */
+.ks-profile-form-card {
+  background: var(--kx-surface-1, #0D1114);
+  border: 1px solid var(--kx-border, rgba(255, 255, 255, 0.16));
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .ks-profile-form-card {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.ks-form-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 0;
+  border-bottom: none !important;
+}
+
+.ks-form-card-header hr,
+.ks-profile-form-card hr {
+  display: none !important;
+}
+
+.ks-form-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.ks-form-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.ks-form-card-desc {
+  font-size: 13.5px;
+  color: var(--kx-text-muted, #CBD5E1);
+  margin-top: 4px;
+  margin-bottom: 0;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+/* DPDP 2023 Protected Pill */
+.ks-dpdp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(34, 255, 136, 0.08);
+  border: 1px solid rgba(34, 255, 136, 0.25);
+  color: var(--kx-accent, #22FF88);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .ks-form-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* Form Grid */
+.ks-profile-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start !important;
+}
+
+@media (max-width: 640px) {
+  .ks-profile-form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.ks-field-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ks-field-container--full {
+  grid-column: 1 / -1;
+}
+
+/* Unified 56px Floating Label Field */
+.ks-unified-field {
+  position: relative;
+  height: 56px;
+  background: var(--kx-surface-1, #0D1114);
+  border: 1px solid var(--kx-border, rgba(255, 255, 255, 0.1));
+  border-radius: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.ks-unified-field:hover {
+  border-color: var(--kx-border-hover, rgba(255, 255, 255, 0.2));
+}
+
+.ks-unified-field:focus-within {
+  border-color: var(--kx-accent, #22FF88) !important;
+  box-shadow: 0 0 0 4px var(--kx-accent-soft, rgba(34, 255, 136, 0.14)) !important;
+}
+
+.ks-unified-field.is-error {
+  border-color: var(--kx-red, #ef4444) !important;
+  box-shadow: 0 0 0 4px var(--kx-red-soft, rgba(239, 68, 68, 0.14)) !important;
+}
+
+.ks-unified-field.is-readonly {
+  background: rgba(13, 17, 20, 0.6);
+  opacity: 0.92;
+}
+
+.ks-unified-input {
+  width: 100%;
+  height: 100%;
+  padding: 22px 16px 6px;
+  background: transparent;
+  border: none;
+  color: var(--kx-text, #f4f7f5);
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  font-family: inherit;
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+
+.ks-unified-input--email {
+  padding-right: 88px !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ks-unified-input--date {
+  color-scheme: dark;
+}
+
+.ks-unified-input--date::-webkit-calendar-picker-indicator {
+  filter: invert(0.65) brightness(1.2);
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.ks-unified-input--date::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.ks-unified-select {
+  width: 100%;
+  height: 100%;
+  padding: 22px 36px 6px 16px;
+  background: transparent;
+  border: none;
+  color: var(--kx-text, #f4f7f5);
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  font-family: inherit;
+  border-radius: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.ks-unified-select option {
+  background: #0D1114;
+  color: #f4f7f5;
+}
+
+.ks-select-chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--kx-text-muted, #94a3b8);
+  display: flex;
+  align-items: center;
+}
+
+/* Floating Label text */
+.ks-unified-label {
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--kx-text-muted, #CBD5E1);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), font-size 0.18s ease, color 0.18s ease;
+  z-index: 1;
+}
+
+.ks-unified-label--email {
+  max-width: calc(100% - 100px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Floating Label transformation state */
+.ks-unified-field:focus-within .ks-unified-label,
+.ks-unified-field.is-floating .ks-unified-label {
+  transform: translateY(-10px) scale(0.78);
+  color: var(--kx-text-muted, #CBD5E1);
+  font-weight: 600;
+}
+
+.ks-unified-field:focus-within .ks-unified-label {
+  color: var(--kx-accent, #22FF88);
+}
+
+/* Email "Change" Button */
+.ks-email-change-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.ks-email-change-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.ks-email-change-btn:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+/* Phone Field +91 Chip */
+.ks-phone-prefix-chip {
+  height: 32px;
+  padding: 0 10px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--kx-text-muted, #CBD5E1);
+  border-right: 1px solid var(--kx-border, rgba(255, 255, 255, 0.16));
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.ks-unified-input--phone {
+  padding-left: 12px;
+}
+
+.ks-unified-label--phone {
+  left: 64px;
+}
+
+.ks-unified-field.is-floating .ks-unified-label--phone,
+.ks-unified-field:focus-within .ks-unified-label--phone {
+  transform: translateY(-10px) scale(0.78);
+}
+
+/* Standardized 12.5px Helper & Error Texts */
+.ks-field-helper-text {
+  display: block;
+  font-size: 12.5px !important;
+  color: var(--kx-text-muted, #CBD5E1) !important;
+  line-height: 1.4 !important;
+  margin-top: 6px;
+  word-wrap: break-word;
+}
+
+.ks-field-error-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--kx-red, #ef4444);
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.ks-pending-email-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #fbbf24;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+/* 5. Compact Unsaved Changes Save Bar (Height 56px, glass blur, slide up) */
+.ks-save-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  width: calc(100% - 32px);
+  max-width: 600px;
+  height: 56px;
+  min-height: 56px;
+  padding: 0 20px;
+  border-radius: 16px;
+  background: rgba(13, 17, 20, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  z-index: 85;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  pointer-events: none;
+  opacity: 0;
+  box-sizing: border-box;
+}
+
+.ks-save-bar.is-visible {
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.ks-save-bar-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.ks-save-bar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--kx-accent, #22FF88);
+  box-shadow: 0 0 10px var(--kx-accent, #22FF88);
+  flex-shrink: 0;
+}
+
+.ks-save-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ks-save-bar .ks-btn-secondary {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ks-save-bar .ks-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.ks-save-bar .ks-btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.ks-save-bar .ks-btn-primary {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: var(--kx-accent, #22FF88);
+  border: none;
+  color: #030508;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ks-save-bar .ks-btn-primary:hover {
+  background: #1de077;
+  box-shadow: 0 0 16px rgba(34, 255, 136, 0.35);
+}
+
+.ks-save-bar .ks-btn-primary:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .ks-save-bar {
+    height: auto;
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    bottom: 16px;
+  }
+  .ks-save-bar-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* 6. Strict Dark Theme Enforcement (Guarantees zero white backgrounds) */
+.kx-page.ks-profile-page,
+.kx-page[data-theme="light"].ks-profile-page,
+[data-theme="light"] .ks-profile-page {
+  background-color: transparent !important;
+  color: #F1F5F9 !important;
+}
+
+.ks-photo-card,
+.ks-profile-form-card,
+.ks-card,
+.ks-overview-welcome-card,
+.ks-checklist-card,
+.ks-alerts-card,
+.ks-address-card,
+.ks-product-dashboard-card {
+  background: radial-gradient(circle at top right, rgba(0, 255, 170, 0.08), transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45) !important;
+  color: #C0CAD8 !important;
+}
+
+/* Card hover lift & glow */
+.ks-card:hover,
+.ks-address-card:hover,
+.ks-product-dashboard-card:hover,
+.ks-photo-card:hover,
+.ks-profile-form-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(45, 255, 178, 0.28) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 24px rgba(45, 255, 178, 0.08) !important;
+}
+
+/* Strict Dark Form Inputs */
+.ks-unified-field {
+  background: #080D15 !important;
+  border: 1px solid rgba(148, 163, 184, 0.20) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+}
+
+.ks-unified-field:hover {
+  border-color: rgba(148, 163, 184, 0.35) !important;
+}
+
+.ks-unified-field:focus-within {
+  border-color: #2DFFB2 !important;
+  box-shadow: 0 0 0 3px rgba(45, 255, 178, 0.18), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  background: #080D15 !important;
+}
+
+.ks-unified-field.is-readonly {
+  background: rgba(10, 15, 23, 0.7) !important;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+  opacity: 0.85;
+}
+
+.ks-unified-input,
+.ks-unified-select {
+  background: transparent !important;
+  color: #E2E8F0 !important;
+  font-size: 15px !important;
+}
+
+.ks-unified-input::placeholder {
+  color: #748399 !important;
+}
+
+.ks-unified-label {
+  color: #A8B5C7 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+
+.ks-unified-field:focus-within .ks-unified-label {
+  color: #2DFFB2 !important;
+}
+
+.ks-unified-select option {
+  background: #080D15 !important;
+  color: #E2E8F0 !important;
+}
+
+.ks-phone-combined-input {
+  background: #080D15 !important;
+  border: 1px solid rgba(148, 163, 184, 0.20) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.ks-phone-combined-input:focus-within {
+  border-color: #2DFFB2 !important;
+  box-shadow: 0 0 0 3px rgba(45, 255, 178, 0.18) !important;
+}
+
+.ks-phone-prefix-chip {
+  background: #0D1420 !important;
+  color: #2DFFB2 !important;
+  border-right: 1px solid rgba(148, 163, 184, 0.18) !important;
+}
+
+.ks-phone-number-field {
+  background: transparent !important;
+  color: #E2E8F0 !important;
+}
+
+.ks-phone-number-field::placeholder {
+  color: #748399 !important;
+}
+
+/* Text Hierarchy */
+.ks-photo-name,
+.ks-form-card-title,
+.ks-card-section-title,
+.ks-overview-heading,
+.ks-panel-heading {
+  color: #F1F5F9 !important;
+  font-weight: 800 !important;
+}
+
+.ks-card-section-desc,
+.ks-panel-desc,
+.ks-overview-body-desc {
+  color: #C0CAD8 !important;
+  line-height: 1.6 !important;
+}
+
+.ks-overview-eyebrow,
+.ks-section-eyebrow {
+  color: #2DFFB2 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  font-size: 11.5px !important;
+}
+
+/* Save Bar */
+.ks-save-bar {
+  background: linear-gradient(135deg, #0D1420 0%, #111827 100%) !important;
+  border: 1px solid rgba(45, 255, 178, 0.28) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 20px rgba(45, 255, 178, 0.15) !important;
+  border-radius: 18px !important;
+}
+
+.ks-save-bar-msg {
+  color: #F1F5F9 !important;
+  font-weight: 600 !important;
+}
+
+.ks-save-bar .ks-btn-secondary {
+  background: #080D15 !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+  color: #C0CAD8 !important;
+}
+
+.ks-save-bar .ks-btn-secondary:hover {
+  background: #111827 !important;
+  color: #FFFFFF !important;
+  border-color: rgba(45, 255, 178, 0.3) !important;
+}
+
+/* Interactive Card Lift */
+.ks-card:hover,
+.ks-address-card:hover,
+.ks-product-dashboard-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 245, 160, 0.28) !important;
+  box-shadow: var(--ks-shadow-elevated, 0 16px 40px rgba(0, 0, 0, 0.32)), 0 12px 40px rgba(0, 245, 160, 0.06) !important;
+}
+
+/* 3. Modern Page Headings and Hero Cards (Band) */
+.ks-panel-header-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px 32px !important;
+  min-height: 96px;
+  border-radius: 22px !important;
+  background: radial-gradient(circle at top right, rgba(0, 245, 160, 0.12), transparent 70%), linear-gradient(145deg, #101722, #080C12) !important;
+  border: 1px solid rgba(0, 245, 160, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25) !important;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ks-panel-header-band.is-danger-band {
+  background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.12), transparent 70%), linear-gradient(145deg, rgba(35, 14, 18, 0.85), #080C12) !important;
+  border-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+.ks-section-eyebrow {
+  font-size: 11px !important;
+  letter-spacing: 0.14em !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  color: #00F5A0 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.ks-panel-heading {
+  font-size: clamp(24px, 3.2vw, 32px) !important;
+  font-weight: 800 !important;
+  color: #F5F7FA !important;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px 0;
+}
+
+.ks-panel-desc {
+  font-size: 14px !important;
+  color: #94A3B8 !important;
+  line-height: 1.6 !important;
+  margin: 0;
+}
+
+.ks-panel-header-art {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.15), rgba(39, 215, 255, 0.12));
+  border: 1px solid rgba(0, 245, 160, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 4. Recently Viewed Product Dashboard Cards */
+.ks-product-dashboard-card {
+  padding: 18px !important;
+  border-radius: 20px !important;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease !important;
+  box-sizing: border-box;
+}
+
+/* Compact Elegant Empty States */
+.ks-empty-state-compact-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px !important;
+  text-align: center;
+  border-radius: 20px !important;
+  background: radial-gradient(circle at 50% 20%, rgba(39, 215, 255, 0.08) 0%, transparent 65%), #0D131C !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+  margin: 8px 0;
+}
+
+.ks-empty-icon-tile {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.ks-empty-icon-tile--cyan {
+  background: rgba(39, 215, 255, 0.12) !important;
+  color: #27D7FF !important;
+  border: 1px solid rgba(39, 215, 255, 0.3) !important;
+  box-shadow: 0 0 20px rgba(39, 215, 255, 0.15);
+}
+
+.ks-empty-icon-tile--green {
+  background: rgba(0, 245, 160, 0.12) !important;
+  color: #00F5A0 !important;
+  border: 1px solid rgba(0, 245, 160, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 245, 160, 0.15);
+}
+
+/* 5. Notification Preference Row Cards */
+.ks-notification-row {
+  background: linear-gradient(145deg, rgba(16, 23, 34, 0.7), rgba(9, 13, 18, 0.85)) !important;
+  border: 1px solid rgba(148, 163, 184, 0.10) !important;
+  border-radius: 16px !important;
+  padding: 18px 22px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ks-notification-row:hover {
+  background: linear-gradient(145deg, rgba(20, 30, 44, 0.85), rgba(11, 16, 24, 0.95)) !important;
+  border-color: rgba(0, 245, 160, 0.22) !important;
+}
+
+/* Neon Green Active Toggle */
+.ks-tab-panel button.bg-\[\#22FF88\],
+.ks-tab-panel button.bg-\[\#00F5A0\] {
+  background-color: #00F5A0 !important;
+  box-shadow: 0 0 16px rgba(0, 245, 160, 0.35) !important;
+}
+
+/* 6. Theme Selection Cards */
+.ks-tab-panel .grid button {
+  padding: 20px !important;
+  border-radius: 18px !important;
+  transition: all 0.22s ease !important;
+  box-sizing: border-box;
+}
+
+.ks-tab-panel .grid button:hover {
+  transform: translateY(-2px);
+}
+
+/* 7. Refined 248px Sidebar Navigation on Desktop */
+@media (min-width: 1024px) {
+  .ks-hub-sidebar {
+    width: 248px !important;
+    position: sticky !important;
+    top: 96px !important;
+    z-index: 30 !important;
+    align-self: start !important;
+  }
+
+  .ks-account-hub-layout {
+    grid-template-columns: 248px minmax(0, 1fr) !important;
+    gap: 24px !important;
+    padding: 24px 24px 48px !important;
+    max-width: 1320px !important;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav {
+    background: #0A0F17 !important;
+    border: 1px solid rgba(148, 163, 184, 0.14) !important;
+    border-radius: 16px !important;
+    padding: 8px !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  .ks-hub-sidebar .ks-sticky-nav-track {
+    gap: 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn {
+    height: 44px !important;
+    padding: 0 12px !important;
+    border-radius: 12px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #A8B5C7 !important;
+    gap: 12px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:hover {
+    background: rgba(45, 255, 178, 0.05) !important;
+    color: #F1F5F9 !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active {
+    color: #2DFFB2 !important;
+    font-weight: 700 !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-active-pill {
+    background: linear-gradient(135deg, rgba(45, 255, 178, 0.16) 0%, rgba(38, 217, 248, 0.12) 100%) !important;
+    border: 1px solid rgba(45, 255, 178, 0.35) !important;
+    box-shadow: 0 0 18px rgba(45, 255, 178, 0.16) !important;
+    border-radius: 12px !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-active-pill.is-danger-pill {
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.20) 0%, rgba(245, 158, 11, 0.15) 100%) !important;
+    border: 1px solid rgba(248, 113, 113, 0.45) !important;
+    box-shadow: 0 0 18px rgba(248, 113, 113, 0.22) !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:focus {
+    outline: none !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:focus-visible {
+    outline: 2px solid var(--kx-accent, #22FF88) !important;
+    outline-offset: 2px !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger:focus-visible {
+    outline: 2px solid #F87171 !important;
+    outline-offset: 2px !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger {
+    color: #F87171 !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger:hover {
+    background: rgba(248, 113, 113, 0.08) !important;
+    color: #FFA3A3 !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger.is-active {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+  }
+}
+
+/* Scroll margin offset so panel top is not hidden behind the sticky navbar */
+.ks-hub-content,
+.ks-tab-panel,
+#ks-hub-content-area {
+  scroll-margin-top: 88px;
+}
+@media (max-width: 768px) {
+  .ks-hub-content,
+  .ks-tab-panel,
+  #ks-hub-content-area {
+    scroll-margin-top: 80px;
+  }
+}
+
+
+/* 8. Danger Zone Specific Styling */
+.ks-danger-warning-card {
+  background: linear-gradient(145deg, rgba(35, 14, 18, 0.85), rgba(16, 10, 14, 0.95)) !important;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 9. Buttons and Actions */
+.ks-btn-primary {
+  background: linear-gradient(135deg, #2DFFB2, #25C9F7) !important;
+  color: #05070B !important;
+  font-weight: 800 !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  border-radius: 12px !important;
+  padding: 12px 22px !important;
+  box-shadow: 0 4px 18px rgba(45, 255, 178, 0.3) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.ks-btn-primary:hover {
+  background: linear-gradient(135deg, #38FFBC, #30D2FF) !important;
+  box-shadow: 0 6px 24px rgba(45, 255, 178, 0.45), 0 0 16px rgba(37, 201, 247, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+.ks-btn-secondary {
+  background: #0D1420 !important;
+  border: 1px solid rgba(148, 163, 184, 0.16) !important;
+  color: #DCE6F2 !important;
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  font-weight: 700 !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.ks-btn-secondary:hover {
+  border-color: rgba(45, 255, 178, 0.35) !important;
+  color: #F1F5F9 !important;
+  background: #111827 !important;
+  transform: translateY(-2px) !important;
+}
+
+.ks-btn-danger {
+  background: rgba(220, 38, 38, 0.14) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  color: #EF4444 !important;
+  border-radius: 12px !important;
+  padding: 10px 18px !important;
+  font-weight: 700 !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+}
+
+.ks-btn-danger:hover {
+  background: rgba(220, 38, 38, 0.28) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  color: #FCA5A5 !important;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 10. Connected Sign-in Methods Row Cards */
+.ks-connected-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px !important;
+  border-radius: 16px !important;
+  background: #080D15 !important;
+  border: 1px solid rgba(148, 163, 184, 0.16) !important;
+  transition: all 0.2s ease !important;
+}
+
+.ks-connected-row:hover {
+  background: #0D1420 !important;
+  border-color: rgba(45, 255, 178, 0.28) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 11. Input Fields General System */
+.ks-password-input,
+.ks-field-input,
+.ks-unified-field input,
+.ks-unified-field select,
+.ks-float-input,
+.ks-float-select {
+  background-color: #080D15 !important;
+  border: 1px solid rgba(148, 163, 184, 0.20) !important;
+  border-radius: 12px !important;
+  color: #E2E8F0 !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease !important;
+}
+
+.ks-password-input {
+  padding: 0 48px 0 16px !important;
+}
+
+.ks-password-input::placeholder,
+.ks-field-input::placeholder,
+.ks-float-input::placeholder {
+  color: #748399 !important;
+}
+
+.ks-password-input:focus,
+.ks-field-input:focus,
+.ks-float-input:focus,
+.ks-float-select:focus,
+.ks-unified-field.is-focused,
+.ks-unified-field input:focus,
+.ks-unified-field select:focus {
+  border-color: #2DFFB2 !important;
+  box-shadow: 0 0 0 3px rgba(45, 255, 178, 0.18) !important;
+  background-color: #080D15 !important;
+  outline: none !important;
+}
+
+/* 12. Dynamic Tab Transitions */
+.ks-tab-transition-in {
+  animation: ksTabFadeSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes ksTabFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 13. Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  .ks-card,
+  .ks-address-card,
+  .ks-product-dashboard-card,
+  .ks-btn-primary,
+  .ks-btn-secondary,
+  .ks-btn-danger,
+  .ks-nav-active-pill,
+  .ks-tab-transition-in {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   14. Scoped Color Contrast & Readability Enhancements (.ks-profile-page / .kx-page)
+   Strictly dark theme rules. No element in the profile hierarchy is inverted to white.
+   ========================================================================== */
+.ks-profile-page,
+.kx-page.ks-profile-page {
+  background: #05070B !important;
+  color: #F1F5F9 !important;
+}
+
+.ks-profile-page .text-gray-400,
+.kx-page .text-gray-400 {
+  color: #98A6BA !important;
+}
+
+.ks-profile-page .text-gray-500,
+.kx-page .text-gray-500 {
+  color: #748399 !important;
+}
+
+.ks-profile-page .text-gray-600,
+.kx-page .text-gray-600 {
+  color: #657185 !important;
+}
+
+.ks-profile-page .text-gray-300,
+.kx-page .text-gray-300 {
+  color: #C0CAD8 !important;
+}
+
+.ks-profile-page .text-\[\#98A3A0\],
+.kx-page .text-\[\#98A3A0\] {
+  color: #98A6BA !important;
+}
+
+.ks-profile-page .border-white\/10,
+.kx-page .border-white\/10 {
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+.ks-profile-page .border-white\/15,
+.kx-page .border-white\/15 {
+  border-color: rgba(148, 163, 184, 0.20) !important;
+}
+
+.ks-profile-page .border-white\/5,
+.kx-page .border-white\/5 {
+  border-color: rgba(148, 163, 184, 0.08) !important;
+}
+
+/* Strict Dark Guarantee: override any light theme styles that try to invert text to dark gray on profile */
+.kx-page[data-theme="light"].ks-profile-page .text-gray-400,
+[data-theme="light"] .ks-profile-page .text-gray-400,
+.kx-page[data-theme="light"] .ks-hub-content .text-gray-400 {
+  color: #98A6BA !important;
+}
+
+.kx-page[data-theme="light"].ks-profile-page .text-gray-500,
+[data-theme="light"] .ks-profile-page .text-gray-500,
+.kx-page[data-theme="light"] .ks-hub-content .text-gray-500 {
+  color: #748399 !important;
+}
+
+.kx-page[data-theme="light"].ks-profile-page .text-gray-300,
+[data-theme="light"] .ks-profile-page .text-gray-300,
+.kx-page[data-theme="light"] .ks-hub-content .text-gray-300 {
+  color: #C0CAD8 !important;
+}
+
+.kx-page[data-theme="light"].ks-profile-page .text-\[\#98A3A0\],
+[data-theme="light"] .ks-profile-page .text-\[\#98A3A0\],
+.kx-page[data-theme="light"] .ks-hub-content .text-\[\#98A3A0\] {
+  color: #98A6BA !important;
+}
+
+.kx-page[data-theme="light"].ks-profile-page .border-white\/10,
+[data-theme="light"] .ks-profile-page .border-white\/10,
+.kx-page[data-theme="light"].ks-profile-page .border-white\/15,
+[data-theme="light"] .ks-profile-page .border-white\/15,
+.kx-page[data-theme="light"].ks-profile-page .border-white\/5,
+[data-theme="light"] .ks-profile-page .border-white\/5 {
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+/* ==========================================================================
+   15. Scoped Strict Dark Newsletter for Profile Page
+   Guarantees zero white backgrounds in the profile newsletter component.
+   ========================================================================== */
+.ks-profile-newsletter-wrap .ksam-newsletter {
+  background: radial-gradient(circle at 10% 20%, rgba(45, 255, 178, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(38, 217, 248, 0.08) 0%, transparent 40%),
+              linear-gradient(135deg, #0A0F17 0%, #101827 100%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  border-radius: 28px !important;
+  color: #F1F5F9 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+  margin-top: 32px !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-badge {
+  background: #080D15 !important;
+  border: 1px solid rgba(45, 255, 178, 0.25) !important;
+  color: #2DFFB2 !important;
+  box-shadow: none !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-title {
+  color: #F1F5F9 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-title-green {
+  color: #2DFFB2 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-title-red {
+  background: linear-gradient(90deg, #2DFFB2 0%, #26D9F8 50%, #8B7CFF 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-description {
+  color: #C0CAD8 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-features .ksam-feature {
+  background: #080D15 !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-features .ksam-feature:hover {
+  background: #0D1420 !important;
+  border-color: rgba(45, 255, 178, 0.25) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-features .ksam-feature h4 {
+  color: #F1F5F9 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-features .ksam-feature p {
+  color: #98A6BA !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-email {
+  background: #080D15 !important;
+  border: 1px solid rgba(148, 163, 184, 0.20) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-email:focus-within {
+  border-color: #2DFFB2 !important;
+  box-shadow: 0 0 0 3px rgba(45, 255, 178, 0.18) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-email input {
+  color: #E2E8F0 !important;
+  background: transparent !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-email input::placeholder {
+  color: #748399 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-subscribe {
+  background: linear-gradient(135deg, #2DFFB2 0%, #25C9F7 100%) !important;
+  color: #05070B !important;
+  font-weight: 800 !important;
+  box-shadow: 0 10px 25px rgba(45, 255, 178, 0.3) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-subscribe:hover {
+  background: linear-gradient(135deg, #38FFBC 0%, #30D2FF 100%) !important;
+  box-shadow: 0 14px 32px rgba(45, 255, 178, 0.45) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-deal-card,
+.ks-profile-newsletter-wrap .ksam-rating-card {
+  background: #0D1420 !important;
+  border: 1px solid rgba(148, 163, 184, 0.16) !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(15px) !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-deal-card *,
+.ks-profile-newsletter-wrap .ksam-rating-card * {
+  color: #C0CAD8 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-deal-card strong,
+.ks-profile-newsletter-wrap .ksam-rating-card strong,
+.ks-profile-newsletter-wrap .ksam-deal-card b,
+.ks-profile-newsletter-wrap .ksam-rating-card b {
+  color: #F1F5F9 !important;
+}
+
+.ks-profile-newsletter-wrap .ksam-deal-title {
+  color: #F1F5F9 !important;
+}
+
+/* Zero white backgrounds on profile header / navbar elements */
+.ks-profile-page .kh-nav-hamburger-line {
+  background: #2DFFB2 !important;
+}
+
 

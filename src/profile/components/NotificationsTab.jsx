@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { Bell, Lock, Mail, ShieldAlert, Sparkles, Check, Zap } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Bell, Lock, Mail, ShieldAlert, Sparkles, Zap } from "lucide-react";
+import gsap from "gsap";
 import { supabase } from "../../lib/supabase";
+import { respectReducedMotion } from "../../lib/motion.js";
 
 export default function NotificationsTab({
   preferences = {},
@@ -10,6 +12,33 @@ export default function NotificationsTab({
   onShowToast
 }) {
   const [saving, setSaving] = useState(false);
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    if (respectReducedMotion() || !panelRef.current) return;
+    const ctx = gsap.context(() => {
+      const heading = panelRef.current.querySelector(".kx-notifications-heading");
+      const rows = panelRef.current.querySelectorAll(".kx-spot");
+      const tl = gsap.timeline();
+      if (heading) {
+        tl.fromTo(
+          heading,
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+        );
+      }
+      if (rows.length > 0) {
+        tl.fromTo(
+          rows,
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: "power2.out" },
+          "-=0.15"
+        );
+      }
+    }, panelRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const notifications = preferences?.notifications || {
     deal_alerts: true,
@@ -62,146 +91,141 @@ export default function NotificationsTab({
   };
 
   return (
-    <div className="ks-tab-panel" role="tabpanel" aria-label="Notification Preferences">
-      <div className="ks-card">
-        <div className="ks-card-header">
-          <h2 className="ks-card-title">
-            <Bell size={20} color="#22FF88" />
-            <span>Notification Channels</span>
-          </h2>
-          <p className="ks-card-desc">
-            Choose what alerts and marketing updates you wish to receive from KSAM Deal.
-          </p>
+    <div ref={panelRef} className="ks-tab-panel" role="tabpanel" aria-label="Notification Preferences">
+      {/* Clean Section Heading (No redundant outer card container) */}
+      <div className="kx-notifications-heading mb-6 px-1">
+        <h2 className="flex items-center gap-2.5 text-lg font-bold text-white tracking-[-0.01em]">
+          <Bell size={20} className="text-[#22FF88]" />
+          <span>Notification Channels</span>
+        </h2>
+        <p className="text-[13.5px] text-[#98A3A0] mt-1 leading-[1.55]">
+          Choose what alerts and marketing updates you wish to receive from KSAM Deal.
+        </p>
+      </div>
+
+      {/* Spotlight List with 12px gap and sibling dimming */}
+      <div className="kx-spot-list">
+        {/* Row 1: Deal Alerts (Tone: Green) */}
+        <div className="kx-spot" data-tone="green">
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--green">
+              <Zap size={20} />
+            </div>
+            <div className="kx-spot-text-wrap">
+              <h4 className="kx-spot-title">Flash Deal & Lightning Drop Alerts</h4>
+              <p className="kx-spot-desc">Receive notifications when popular deals hit clearance pricing.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notifications.deal_alerts}
+            onClick={() => handleToggle("deal_alerts", notifications.deal_alerts)}
+            aria-label={`Toggle flash deal alerts (${notifications.deal_alerts ? 'enabled' : 'disabled'})`}
+            className={`kx-toggle-btn ${notifications.deal_alerts ? "is-active" : ""}`}
+          >
+            <span className="kx-toggle-thumb" />
+          </button>
         </div>
 
-        <div className="space-y-4">
-          {/* Deal Alerts */}
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/20">
-                <Zap size={18} />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-white">Flash Deal & Lightning Drop Alerts</h4>
-                <p className="text-xs text-gray-400">Receive notifications when popular deals hit clearance pricing.</p>
-              </div>
+        {/* Row 2: Price-Drop Alerts (Tone: Yellow) */}
+        <div className="kx-spot" data-tone="yellow">
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--yellow">
+              <Bell size={20} />
             </div>
-            <button
-              type="button"
-              onClick={() => handleToggle("deal_alerts", notifications.deal_alerts)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                notifications.deal_alerts ? "bg-[#22FF88]" : "bg-gray-700"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black shadow-lg transition duration-200 ease-in-out ${
-                  notifications.deal_alerts ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
+            <div className="kx-spot-text-wrap">
+              <h4 className="kx-spot-title">Target Price Drops</h4>
+              <p className="kx-spot-desc">Notifications when your monitored wishlist or price alert targets are reached.</p>
+            </div>
           </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notifications.price_drops}
+            onClick={() => handleToggle("price_drops", notifications.price_drops)}
+            aria-label={`Toggle target price drops (${notifications.price_drops ? 'enabled' : 'disabled'})`}
+            className={`kx-toggle-btn ${notifications.price_drops ? "is-active" : ""}`}
+          >
+            <span className="kx-toggle-thumb" />
+          </button>
+        </div>
 
-          {/* Price-Drop Alerts */}
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20">
-                <Bell size={18} />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-white">Target Price Drops</h4>
-                <p className="text-xs text-gray-400">Notifications when your monitored wishlist or price alert targets are reached.</p>
-              </div>
+        {/* Row 3: Weekly Newsletter (Tone: Blue) */}
+        <div className="kx-spot" data-tone="blue">
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--blue">
+              <Mail size={20} />
             </div>
-            <button
-              type="button"
-              onClick={() => handleToggle("price_drops", notifications.price_drops)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                notifications.price_drops ? "bg-[#22FF88]" : "bg-gray-700"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black shadow-lg transition duration-200 ease-in-out ${
-                  notifications.price_drops ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
+            <div className="kx-spot-text-wrap">
+              <h4 className="kx-spot-title">Weekly Deal Digest & Coupons</h4>
+              <p className="kx-spot-desc">Curated weekly highlights of the highest coupon savings in India.</p>
+            </div>
           </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notifications.weekly_newsletter}
+            onClick={() => handleToggle("weekly_newsletter", notifications.weekly_newsletter)}
+            aria-label={`Toggle weekly newsletter (${notifications.weekly_newsletter ? 'enabled' : 'disabled'})`}
+            className={`kx-toggle-btn ${notifications.weekly_newsletter ? "is-active" : ""}`}
+          >
+            <span className="kx-toggle-thumb" />
+          </button>
+        </div>
 
-          {/* Weekly Newsletter */}
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">
-                <Mail size={18} />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-white">Weekly Deal Digest & Coupons</h4>
-                <p className="text-xs text-gray-400">Curated weekly highlights of the highest coupon savings in India.</p>
-              </div>
+        {/* Row 4: Product Recommendations (Tone: Purple) */}
+        <div className="kx-spot" data-tone="purple">
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--purple">
+              <Sparkles size={20} />
             </div>
-            <button
-              type="button"
-              onClick={() => handleToggle("weekly_newsletter", notifications.weekly_newsletter)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                notifications.weekly_newsletter ? "bg-[#22FF88]" : "bg-gray-700"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black shadow-lg transition duration-200 ease-in-out ${
-                  notifications.weekly_newsletter ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
+            <div className="kx-spot-text-wrap">
+              <h4 className="kx-spot-title">Personalized Recommendations</h4>
+              <p className="kx-spot-desc">Suggestions tailored to your browsing and category preferences.</p>
+            </div>
           </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notifications.recommendations}
+            onClick={() => handleToggle("recommendations", notifications.recommendations)}
+            aria-label={`Toggle recommendations (${notifications.recommendations ? 'enabled' : 'disabled'})`}
+            className={`kx-toggle-btn ${notifications.recommendations ? "is-active" : ""}`}
+          >
+            <span className="kx-toggle-thumb" />
+          </button>
+        </div>
 
-          {/* Product Recommendations */}
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                <Sparkles size={18} />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-white">Personalized Recommendations</h4>
-                <p className="text-xs text-gray-400">Suggestions tailored to your browsing and category preferences.</p>
-              </div>
+        {/* Row 5: Account & Security (Locked ON, Tone: Green) */}
+        <div className="kx-spot" data-tone="green">
+          <div className="kx-spot-content">
+            <div className="kx-spot-icon-tile kx-spot-icon-tile--green">
+              <ShieldAlert size={20} />
             </div>
-            <button
-              type="button"
-              onClick={() => handleToggle("recommendations", notifications.recommendations)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                notifications.recommendations ? "bg-[#22FF88]" : "bg-gray-700"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black shadow-lg transition duration-200 ease-in-out ${
-                  notifications.recommendations ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* Account & Security (Locked ON) */}
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <ShieldAlert size={18} />
+            <div className="kx-spot-text-wrap">
+              <div className="flex items-center gap-2">
+                <h4 className="kx-spot-title">Account & Security Alerts</h4>
+                <span className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-gray-300">
+                  <Lock size={10} /> Required
+                </span>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-white">Account & Security Alerts</h4>
-                  <span className="flex items-center gap-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-gray-300">
-                    <Lock size={10} /> Required
-                  </span>
-                </div>
-                <p className="text-xs text-gray-400">Password changes, email confirmations, and account security notifications.</p>
-              </div>
-            </div>
-            <div
-              className="relative inline-flex h-6 w-11 shrink-0 cursor-not-allowed rounded-full bg-[#22FF88]/40 border-2 border-transparent"
-              title="Security alerts cannot be disabled"
-            >
-              <span className="inline-block h-5 w-5 transform rounded-full bg-black translate-x-5" />
+              <p className="kx-spot-desc">Password changes, email confirmations, and account security notifications.</p>
             </div>
           </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked="true"
+            disabled
+            className="kx-toggle-btn is-locked"
+            title="Security alerts are required and cannot be disabled"
+            aria-label="Account & Security Alerts (Required, cannot be disabled)"
+          >
+            <span className="kx-toggle-thumb">
+              <Lock size={11} className="text-gray-900" />
+            </span>
+          </button>
         </div>
       </div>
     </div>

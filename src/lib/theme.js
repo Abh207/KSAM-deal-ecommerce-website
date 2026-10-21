@@ -67,11 +67,23 @@ export function applyTheme(themeSetting = "dark", accentSetting = "green") {
 
   doc.setAttribute("data-theme", effectiveTheme);
   doc.setAttribute("data-accent", accentSetting);
+  if (document.body) {
+    document.body.setAttribute("data-theme", effectiveTheme);
+    document.body.setAttribute("data-accent", accentSetting);
+  }
 
   const accentObj = ACCENT_COLORS[accentSetting] || ACCENT_COLORS.green;
   doc.style.setProperty("--ks-brand-accent", accentObj.value);
   doc.style.setProperty("--ks-brand-accent-rgb", accentObj.rgb);
   doc.style.setProperty("--ks-brand-accent-glow", accentObj.glow);
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("ksam-theme-changed", {
+        detail: { theme: effectiveTheme, rawTheme: themeSetting, accent: accentSetting }
+      })
+    );
+  }
 
   try {
     localStorage.setItem(THEME_STORAGE_KEY, themeSetting);

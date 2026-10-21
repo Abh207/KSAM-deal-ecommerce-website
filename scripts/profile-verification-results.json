@@ -1,0 +1,101 @@
+{
+  "viewports": {
+    "360px-mobile": {
+      "windowWidth": 360,
+      "bodyScrollWidth": 360,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 360,
+      "sidebarLayout": "none"
+    },
+    "390px-mobile": {
+      "windowWidth": 390,
+      "bodyScrollWidth": 390,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 390,
+      "sidebarLayout": "none"
+    },
+    "768px-tablet": {
+      "windowWidth": 768,
+      "bodyScrollWidth": 768,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 768,
+      "sidebarLayout": "none"
+    },
+    "1024px-desktop": {
+      "windowWidth": 1024,
+      "bodyScrollWidth": 1024,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248,
+      "sidebarLayout": "248px 704px"
+    },
+    "1366px-desktop": {
+      "windowWidth": 1366,
+      "bodyScrollWidth": 1366,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248,
+      "sidebarLayout": "248px 1000px"
+    },
+    "1920px-fhd": {
+      "windowWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248,
+      "sidebarLayout": "248px 1000px"
+    },
+    "2560px-qhd": {
+      "windowWidth": 2560,
+      "bodyScrollWidth": 2560,
+      "hasHorizontalOverflow": false,
+      "sidebarWidth": 248,
+      "sidebarLayout": "248px 1000px"
+    }
+  },
+  "checks": {
+    "homeHasFooter": false,
+    "profileHasNoFooter": true,
+    "profileHasNewsletter": true,
+    "textStripRemoved": true,
+    "backdropCanvas": {
+      "exists": true,
+      "hasContainer": true,
+      "hasGrid": true,
+      "hasGrain": true,
+      "width": 280,
+      "height": 1272
+    },
+    "productStrip": {
+      "exists": true,
+      "trackCount": 2,
+      "cardCount": 44,
+      "hasForwardAndReverse": true,
+      "linksToShowcase": true
+    },
+    "notifications": {
+      "hasSpotList": true,
+      "rowCount": 5,
+      "tones": [
+        "green",
+        "yellow",
+        "blue",
+        "purple",
+        "green"
+      ],
+      "toggleCount": 5,
+      "hasLockedToggle": true,
+      "firstToggleDimensions": {
+        "width": 52,
+        "height": 30
+      },
+      "firstThumbDimensions": {
+        "width": 24,
+        "height": 24
+      },
+      "noDoubleBorders": true
+    },
+    "toggleInteraction": {
+      "before": "true",
+      "after": "false",
+      "toggled": true
+    }
+  }
+}

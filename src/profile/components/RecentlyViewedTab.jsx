@@ -55,36 +55,36 @@ export default function RecentlyViewedTab({
         </div>
 
         {items.length === 0 ? (
-          <div className="py-16 text-center space-y-4 rounded-2xl border border-white/5 bg-white/[0.02]">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">
-              <Clock size={28} />
+          <div className="ks-empty-state-compact-box">
+            <div className="ks-empty-icon-tile ks-empty-icon-tile--cyan">
+              <Clock size={24} />
             </div>
-            <div className="max-w-md mx-auto">
+            <div className="max-w-md mx-auto space-y-1.5 text-center">
               <h3 className="text-base font-bold text-white">No Recently Viewed Products</h3>
-              <p className="text-xs text-gray-400 mt-1">
-                As you browse discounts across electronics, fashion, and lifestyle on KSAM Deal, your recently inspected items will appear here.
+              <p className="text-xs text-gray-400 leading-relaxed max-w-sm mx-auto">
+                Explore the latest electronics, fashion, and lifestyle discounts across partner stores to see them tracked here.
               </p>
             </div>
             <a
               href={`${BASE_URL}#deals`}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#22FF88] to-[#38BDF8] px-5 py-2.5 text-xs font-black text-black hover:opacity-90 transition"
+              className="ks-btn-primary inline-flex items-center gap-2 mt-2"
             >
-              <ShoppingBag size={14} />
-              <span>Browse Today's Deals</span>
+              <ShoppingBag size={15} />
+              <span>Browse Deals</span>
             </a>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {items.map((item) => {
               const detailUrl = `${BASE_URL}deal.html?id=${encodeURIComponent(item.id)}`;
               return (
                 <div
                   key={item.id}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 transition-all hover:border-[#38BDF8]/50 hover:shadow-[0_0_25px_rgba(56,189,248,.1)]"
+                  className="ks-product-dashboard-card group relative flex flex-col justify-between"
                 >
                   <div>
-                    {/* Image */}
-                    <div className="relative h-44 w-full overflow-hidden rounded-xl bg-[#111] mb-3">
+                    {/* Image with 16:10 aspect ratio */}
+                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-[#090D14] mb-3.5">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -105,31 +105,38 @@ export default function RecentlyViewedTab({
 
                       {/* Discount Badge */}
                       {item.discount > 0 && (
-                        <span className="absolute left-2.5 top-2.5 rounded-full bg-[#FFD60A] px-2 py-0.5 text-[10px] font-black text-black">
+                        <span className="absolute left-2.5 top-2.5 rounded-full bg-[#00F5A0] px-2 py-0.5 text-[10px] font-black text-black">
                           -{item.discount}%
                         </span>
                       )}
                     </div>
 
-                    {/* Category & Title */}
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#38BDF8]">
-                      {item.category || "Deal"}
-                    </span>
-                    <h4 className="mt-1 text-sm font-bold text-white line-clamp-2 min-h-[40px]">
-                      <a href={detailUrl} className="hover:text-[#22FF88] transition">
+                    {/* Category & Rating */}
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className="font-bold uppercase tracking-wider text-[#25C8FF]">
+                        {item.category || "Deal"}
+                      </span>
+                      <span className="text-amber-400 font-semibold flex items-center gap-1">
+                        ★ {item.rating || "4.5"}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="text-sm font-bold text-white line-clamp-2 min-h-[40px] leading-snug">
+                      <a href={detailUrl} className="hover:text-[#00F5A0] transition">
                         {item.name}
                       </a>
                     </h4>
                   </div>
 
-                  {/* Price & Link */}
-                  <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-3">
+                  {/* Price & Action Row (No horizontal divider) */}
+                  <div className="mt-4 flex items-center justify-between pt-1">
                     <div>
-                      <p className="text-base font-black text-[#22FF88]">
+                      <p className="text-base font-black text-[#00F5A0]">
                         ₹{Number(item.price || 0).toLocaleString("en-IN")}
                       </p>
                       {item.oldPrice > item.price && (
-                        <del className="text-xs text-gray-500">
+                        <del className="text-xs text-gray-500 block -mt-0.5">
                           ₹{Number(item.oldPrice).toLocaleString("en-IN")}
                         </del>
                       )}
@@ -137,9 +144,9 @@ export default function RecentlyViewedTab({
 
                     <a
                       href={detailUrl}
-                      className="flex items-center gap-1 rounded-lg border border-[#38BDF8]/40 bg-[#38BDF8]/10 px-3 py-1.5 text-xs font-bold text-[#38BDF8] hover:bg-[#38BDF8] hover:text-black transition"
+                      className="flex items-center gap-1.5 rounded-xl border border-[#25C8FF]/40 bg-[#25C8FF]/10 px-3.5 py-2 text-xs font-bold text-[#25C8FF] hover:bg-[#25C8FF] hover:text-black transition"
                     >
-                      <span>View</span>
+                      <span>View Deal</span>
                       <ArrowUpRight size={13} />
                     </a>
                   </div>

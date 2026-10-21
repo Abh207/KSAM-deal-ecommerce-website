@@ -205,9 +205,9 @@ export default function AvatarModal({
               height: 150,
               borderRadius: "50%",
               overflow: "hidden",
-              border: "3px solid #22FF88",
-              boxShadow: "0 0 25px rgba(34, 255, 136, 0.25)",
-              background: "#090e17",
+              border: "3px solid #2DFFB2",
+              boxShadow: "0 0 25px rgba(45, 255, 178, 0.25)",
+              background: "#080D15",
               position: "relative"
             }}
           >
@@ -225,7 +225,7 @@ export default function AvatarModal({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#64748b"
+                  color: "#748399"
                 }}
               >
                 <Camera size={44} />
@@ -233,7 +233,7 @@ export default function AvatarModal({
             )}
           </div>
 
-          <p style={{ fontSize: 12, color: "#94a3b8", marginTop: 12, textAlign: "center" }}>
+          <p style={{ fontSize: 12, color: "#98A6BA", marginTop: 12, textAlign: "center" }}>
             JPG, PNG or WebP • Max 5MB • Automatically cropped to 400x400
           </p>
         </div>
