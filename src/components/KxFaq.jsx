@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ChevronsUpDown } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { respectReducedMotion } from "../lib/motion.js";
@@ -106,7 +106,7 @@ export default function KxFaq({
   useEffect(() => {
     if (!listRef.current) return;
 
-    // Safety fallback: after 1s ensure all rows are 100% visible with transform cleared
+    // Safety fallback: after 1.2s ensure all rows are 100% visible with transform cleared
     const safetyTimer = setTimeout(() => {
       if (listRef.current) {
         const rows = listRef.current.querySelectorAll(".kx-faq-row");
@@ -115,7 +115,7 @@ export default function KxFaq({
           r.style.transform = "none";
         });
       }
-    }, 1000);
+    }, 1200);
 
     if (respectReducedMotion()) {
       const rows = listRef.current.querySelectorAll(".kx-faq-row");
@@ -131,27 +131,18 @@ export default function KxFaq({
     if (!rows.length) return () => clearTimeout(safetyTimer);
 
     const ctx = gsap.context(() => {
-      rows.forEach((row, idx) => {
-        const fromLeft = idx % 2 === 0;
-        const startX = isMobile ? 0 : fromLeft ? -48 : 48;
-        const startY = isMobile ? 32 : 16;
-        const angle = isMobile ? 0 : fromLeft ? -1 : 1;
+      rows.forEach((row) => {
+        const startY = isMobile ? 24 : 20;
 
         gsap.fromTo(
           row,
           {
             opacity: 0,
-            x: startX,
-            y: startY,
-            scale: 0.98,
-            rotation: angle
+            y: startY
           },
           {
             opacity: 1,
-            x: 0,
             y: 0,
-            scale: 1,
-            rotation: 0,
             duration: 0.65, // Finishes within 700ms
             ease: "power2.out",
             scrollTrigger: {
@@ -236,13 +227,16 @@ export default function KxFaq({
     <div className="w-full">
       {/* Optional Expand all / Collapse all Controls */}
       {showControls && items.length > 1 && (
-        <div className="flex justify-end mb-4 px-2">
+        <div className="kx-faq-controls-row">
           <button
             type="button"
             onClick={allOpen ? handleCollapseAll : handleExpandAll}
-            className="text-xs font-bold text-[var(--kx-text-muted)] hover:text-[var(--kx-accent)] transition-colors kx-animated-link"
+            aria-expanded={allOpen}
+            aria-label={allOpen ? "Collapse all" : "Expand all"}
+            className="kx-faq-expand-btn"
           >
-            {allOpen ? "Collapse all" : "Expand all"}
+            <span>{allOpen ? "Collapse all" : "Expand all"}</span>
+            <ChevronsUpDown size={16} className="kx-faq-expand-icon" />
           </button>
         </div>
       )}

@@ -19,6 +19,7 @@ import {
   initHeroExitDrift
 } from "../lib/motion.js";
 import { applyTheme, getStoredTheme, getStoredAccent } from "../lib/theme.js";
+import LegalHero from "./LegalHero.jsx";
 
 import "../deals/tailwind-generated.css";
 import "../deals/deals.css";
@@ -230,76 +231,43 @@ export function TermsPage() {
       <Navbar />
 
       <div className="kx-main-wrapper relative z-10">
-        <main className="kx-container-1200 py-10 sm:py-16 lg:py-20">
-          {/* Top Breadcrumb Navigation */}
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-            <a
-              href={`${BASE_URL}profile.html`}
-              className="inline-flex items-center gap-2 text-xs font-bold text-[var(--kx-text-muted)] hover:text-[var(--kx-accent)] transition kx-animated-link"
-            >
-              <ArrowLeft size={14} /> Back to Profile Hub
-            </a>
-            <div className="flex items-center gap-3 text-xs text-[var(--kx-text-dim)] font-medium">
-              <span className="kx-pill-tint">
-                <Clock size={12} className="text-[var(--kx-accent)]" /> ~5 min read
-              </span>
-              <span>Effective Date: [EFFECTIVE DATE]</span>
-            </div>
-          </div>
-
-          {/* Fluid Open Hero (No card, no border) */}
-          <section
-            ref={heroRef}
-            className="kx-faq-hero"
-            data-tone="yellow-green"
-          >
-            <Aurora tone="yellow-green" />
-
-            <div ref={heroContentRef} className="relative z-10 max-w-3xl">
-              <div className="kx-faq-icon-tile mb-6">
-                <FileText size={26} strokeWidth={2.4} />
-              </div>
-              <span className="kx-eyebrow mb-4">
-                Terms of service
-              </span>
-              <h1 className="kx-hero-heading mb-6">
-                Clear terms.{" "}
-                <span className="kx-gradient-text" data-tone="yellow-green">
-                  Better experiences.
-                </span>
-              </h1>
-              <p className="text-base sm:text-lg text-[var(--kx-text-muted)] leading-relaxed max-w-2xl">
-                Please review these Terms & Conditions carefully before using KSAM Deal. By accessing our platform, you agree to these legal obligations and service terms.
-              </p>
-            </div>
-          </section>
+        <main className="kx-legal-single-col py-10 sm:py-14 lg:py-16">
+          <LegalHero
+            tone="terms"
+            icon={FileText}
+            eyebrow="Terms of service"
+            headingLine1="Clear terms."
+            headingKeyPhrase="Better experiences."
+            description="Please review these Terms & Conditions carefully before using KSAM Deal. By accessing our platform, you agree to these legal obligations and service terms."
+            readTime="~5 min read"
+            effectiveDate="[EFFECTIVE DATE]"
+            backUrl={`${BASE_URL}profile.html`}
+          />
 
           {/* Single Centered Column: Legal FAQ Accordion */}
-          <div className="kx-faq-centered-col">
-            <KxFaq items={faqItems} defaultOpen="platform-nature" allowMultiple />
+          <KxFaq items={faqItems} defaultOpen="platform-nature" allowMultiple />
 
-            {/* End of Page Navigation CTAs */}
-            <div className="kx-legal-actions">
-              <a
-                href={`${BASE_URL}profile.html`}
-                className="kx-btn-48 kx-btn-primary-gradient kx-btn-shine"
-              >
-                <span>Back to Profile Hub</span>
-                <ArrowRight size={16} />
-              </a>
-              <a
-                href={`${BASE_URL}contact-us.html`}
-                className="kx-btn-48 kx-btn-secondary-tint"
-              >
-                <Mail size={16} />
-                <span>Contact Us</span>
-              </a>
-            </div>
+          {/* End of Page Navigation CTAs */}
+          <div className="kx-legal-actions">
+            <a
+              href={`${BASE_URL}profile.html`}
+              className="kx-legal-btn-primary kx-btn-shine"
+            >
+              <span>Back to Profile Hub</span>
+              <ArrowRight size={16} />
+            </a>
+            <a
+              href={`${BASE_URL}contact-us.html`}
+              className="kx-legal-btn-secondary"
+            >
+              <Mail size={16} />
+              <span>Contact Us</span>
+            </a>
           </div>
         </main>
       </div>
 
-      <Newsletter />
+      <Newsletter variant="kx-dark" />
       <div className="kx-legal-bottom-pad" />
     </div>
   );

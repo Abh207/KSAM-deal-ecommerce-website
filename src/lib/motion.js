@@ -381,8 +381,7 @@ export function initHeroExitDrift(heroEl, contentEl) {
   if (!heroEl || !contentEl || respectReducedMotion()) return () => {};
 
   const tween = gsap.to(contentEl, {
-    y: -40,
-    opacity: 0.88,
+    y: -30,
     ease: "none",
     scrollTrigger: {
       trigger: heroEl,

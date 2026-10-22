@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Mail,
   ArrowRight,
@@ -9,13 +9,16 @@ import {
   Zap,
   TrendingDown,
 } from "lucide-react";
+import gsap from "gsap";
 import { supabase } from "../../lib/supabase.js";
 import { getSession } from "../../auth/auth.js";
+import { respectReducedMotion } from "../../lib/motion.js";
 
-function Newsletter() {
+function Newsletter({ variant = "default" }) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const darkSectionRef = useRef(null);
 
   useEffect(() => {
     getSession().then((session) => {
@@ -24,6 +27,47 @@ function Newsletter() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (variant !== "kx-dark" || !darkSectionRef.current) return;
+    if (respectReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".kx-newsletter-dark-content",
+        { opacity: 0, x: -36 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.65,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: darkSectionRef.current,
+            start: "top 85%",
+            once: true
+          }
+        }
+      );
+
+      gsap.fromTo(
+        ".kx-newsletter-dark-visual",
+        { opacity: 0, x: 36 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.65,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: darkSectionRef.current,
+            start: "top 85%",
+            once: true
+          }
+        }
+      );
+    }, darkSectionRef);
+
+    return () => ctx.revert();
+  }, [variant]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +92,181 @@ function Newsletter() {
     setMessage("You're officially on the KSAM Deal list! 🔥");
     setIsSubscribed(true);
   };
+
+  if (variant === "kx-dark") {
+    return (
+      <section ref={darkSectionRef} className="kx-newsletter-dark">
+        <div className="kx-newsletter-dark-card">
+          {/* Animated Mesh + Scrim */}
+          <div className="kx-newsletter-dark-mesh" aria-hidden="true">
+            <div className="kx-newsletter-dark-blob-1" />
+            <div className="kx-newsletter-dark-blob-2" />
+            <div className="kx-newsletter-dark-blob-3" />
+          </div>
+          <div className="kx-newsletter-dark-scrim" aria-hidden="true" />
+
+          {/* Grid Layout */}
+          <div className="kx-newsletter-dark-grid">
+            {/* Left Content */}
+            <div className="kx-newsletter-dark-content">
+              {/* Badge */}
+              <div className="ksam-badge mb-4">
+                <span className="ksam-badge-icon">
+                  <Sparkles size={15} />
+                </span>
+                KSAM DEAL INSIDER
+                <span className="ksam-live-dot"></span>
+              </div>
+
+              {/* Title */}
+              <h2 className="kx-newsletter-dark-title">
+                Hot deals.{" "}
+                <span className="kx-title-green">Into your inbox.</span>{" "}
+                Every week.
+              </h2>
+
+              {/* Description */}
+              <p className="kx-newsletter-dark-desc">
+                Don't waste hours searching different websites. Get the latest discounts, price drops and amazing product discoveries directly in your inbox.
+              </p>
+
+              {/* Benefits */}
+              <div className="kx-newsletter-dark-features">
+                <div className="kx-newsletter-dark-feature">
+                  <div className="kx-newsletter-dark-feature-icon">
+                    <TrendingDown size={18} />
+                  </div>
+                  <div>
+                    <h4>Fresh price drops</h4>
+                    <p>Never miss a discount</p>
+                  </div>
+                </div>
+
+                <div className="kx-newsletter-dark-feature">
+                  <div className="kx-newsletter-dark-feature-icon">
+                    <Zap size={18} />
+                  </div>
+                  <div>
+                    <h4>Exclusive deals</h4>
+                    <p>Deals worth grabbing</p>
+                  </div>
+                </div>
+
+                <div className="kx-newsletter-dark-feature">
+                  <div className="kx-newsletter-dark-feature-icon">
+                    <ShoppingBag size={18} />
+                  </div>
+                  <div>
+                    <h4>Smart discoveries</h4>
+                    <p>Products you'll love</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <form className="kx-newsletter-dark-form" onSubmit={handleSubmit} noValidate>
+                <div className="kx-newsletter-dark-input-wrap">
+                  <Mail size={19} className="kx-newsletter-dark-input-icon" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    aria-label="Email address"
+                    className="kx-newsletter-dark-input"
+                  />
+                  <div className="kx-newsletter-dark-focus-bar" />
+                </div>
+
+                <button type="submit" className="kx-newsletter-dark-btn kx-btn-shine">
+                  <span>Subscribe</span>
+                  <ArrowRight size={18} />
+                </button>
+              </form>
+
+              {/* Message */}
+              {message && (
+                isSubscribed ? (
+                  <div className="kx-newsletter-dark-msg-success">
+                    <svg className="kx-check-draw" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22FF88" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17L4 12" />
+                    </svg>
+                    <span>{message}</span>
+                  </div>
+                ) : (
+                  <div className="kx-newsletter-dark-msg-error">
+                    {message}
+                  </div>
+                )
+              )}
+
+              {/* Reassurance */}
+              <p className="kx-newsletter-dark-privacy mt-4">
+                <Check size={14} />
+                <span>No spam. Just great deals. Unsubscribe anytime.</span>
+              </p>
+            </div>
+
+            {/* Right Visual */}
+            <div className="kx-newsletter-dark-visual">
+              <div className="kx-newsletter-dark-img-wrap">
+                <img
+                  src="/KSAM-deal-ecommerce-website/products/newsletter-person1.png"
+                  alt="KSAM Deal shopping"
+                  className="kx-newsletter-dark-img"
+                />
+              </div>
+
+              {/* Floating Badges */}
+              {/* 1. Price drop card */}
+              <div className="kx-dark-badge kx-dark-badge-deal">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#22FF88] text-black">
+                  <TrendingDown size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold tracking-wider text-[#AEBAB4] uppercase m-0">PRICE DROP</p>
+                  <h4 className="text-xs font-bold text-white m-0">Up to <strong className="text-[#22FF88]">70% OFF</strong></h4>
+                </div>
+              </div>
+
+              {/* 2. Rating card */}
+              <div className="kx-dark-badge kx-dark-badge-rating">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22FF88] to-[#38BDF8] text-black font-extrabold text-xs flex items-center justify-center">
+                  KD
+                </div>
+                <div>
+                  <div className="flex text-[#FACC15] gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={11} fill="currentColor" />
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#AEBAB4] m-0">Loved by <strong className="text-white">50K+</strong> shoppers</p>
+                </div>
+              </div>
+
+              {/* 3. New deal alert */}
+              <div className="kx-dark-badge kx-dark-badge-notif">
+                <div className="w-8 h-8 rounded-xl bg-white/10 text-[#38BDF8] flex items-center justify-center">
+                  <Mail size={16} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold tracking-wider text-[#AEBAB4] uppercase m-0">NEW DEAL ALERT</p>
+                  <strong className="text-xs text-white block">Nike Air Max — 42% OFF</strong>
+                </div>
+                <div className="w-2 h-2 rounded-full bg-[#22FF88] animate-pulse ml-1" />
+              </div>
+
+              {/* 4. Discount sticker */}
+              <div className="kx-dark-badge kx-dark-badge-discount">
+                <span className="text-sm font-extrabold">-42%</span>
+                <span className="text-[9px] block tracking-wider uppercase text-white/70">TODAY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
