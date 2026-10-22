@@ -1,0 +1,897 @@
+/* ==========================================================================
+   KSAM DEAL - FAQ ACCORDION SYSTEM & BORDERLESS DESIGN (PHASE 1 & 2)
+   Scoped strictly under .kx-page. Zero borders on standalone pages.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GLOBAL BORDER ELIMINATION & RESET FOR STANDALONE PAGES
+   -------------------------------------------------------------------------- */
+.kx-page,
+.kx-page * {
+  box-sizing: border-box;
+}
+
+/* Eliminate borders, outlines (except :focus-visible), and inset rings */
+.kx-page section,
+.kx-page article,
+.kx-page aside,
+.kx-page .kx-hero-card,
+.kx-page .kx-glow,
+.kx-page .kx-card,
+.kx-page .kx-toc-box,
+.kx-page .kx-callout-block,
+.kx-page .kx-icon-tile-48,
+.kx-page .kx-icon-tile-56,
+.kx-page .kx-mobile-action-bar,
+.kx-page .kx-mobile-toc-bar,
+.kx-page .kx-mobile-toc-pill,
+.kx-page hr,
+.kx-page .kx-divider {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove ::before conic gradient rings from these pages */
+.kx-page .kx-glow::before,
+.kx-page .kx-glow::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Keyboard accessibility: Visible focus indicator ONLY for real keyboard use */
+.kx-page :focus,
+.kx-page :focus-visible {
+  outline: none !important;
+}
+
+[data-input="keyboard"] .kx-page :focus-visible,
+[data-input="keyboard"] .kx-faq-question-btn:focus-visible,
+[data-input="keyboard"] .kx-page a:focus-visible,
+[data-input="keyboard"] .kx-page button:focus-visible {
+  outline: 2px solid var(--tone-from, var(--kx-accent, #00F5A0)) !important;
+  outline-offset: 3px !important;
+  border-radius: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   2. TYPOGRAPHY & SPACING RULES
+   -------------------------------------------------------------------------- */
+.kx-page {
+  overflow-x: clip;
+}
+
+.kx-page h1,
+.kx-page h2,
+.kx-page h3,
+.kx-page h4 {
+  letter-spacing: -0.01em;
+}
+
+.kx-page p,
+.kx-page span,
+.kx-page li,
+.kx-page a,
+.kx-page input,
+.kx-page textarea,
+.kx-page select {
+  letter-spacing: 0;
+}
+
+.kx-page .kx-eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: normal;
+  text-transform: none; /* Sentence case */
+  color: var(--tone-from, var(--kx-accent, #00F5A0));
+  background: var(--tone-soft, rgba(0, 245, 160, 0.1));
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: none !important;
+  margin-bottom: 16px;
+}
+
+/* Main wrapper spacing & Anchor scroll margin */
+.kx-page .kx-main-wrapper {
+  padding-top: 96px; /* 72px navbar + 24px space */
+  width: 100%;
+  flex: 1 0 auto;
+}
+
+/* Sticky navbar height 72px + 16px = 88px offset */
+.kx-page [id],
+.kx-page .kx-faq-row,
+.kx-page section {
+  scroll-margin-top: 88px;
+}
+
+/* Fluid Hero: 880px centered column, 48px space before first row */
+.kx-page .kx-faq-hero {
+  max-width: 880px;
+  width: 100%;
+  margin-inline: auto;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(40px, 6vw, 64px) clamp(20px, 5vw, 48px);
+  margin-bottom: 48px;
+  border-radius: 32px;
+  background: transparent;
+  border: none !important;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-faq-hero {
+    padding: 32px 20px;
+    margin-bottom: 36px;
+  }
+}
+
+.kx-page .kx-hero-heading {
+  font-size: clamp(34px, 5vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #F4F7F5;
+  letter-spacing: -0.015em;
+  max-width: 860px;
+}
+
+.kx-page[data-theme="light"] .kx-hero-heading {
+  color: #0C1410;
+}
+
+/* --------------------------------------------------------------------------
+   3. FORM FIELDS: BORDERLESS FILLED SURFACES & GRADIENT FOCUS BAR
+   -------------------------------------------------------------------------- */
+.kx-page .kx-field-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.kx-page .kx-field-60,
+.kx-page .kx-textarea-borderless,
+.kx-page .kx-select-borderless {
+  width: 100%;
+  border-radius: 16px;
+  border: none !important;
+  outline: none;
+  font-size: 15px;
+  font-family: var(--kx-font-sans);
+  color: var(--kx-text);
+  background: rgba(255, 255, 255, 0.05); /* dark mode default */
+  box-shadow: none;
+  transition: background 220ms ease, box-shadow 260ms ease;
+  box-sizing: border-box;
+}
+
+.kx-page[data-theme="light"] .kx-field-60,
+.kx-page[data-theme="light"] .kx-textarea-borderless,
+.kx-page[data-theme="light"] .kx-select-borderless {
+  background: rgba(8, 20, 12, 0.05);
+}
+
+.kx-page .kx-field-60 {
+  height: 60px;
+  padding: 22px 18px 6px 18px;
+}
+
+.kx-page .kx-textarea-borderless {
+  min-height: 148px;
+  padding: 24px 18px 18px 18px;
+  resize: vertical;
+}
+
+.kx-page .kx-select-borderless {
+  height: 60px;
+  padding: 18px 44px 18px 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+}
+
+.kx-page[data-theme="light"] .kx-select-borderless {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Hover: slightly lighter fill */
+.kx-page .kx-field-60:hover,
+.kx-page .kx-textarea-borderless:hover,
+.kx-page .kx-select-borderless:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.kx-page[data-theme="light"] .kx-field-60:hover,
+.kx-page[data-theme="light"] .kx-textarea-borderless:hover,
+.kx-page[data-theme="light"] .kx-select-borderless:hover {
+  background: rgba(8, 20, 12, 0.08);
+}
+
+/* Focus: soft gradient glow (blur only, NO 1px ring) */
+.kx-page .kx-field-60:focus,
+.kx-page .kx-textarea-borderless:focus,
+.kx-page .kx-select-borderless:focus {
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 28px -4px var(--tone-glow, rgba(0, 245, 160, 0.22));
+}
+
+.kx-page[data-theme="light"] .kx-field-60:focus,
+.kx-page[data-theme="light"] .kx-textarea-borderless:focus,
+.kx-page[data-theme="light"] .kx-select-borderless:focus {
+  background: rgba(8, 20, 12, 0.08);
+  box-shadow: 0 8px 24px -4px rgba(5, 150, 105, 0.18);
+}
+
+/* Gradient underline bar that grows from left under field (3px rounded bar, not border) */
+.kx-page .kx-focus-bar {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--tone-from, #00F5A0), var(--tone-to, #22D3EE));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.kx-page .kx-field-60:focus ~ .kx-focus-bar,
+.kx-page .kx-textarea-borderless:focus ~ .kx-focus-bar,
+.kx-page .kx-select-borderless:focus ~ .kx-focus-bar {
+  transform: scaleX(1);
+}
+
+/* Floating label inside 60px field */
+.kx-page .kx-floating-label-60 {
+  position: absolute;
+  left: 18px;
+  top: 20px;
+  font-size: 14.5px;
+  color: var(--kx-text-muted);
+  pointer-events: none;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left top;
+}
+
+.kx-page .kx-field-60:focus ~ .kx-floating-label-60,
+.kx-page .kx-field-60:not(:placeholder-shown) ~ .kx-floating-label-60,
+.kx-page .kx-textarea-borderless:focus ~ .kx-floating-label-60,
+.kx-page .kx-textarea-borderless:not(:placeholder-shown) ~ .kx-floating-label-60 {
+  transform: translateY(-12px) scale(0.74);
+  color: var(--tone-from, var(--kx-accent, #00F5A0));
+  font-weight: 700;
+}
+
+/* Inline plain-language validation line (red-amber tinted text, no border) */
+.kx-page .kx-field-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(248, 113, 113, 0.12);
+  color: #F87171;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Character counter: amber then red near limit */
+.kx-page .kx-char-counter.is-normal {
+  color: var(--kx-text-dim);
+}
+.kx-page .kx-char-counter.is-warning {
+  color: #FACC15;
+  font-weight: 700;
+}
+.kx-page .kx-char-counter.is-danger {
+  color: #EF4444;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   4. BUTTONS & PILLS (NO BORDERS)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-btn-primary-gradient {
+  background: linear-gradient(135deg, #00F5A0 0%, #22D3EE 100%) !important;
+  color: #050505 !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 245, 160, 0.3) !important;
+  border-radius: 16px;
+}
+
+.kx-page .kx-btn-primary-gradient:hover {
+  background: linear-gradient(135deg, #22FFA8 0%, #38BDF8 100%) !important;
+  box-shadow: 0 8px 28px rgba(0, 245, 160, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.kx-page .kx-btn-secondary-tint {
+  background: var(--tone-soft, rgba(0, 245, 160, 0.12)) !important;
+  color: var(--kx-text) !important;
+  border: none !important;
+  border-radius: 16px;
+}
+
+.kx-page .kx-btn-secondary-tint:hover {
+  background: var(--tone-soft, rgba(0, 245, 160, 0.22)) !important;
+  color: var(--tone-from, var(--kx-accent, #00F5A0)) !important;
+  transform: translateY(-1px);
+}
+
+.kx-page .kx-btn-ghost-tint {
+  background: transparent !important;
+  color: var(--kx-text-muted) !important;
+  border: none !important;
+  border-radius: 16px;
+}
+
+.kx-page .kx-btn-ghost-tint:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--kx-text) !important;
+}
+
+/* Tinted reading time pill */
+.kx-page .kx-pill-tint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--kx-text);
+  font-size: 12px;
+  font-weight: 600;
+  border: none !important;
+}
+
+.kx-page[data-theme="light"] .kx-pill-tint {
+  background: rgba(8, 20, 12, 0.06);
+  color: var(--kx-text);
+}
+
+/* --------------------------------------------------------------------------
+   5. FAQ ACCORDION ROW ARCHITECTURE (880px CENTERED LIST, SOLID SURFACES)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-faq-centered-col,
+.kx-page .kx-legal-container {
+  max-width: 880px;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 64px);
+  box-sizing: border-box;
+}
+
+.kx-page .kx-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-faq-list {
+    gap: 14px;
+  }
+}
+
+/* Solid filled row surface: #0F1519 at rest, #121B20 when open, radius 24px, NO border */
+.kx-page .kx-faq-row {
+  position: relative;
+  width: 100%;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #0F1519;
+  border-radius: 24px;
+  padding: 28px 32px;
+  transition: background 300ms ease, transform 300ms ease;
+  overflow: hidden;
+  box-sizing: border-box;
+  opacity: 1;
+  transform: none;
+}
+
+.kx-page .kx-faq-row.is-open {
+  background: #121B20;
+}
+
+.kx-page[data-theme="light"] .kx-faq-row {
+  background: #FFFFFF;
+}
+
+.kx-page[data-theme="light"] .kx-faq-row.is-open {
+  background: #F3F7F4;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-faq-row {
+    padding: 22px 20px;
+    border-radius: 20px;
+  }
+}
+
+/* Background gradient wash on hover or open (decoration only: max opacity 0.10) */
+.kx-page .kx-faq-row-wash {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    var(--tone-from, #00F5A0) 0%,
+    transparent 50%,
+    var(--tone-to, #22D3EE) 100%
+  );
+  background-size: 200% 200%;
+  transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.kx-page .kx-faq-row:hover .kx-faq-row-wash {
+  opacity: 0.08;
+  animation: kxFaqDrift 12s linear infinite;
+}
+
+.kx-page .kx-faq-row.is-open .kx-faq-row-wash {
+  opacity: 0.10;
+  animation: kxFaqDrift 12s linear infinite;
+}
+
+@keyframes kxFaqDrift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Open row clipped aurora layer: subtle (max opacity 0.08) */
+.kx-page .kx-faq-row-aurora {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 400ms ease;
+}
+
+.kx-page .kx-faq-row.is-open .kx-faq-row-aurora {
+  opacity: 0.08;
+}
+
+/* Solid veil scrim at 70% opacity over the wash so text background never gets lighter than #1A2328 */
+.kx-page .kx-faq-row-scrim {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: rgba(15, 21, 25, 0.70);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.kx-page[data-theme="light"] .kx-faq-row-scrim {
+  background: rgba(255, 255, 255, 0.70);
+}
+
+/* Question Header button */
+.kx-page .kx-faq-question-btn {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  background: transparent;
+  border: none !important;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  text-align: left;
+}
+
+.kx-page .kx-faq-question-text {
+  font-size: clamp(19px, 2.2vw, 26px);
+  font-weight: 700;
+  line-height: 1.35;
+  color: #F4F7F5;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  transition: color 200ms ease;
+}
+
+.kx-page[data-theme="light"] .kx-faq-question-text {
+  color: #0C1410;
+}
+
+/* Row number prefix with gradient text: "01 —" */
+.kx-page .kx-faq-question-prefix {
+  background: linear-gradient(135deg, var(--tone-from, #00F5A0) 0%, var(--tone-to, #22D3EE) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: 800;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Question title: SOLID #F4F7F5 at all times (rest, hover, open); #0C1410 in light theme */
+.kx-page .kx-faq-question-title {
+  color: #F4F7F5 !important;
+  -webkit-text-fill-color: #F4F7F5 !important;
+  background: none !important;
+}
+
+.kx-page[data-theme="light"] .kx-faq-question-title {
+  color: #0C1410 !important;
+  -webkit-text-fill-color: #0C1410 !important;
+}
+
+.kx-page .kx-faq-row:hover .kx-faq-question-title,
+.kx-page .kx-faq-row.is-open .kx-faq-question-title {
+  color: #F4F7F5 !important;
+  -webkit-text-fill-color: #F4F7F5 !important;
+  background: none !important;
+}
+
+.kx-page[data-theme="light"] .kx-faq-row:hover .kx-faq-question-title,
+.kx-page[data-theme="light"] .kx-faq-row.is-open .kx-faq-question-title {
+  color: #0C1410 !important;
+  -webkit-text-fill-color: #0C1410 !important;
+}
+
+/* Icon tile: 48px (44px on phones), filled with row tone gradient */
+.kx-page .kx-faq-icon-tile {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--tone-from, #00F5A0) 0%, var(--tone-to, #22D3EE) 100%);
+  color: #050505;
+  border: none !important;
+  box-shadow: 0 4px 16px var(--tone-glow, rgba(0, 245, 160, 0.25));
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-faq-icon-tile {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+}
+
+.kx-page .kx-faq-row:hover .kx-faq-icon-tile {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px var(--tone-glow, rgba(0, 245, 160, 0.35));
+}
+
+/* Plus rotates 45deg to a cross when open */
+.kx-page .kx-faq-plus-icon {
+  transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: rotate(0deg);
+}
+
+.kx-page .kx-faq-row.is-open .kx-faq-plus-icon {
+  transform: rotate(45deg);
+}
+
+/* Grid accordion expansion: 0fr to 1fr over 400ms */
+.kx-page .kx-faq-answer-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 2;
+}
+
+.kx-page .kx-faq-row.is-open .kx-faq-answer-grid {
+  grid-template-rows: 1fr;
+}
+
+.kx-page .kx-faq-answer-inner {
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1), transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kx-page .kx-faq-row.is-open .kx-faq-answer-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   6. ANSWER STYLING (17px / 1.75, solid #E3EAE6, 20px top / 28px bottom, 16px p gap)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-faq-answer-content {
+  margin-top: 20px;
+  padding-bottom: 28px;
+  font-size: 17px;
+  line-height: 1.75;
+  letter-spacing: 0;
+  color: #E3EAE6;
+  max-width: 100%;
+}
+
+.kx-page[data-theme="light"] .kx-faq-answer-content {
+  color: #1F2B24;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-faq-answer-content {
+    font-size: 16px;
+    line-height: 1.75;
+    margin-top: 16px;
+    padding-bottom: 20px;
+  }
+}
+
+/* Paragraphs separated by 16px */
+.kx-page .kx-faq-answer-content p {
+  margin-top: 0;
+  margin-bottom: 16px;
+  line-height: 1.75;
+}
+
+.kx-page .kx-faq-answer-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Helper, secondary, dim text: #AEBAB4 (dark), #4A5750 (light) */
+.kx-page .kx-helper-text,
+.kx-page .kx-faq-answer-content .text-xs,
+.kx-page .kx-faq-answer-content .text-sm,
+.kx-page .kx-faq-answer-content .kx-text-secondary,
+.kx-page .kx-faq-answer-content [class*="text-[var(--kx-text-dim)"] {
+  color: #AEBAB4;
+}
+
+.kx-page[data-theme="light"] .kx-helper-text,
+.kx-page[data-theme="light"] .kx-faq-answer-content .text-xs,
+.kx-page[data-theme="light"] .kx-faq-answer-content .text-sm,
+.kx-page[data-theme="light"] .kx-faq-answer-content .kx-text-secondary,
+.kx-page[data-theme="light"] .kx-faq-answer-content [class*="text-[var(--kx-text-dim)"] {
+  color: #4A5750;
+}
+
+/* List items: 12px apart with 24px left indent */
+.kx-page .kx-faq-answer-content ul,
+.kx-page .kx-faq-answer-content ol,
+.kx-page .kx-gradient-bullets {
+  list-style: none;
+  padding-left: 24px;
+  margin: 16px 0;
+}
+
+.kx-page .kx-faq-answer-content li,
+.kx-page .kx-gradient-bullets li {
+  position: relative;
+  margin-bottom: 12px;
+  line-height: 1.75;
+  font-size: 17px;
+  color: #E3EAE6;
+}
+
+.kx-page[data-theme="light"] .kx-faq-answer-content li,
+.kx-page[data-theme="light"] .kx-gradient-bullets li {
+  color: #1F2B24;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-faq-answer-content li,
+  .kx-page .kx-gradient-bullets li {
+    font-size: 16px;
+  }
+}
+
+.kx-page .kx-faq-answer-content li:last-child,
+.kx-page .kx-gradient-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.kx-page .kx-gradient-bullets li::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--tone-from, #00F5A0) 0%, var(--tone-to, #22D3EE) 100%);
+  box-shadow: 0 0 8px var(--tone-glow, rgba(0, 245, 160, 0.4));
+}
+
+/* Link text: bright tone (#5CFFA8 green or #7DD3FC blue) with underline */
+.kx-page a.kx-faq-link,
+.kx-page .kx-faq-answer-content a {
+  color: #5CFFA8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 650;
+  transition: color 180ms ease;
+  border: none !important;
+}
+
+.kx-page a.kx-faq-link:hover,
+.kx-page .kx-faq-answer-content a:hover {
+  color: #7DD3FC;
+}
+
+.kx-page[data-theme="light"] a.kx-faq-link,
+.kx-page[data-theme="light"] .kx-faq-answer-content a {
+  color: #059669;
+}
+
+.kx-page[data-theme="light"] a.kx-faq-link:hover,
+.kx-page[data-theme="light"] .kx-faq-answer-content a:hover {
+  color: #0284C7;
+}
+
+/* Callouts and warnings */
+.kx-page .kx-callout-block {
+  padding: clamp(20px, 3vw, 28px);
+  border-radius: 20px;
+  background: rgba(15, 21, 25, 0.85);
+  color: #E3EAE6;
+  margin: 20px 0;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.kx-page[data-theme="light"] .kx-callout-block {
+  background: #F3F7F4;
+  color: #1F2B24;
+}
+
+.kx-page .kx-notice-amber {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #FACC15 !important;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin: 16px 0;
+  border: none !important;
+}
+
+/* Section spacing & CTA buttons */
+.kx-page .kx-legal-actions {
+  margin-top: 48px;
+  margin-bottom: 64px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.kx-page .kx-legal-bottom-pad {
+  padding-bottom: 48px;
+}
+
+/* --------------------------------------------------------------------------
+   7. STICKY DESKTOP TOC & MOBILE HORIZONTAL PILL BAR (NO BORDERS)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-toc-box {
+  width: 260px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 24px;
+  padding: 24px 18px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.kx-page[data-theme="light"] .kx-toc-box {
+  background: rgba(8, 20, 12, 0.03);
+}
+
+.kx-page .kx-toc-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kx-text-muted);
+  text-decoration: none;
+  transition: all 200ms ease;
+  border: none !important;
+}
+
+.kx-page .kx-toc-link:hover {
+  color: var(--kx-text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.kx-page[data-theme="light"] .kx-toc-link:hover {
+  background: rgba(8, 20, 12, 0.05);
+}
+
+.kx-page .kx-toc-link.is-active {
+  color: #050505 !important;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--tone-from, #00F5A0) 0%, var(--tone-to, #22D3EE) 100%) !important;
+  box-shadow: 0 4px 16px var(--tone-glow, rgba(0, 245, 160, 0.28));
+}
+
+/* Mobile horizontal pill bar (no border) */
+.kx-page .kx-mobile-toc-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 12px 16px;
+  scrollbar-width: none;
+  background: var(--kx-surface-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: sticky;
+  top: 72px;
+  z-index: 900;
+  border: none !important;
+}
+
+.kx-page .kx-mobile-toc-pill {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--kx-text-muted);
+  border: none !important;
+  transition: all 180ms ease;
+}
+
+.kx-page[data-theme="light"] .kx-mobile-toc-pill {
+  background: rgba(8, 20, 12, 0.06);
+}
+
+.kx-page .kx-mobile-toc-pill.is-active {
+  background: linear-gradient(135deg, var(--tone-from, #00F5A0) 0%, var(--tone-to, #22D3EE) 100%);
+  color: #050505 !important;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   8. REDUCED MOTION SPECIFICATION
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .kx-page .kx-faq-answer-grid {
+    transition: none !important;
+  }
+  .kx-page .kx-faq-answer-inner {
+    transition: none !important;
+    transform: none !important;
+  }
+  .kx-page .kx-faq-row-wash,
+  .kx-page .kx-faq-row-aurora,
+  .kx-page .kx-marquee-track {
+    animation: none !important;
+  }
+}

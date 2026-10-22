@@ -91,36 +91,42 @@ export default function LiveBackdrop({
     if (!ctx) return;
 
     const isReduced = respectReducedMotion();
-    const isMobile = window.innerWidth < 768;
+    const isLowPower = typeof navigator !== "undefined" && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+    const isSmallMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
-    // Skip canvas loop completely for reduced motion or small mobile screens to save GPU
-    if (isReduced || isMobile) {
-      canvas.style.display = "none";
+    // Static frame for reduced motion or low power / small screens
+    if (isReduced || isLowPower || isSmallMobile) {
+      canvas.width = Math.floor(window.innerWidth * 0.35);
+      canvas.height = Math.floor(window.innerHeight * 0.35);
+      ctx.fillStyle = "rgba(34, 255, 136, 0.08)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       return;
     }
 
     canvas.style.display = "block";
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    // 0.35 resolution scale for maximum efficiency
+    const scale = 0.35;
+    let width = (canvas.width = Math.max(100, Math.floor(window.innerWidth * scale)));
+    let height = (canvas.height = Math.max(100, Math.floor(window.innerHeight * scale)));
 
-    // Particle count: 28 on desktop, 14 on tablet
-    const count = window.innerWidth > 1024 ? 28 : 14;
+    // Particle count: 24 on desktop, 12 on tablet
+    const count = window.innerWidth > 1024 ? 24 : 12;
     const particles = [];
 
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: 0.75 + Math.random() * 1.25,
-        baseAlpha: 0.12 + Math.random() * 0.28,
+        radius: (0.75 + Math.random() * 1.25) * scale,
+        baseAlpha: 0.14 + Math.random() * 0.26,
         pulseSpeed: 0.015 + Math.random() * 0.025,
         pulsePhase: Math.random() * Math.PI * 2,
-        vy: 0.12 + Math.random() * 0.22,
+        vy: (0.12 + Math.random() * 0.22) * scale,
         swaySpeed: 0.008 + Math.random() * 0.015,
         swayPhase: Math.random() * Math.PI * 2,
-        swayAmp: 0.4 + Math.random() * 0.6,
-        colorType: Math.random() > 0.45 ? "cyan" : Math.random() > 0.3 ? "emerald" : "white"
+        swayAmp: (0.4 + Math.random() * 0.6) * scale,
+        colorType: Math.random() > 0.5 ? "toneA" : Math.random() > 0.25 ? "toneB" : "white"
       });
     }
 
@@ -129,8 +135,8 @@ export default function LiveBackdrop({
     const fpsInterval = 1000 / 30; // 30 FPS cap for maximum power efficiency
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      width = canvas.width = Math.max(100, Math.floor(window.innerWidth * scale));
+      height = canvas.height = Math.max(100, Math.floor(window.innerHeight * scale));
     };
 
     window.addEventListener("resize", handleResize, { passive: true });
@@ -154,21 +160,29 @@ export default function LiveBackdrop({
         p.x += Math.sin(t * p.swaySpeed + p.swayPhase) * p.swayAmp;
 
         // Wrap around viewport edges seamlessly
-        if (p.y < -10) {
-          p.y = height + 10;
+        if (p.y < -5) {
+          p.y = height + 5;
           p.x = Math.random() * width;
         }
-        if (p.x < -10) p.x = width + 10;
-        if (p.x > width + 10) p.x = -10;
+        if (p.x < -5) p.x = width + 5;
+        if (p.x > width + 5) p.x = -5;
 
         const currentAlpha = p.baseAlpha * (0.65 + 0.35 * Math.sin(t * p.pulseSpeed * 10 + p.pulsePhase));
 
         let fill;
         if (palette === "danger") {
           fill = `rgba(248, 113, 113, ${currentAlpha})`;
-        } else if (p.colorType === "emerald") {
+        } else if (palette === "privacy") {
+          fill = p.colorType === "toneA" ? `rgba(56, 189, 248, ${currentAlpha})` : p.colorType === "toneB" ? `rgba(168, 85, 247, ${currentAlpha})` : `rgba(255, 255, 255, ${currentAlpha * 0.7})`;
+        } else if (palette === "terms") {
+          fill = p.colorType === "toneA" ? `rgba(255, 214, 10, ${currentAlpha})` : p.colorType === "toneB" ? `rgba(34, 255, 136, ${currentAlpha})` : `rgba(168, 85, 247, ${currentAlpha * 0.4})`;
+        } else if (palette === "affiliate") {
+          fill = p.colorType === "toneA" ? `rgba(34, 255, 136, ${currentAlpha})` : p.colorType === "toneB" ? `rgba(255, 214, 10, ${currentAlpha})` : `rgba(168, 85, 247, ${currentAlpha * 0.5})`;
+        } else if (palette === "contact") {
+          fill = p.colorType === "toneA" ? `rgba(34, 255, 136, ${currentAlpha})` : p.colorType === "toneB" ? `rgba(56, 189, 248, ${currentAlpha})` : `rgba(255, 255, 255, ${currentAlpha * 0.7})`;
+        } else if (p.colorType === "toneA") {
           fill = `rgba(0, 245, 160, ${currentAlpha})`;
-        } else if (p.colorType === "cyan") {
+        } else if (p.colorType === "toneB") {
           fill = `rgba(39, 215, 255, ${currentAlpha})`;
         } else {
           fill = `rgba(255, 255, 255, ${currentAlpha * 0.8})`;
@@ -176,7 +190,7 @@ export default function LiveBackdrop({
 
         ctx.fillStyle = fill;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(0.6, p.radius), 0, Math.PI * 2);
         ctx.fill();
       }
     };

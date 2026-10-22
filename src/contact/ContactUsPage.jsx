@@ -1,32 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Mail,
-  User,
-  MessageSquare,
   Send,
-  Clock,
-  ShieldCheck,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle
+  Loader2,
+  ArrowRight
 } from "lucide-react";
+import gsap from "gsap";
 import { supabase } from "../lib/supabase.js";
 import { BASE_URL } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
 import Newsletter from "../deals/components/Newsletter.jsx";
 import Footer from "../deals/components/Footer.jsx";
+import LiveBackdrop from "../profile/components/LiveBackdrop.jsx";
+import KxFaq from "../components/KxFaq.jsx";
+import { ReadingProgressBar, Aurora, useThemeSync } from "../lib/pageEffects.jsx";
+import {
+  initScrollParallax,
+  initHeroExitDrift
+} from "../lib/motion.js";
+import { applyTheme, getStoredTheme, getStoredAccent } from "../lib/theme.js";
+
 import "../deals/tailwind-generated.css";
 import "../deals/deals.css";
+import "../profile/kx-spotlight.css";
 import "../styles/kx-tokens.css";
 import "../styles/kx-motion.css";
+import "../styles/kx-pages.css";
+import "../styles/kx-faq.css";
 
 const SUBJECTS = [
-  "Deal question / Expired deal report",
-  "Account & Profile assistance",
-  "Partner store / Affiliate inquiry",
-  "Bug report / Technical feedback",
-  "Other general inquiry"
+  "Deal Inquiry or Price Discrepancy",
+  "Feature Request or Platform Feedback",
+  "Account & Login Support",
+  "Affiliate or Business Partnership",
+  "Report an Expired Offer",
+  "Other"
+];
+
+const MARQUEE_ITEMS = [
+  "24/7 Support",
+  "Deal Discovery",
+  "Instant Assistance",
+  "Verified Stores",
+  "Privacy First"
 ];
 
 export function ContactUsPage() {
@@ -42,6 +59,30 @@ export function ContactUsPage() {
   const [submitted, setSubmitted] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [error, setError] = useState("");
+  const [touched, setTouched] = useState({});
+
+  const containerRef = useRef(null);
+  const heroRef = useRef(null);
+  const heroContentRef = useRef(null);
+  const formSectionRef = useRef(null);
+
+  useThemeSync();
+
+  useEffect(() => {
+    applyTheme(getStoredTheme(), getStoredAccent());
+  }, []);
+
+  // GSAP Scroll Motion
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (heroRef.current && heroContentRef.current) {
+        initHeroExitDrift(heroRef.current, heroContentRef.current);
+      }
+      initScrollParallax(".kx-aurora-blob", 50);
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -71,12 +112,15 @@ export function ContactUsPage() {
     if (error) setError("");
   };
 
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Spam honeypot check
     if (formData.website) {
-      // Quietly simulate submission for bots
       setSubmitted(true);
       return;
     }
@@ -122,283 +166,415 @@ export function ContactUsPage() {
         .insert(payload);
 
       if (insertErr) {
-        throw insertErr;
+        console.error("Supabase error inserting message:", insertErr);
+        setError("Failed to send message. Please try again shortly.");
+      } else {
+        setSubmitted(true);
+        setCooldown(30);
       }
-
-      setSubmitted(true);
-      setCooldown(30);
     } catch (err) {
-      console.error("[ContactUs]", err);
-      setError(err?.message || "Failed to send message. Please try again or email support directly.");
+      console.error("Unexpected error submitting form:", err);
+      setError("A network error occurred. Please check your connection.");
     } finally {
       setLoading(false);
     }
   };
 
-  const bannerImg = `${BASE_URL}lamplight.png`;
+  const msgLen = formData.message.length;
+  const counterClass =
+    msgLen >= 1900
+      ? "is-danger"
+      : msgLen >= 1600
+      ? "is-warning"
+      : "is-normal";
 
-  return (
-    <div className="kx-page min-h-screen flex flex-col justify-between relative overflow-hidden" style={{ background: "var(--kx-base)", color: "var(--kx-text)" }}>
-      {/* Dynamic Background Elements */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="kx-mesh-bg opacity-30" />
-        <div className="kx-noise-overlay" />
-        <div className="kx-floating-shape w-96 h-96 -top-20 -left-20 bg-[var(--kx-accent)] opacity-10 blur-3xl rounded-full" />
-        <div className="kx-floating-shape w-80 h-80 top-1/2 -right-20 bg-[var(--kx-cyan)] opacity-10 blur-3xl rounded-full" style={{ animationDelay: "-6s" }} />
-      </div>
-
-      <Navbar />
-
-      <main className="mx-auto max-w-7xl w-full px-4 py-12 sm:py-20 relative z-10">
-        {/* Hero Section */}
-        <div className="relative overflow-hidden rounded-3xl border border-[var(--kx-border)] bg-[var(--kx-surface-1)] p-8 sm:p-14 mb-12 shadow-2xl">
-          {/* Ambient Glow & Cover image blend */}
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 opacity-20 hidden md:block">
-            <img
-              src={bannerImg}
-              alt="KSAM Deal Support"
-              loading="lazy"
-              className="h-full w-full object-cover mix-blend-screen"
-            />
+  // FAQ Items for Support Details
+  const supportFaqItems = useMemo(
+    () => [
+      {
+        id: "general-inquiries",
+        question: "General Inquiries",
+        tone: "green-blue",
+        answer: (
+          <div className="space-y-3">
+            <p>
+              For general questions regarding deal aggregation, store redirections, or website feedback:
+            </p>
+            <a
+              href="mailto:support@ksamdeal.in"
+              className="text-base text-[var(--kx-cyan)] kx-animated-link font-bold inline-block"
+            >
+              support@ksamdeal.in
+            </a>
           </div>
-
-          <div className="relative z-10 max-w-2xl">
-            <span className="inline-block rounded-full border border-[var(--kx-accent)]/30 bg-[var(--kx-accent-soft)] px-3.5 py-1 text-xs font-bold text-[var(--kx-accent)] uppercase tracking-widest mb-4">
-              Customer Support & Inquiries
-            </span>
-            <h1 className="text-3xl sm:text-5xl font-black text-[var(--kx-text)] leading-tight tracking-tight">
-              We're here to <span className="text-[var(--kx-cyan)]">help you.</span>
-            </h1>
-            <p className="mt-4 text-base text-[var(--kx-text-muted)] leading-relaxed">
-              Have questions about a deal, need account help, or want to suggest a new store integration? Drop us a note below.
+        )
+      },
+      {
+        id: "technical-support",
+        question: "Technical Support",
+        tone: "blue-purple",
+        answer: (
+          <p>
+            Assistance with account alerts, deal notifications, search discovery, and platform bugs.
+          </p>
+        )
+      },
+      {
+        id: "partnerships",
+        question: "Partnerships & Business Opportunities",
+        tone: "purple-pink",
+        answer: (
+          <p>
+            Store integrations, merchant feeds, affiliate network connections, and brand collaborations.
+          </p>
+        )
+      },
+      {
+        id: "response-hours",
+        question: "Response Time & Operating Hours",
+        tone: "yellow-green",
+        answer: (
+          <div className="space-y-2">
+            <p>
+              We typically review and reply to messages within 24 business hours.
+            </p>
+            <p className="text-xs text-[var(--kx-text-dim)] font-medium">
+              Operating Hours: Monday – Saturday, 9:00 AM – 7:00 PM IST
             </p>
           </div>
-
-          {/* Decorative Marquee Strip */}
-          <div className="mt-8 pt-4 border-t border-[var(--kx-border)] overflow-hidden relative">
-            <div className="kx-marquee-track text-[11px] font-black uppercase tracking-[0.25em] text-[var(--kx-text-dim)] select-none">
-              <span className="kx-marquee-content">
-                &nbsp;24/7 SUPPORT • DEAL DISCOVERY • INSTANT ASSISTANCE • VERIFIED STORES • PRIVACY FIRST • 24/7 SUPPORT • DEAL DISCOVERY • INSTANT ASSISTANCE • VERIFIED STORES • PRIVACY FIRST •
-              </span>
-              <span className="kx-marquee-content" aria-hidden="true">
-                &nbsp;24/7 SUPPORT • DEAL DISCOVERY • INSTANT ASSISTANCE • VERIFIED STORES • PRIVACY FIRST • 24/7 SUPPORT • DEAL DISCOVERY • INSTANT ASSISTANCE • VERIFIED STORES • PRIVACY FIRST •
-              </span>
-            </div>
+        )
+      },
+      {
+        id: "quick-faq",
+        question: "Quick Answers & FAQs",
+        tone: "green-blue",
+        answer: (
+          <div className="space-y-3">
+            <p>
+              Looking for instant answers on how deals are ranked or redirected?
+            </p>
+            <a
+              href={`${BASE_URL}index.html#faq`}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--kx-accent)] kx-animated-link"
+            >
+              <span>Browse Frequently Asked Questions</span>
+              <ArrowRight size={13} />
+            </a>
           </div>
-        </div>
+        )
+      }
+    ],
+    []
+  );
 
-        <div className="grid gap-12 lg:grid-cols-12">
-          {/* Contact Form Column */}
-          <div className="lg:col-span-7">
-            <div className="kx-card p-6 sm:p-10 shadow-2xl">
-              <h2 className="text-xl font-bold text-[var(--kx-text)] mb-2">Send us a message</h2>
-              <p className="text-xs text-[var(--kx-text-muted)] mb-6">
-                Fill out the form below. We typically reply within 24 hours.
+  return (
+    <div
+      ref={containerRef}
+      className="kx-page min-h-screen flex flex-col justify-between relative"
+      style={{ background: "var(--kx-base)", color: "var(--kx-text)" }}
+    >
+      <ReadingProgressBar />
+      <LiveBackdrop palette="contact" />
+      <Navbar />
+
+      <div className="kx-main-wrapper relative z-10">
+        <main className="kx-container-1200 py-10 sm:py-16 lg:py-20">
+          {/* Fluid Open Hero (No card, no border) */}
+          <section
+            ref={heroRef}
+            className="kx-faq-hero"
+            data-tone="green-blue"
+          >
+            <Aurora tone="green-blue" />
+
+            <div ref={heroContentRef} className="relative z-10 max-w-3xl">
+              <div className="kx-faq-icon-tile mb-6">
+                <Mail size={26} strokeWidth={2.4} />
+              </div>
+              <span className="kx-eyebrow mb-4">
+                We're here to help
+              </span>
+              <h1 className="kx-hero-heading mb-6">
+                Let's start a{" "}
+                <span className="kx-gradient-text" data-tone="green-blue">
+                  conversation.
+                </span>
+              </h1>
+              <p className="text-base sm:text-lg text-[var(--kx-text-muted)] leading-relaxed max-w-2xl">
+                Have questions about a price drop, store partnership, or spotted a bug? We are here to assist you promptly.
               </p>
+            </div>
 
-              {submitted ? (
-                <div className="rounded-2xl border border-[var(--kx-accent)]/30 bg-[var(--kx-accent-soft)] p-8 text-center animate-[scaleIn_0.4s_ease]">
-                  <CheckCircle2 size={44} className="mx-auto text-[var(--kx-accent)] mb-3" />
-                  <h3 className="text-xl font-bold text-[var(--kx-text)]">Message Delivered!</h3>
-                  <p className="mt-2 text-xs text-[var(--kx-text-muted)] leading-relaxed max-w-md mx-auto">
-                    Thank you for reaching out. We have received your inquiry and our support team will get back to you shortly.
-                  </p>
-
-                  <button
-                    type="button"
-                    disabled={cooldown > 0}
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData((p) => ({ ...p, message: "" }));
-                    }}
-                    className="mt-6 inline-flex items-center gap-2 kx-btn kx-btn--secondary px-5 py-2.5 text-xs font-bold disabled:opacity-50"
-                  >
-                    {cooldown > 0 ? `Send another message in ${cooldown}s` : "Send another message"}
-                  </button>
+            {/* Seamless Looping Marquee Strip (Pauses on hover and off-screen) */}
+            <div className="mt-12 pt-6 overflow-hidden relative">
+              <div className="kx-marquee" tabIndex={0}>
+                <div className="kx-marquee-track text-[11px] font-black uppercase tracking-[0.25em] text-[var(--kx-text-dim)] select-none">
+                  {[...Array(3)].map((_, setIdx) => (
+                    <React.Fragment key={setIdx}>
+                      {MARQUEE_ITEMS.map((item, i) => (
+                        <span key={i} className="inline-flex items-center gap-3 mx-4">
+                          <span>{item}</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--kx-accent)] opacity-60" />
+                        </span>
+                      ))}
+                    </React.Fragment>
+                  ))}
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Honeypot hidden input */}
-                  <div style={{ display: "none" }}>
+              </div>
+            </div>
+          </section>
+
+          {/* Two-Column Layout: FAQ Rows Left, Open Form Right (Form first on mobile/tablet) */}
+          <div className="grid gap-12 lg:gap-16 lg:grid-cols-12 items-start">
+            {/* Support Information as FAQ Rows (Desktop Left) */}
+            <div className="lg:col-span-6 order-2 lg:order-1 space-y-6">
+              <div className="mb-2">
+                <h2 className="text-xl sm:text-2xl font-bold text-[var(--kx-text)]">
+                  Support Channels
+                </h2>
+                <p className="text-xs text-[var(--kx-text-muted)] mt-1">
+                  Click any channel to view contact specifics and response policies.
+                </p>
+              </div>
+
+              <KxFaq
+                items={supportFaqItems}
+                defaultOpen="general-inquiries"
+                allowMultiple
+                showControls={false}
+              />
+
+              {/* Merchant notice callout (no border) */}
+              <div className="kx-callout-block" data-tone="purple-pink">
+                <p className="text-xs sm:text-sm text-[var(--kx-text-muted)] leading-relaxed">
+                  <strong className="text-[var(--kx-text)]">Merchant Notice:</strong> KSAM Deal is an independent deal-discovery platform. For inquiries regarding order shipments, returns, or refunds for products purchased on external merchant websites (Amazon, Flipkart, etc.), please contact that retailer directly.
+                </p>
+              </div>
+            </div>
+
+            {/* Open Contact Form (NOT inside a box, Desktop Right, Form first on mobile) */}
+            <div
+              ref={formSectionRef}
+              id="contact-form-section"
+              className="lg:col-span-6 order-1 lg:order-2"
+            >
+              <div className="p-0">
+                <div className="mb-8">
+                  <span className="kx-eyebrow mb-2">Direct message</span>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--kx-text)]">
+                    Send a Message
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[var(--kx-text-muted)] mt-1.5">
+                    Fill out the form below. Our response time is typically within 24 hours.
+                  </p>
+                </div>
+
+                {submitted ? (
+                  <div className="text-center py-12 px-6 rounded-3xl bg-[rgba(255,255,255,0.03)]">
+                    {/* SVG Check Draw Animation */}
+                    <div className="w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center bg-[linear-gradient(135deg,#00F5A0,#22D3EE)] text-[#050505]">
+                      <svg
+                        className="w-8 h-8 kx-check-circle"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline className="kx-check-path" points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+
+                    <h3 className="text-2xl font-black text-[var(--kx-text)]">
+                      Message Delivered!
+                    </h3>
+                    <p className="text-sm text-[var(--kx-text-muted)] max-w-md mx-auto mt-2 leading-relaxed">
+                      Thank you for reaching out. We have logged your request and our support desk will respond shortly.
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData((prev) => ({
+                          ...prev,
+                          subject: SUBJECTS[0],
+                          message: ""
+                        }));
+                      }}
+                      className="mt-6 kx-btn-48 kx-btn-secondary-tint"
+                    >
+                      Send another message
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                    {/* Hidden Honeypot Field */}
                     <input
                       type="text"
                       name="website"
-                      tabIndex={-1}
-                      autoComplete="off"
                       value={formData.website}
                       onChange={(e) => handleChange("website", e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      style={{ display: "none" }}
                     />
-                  </div>
 
-                  {/* Name Input */}
-                  <div>
-                    <label htmlFor="c-name" className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
-                      Your Name
-                    </label>
-                    <div className="relative flex items-center">
-                      <User size={16} className="absolute left-4 text-[var(--kx-text-dim)] pointer-events-none" />
+                    {/* Name Field (60px, filled, no border) */}
+                    <div className="kx-field-wrapper">
                       <input
                         id="c-name"
                         type="text"
+                        name="name"
                         required
-                        minLength={2}
-                        maxLength={80}
                         value={formData.name}
                         onChange={(e) => handleChange("name", e.target.value)}
-                        placeholder="John Doe"
-                        className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 pl-11 pr-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
+                        onBlur={() => handleBlur("name")}
+                        placeholder=" "
+                        className="kx-field-60"
                       />
+                      <label htmlFor="c-name" className="kx-floating-label-60">
+                        Full Name
+                      </label>
+                      <div className="kx-focus-bar" />
+                      {touched.name && formData.name.trim().length < 2 && (
+                        <div className="kx-field-error-msg">
+                          Please enter your full name (at least 2 characters).
+                        </div>
+                      )}
                     </div>
-                  </div>
 
-                  {/* Email Input */}
-                  <div>
-                    <label htmlFor="c-email" className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
-                      Email Address
-                    </label>
-                    <div className="relative flex items-center">
-                      <Mail size={16} className="absolute left-4 text-[var(--kx-text-dim)] pointer-events-none" />
+                    {/* Email Field (60px, filled, no border) */}
+                    <div className="kx-field-wrapper">
                       <input
                         id="c-email"
                         type="email"
+                        name="email"
                         required
                         value={formData.email}
                         onChange={(e) => handleChange("email", e.target.value)}
-                        placeholder="john@example.com"
-                        className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 pl-11 pr-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
+                        onBlur={() => handleBlur("email")}
+                        placeholder=" "
+                        className="kx-field-60"
                       />
+                      <label htmlFor="c-email" className="kx-floating-label-60">
+                        Email Address
+                      </label>
+                      <div className="kx-focus-bar" />
+                      {touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                        <div className="kx-field-error-msg">
+                          Please enter a valid email address.
+                        </div>
+                      )}
                     </div>
-                  </div>
 
-                  {/* Subject Dropdown */}
-                  <div>
-                    <label htmlFor="c-sub" className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
-                      Topic / Subject
-                    </label>
-                    <select
-                      id="c-sub"
-                      value={formData.subject}
-                      onChange={(e) => handleChange("subject", e.target.value)}
-                      className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
-                    >
-                      {SUBJECTS.map((s) => (
-                        <option key={s} value={s} className="bg-[var(--kx-surface-1)] text-[var(--kx-text)]">
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                    {/* Subject Field (60px, custom chevron, no border) */}
+                    <div className="kx-field-wrapper">
+                      <select
+                        id="c-subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={(e) => handleChange("subject", e.target.value)}
+                        className="kx-select-borderless"
+                      >
+                        {SUBJECTS.map((s) => (
+                          <option key={s} value={s} className="bg-[#101114] text-[#F8FAFC]">
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="kx-focus-bar" />
+                    </div>
 
-                  {/* Message Area with Character Counter */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label htmlFor="c-msg" className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider">
+                    {/* Message Field (filled, no border) */}
+                    <div className="kx-field-wrapper">
+                      <textarea
+                        id="c-msg"
+                        name="message"
+                        required
+                        rows={5}
+                        maxLength={2000}
+                        value={formData.message}
+                        onChange={(e) => handleChange("message", e.target.value)}
+                        onBlur={() => handleBlur("message")}
+                        placeholder=" "
+                        className="kx-textarea-borderless"
+                      />
+                      <label htmlFor="c-msg" className="kx-floating-label-60">
                         Message
                       </label>
-                      <span className="text-[11px] text-[var(--kx-text-dim)]">
-                        {formData.message.length} / 2000
-                      </span>
-                    </div>
-                    <textarea
-                      id="c-msg"
-                      rows={5}
-                      required
-                      minLength={10}
-                      maxLength={2000}
-                      value={formData.message}
-                      onChange={(e) => handleChange("message", e.target.value)}
-                      placeholder="Please describe your question or issue in detail..."
-                      className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] p-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
-                    />
-                  </div>
+                      <div className="kx-focus-bar" />
 
-                  {error && (
-                    <div className="rounded-xl border border-[var(--kx-red)]/30 bg-[var(--kx-red-soft)] p-3 text-xs text-[var(--kx-red)] flex items-center gap-2">
-                      <AlertCircle size={14} className="shrink-0" /> {error}
+                      <div className="flex justify-between items-center mt-2 px-1">
+                        <span className="text-[11px] text-[var(--kx-text-dim)]">
+                          Minimum 10 characters
+                        </span>
+                        <span className={`text-[11px] kx-char-counter transition-colors ${counterClass}`}>
+                          {msgLen} / 2000
+                        </span>
+                      </div>
+                      {touched.message && formData.message.trim().length < 10 && (
+                        <div className="kx-field-error-msg">
+                          Message must be at least 10 characters long.
+                        </div>
+                      )}
                     </div>
-                  )}
 
-                  <button
-                    type="submit"
-                    disabled={loading || cooldown > 0}
-                    className="kx-btn kx-btn--primary w-full py-4 text-sm font-black flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <Send size={16} />
-                    {loading ? "Sending..." : cooldown > 0 ? `Please wait (${cooldown}s)` : "Send Message"}
-                  </button>
-                </form>
-              )}
+                    {error && (
+                      <div className="kx-field-error-msg py-2 px-3">
+                        <span>{error}</span>
+                      </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={loading || cooldown > 0}
+                      className="kx-btn-48 kx-btn-primary-gradient kx-btn-shine w-full text-sm font-black disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 size={18} className="animate-spin" />
+                          <span>Sending...</span>
+                        </>
+                      ) : cooldown > 0 ? (
+                        <span>Please wait ({cooldown}s)</span>
+                      ) : (
+                        <>
+                          <Send size={16} />
+                          <span>Send Message</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
             </div>
           </div>
+        </main>
+      </div>
 
-          {/* Info Cards Column */}
-          <div className="lg:col-span-5 space-y-4">
-            {/* Email Support Card */}
-            <div className="kx-card p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--kx-accent-soft)] text-[var(--kx-accent)] border border-[var(--kx-accent)]/20">
-                  <Mail size={18} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-[var(--kx-text)]">Direct Support Email</h3>
-                  <a
-                    href="mailto:support@ksamdeal.in"
-                    className="text-xs text-[var(--kx-cyan)] hover:underline"
-                  >
-                    support@ksamdeal.in
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Response Time & Hours */}
-            <div className="kx-card p-6 space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--kx-cyan-soft)] text-[var(--kx-cyan)] border border-[var(--kx-cyan)]/20 shrink-0">
-                  <Clock size={18} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-[var(--kx-text)]">Response Time</h3>
-                  <p className="text-xs text-[var(--kx-text-muted)] mt-0.5">
-                    We review messages in order of arrival and aim to respond within 24 business hours.
-                  </p>
-                  <p className="text-xs text-[var(--kx-text-dim)] mt-1">
-                    Hours: Monday – Saturday, 9:00 AM – 7:00 PM IST
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick FAQ Card */}
-            <div className="kx-card p-6">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--kx-yellow-soft)] text-[var(--kx-yellow)] border border-[var(--kx-yellow)]/20 shrink-0">
-                  <HelpCircle size={18} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-[var(--kx-text)]">Quick Answers</h3>
-                  <p className="text-xs text-[var(--kx-text-muted)] mt-0.5">
-                    Have questions about how KSAM Deal tracks prices or redirects purchases?
-                  </p>
-                  <a
-                    href={`${BASE_URL}index.html#faq`}
-                    className="mt-3 inline-block text-xs font-bold text-[var(--kx-accent)] hover:underline"
-                  >
-                    Read Frequently Asked Questions →
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Legal Notice Card */}
-            <div className="rounded-3xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] p-5 text-xs text-[var(--kx-text-muted)] leading-relaxed">
-              <p>
-                <strong className="text-[var(--kx-text)]">Note:</strong> KSAM Deal is an independent deals aggregator. If you have questions regarding order shipping, returns, or refunds for an item bought on Amazon, Flipkart, or another partner store, please contact that retailer directly.
-              </p>
-            </div>
+      {/* Sticky Mobile Glass Action Bar (no border) */}
+      {!submitted && (
+        <div className="kx-mobile-action-bar">
+          <div>
+            <div className="text-xs font-bold text-[var(--kx-text)]">Need Help?</div>
+            <div className="text-[11px] text-[var(--kx-text-muted)]">Reply in ~24h</div>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById("contact-form-section");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="kx-btn-48 kx-btn-primary-gradient px-5 text-xs font-black"
+          >
+            <Send size={14} /> Send Message
+          </button>
         </div>
-      </main>
+      )}
 
       <Newsletter />
       <Footer />

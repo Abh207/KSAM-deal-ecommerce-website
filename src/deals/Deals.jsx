@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { requireAuth, getPendingAction, clearPendingAction, getStoredSessionSync } from "../auth/auth.js";
+import KsamPreloader from "./components/KsamPreloader.jsx";
 
 
 import Navbar
@@ -66,26 +67,29 @@ function Deals() {
 
     /*
     ==========================================
-    PRELOADER
+    PRELOADER (Cinematic Futuristic Experience)
     ==========================================
     */
 
-    const [loading, setLoading] =
-        useState(true);
+    const [loading, setLoading] = useState(true);
+    const [isPreloaderExiting, setIsPreloaderExiting] = useState(false);
 
+    const handlePreloaderComplete = useCallback(() => {
+        setIsPreloaderExiting(true);
+        const exitTimer = setTimeout(() => {
+            setLoading(false);
+        }, 550);
+        return () => clearTimeout(exitTimer);
+    }, []);
 
+    // Fallback timer ensures loading screen never hangs
     useEffect(() => {
+        const fallbackTimer = setTimeout(() => {
+            setIsPreloaderExiting(true);
+            setTimeout(() => setLoading(false), 550);
+        }, 2800);
 
-        const timer =
-            setTimeout(
-                () => setLoading(false),
-                900
-            );
-
-
-        return () =>
-            clearTimeout(timer);
-
+        return () => clearTimeout(fallbackTimer);
     }, []);
 
 
@@ -154,56 +158,6 @@ function Deals() {
     }
 
 
-    if (loading) {
-
-        return (
-
-            <div
-                className="
-                    flex
-                    min-h-screen
-                    items-center
-                    justify-center
-                    bg-black
-                "
-            >
-
-                <div className="text-center">
-
-                    <div
-                        className="
-                            mx-auto
-                            h-14
-                            w-14
-                            animate-spin
-                            rounded-full
-                            border-4
-                            border-white/10
-                            border-t-[#22FF88]
-                        "
-                    />
-
-                    <p
-                        className="
-                            mt-5
-                            text-sm
-                            font-bold
-                            tracking-widest
-                            text-white
-                        "
-                    >
-                        KSAM DEAL
-                    </p>
-
-                </div>
-
-            </div>
-
-        );
-
-    }
-
-
     return (
 
         <div
@@ -214,6 +168,12 @@ function Deals() {
                 text-white
             "
         >
+            {loading && (
+                <KsamPreloader
+                    isExiting={isPreloaderExiting}
+                    onComplete={handlePreloaderComplete}
+                />
+            )}
 
             <ScrollProgress />
 

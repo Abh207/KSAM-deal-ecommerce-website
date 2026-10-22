@@ -1,291 +1,331 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { createRoot } from "react-dom/client";
-import { Shield, ArrowLeft, ChevronDown, Lock, FileText, Database, UserCheck, AlertTriangle } from "lucide-react";
+import {
+  Shield,
+  ArrowLeft,
+  Clock,
+  ArrowRight,
+  Mail
+} from "lucide-react";
+import gsap from "gsap";
 import { BASE_URL } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
 import Newsletter from "../deals/components/Newsletter.jsx";
-import Footer from "../deals/components/Footer.jsx";
+import LiveBackdrop from "../profile/components/LiveBackdrop.jsx";
+import KxFaq from "../components/KxFaq.jsx";
+import { ReadingProgressBar, Aurora, useThemeSync } from "../lib/pageEffects.jsx";
+import {
+  initScrollParallax,
+  initHeroExitDrift
+} from "../lib/motion.js";
+import { applyTheme, getStoredTheme, getStoredAccent } from "../lib/theme.js";
+
 import "../deals/tailwind-generated.css";
 import "../deals/deals.css";
+import "../profile/kx-spotlight.css";
 import "../styles/kx-tokens.css";
 import "../styles/kx-motion.css";
-
-const SECTIONS = [
-  { id: "intro", title: "1. Overview & Scope" },
-  { id: "data-collected", title: "2. Personal Data We Collect" },
-  { id: "purpose", title: "3. How We Use Your Data" },
-  { id: "storage", title: "4. Data Storage & Security" },
-  { id: "cookies", title: "5. Cookies & Local Storage" },
-  { id: "third-parties", title: "6. Partner Stores & Affiliate Links" },
-  { id: "retention", title: "7. Data Retention & Deletion" },
-  { id: "rights", title: "8. Your Rights Under DPDP Act 2023" },
-  { id: "grievance", title: "9. Grievance Officer & Contact" }
-];
+import "../styles/kx-pages.css";
+import "../styles/kx-faq.css";
 
 export function PrivacyPolicyPage() {
-  const [activeSection, setActiveSection] = useState("intro");
-  const [openAccordion, setOpenAccordion] = useState({
-    intro: true,
-    "data-collected": true
-  });
+  const containerRef = useRef(null);
+  const heroRef = useRef(null);
+  const heroContentRef = useRef(null);
+
+  useThemeSync();
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + 200;
-      for (const sec of SECTIONS) {
-        const el = document.getElementById(sec.id);
-        if (el && el.offsetTop <= scrollPos) {
-          setActiveSection(sec.id);
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    applyTheme(getStoredTheme(), getStoredAccent());
   }, []);
 
-  const toggleAccordion = (id) => {
-    setOpenAccordion((p) => ({ ...p, [id]: !p[id] }));
-  };
+  // GSAP Scroll Motion (Pin-free, reverted on unmount via gsap.context)
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (heroRef.current && heroContentRef.current) {
+        initHeroExitDrift(heroRef.current, heroContentRef.current);
+      }
+      initScrollParallax(".kx-aurora-blob", 50);
+    }, containerRef);
 
-  const bannerImg = `${BASE_URL}laptop-image.png`;
+    return () => ctx.revert();
+  }, []);
 
-  return (
-    <div className="kx-page min-h-screen flex flex-col justify-between relative overflow-hidden" style={{ background: "var(--kx-base)", color: "var(--kx-text)" }}>
-      {/* Dynamic Background Elements */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="kx-mesh-bg opacity-30" />
-        <div className="kx-noise-overlay" />
-        <div className="kx-floating-shape w-96 h-96 -top-20 -left-20 bg-[var(--kx-accent)] opacity-10 blur-3xl rounded-full" />
-        <div className="kx-floating-shape w-80 h-80 top-1/2 -right-20 bg-[var(--kx-cyan)] opacity-10 blur-3xl rounded-full" style={{ animationDelay: "-6s" }} />
-      </div>
-
-      <Navbar />
-
-      <main className="mx-auto max-w-7xl w-full px-4 py-12 sm:py-20 relative z-10">
-        {/* Top Back Navigation */}
-        <div className="mb-8 flex items-center justify-between">
-          <a
-            href={`${BASE_URL}profile.html`}
-            className="inline-flex items-center gap-2 text-xs font-bold text-[var(--kx-text-muted)] hover:text-[var(--kx-accent)] transition"
-          >
-            <ArrowLeft size={14} /> Back to Profile Hub
-          </a>
-          <span className="text-xs text-[var(--kx-text-dim)] font-medium">
-            Effective Date: [EFFECTIVE DATE]
-          </span>
-        </div>
-
-        {/* Hero Banner */}
-        <div className="relative overflow-hidden rounded-3xl border border-[var(--kx-border)] bg-[var(--kx-surface-1)] p-8 sm:p-14 mb-12 shadow-2xl">
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 opacity-15 hidden md:block">
-            <img
-              src={bannerImg}
-              alt="Privacy & Data Protection"
-              loading="lazy"
-              className="h-full w-full object-cover mix-blend-screen"
-            />
-          </div>
-
-          <div className="relative z-10 max-w-2xl">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--kx-accent-soft)] text-[var(--kx-accent)] mb-5 border border-[var(--kx-accent)]/20 shadow-[0_0_20px_var(--kx-accent-glow)]">
-              <Shield size={24} />
+  const faqItems = useMemo(
+    () => [
+      {
+        id: "intro",
+        question: "01 — Overview & Scope",
+        tone: "blue-purple",
+        answer: (
+          <div className="space-y-4">
+            <p>
+              This Privacy Policy applies to the services offered by <strong>[LEGAL NAME]</strong> ("KSAM Deal", "we", "our", or "us"), located at <strong>[REGISTERED ADDRESS]</strong>.
+            </p>
+            <p>
+              KSAM Deal is an online <strong>deal discovery and shopping aggregation platform</strong>. We collect discounted product listings from multiple verified Indian e-commerce merchants and direct our visitors to the merchant's store to finalize purchases.
+            </p>
+            <div className="kx-callout-block" data-tone="blue-purple">
+              <p className="font-semibold text-[var(--kx-text)]">
+                KSAM Deal does not sell products, operate inventory, collect payments for goods, or handle shipping logistics.
+              </p>
             </div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-[var(--kx-cyan)] block mb-1">
-              Legal & Compliance
-            </span>
-            <h1 className="text-3xl sm:text-5xl font-black text-[var(--kx-text)] leading-tight tracking-tight">
-              Privacy <span className="text-[var(--kx-accent)]">Policy</span>
-            </h1>
-            <p className="mt-4 text-sm text-[var(--kx-text-muted)] leading-relaxed">
-              KSAM Deal respects your digital privacy. This policy explains how we collect, store, and protect your personal information in compliance with the Digital Personal Data Protection Act 2023 (India) and the Information Technology Act 2000.
+          </div>
+        )
+      },
+      {
+        id: "data-collected",
+        question: "02 — Personal Data We Collect",
+        tone: "green-blue",
+        answer: (
+          <div className="space-y-4">
+            <p>We only collect information necessary to deliver personalized deal tracking and account features:</p>
+            <ul className="kx-gradient-bullets" data-tone="green-blue">
+              <li><strong>Account Profile:</strong> Full name, verified email address, phone number, date of birth, gender, and custom profile avatar.</li>
+              <li><strong>Delivery Addresses:</strong> Street address, city, state, and 6-digit PIN code saved in your address book.</li>
+              <li><strong>Shopping Preferences:</strong> Wishlist items, price alert thresholds, recently viewed deals, and theme customizations.</li>
+              <li><strong>Communications:</strong> Newsletter subscription emails, contact messages, and customer support inquiries.</li>
+              <li><strong>Technical Identifiers:</strong> Browser user agent, device screen dimensions, IP address, and cookie identifiers for session continuity.</li>
+            </ul>
+          </div>
+        )
+      },
+      {
+        id: "purpose",
+        question: "03 — How We Use Your Data",
+        tone: "yellow-green",
+        answer: (
+          <div className="space-y-4">
+            <p>Your data is processed strictly for legitimate discovery and account operations:</p>
+            <ul className="kx-gradient-bullets" data-tone="yellow-green">
+              <li>Authenticating your session and safeguarding your account settings.</li>
+              <li>Saving your wishlist and recently viewed products across browser sessions.</li>
+              <li>Dispatching price drop notifications when an item reaches your target discount.</li>
+              <li>Displaying regional availability based on your delivery PIN code.</li>
+              <li>Responding to inquiries submitted through our Contact Us form.</li>
+            </ul>
+          </div>
+        )
+      },
+      {
+        id: "storage",
+        question: "04 — Data Storage & Security",
+        tone: "purple-pink",
+        answer: (
+          <div className="space-y-4">
+            <p>
+              Your account profile and wishlist data are securely stored in managed PostgreSQL databases powered by <strong>Supabase</strong> with Row-Level Security (RLS) enforcement.
+            </p>
+            <p>
+              All network communications between your browser and our servers are encrypted in transit using industry-standard TLS 1.3. We implement tokenized authorization headers, brute-force rate limiting, and encrypted password hashing.
             </p>
           </div>
-
-          {/* Decorative Marquee Strip */}
-          <div className="mt-8 pt-4 border-t border-[var(--kx-border)] overflow-hidden relative">
-            <div className="kx-marquee-track text-[11px] font-black uppercase tracking-[0.25em] text-[var(--kx-text-dim)] select-none">
-              <span className="kx-marquee-content">
-                &nbsp;DATA PROTECTION • DPDP ACT 2023 • ENCRYPTED STORAGE • PRIVACY FIRST • TRANSPARENT DISCOVERY • DATA PROTECTION • DPDP ACT 2023 • ENCRYPTED STORAGE • PRIVACY FIRST • TRANSPARENT DISCOVERY •
-              </span>
-              <span className="kx-marquee-content" aria-hidden="true">
-                &nbsp;DATA PROTECTION • DPDP ACT 2023 • ENCRYPTED STORAGE • PRIVACY FIRST • TRANSPARENT DISCOVERY • DATA PROTECTION • DPDP ACT 2023 • ENCRYPTED STORAGE • PRIVACY FIRST • TRANSPARENT DISCOVERY •
-              </span>
+        )
+      },
+      {
+        id: "cookies",
+        question: "05 — Cookies & Tracking",
+        tone: "blue-purple",
+        answer: (
+          <div className="space-y-4">
+            <p>KSAM Deal utilizes minimal, first-party browser storage essential for core site functionality:</p>
+            <div className="overflow-x-auto my-4">
+              <table className="w-full text-left text-xs rounded-xl overflow-hidden">
+                <thead className="bg-[rgba(255,255,255,0.06)] text-[var(--kx-text)] uppercase tracking-wider">
+                  <tr>
+                    <th className="p-3">Key / Cookie</th>
+                    <th className="p-3">Storage Type</th>
+                    <th className="p-3">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[var(--kx-text-muted)]">
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-[var(--kx-cyan)]">sb-auth-token</td>
+                    <td className="p-3">LocalStorage</td>
+                    <td className="p-3">Encrypted user authentication session</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-[var(--kx-cyan)]">theme / accent</td>
+                    <td className="p-3">LocalStorage</td>
+                    <td className="p-3">Dark/light mode and custom color theme</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-[var(--kx-cyan)]">ksam_recent_searches</td>
+                    <td className="p-3">LocalStorage</td>
+                    <td className="p-3">Recent search query suggestions</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-
-        {/* Two-Column Layout: Sticky Sidebar TOC + Content */}
-        <div className="grid gap-12 lg:grid-cols-12">
-          {/* Table of Contents (Desktop Sticky) */}
-          <aside className="hidden lg:block lg:col-span-4">
-            <div className="sticky top-28 kx-card--glass p-6">
-              <h2 className="text-xs font-black uppercase tracking-wider text-[var(--kx-cyan)] mb-4">
-                Contents
-              </h2>
-              <nav className="space-y-1">
-                {SECTIONS.map((sec) => (
-                  <a
-                    key={sec.id}
-                    href={`#${sec.id}`}
-                    className={`block rounded-lg px-3 py-2 text-xs font-bold transition ${
-                      activeSection === sec.id
-                        ? "bg-[var(--kx-accent-soft)] text-[var(--kx-accent)] border-l-2 border-[var(--kx-accent)]"
-                        : "text-[var(--kx-text-muted)] hover:text-[var(--kx-text)] hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    {sec.title}
-                  </a>
-                ))}
-              </nav>
-            </div>
-          </aside>
-
-          {/* Policy Text Column */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* 1. Overview */}
-            <section id="intro" className="kx-card p-6 sm:p-8">
-              <div
-                className="flex items-center justify-between cursor-pointer lg:cursor-default"
-                onClick={() => toggleAccordion("intro")}
-              >
-                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                  <FileText size={18} className="text-[#22FF88]" />
-                  1. Overview & Scope
-                </h2>
-                <ChevronDown size={18} className="text-gray-400 lg:hidden" />
-              </div>
-
-              {(openAccordion["intro"] || window.innerWidth >= 1024) && (
-                <div className="mt-4 text-sm text-gray-300 leading-relaxed space-y-3 pt-3 border-t border-white/5">
-                  <p>
-                    This Privacy Policy applies to the services offered by <strong>[LEGAL NAME]</strong> ("KSAM Deal", "we", "our", or "us"), located at <strong>[REGISTERED ADDRESS]</strong>.
-                  </p>
-                  <p>
-                    KSAM Deal is an online <strong>deal discovery and shopping aggregation platform</strong>. We collect discounted product listings from multiple verified Indian e-commerce merchants and direct our visitors to the merchant's store to finalize purchases. <strong>KSAM Deal does not sell products, operate inventory, collect payments for goods, or handle shipping logistics.</strong>
-                  </p>
-                </div>
-              )}
-            </section>
-
-            {/* 2. Personal Data We Collect */}
-            <section id="data-collected" className="kx-card p-6 sm:p-8">
-              <div
-                className="flex items-center justify-between cursor-pointer lg:cursor-default"
-                onClick={() => toggleAccordion("data-collected")}
-              >
-                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                  <Database size={18} className="text-[#38BDF8]" />
-                  2. Personal Data We Collect
-                </h2>
-                <ChevronDown size={18} className="text-gray-400 lg:hidden" />
-              </div>
-
-              {(openAccordion["data-collected"] || window.innerWidth >= 1024) && (
-                <div className="mt-4 text-sm text-gray-300 leading-relaxed space-y-3 pt-3 border-t border-white/5">
-                  <p>We only collect information necessary to deliver personalized deal tracking and account features:</p>
-                  <ul className="list-disc pl-5 space-y-1.5 text-xs text-gray-400">
-                    <li><strong>Account Profile:</strong> Full name, verified email address, phone number, date of birth, gender, and custom profile avatar.</li>
-                    <li><strong>Delivery Addresses:</strong> Street address, city, state, and 6-digit PIN code saved in your address book.</li>
-                    <li><strong>Shopping Preferences:</strong> Wishlist items, price alert thresholds, recently viewed deals, and theme customizations.</li>
-                    <li><strong>Communications:</strong> Newsletter subscription emails, contact messages, and customer support inquiries.</li>
-                    <li><strong>Telemetry & Outbound Tracking:</strong> Timestamped outbound clicks on deal links (product ID, user ID if logged in) to monitor deal engagement.</li>
-                  </ul>
-                </div>
-              )}
-            </section>
-
-            {/* 3. Purpose */}
-            <section id="purpose" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3">3. How We Use Your Data</h2>
-              <div className="text-sm text-gray-300 leading-relaxed space-y-2">
-                <p>We process your data strictly to:</p>
-                <ul className="list-disc pl-5 space-y-1 text-xs text-gray-400">
-                  <li>Provide seamless user authentication and secure profile management.</li>
-                  <li>Track product price changes and alert you when target prices are reached.</li>
-                  <li>Personalize deal discovery feeds based on your chosen categories and stores.</li>
-                  <li>Send optional promotional deal digests (only if marketing opt-in is enabled).</li>
-                  <li>Comply with applicable legal obligations under Indian cyber laws.</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* 4. Storage & Security */}
-            <section id="storage" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3 flex items-center gap-2">
-                <Lock size={18} className="text-[#22FF88]" />
-                4. Data Storage & Security
-              </h2>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                All account data, addresses, and wishlist records are stored securely in Supabase PostgreSQL databases with encrypted connections (TLS 1.3) and strict Row-Level Security (RLS) policies. User authentication passwords are encrypted using one-way bcrypt hashing algorithms within Supabase Auth; KSAM Deal never stores or has access to your raw password.
-              </p>
-            </section>
-
-            {/* 5. Cookies & Local Storage */}
-            <section id="cookies" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3">5. Cookies & Local Storage</h2>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                We use browser localStorage and sessionStorage to retain active login tokens, shopping cart values for legacy catalogs, and guest wishlists. No third-party behavioral advertising cookies are deposited on your device by KSAM Deal.
-              </p>
-            </section>
-
-            {/* 6. Partner Stores */}
-            <section id="third-parties" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3">6. Partner Stores & Affiliate Links</h2>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                When you click "Buy on Store" or "View Deal", you are redirected via an affiliate link to the partner retailer's website (e.g. Amazon India, Flipkart, Croma). Once you leave our domain, your interactions and purchases are governed exclusively by that merchant's privacy policy and terms.
-              </p>
-            </section>
-
-            {/* 7. Retention */}
-            <section id="retention" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3">7. Data Retention & Deletion</h2>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                We retain your account profile and addresses for as long as your account remains active. Historical price tracking points older than 180 days and ingest logs older than 30 days are automatically purged. If you choose to delete your account via the Profile Hub, all personal profile records, addresses, wishlist items, price alerts, and uploaded avatars are permanently deleted immediately.
-              </p>
-            </section>
-
-            {/* 8. User Rights */}
-            <section id="rights" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3 flex items-center gap-2">
-                <UserCheck size={18} className="text-[#38BDF8]" />
-                8. Your Rights Under India's DPDP Act 2023
-              </h2>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                As a digital data principal under the Digital Personal Data Protection Act 2023, you have the right to:
-              </p>
-              <ul className="list-disc pl-5 mt-2 space-y-1 text-xs text-gray-400">
-                <li>Access and review all personal data held about you in your Profile Hub.</li>
-                <li>Correct inaccurate or incomplete personal information at any time.</li>
-                <li>Withdraw consent for marketing communications with a single toggle.</li>
-                <li>Request permanent erasure of your account and personal data.</li>
-              </ul>
-            </section>
-
-            {/* 9. Grievance Officer */}
-            <section id="grievance" className="kx-card p-6 sm:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-3">9. Grievance Officer & Contact Details</h2>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                In accordance with the Information Technology Act 2000 and rules made thereunder, the contact details of the Grievance Officer for KSAM Deal are provided below:
-              </p>
-              <div className="mt-4 rounded-xl border border-white/5 bg-white/[0.02] p-4 text-xs space-y-1.5 text-gray-300">
-                <p><strong>Officer Name:</strong> [GRIEVANCE OFFICER NAME/EMAIL]</p>
-                <p><strong>Designation:</strong> Data Protection & Grievance Officer</p>
-                <p><strong>Company:</strong> [LEGAL NAME]</p>
-                <p><strong>Address:</strong> [REGISTERED ADDRESS]</p>
-                <p><strong>Email:</strong> <a href="mailto:support@ksamdeal.in" className="text-[#22FF88] hover:underline">[SUPPORT EMAIL]</a></p>
-              </div>
-            </section>
+        )
+      },
+      {
+        id: "third-parties",
+        question: "06 — Third-Party Services & Partner Links",
+        tone: "green-blue",
+        answer: (
+          <div className="space-y-4">
+            <p>
+              When you click on a deal or external store link, you will be redirected to an external retailer's website (such as Amazon India, Flipkart, Myntra, etc.).
+            </p>
+            <p>
+              These third-party platforms govern your transaction under their own privacy policies. For complete details on how affiliate partnerships operate, please review our{" "}
+              <a href={`${BASE_URL}affiliate-disclosure.html`} className="text-[var(--kx-accent)] kx-animated-link font-bold">
+                Affiliate Disclosure
+              </a>.
+            </p>
           </div>
-        </div>
-      </main>
+        )
+      },
+      {
+        id: "retention",
+        question: "07 — Data Retention & Deletion",
+        tone: "yellow-green",
+        answer: (
+          <div className="space-y-4">
+            <p>
+              We retain your personal data only as long as your account remains active. You may permanently delete your account, saved addresses, and all associated personal records at any time directly through the{" "}
+              <a href={`${BASE_URL}profile.html#danger`} className="text-[var(--kx-accent)] kx-animated-link font-bold">
+                Danger Zone in your Profile Hub
+              </a>.
+            </p>
+          </div>
+        )
+      },
+      {
+        id: "rights",
+        question: "08 — Your Privacy Rights Under DPDP Act 2023",
+        tone: "blue-purple",
+        answer: (
+          <div className="space-y-4">
+            <p>As a Data Principal under India's Digital Personal Data Protection Act 2023, you are entitled to:</p>
+            <ul className="kx-gradient-bullets" data-tone="blue-purple">
+              <li><strong>Right to Access:</strong> Request a summary of the personal data we hold about you.</li>
+              <li><strong>Right to Correction:</strong> Update or rectify outdated or inaccurate account details.</li>
+              <li><strong>Right to Erasure:</strong> Delete your personal data through your Profile or by written request.</li>
+              <li><strong>Right of Grievance Redressal:</strong> Submit a complaint regarding data processing to our Grievance Officer.</li>
+            </ul>
+          </div>
+        )
+      },
+      {
+        id: "grievance",
+        question: "09 — Grievance Officer & Contact",
+        tone: "purple-pink",
+        answer: (
+          <div className="space-y-4">
+            <p>
+              In accordance with Rule 3(2) of the Information Technology (Intermediary Guidelines) Rules 2021 and Section 12 of the DPDP Act 2023, the details of our Grievance Officer are:
+            </p>
+            <div className="kx-callout-block text-xs sm:text-sm space-y-2" data-tone="purple-pink">
+              <div><strong>Officer Name:</strong> [GRIEVANCE OFFICER NAME/EMAIL]</div>
+              <div><strong>Entity:</strong> [LEGAL NAME]</div>
+              <div><strong>Address:</strong> [REGISTERED ADDRESS]</div>
+              <div>
+                <strong>Support & Grievance Email:</strong>{" "}
+                <a href="mailto:[SUPPORT EMAIL]" className="text-[var(--kx-accent)] kx-animated-link font-bold">
+                  [SUPPORT EMAIL]
+                </a>
+              </div>
+            </div>
+            <p className="text-xs text-[var(--kx-text-dim)] pt-2">
+              We respond to all grievance complaints within 24–48 working hours, and resolve matters within 15 days as mandated by applicable law.
+            </p>
+          </div>
+        )
+      }
+    ],
+    []
+  );
+
+  return (
+    <div
+      ref={containerRef}
+      className="kx-page min-h-screen flex flex-col justify-between relative"
+      style={{ background: "var(--kx-base)", color: "var(--kx-text)" }}
+    >
+      <ReadingProgressBar />
+      <LiveBackdrop palette="privacy" />
+      <Navbar />
+
+      <div className="kx-main-wrapper relative z-10">
+        <main className="kx-container-1200 py-10 sm:py-16 lg:py-20">
+          {/* Top Breadcrumb Navigation */}
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <a
+              href={`${BASE_URL}profile.html`}
+              className="inline-flex items-center gap-2 text-xs font-bold text-[var(--kx-text-muted)] hover:text-[var(--kx-accent)] transition kx-animated-link"
+            >
+              <ArrowLeft size={14} /> Back to Profile Hub
+            </a>
+            <div className="flex items-center gap-3 text-xs text-[var(--kx-text-dim)] font-medium">
+              <span className="kx-pill-tint">
+                <Clock size={12} className="text-[var(--kx-cyan)]" /> ~4 min read
+              </span>
+              <span>Effective Date: [EFFECTIVE DATE]</span>
+            </div>
+          </div>
+
+          {/* Fluid Open Hero (No card, no border) */}
+          <section
+            ref={heroRef}
+            className="kx-faq-hero"
+            data-tone="blue-purple"
+          >
+            <Aurora tone="blue-purple" />
+
+            <div ref={heroContentRef} className="relative z-10 max-w-3xl">
+              <div className="kx-faq-icon-tile mb-6">
+                <Shield size={26} strokeWidth={2.4} />
+              </div>
+              <span className="kx-eyebrow mb-4">
+                Your privacy matters
+              </span>
+              <h1 className="kx-hero-heading mb-6">
+                Your privacy.{" "}
+                <span className="kx-gradient-text" data-tone="blue-purple">
+                  Our priority.
+                </span>
+              </h1>
+              <p className="text-base sm:text-lg text-[var(--kx-text-muted)] leading-relaxed max-w-2xl">
+                KSAM Deal respects your digital privacy. This policy explains how we collect, store, and protect your personal information in compliance with the Digital Personal Data Protection Act 2023 (India) and the Information Technology Act 2000.
+              </p>
+            </div>
+          </section>
+
+          {/* Single Centered Column: Legal FAQ Accordion */}
+          <div className="kx-faq-centered-col">
+            <KxFaq items={faqItems} defaultOpen="intro" allowMultiple />
+
+            {/* End of Page Navigation CTAs */}
+            <div className="kx-legal-actions">
+              <a
+                href={`${BASE_URL}profile.html`}
+                className="kx-btn-48 kx-btn-primary-gradient kx-btn-shine"
+              >
+                <span>Back to Profile Hub</span>
+                <ArrowRight size={16} />
+              </a>
+              <a
+                href={`${BASE_URL}contact-us.html`}
+                className="kx-btn-48 kx-btn-secondary-tint"
+              >
+                <Mail size={16} />
+                <span>Contact Us</span>
+              </a>
+            </div>
+          </div>
+        </main>
+      </div>
 
       <Newsletter />
-      <Footer />
+      <div className="kx-legal-bottom-pad" />
     </div>
   );
 }
 
-const rootEl = document.getElementById("privacy-policy-root");
+const rootEl = document.getElementById("privacy-policy-root") || document.getElementById("privacy-root");
 if (rootEl) {
   createRoot(rootEl).render(
     <React.StrictMode>

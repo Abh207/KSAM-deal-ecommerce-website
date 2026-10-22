@@ -37,8 +37,15 @@ import "./kx-spotlight.css";
 import "../styles/kx-tokens.css";
 import "../styles/kx-motion.css";
 
-// Extensible list of account routes without global footer
-export const PAGES_WITHOUT_FOOTER = ["profile.html", "/profile", "profile"];
+// Extensible list of account & legal routes without global footer
+export const PAGES_WITHOUT_FOOTER = [
+  "profile.html",
+  "/profile",
+  "profile",
+  "privacy-policy.html",
+  "terms.html",
+  "affiliate-disclosure.html"
+];
 
 const VALID_SECTIONS = [
   "overview", "profile", "addresses", "alerts", "recent",

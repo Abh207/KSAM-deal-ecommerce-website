@@ -219,3 +219,233 @@ export function countUp(el, target, duration = 1.2) {
     }
   });
 }
+
+/**
+ * Advanced Scroll-Triggered Box Reveal with alternating offsets
+ * Moves into place when reached at ~85% of viewport height
+ */
+export function revealBox(el, options = {}) {
+  if (!el) return null;
+  if (respectReducedMotion()) {
+    gsap.set(el, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, clearProps: "all" });
+    return null;
+  }
+
+  const {
+    direction = "up",
+    index = 0,
+    delay = 0,
+    duration = 0.9,
+    ease = "power3.out"
+  } = options;
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const angle = (index % 2 === 0 ? 2 : -2);
+
+  let startX = 0;
+  let startY = 48;
+
+  if (!isMobile) {
+    if (direction === "left") {
+      startX = -64;
+      startY = 20;
+    } else if (direction === "right") {
+      startX = 64;
+      startY = 20;
+    } else {
+      startX = (index % 2 === 0 ? -32 : 32);
+      startY = 64;
+    }
+  }
+
+  gsap.set(el, { willChange: "transform, opacity" });
+
+  return gsap.fromTo(
+    el,
+    {
+      opacity: 0,
+      x: startX,
+      y: startY,
+      scale: 0.94,
+      rotation: angle
+    },
+    {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      rotation: 0,
+      duration,
+      delay,
+      ease,
+      scrollTrigger: {
+        trigger: el,
+        start: "top 85%",
+        once: true
+      },
+      onComplete: () => {
+        gsap.set(el, { clearProps: "willChange,transform" });
+      }
+    }
+  );
+}
+
+/**
+ * Staggered Card Grid Reveal where cards fly in from alternating sides
+ */
+export function revealGroup(container, selector = ".kx-glow", options = {}) {
+  if (!container) return null;
+  const items = container.querySelectorAll(selector);
+  if (!items.length) return null;
+
+  if (respectReducedMotion()) {
+    gsap.set(items, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, clearProps: "all" });
+    return null;
+  }
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const { stagger = 0.08, duration = 0.9, ease = "power3.out" } = options;
+
+  items.forEach((item, idx) => {
+    const fromLeft = idx % 2 === 0;
+    const startX = isMobile ? 0 : fromLeft ? -64 : 64;
+    const startY = isMobile ? 48 : 24;
+    const angle = fromLeft ? -2 : 2;
+
+    gsap.set(item, { willChange: "transform, opacity" });
+
+    gsap.fromTo(
+      item,
+      {
+        opacity: 0,
+        x: startX,
+        y: startY,
+        scale: 0.94,
+        rotation: angle
+      },
+      {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0,
+        duration,
+        ease,
+        scrollTrigger: {
+          trigger: item,
+          start: "top 85%",
+          once: true
+        },
+        onComplete: () => {
+          gsap.set(item, { clearProps: "willChange,transform" });
+        }
+      }
+    );
+  });
+}
+
+/**
+ * Decorative layer scroll parallax drift (scrub: 0.6, up to 60px)
+ */
+export function initScrollParallax(targets, maxDrift = 60) {
+  if (!targets || respectReducedMotion()) return () => {};
+
+  const elements = typeof targets === "string" ? document.querySelectorAll(targets) : targets;
+  if (!elements || !elements.length) return () => {};
+
+  const tweens = [];
+  elements.forEach((el, idx) => {
+    const speed = idx % 2 === 0 ? 1 : 0.65;
+    const tween = gsap.to(el, {
+      y: () => -maxDrift * speed,
+      ease: "none",
+      scrollTrigger: {
+        trigger: el,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 0.6
+      }
+    });
+    tweens.push(tween);
+  });
+
+  return () => {
+    tweens.forEach((t) => t.kill());
+  };
+}
+
+/**
+ * Hero content drift as visitor scrolls down (moves up slowly, fades slightly)
+ */
+export function initHeroExitDrift(heroEl, contentEl) {
+  if (!heroEl || !contentEl || respectReducedMotion()) return () => {};
+
+  const tween = gsap.to(contentEl, {
+    y: -40,
+    opacity: 0.88,
+    ease: "none",
+    scrollTrigger: {
+      trigger: heroEl,
+      start: "top top",
+      end: "bottom top",
+      scrub: 0.6
+    }
+  });
+
+  return () => {
+    tween.kill();
+  };
+}
+
+/**
+ * Subtle desktop-only hover tilt (max 4 degrees)
+ */
+export function initCardTilt4Deg(container) {
+  if (!container || respectReducedMotion()) return () => {};
+  if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+    return () => {};
+  }
+
+  const cards = container.querySelectorAll(".kx-glow");
+  const cleanups = [];
+
+  cards.forEach((card) => {
+    const onMouseMove = (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rotX = ((y / rect.height) - 0.5) * -4;
+      const rotY = ((x / rect.width) - 0.5) * 4;
+
+      gsap.to(card, {
+        rotationX: rotX,
+        rotationY: rotY,
+        transformPerspective: 1000,
+        duration: 0.3,
+        ease: "power1.out"
+      });
+    };
+
+    const onMouseLeave = () => {
+      gsap.to(card, {
+        rotationX: 0,
+        rotationY: 0,
+        duration: 0.45,
+        ease: "power2.out"
+      });
+    };
+
+    card.addEventListener("mousemove", onMouseMove);
+    card.addEventListener("mouseleave", onMouseLeave);
+
+    cleanups.push(() => {
+      card.removeEventListener("mousemove", onMouseMove);
+      card.removeEventListener("mouseleave", onMouseLeave);
+    });
+  });
+
+  return () => {
+    cleanups.forEach((c) => c());
+  };
+}
+

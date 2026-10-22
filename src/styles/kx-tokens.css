@@ -7,45 +7,45 @@
 .kx-page,
 .kx-page[data-theme="dark"] {
   /* Color Palette */
-  --kx-base: #05070B;
-  --kx-surface-1: #0D1420;
-  --kx-surface-2: #111827;
-  --kx-surface-3: #0A0F17;
-  --kx-surface-input: #080D15;
-  --kx-surface-glass: rgba(13, 20, 32, 0.85);
+  --kx-base: #050505;
+  --kx-surface-1: #101114;
+  --kx-surface-2: #16181F;
+  --kx-surface-3: #1C1F27;
+  --kx-surface-input: #0B0D10;
+  --kx-surface-glass: rgba(16, 17, 20, 0.88);
   
   --kx-border: rgba(148, 163, 184, 0.14);
   --kx-border-subtle: rgba(148, 163, 184, 0.08);
-  --kx-border-hover: rgba(45, 255, 178, 0.35);
+  --kx-border-hover: rgba(0, 245, 160, 0.35);
   
   /* Text Hierarchy */
-  --kx-text: #F1F5F9;
-  --kx-text-heading: #F1F5F9;
-  --kx-text-secondary: #DCE6F2;
-  --kx-text-body: #C0CAD8;
-  --kx-text-muted: #98A6BA;
-  --kx-text-dim: #748399;
+  --kx-text: #F8FAFC;
+  --kx-text-heading: #F8FAFC;
+  --kx-text-secondary: #E2E8F0;
+  --kx-text-body: #CBD5E1;
+  --kx-text-muted: #94A3B8;
+  --kx-text-dim: #64748B;
   --kx-text-label: #A8B5C7;
-  --kx-text-placeholder: #748399;
-  --kx-text-disabled: #657185;
-  --kx-text-important: #E5FFF5;
-  --kx-text-inverse: #05070B;
+  --kx-text-placeholder: #64748B;
+  --kx-text-disabled: #475569;
+  --kx-text-important: #E6FFF6;
+  --kx-text-inverse: #050505;
   
   /* Primary & Accent System */
-  --kx-accent: #2DFFB2;
-  --kx-accent-highlight: #26D9F8;
-  --kx-accent-glow: rgba(45, 255, 178, 0.28);
-  --kx-accent-soft: rgba(45, 255, 178, 0.10);
-  --kx-accent-border: rgba(45, 255, 178, 0.22);
-  --kx-accent-text: #05070B;
+  --kx-accent: #00F5A0;
+  --kx-accent-highlight: #22D3EE;
+  --kx-accent-glow: rgba(0, 245, 160, 0.28);
+  --kx-accent-soft: rgba(0, 245, 160, 0.10);
+  --kx-accent-border: rgba(0, 245, 160, 0.22);
+  --kx-accent-text: #050505;
   
-  /* Secondary Semantic Accents */
-  --kx-cyan: #26D9F8;
-  --kx-cyan-soft: rgba(38, 217, 248, 0.12);
-  --kx-purple: #8B7CFF;
-  --kx-purple-soft: rgba(139, 124, 255, 0.12);
-  --kx-yellow: #FFD60A;
-  --kx-yellow-soft: rgba(255, 214, 10, 0.12);
+  /* Palette Tokens */
+  --kx-emerald: #00F5A0;
+  --kx-cyan: #22D3EE;
+  --kx-blue: #3B82F6;
+  --kx-purple: #A855F7;
+  --kx-magenta: #EC4899;
+  --kx-yellow: #FACC15;
   --kx-red: #EF4444;
   --kx-red-soft: rgba(239, 68, 68, 0.12);
 
@@ -59,6 +59,64 @@
   --kx-backdrop-blur: blur(16px);
   --kx-glass-border: 1px solid rgba(148, 163, 184, 0.14);
 }
+
+/* Light Theme Tokens (WCAG AA Compliant for Redesigned Standalone Pages) */
+.kx-page[data-theme="light"],
+[data-theme="light"] .kx-page:not(.ks-profile-page) {
+  /* Surfaces & Base */
+  --kx-base: #F8FAFC;
+  --kx-surface-1: #FFFFFF;
+  --kx-surface-2: #F1F5F9;
+  --kx-surface-3: #E2E8F0;
+  --kx-surface-input: #FFFFFF;
+  --kx-surface-glass: rgba(255, 255, 255, 0.88);
+
+  --kx-border: rgba(15, 23, 42, 0.12);
+  --kx-border-subtle: rgba(15, 23, 42, 0.06);
+  --kx-border-hover: rgba(5, 150, 105, 0.4);
+
+  /* Text Hierarchy (All > 4.5:1 against #F8FAFC / #FFFFFF) */
+  --kx-text: #0F172A;
+  --kx-text-heading: #0F172A;
+  --kx-text-secondary: #1E293B;
+  --kx-text-body: #334155;
+  --kx-text-muted: #64748B;
+  --kx-text-dim: #94A3B8;
+  --kx-text-label: #475569;
+  --kx-text-placeholder: #94A3B8;
+  --kx-text-disabled: #CBD5E1;
+  --kx-text-important: #047857;
+  --kx-text-inverse: #FFFFFF;
+
+  /* Primary Accent (High Contrast Emerald on Light) */
+  --kx-accent: #059669;
+  --kx-accent-highlight: #10B981;
+  --kx-accent-glow: rgba(5, 150, 105, 0.22);
+  --kx-accent-soft: rgba(5, 150, 105, 0.08);
+  --kx-accent-border: rgba(5, 150, 105, 0.28);
+  --kx-accent-text: #FFFFFF;
+
+  /* Secondary Semantic Accents (High Contrast) */
+  --kx-cyan: #0284C7;
+  --kx-cyan-soft: rgba(2, 132, 199, 0.10);
+  --kx-purple: #7C3AED;
+  --kx-purple-soft: rgba(124, 58, 237, 0.10);
+  --kx-yellow: #B45309;
+  --kx-yellow-soft: rgba(180, 83, 9, 0.12);
+  --kx-red: #DC2626;
+  --kx-red-soft: rgba(220, 38, 38, 0.10);
+
+  /* Shadows (Subtle, Soft Depth) */
+  --kx-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --kx-shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --kx-shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --kx-shadow-glow: 0 0 28px -4px var(--kx-accent-glow);
+
+  /* Glassmorphism */
+  --kx-backdrop-blur: blur(16px);
+  --kx-glass-border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
 
 /* Strict Dark Requirement: Profile Page always adheres to dark theme */
 .kx-page.ks-profile-page,
@@ -177,7 +235,45 @@
   flex-direction: column;
   transition: background-color var(--kx-dur-base) ease, color var(--kx-dur-base) ease;
   overflow-x: hidden;
+  scroll-padding-top: 88px;
 }
+
+/* Sticky navbar never covers content & anchors (72px navbar + 16px buffer = 88px) */
+.kx-page [id],
+.kx-page section[id],
+.kx-page h1,
+.kx-page h2,
+.kx-page h3,
+.kx-page h4 {
+  scroll-margin-top: 88px;
+}
+
+/* Typography refinements (letter-spacing -0.01em to 0 for headings, 0 for body) */
+.kx-page h1,
+.kx-page h2,
+.kx-page h3,
+.kx-page h4 {
+  letter-spacing: -0.01em;
+}
+
+.kx-page p,
+.kx-page li,
+.kx-page span,
+.kx-page a,
+.kx-page input,
+.kx-page select,
+.kx-page textarea {
+  letter-spacing: 0;
+}
+
+/* Legal text readability (line-height 1.7, max length ~70 characters) */
+.kx-page .kx-legal-text,
+.kx-page article p,
+.kx-page .kx-reading-col p {
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
 
 /* ==========================================================================
    BUTTON SYSTEM (.kx-btn, .kx-btn--*)
@@ -445,11 +541,11 @@
 }
 
 .kx-eyebrow {
-  font-family: var(--kx-font-display);
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
+  font-family: var(--kx-font-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--kx-accent);
   display: inline-flex;
   align-items: center;

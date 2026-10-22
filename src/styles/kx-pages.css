@@ -1,0 +1,966 @@
+/* ==========================================================================
+   KSAM DEAL - SHARED DESIGN SYSTEM FOR STANDALONE PAGES
+   Scoped strictly under .kx-page. Zero leakage to protected pages.
+   Targets: contact-us, privacy-policy, terms, affiliate-disclosure
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Moving Angle Registration & Keyframes
+   -------------------------------------------------------------------------- */
+@property --kx-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes kxRotateAngle {
+  0% {
+    --kx-angle: 0deg;
+  }
+  100% {
+    --kx-angle: 360deg;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Colorful Gradients & Tone Palettes
+   -------------------------------------------------------------------------- */
+.kx-page [data-tone="green-blue"],
+.kx-page.kx-tone-green-blue {
+  --tone-from: #00F5A0;
+  --tone-to: #22D3EE;
+  --tone-glow: rgba(0, 245, 160, 0.28);
+  --tone-soft: rgba(0, 245, 160, 0.10);
+  --tone-text: #00F5A0;
+}
+
+.kx-page [data-tone="blue-purple"],
+.kx-page.kx-tone-blue-purple {
+  --tone-from: #22D3EE;
+  --tone-to: #A855F7;
+  --tone-glow: rgba(34, 211, 238, 0.28);
+  --tone-soft: rgba(34, 211, 238, 0.10);
+  --tone-text: #22D3EE;
+}
+
+.kx-page [data-tone="yellow-green"],
+.kx-page.kx-tone-yellow-green {
+  --tone-from: #FACC15;
+  --tone-to: #00F5A0;
+  --tone-glow: rgba(250, 204, 21, 0.28);
+  --tone-soft: rgba(250, 204, 21, 0.10);
+  --tone-text: #FACC15;
+}
+
+.kx-page [data-tone="purple-pink"],
+.kx-page.kx-tone-purple-pink {
+  --tone-from: #A855F7;
+  --tone-to: #EC4899;
+  --tone-glow: rgba(168, 85, 247, 0.28);
+  --tone-soft: rgba(168, 85, 247, 0.10);
+  --tone-text: #A855F7;
+}
+
+.kx-page [data-tone="red-amber"],
+.kx-page.kx-tone-red-amber {
+  --tone-from: #F87171;
+  --tone-to: #F59E0B;
+  --tone-glow: rgba(248, 113, 113, 0.28);
+  --tone-soft: rgba(248, 113, 113, 0.10);
+  --tone-text: #F87171;
+}
+
+.kx-page [data-tone="green-purple"],
+.kx-page.kx-tone-green-purple {
+  --tone-from: #00F5A0;
+  --tone-to: #A855F7;
+  --tone-glow: rgba(0, 245, 160, 0.28);
+  --tone-soft: rgba(0, 245, 160, 0.10);
+  --tone-text: #00F5A0;
+}
+
+/* Light Mode Tone Adjustments for WCAG AA */
+.kx-page[data-theme="light"] [data-tone="green-blue"] {
+  --tone-from: #059669;
+  --tone-to: #0284C7;
+  --tone-glow: rgba(5, 150, 105, 0.18);
+  --tone-soft: rgba(5, 150, 105, 0.08);
+  --tone-text: #059669;
+}
+
+.kx-page[data-theme="light"] [data-tone="green-purple"] {
+  --tone-from: #059669;
+  --tone-to: #7C3AED;
+  --tone-glow: rgba(5, 150, 105, 0.18);
+  --tone-soft: rgba(5, 150, 105, 0.08);
+  --tone-text: #059669;
+}
+
+.kx-page[data-theme="light"] [data-tone="blue-purple"] {
+  --tone-from: #0284C7;
+  --tone-to: #7C3AED;
+  --tone-glow: rgba(2, 132, 199, 0.18);
+  --tone-soft: rgba(2, 132, 199, 0.08);
+  --tone-text: #0284C7;
+}
+
+.kx-page[data-theme="light"] [data-tone="yellow-green"] {
+  --tone-from: #B45309;
+  --tone-to: #059669;
+  --tone-glow: rgba(180, 83, 9, 0.18);
+  --tone-soft: rgba(180, 83, 9, 0.08);
+  --tone-text: #B45309;
+}
+
+.kx-page[data-theme="light"] [data-tone="purple-pink"] {
+  --tone-from: #7C3AED;
+  --tone-to: #DB2777;
+  --tone-glow: rgba(124, 58, 237, 0.18);
+  --tone-soft: rgba(124, 58, 237, 0.08);
+  --tone-text: #7C3AED;
+}
+
+.kx-page[data-theme="light"] [data-tone="red-amber"] {
+  --tone-from: #DC2626;
+  --tone-to: #D97706;
+  --tone-glow: rgba(220, 38, 38, 0.18);
+  --tone-soft: rgba(220, 38, 38, 0.08);
+  --tone-text: #DC2626;
+}
+
+/* --------------------------------------------------------------------------
+   3. Key Heading Gradient Accent (Phrase Only, Never Body)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-gradient-text {
+  background: linear-gradient(135deg, var(--tone-from, #22FF88) 0%, var(--tone-to, #38BDF8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   4. Moving Gradient Borders: .kx-glow Cards
+   -------------------------------------------------------------------------- */
+.kx-page .kx-glow {
+  position: relative;
+  border-radius: 24px;
+  background-color: var(--kx-surface-1);
+  border: 1px solid var(--kx-border);
+  box-sizing: border-box;
+  isolation: isolate;
+  transition: transform var(--kx-dur-fast) var(--kx-ease-out),
+              box-shadow var(--kx-dur-fast) var(--kx-ease-out),
+              border-color var(--kx-dur-fast) var(--kx-ease-out);
+}
+
+.kx-page .kx-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--kx-angle, 0deg),
+    var(--tone-from, #22FF88),
+    var(--tone-to, #38BDF8),
+    var(--tone-from, #22FF88)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.65;
+  z-index: 1;
+  transition: opacity var(--kx-dur-fast) ease;
+}
+
+/* Animated active state (controlled via viewport observer / capped at ~6) */
+.kx-page .kx-glow.is-animating::before {
+  animation: kxRotateAngle 10s linear infinite;
+}
+
+/* Hover & Focus Interaction */
+.kx-page .kx-glow:hover::before,
+.kx-page .kx-glow:focus-within::before {
+  animation: kxRotateAngle 10s linear infinite;
+  opacity: 1;
+}
+
+.kx-page .kx-glow:hover {
+  box-shadow: 0 12px 32px -4px var(--tone-glow, rgba(34, 255, 136, 0.18));
+  border-color: transparent;
+}
+
+/* Static Fallback for unsupported browsers */
+@supports not (background: paint(something)) {
+  .kx-page .kx-glow::before {
+    background: linear-gradient(135deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Moving Gradient Surfaces: .kx-aurora Layers
+   -------------------------------------------------------------------------- */
+.kx-page .kx-aurora {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kx-page .kx-aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.kx-page .kx-aurora-blob-1 {
+  width: clamp(240px, 40vw, 480px);
+  height: clamp(240px, 40vw, 480px);
+  top: -15%;
+  left: -8%;
+  background: radial-gradient(circle, var(--tone-from, #22FF88) 0%, transparent 68%);
+  opacity: 0.22;
+  animation: kxAuroraDrift1 24s ease-in-out infinite alternate;
+}
+
+.kx-page .kx-aurora-blob-2 {
+  width: clamp(220px, 35vw, 440px);
+  height: clamp(220px, 35vw, 440px);
+  top: 15%;
+  right: -6%;
+  background: radial-gradient(circle, var(--tone-to, #38BDF8) 0%, transparent 68%);
+  opacity: 0.20;
+  animation: kxAuroraDrift2 28s ease-in-out infinite alternate;
+}
+
+.kx-page .kx-aurora-blob-3 {
+  width: clamp(180px, 28vw, 360px);
+  height: clamp(180px, 28vw, 360px);
+  bottom: -15%;
+  left: 28%;
+  background: radial-gradient(circle, var(--tone-from, #22FF88) 0%, transparent 65%);
+  opacity: 0.16;
+  animation: kxAuroraDrift3 22s ease-in-out infinite alternate;
+}
+
+@keyframes kxAuroraDrift1 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(28px, 20px, 0) scale(1.08); }
+  100% { transform: translate3d(-20px, 36px, 0) scale(0.94); }
+}
+
+@keyframes kxAuroraDrift2 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-32px, 26px, 0) scale(1.12); }
+  100% { transform: translate3d(20px, -24px, 0) scale(0.92); }
+}
+
+@keyframes kxAuroraDrift3 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(20px, -26px, 0) scale(1.06); }
+  100% { transform: translate3d(-24px, -14px, 0) scale(0.98); }
+}
+
+/* --------------------------------------------------------------------------
+   6. Spacing, Layout & Hero Architecture
+   -------------------------------------------------------------------------- */
+.kx-page .kx-main-wrapper {
+  padding-top: 96px; /* 72px navbar + 24px space */
+  width: 100%;
+  flex: 1 0 auto;
+}
+
+.kx-page {
+  overflow-x: clip;
+}
+
+.kx-page .kx-container-1200 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.kx-page .kx-reading-col {
+  max-width: 760px;
+  width: 100%;
+}
+
+.kx-page .kx-section-pad {
+  padding-top: clamp(72px, 10vw, 160px);
+  padding-bottom: clamp(72px, 10vw, 160px);
+}
+
+.kx-page .kx-section-gap {
+  margin-bottom: clamp(48px, 7vw, 112px);
+}
+
+.kx-page .kx-hero-card {
+  min-height: 480px;
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(36px, 6vw, 72px);
+  background-color: var(--kx-surface-1);
+  border: 1px solid var(--kx-border);
+  box-shadow: var(--kx-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-bottom: clamp(48px, 7vw, 112px);
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-hero-card {
+    min-height: 360px;
+    padding: 32px 24px;
+  }
+}
+
+.kx-page .kx-card-pad {
+  padding: clamp(28px, 3.5vw, 48px);
+}
+
+.kx-page .kx-grid-gap {
+  gap: clamp(28px, 3vw, 40px);
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Radius Hierarchy & Surfaces
+   -------------------------------------------------------------------------- */
+.kx-page .kx-r-hero { border-radius: 28px; }
+.kx-page .kx-r-card { border-radius: 24px; }
+.kx-page .kx-r-inner { border-radius: 14px; }
+.kx-page .kx-r-pill { border-radius: 9999px; }
+
+/* --------------------------------------------------------------------------
+   8. Button System Enhancements (48px, Hover Lift, Focus Ring)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-btn-48 {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 160ms var(--kx-ease-out),
+              box-shadow 160ms var(--kx-ease-out),
+              background 160ms ease,
+              border-color 160ms ease;
+  user-select: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.kx-page .kx-btn-48:hover {
+  transform: translateY(-2px);
+}
+
+.kx-page .kx-btn-48:active {
+  transform: scale(0.98);
+}
+
+.kx-page .kx-btn-48:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--kx-base), 0 0 0 4px var(--kx-accent);
+}
+
+.kx-page .kx-btn-primary-gradient {
+  background: linear-gradient(135deg, #22FF88 0%, #38BDF8 100%);
+  color: #05070B !important;
+  border: none;
+  box-shadow: 0 4px 20px rgba(34, 255, 136, 0.3);
+}
+
+.kx-page .kx-btn-primary-gradient:hover {
+  background: linear-gradient(135deg, #29FFA0 0%, #4FC3F7 100%);
+  box-shadow: 0 8px 28px rgba(34, 255, 136, 0.42);
+}
+
+.kx-page .kx-btn-outline-glow {
+  background: transparent;
+  color: var(--kx-text);
+  border: 1px solid var(--kx-border);
+}
+
+.kx-page .kx-btn-outline-glow:hover {
+  border-color: var(--kx-accent);
+  color: var(--kx-accent);
+  background: var(--kx-accent-soft);
+  box-shadow: 0 0 20px var(--kx-accent-glow);
+}
+
+.kx-page .kx-btn-ghost-glow {
+  background: transparent;
+  color: var(--kx-text-muted);
+  border: 1px solid transparent;
+}
+
+.kx-page .kx-btn-ghost-glow:hover {
+  color: var(--kx-text);
+  background: var(--kx-surface-2);
+}
+
+/* --------------------------------------------------------------------------
+   9. Reading Progress Bar (Fixed under Navbar at 72px)
+   -------------------------------------------------------------------------- */
+.kx-reading-progress-track {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 999;
+  background: transparent;
+  pointer-events: none;
+}
+
+.kx-reading-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22FF88 0%, #38BDF8 100%);
+  box-shadow: 0 0 8px rgba(34, 255, 136, 0.5);
+  transition: width 60ms linear;
+}
+
+/* --------------------------------------------------------------------------
+   10. Icon Tiles (48px & 56px)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-icon-tile-48 {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--tone-soft, var(--kx-accent-soft));
+  color: var(--tone-from, var(--kx-accent));
+  border: 1px solid var(--tone-from, var(--kx-accent-border));
+  box-shadow: inset 0 0 14px var(--tone-glow, var(--kx-accent-glow));
+}
+
+.kx-page .kx-icon-tile-56 {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--tone-soft, var(--kx-accent-soft));
+  color: var(--tone-from, var(--kx-accent));
+  border: 1px solid var(--tone-from, var(--kx-accent-border));
+  box-shadow: inset 0 0 20px var(--tone-glow, var(--kx-accent-glow)),
+              0 8px 24px -4px var(--tone-glow, rgba(34, 255, 136, 0.2));
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.kx-page .kx-icon-tile-56:hover {
+  transform: scale(1.05);
+}
+
+/* --------------------------------------------------------------------------
+   10B. E-Commerce Elements: Ribbon Tags & Button Shine
+   -------------------------------------------------------------------------- */
+.kx-page .kx-ribbon-tag {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  color: #05070B;
+  box-shadow: 0 4px 12px var(--tone-glow, rgba(34, 255, 136, 0.3));
+  z-index: 10;
+}
+
+.kx-page .kx-btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.kx-page .kx-btn-shine::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -70%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: rotate(25deg);
+  transition: none;
+  pointer-events: none;
+}
+
+.kx-page .kx-btn-shine:hover::after {
+  left: 130%;
+  transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   10C. Mobile Sticky Glass Action Bar
+   -------------------------------------------------------------------------- */
+.kx-mobile-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 20px;
+  background: var(--kx-surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--kx-border);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (min-width: 641px) {
+  .kx-mobile-action-bar {
+    display: none !important;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   11. Legal Lists & Key Callouts
+   -------------------------------------------------------------------------- */
+.kx-page .kx-gradient-bullets {
+  list-style: none;
+  padding-left: 0;
+  margin: 16px 0;
+}
+
+.kx-page .kx-gradient-bullets li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.kx-page .kx-gradient-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--tone-from, #22FF88) 0%, var(--tone-to, #38BDF8) 100%);
+  box-shadow: 0 0 8px var(--tone-glow, rgba(34, 255, 136, 0.4));
+}
+
+.kx-page .kx-callout-block {
+  position: relative;
+  padding: 22px 24px;
+  border-radius: 16px;
+  background: var(--kx-surface-2);
+  border: 1px solid var(--kx-border);
+  margin: 24px 0;
+}
+
+.kx-page .kx-callout-block::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 16px 0 0 16px;
+  background: linear-gradient(to bottom, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+}
+
+.kx-page .kx-animated-link {
+  position: relative;
+  text-decoration: none;
+  color: var(--kx-accent);
+  font-weight: 700;
+  transition: color 180ms ease;
+}
+
+.kx-page .kx-animated-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kx-page .kx-animated-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* --------------------------------------------------------------------------
+   12. Desktop TOC & Mobile Pill Scroll-Spy
+   -------------------------------------------------------------------------- */
+.kx-page .kx-toc-box {
+  position: sticky;
+  top: 104px;
+  border-radius: 20px;
+  background: var(--kx-surface-1);
+  border: 1px solid var(--kx-border);
+  padding: 24px;
+  box-shadow: var(--kx-shadow-md);
+}
+
+.kx-page .kx-toc-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kx-text-muted);
+  text-decoration: none;
+  transition: all 180ms ease;
+  overflow: hidden;
+}
+
+.kx-page .kx-toc-link:hover {
+  color: var(--kx-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.kx-page[data-theme="light"] .kx-toc-link:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.kx-page .kx-toc-link.is-active {
+  color: var(--kx-text);
+  font-weight: 700;
+  background: var(--kx-surface-2);
+}
+
+.kx-page .kx-toc-link.is-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3.5px;
+  border-radius: 0 4px 4px 0;
+  background: linear-gradient(180deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+}
+
+.kx-page .kx-toc-link .kx-toc-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kx-border);
+  transition: all 200ms ease;
+}
+
+.kx-page .kx-toc-link.is-active .kx-toc-bullet {
+  background: var(--tone-from, #22FF88);
+  box-shadow: 0 0 8px var(--tone-from, #22FF88);
+}
+
+/* Mobile horizontal pill bar */
+.kx-page .kx-mobile-toc-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 12px 16px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid var(--kx-border);
+  background: var(--kx-surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: sticky;
+  top: 72px;
+  z-index: 900;
+}
+
+.kx-page .kx-mobile-toc-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.kx-page .kx-mobile-toc-pill {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--kx-surface-2);
+  border: 1px solid var(--kx-border);
+  color: var(--kx-text-muted);
+  transition: all 180ms ease;
+}
+
+.kx-page .kx-mobile-toc-pill.is-active {
+  background: linear-gradient(135deg, var(--tone-from, #22FF88) 0%, var(--tone-to, #38BDF8) 100%);
+  color: #05070B !important;
+  font-weight: 800;
+  border-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   13. Form Controls (56px, Floating Labels, Select Chevron)
+   -------------------------------------------------------------------------- */
+.kx-page .kx-field-56 {
+  width: 100%;
+  height: 56px;
+  background: var(--kx-surface-input);
+  border: 1px solid var(--kx-border);
+  border-radius: 14px;
+  padding: 18px 16px 4px 16px;
+  font-size: 14.5px;
+  color: var(--kx-text);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  box-sizing: border-box;
+  font-family: var(--kx-font-sans);
+}
+
+.kx-page .kx-field-56:focus {
+  border-color: var(--kx-accent);
+  box-shadow: 0 0 0 3px var(--kx-accent-glow);
+  background: var(--kx-surface-2);
+}
+
+.kx-page .kx-textarea-56 {
+  width: 100%;
+  min-height: 140px;
+  background: var(--kx-surface-input);
+  border: 1px solid var(--kx-border);
+  border-radius: 14px;
+  padding: 22px 16px 16px 16px;
+  font-size: 14.5px;
+  color: var(--kx-text);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: var(--kx-font-sans);
+}
+
+.kx-page .kx-textarea-56:focus {
+  border-color: var(--kx-accent);
+  box-shadow: 0 0 0 3px var(--kx-accent-glow);
+  background: var(--kx-surface-2);
+}
+
+.kx-page .kx-select-56 {
+  width: 100%;
+  height: 56px;
+  background: var(--kx-surface-input);
+  border: 1px solid var(--kx-border);
+  border-radius: 14px;
+  padding: 16px 44px 16px 16px;
+  font-size: 14.5px;
+  color: var(--kx-text);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398A6BA' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+  font-family: var(--kx-font-sans);
+}
+
+.kx-page .kx-select-56:focus {
+  border-color: var(--kx-accent);
+  box-shadow: 0 0 0 3px var(--kx-accent-glow);
+}
+
+.kx-page[data-theme="light"] .kx-select-56 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Floating label container */
+.kx-page .kx-floating-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.kx-page .kx-floating-label {
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  font-size: 14px;
+  color: var(--kx-text-muted);
+  pointer-events: none;
+  transition: all 180ms var(--kx-ease-out);
+  transform-origin: left top;
+}
+
+.kx-page .kx-field-56:focus ~ .kx-floating-label,
+.kx-page .kx-field-56:not(:placeholder-shown) ~ .kx-floating-label,
+.kx-page .kx-textarea-56:focus ~ .kx-floating-label,
+.kx-page .kx-textarea-56:not(:placeholder-shown) ~ .kx-floating-label {
+  transform: translateY(-11px) scale(0.75);
+  color: var(--kx-accent);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   14. Animated Checkmark SVG & Success State
+   -------------------------------------------------------------------------- */
+@keyframes kxCheckStroke {
+  0% { stroke-dashoffset: 54; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes kxCheckScale {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.kx-page .kx-check-circle {
+  animation: kxCheckScale 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.kx-page .kx-check-path {
+  stroke-dasharray: 54;
+  stroke-dashoffset: 54;
+  animation: kxCheckStroke 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s;
+}
+
+/* --------------------------------------------------------------------------
+   15. LiveBackdrop Palette Overrides for the 4 Pages
+   -------------------------------------------------------------------------- */
+.kx-page .kx-live-backdrop[data-palette="contact"] .kx-orb-emerald {
+  background: radial-gradient(circle at 45% 45%, rgba(34, 255, 136, 0.24) 0%, rgba(34, 255, 136, 0.08) 45%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="contact"] .kx-orb-cyan {
+  background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.07) 50%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="contact"] .kx-orb-blue {
+  background: radial-gradient(circle at 55% 45%, rgba(37, 99, 235, 0.16) 0%, transparent 70%);
+}
+
+.kx-page .kx-live-backdrop[data-palette="privacy"] .kx-orb-emerald {
+  background: radial-gradient(circle at 45% 45%, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.08) 45%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="privacy"] .kx-orb-cyan {
+  background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.22) 0%, rgba(168, 85, 247, 0.07) 50%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="privacy"] .kx-orb-violet {
+  background: radial-gradient(circle at 45% 55%, rgba(139, 92, 246, 0.22) 0%, transparent 70%);
+}
+
+.kx-page .kx-live-backdrop[data-palette="terms"] .kx-orb-emerald {
+  background: radial-gradient(circle at 45% 45%, rgba(255, 214, 10, 0.22) 0%, rgba(255, 214, 10, 0.07) 45%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="terms"] .kx-orb-cyan {
+  background: radial-gradient(circle at 50% 50%, rgba(34, 255, 136, 0.20) 0%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="terms"] .kx-orb-violet {
+  background: radial-gradient(circle at 45% 55%, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
+}
+
+.kx-page .kx-live-backdrop[data-palette="affiliate"] .kx-orb-emerald {
+  background: radial-gradient(circle at 45% 45%, rgba(34, 255, 136, 0.22) 0%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="affiliate"] .kx-orb-cyan {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 214, 10, 0.18) 0%, transparent 70%);
+}
+.kx-page .kx-live-backdrop[data-palette="affiliate"] .kx-orb-violet {
+  background: radial-gradient(circle at 45% 55%, rgba(168, 85, 247, 0.16) 0%, transparent 70%);
+}
+
+/* --------------------------------------------------------------------------
+   15B. Signature Feature: Scroll-Triggered Transforming Cards & Accordions
+   -------------------------------------------------------------------------- */
+.kx-page .kx-transform-card {
+  opacity: 0.9;
+  transform: translateY(0);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease,
+              border-color 0.3s ease;
+  will-change: transform, box-shadow;
+}
+
+.kx-page .kx-transform-card.is-active-view {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 42px -6px var(--tone-glow, rgba(0, 245, 160, 0.28)),
+              0 0 0 1px var(--tone-from, rgba(0, 245, 160, 0.35));
+  border-color: transparent;
+}
+
+@media (max-width: 640px) {
+  .kx-page .kx-transform-card.is-active-view {
+    transform: none; /* Keep mobile scrolling 100% fluid */
+  }
+}
+
+.kx-page .kx-accordion-toggle {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.kx-page .kx-accordion-chevron {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.kx-page .kx-accordion-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.kx-page .kx-accordion-body {
+  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease;
+}
+
+/* --------------------------------------------------------------------------
+   16. Accessibility & Reduced Motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .kx-page .kx-glow::before,
+  .kx-page .kx-aurora-blob-1,
+  .kx-page .kx-aurora-blob-2,
+  .kx-page .kx-aurora-blob-3,
+  .kx-reading-progress-bar,
+  .kx-page .kx-marquee-track {
+    animation: none !important;
+    transition: none !important;
+  }
+}
