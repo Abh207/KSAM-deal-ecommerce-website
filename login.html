@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sign-In</title>
+    <title>Sign-In | KSAM Deal</title>
 
     <link rel="stylesheet" href="./src/style.css">
     <link rel="stylesheet" href="./src/styles/kx-tokens.css">
@@ -15,14 +15,6 @@
 
 <body class="kx-page">
 
-    <!-- Optional background video -->
-    <!--
-    <video class="signupBackgroundVideo" autoplay muted loop playsinline>
-        <source src="../public/backgroundimage2.mp4" type="video/mp4">
-    </video>
-    -->
-
-
     <main class="SignUpMainTag">
 
         <div class="signUPmain">
@@ -30,9 +22,8 @@
             <div class="contcontainerMain">
 
                 <!-- =========================
-                     SIGN IN FORM
+                     SIGN IN FORM CONTAINER
                 ========================== -->
-
                 <div class="signUpform">
 
                     <!-- LOGO -->
@@ -43,124 +34,200 @@
                         >
                     </div>
 
-
                     <!-- FORM CONTENT -->
                     <div class="signformmainContent">
 
                         <!-- HEADING -->
                         <div class="headpara">
-
-                            <h2 class="signupHead">
+                            <h2 class="signupHead" id="loginTitle">
                                 Welcome Back
                             </h2>
-
-                            <p class="signUpPara">
-                                Sign in to continue to your account
+                            <p class="signUpPara" id="loginSubtitle">
+                                Sign in to your KSAM Deal account
                             </p>
-
                         </div>
 
+                        <!-- Status Alert Banner -->
+                        <div id="authStatusMessage" style="display: none; margin-bottom: 1.125rem; padding: 0.75rem 1rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; line-height: 1.4; text-align: center;"></div>
 
-                        <!-- SIGN IN FORM -->
+                        <!-- SIGN IN MODE TABS -->
+                        <div class="kx-auth-tabs" id="authTabsContainer">
+                            <button type="button" class="kx-auth-tab-btn active" id="tabPasswordBtn">
+                                Password
+                            </button>
+                            <button type="button" class="kx-auth-tab-btn" id="tabOtpBtn">
+                                Login with OTP
+                            </button>
+                        </div>
+
+                        <!-- SIGN IN FORMS -->
                         <div class="signForm">
 
-                            <form action="">
+                            <!-- =====================================================
+                                 TAB 1: PASSWORD LOGIN FORM
+                            ====================================================== -->
+                            <form id="passwordLoginForm">
 
-                                <!-- EMAIL -->
+                                <!-- MOBILE NUMBER -->
                                 <div>
-
-                                    <label for="loginEmail">
-                                        Email
+                                    <label for="loginPhone">
+                                        Mobile Number
                                     </label>
-
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        id="loginEmail"
-                                        placeholder="Enter your email"
-                                        required
-                                    >
-
+                                    <div class="kx-phone-group">
+                                        <select id="loginCountryCode" class="kx-country-select" aria-label="Country Code">
+                                            <option value="+91" selected>🇮🇳 +91</option>
+                                            <option value="+1">🇺🇸 +1</option>
+                                            <option value="+44">🇬🇧 +44</option>
+                                            <option value="+971">🇦🇪 +971</option>
+                                            <option value="+65">🇸🇬 +65</option>
+                                            <option value="+61">🇦🇺 +61</option>
+                                        </select>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            id="loginPhone"
+                                            placeholder="98765 43210"
+                                            required
+                                            maxlength="15"
+                                            inputmode="tel"
+                                            autocomplete="tel"
+                                        >
+                                    </div>
                                 </div>
-
 
                                 <!-- PASSWORD -->
                                 <div>
-
                                     <label for="loginPassword">
                                         Password
                                     </label>
-
                                     <input
                                         type="password"
                                         name="password"
                                         id="loginPassword"
                                         placeholder="Enter your password"
                                         required
+                                        autocomplete="current-password"
                                     >
-
                                 </div>
-
 
                                 <!-- FORGOT PASSWORD -->
                                 <div class="forgotPassword">
-
                                     <a href="./forgot-password.html">
                                         Forgot Password?
                                     </a>
-
                                 </div>
-
 
                                 <!-- SIGN IN BUTTON -->
                                 <div>
-
                                     <button
                                         id="signButton"
                                         type="submit"
                                     >
                                         Sign In
                                     </button>
-
                                 </div>
-
 
                                 <!-- GOOGLE / APPLE -->
                                 <div class="appGoogle">
-
                                     <div class="apple">
-
-                                        <img
-                                            src="./public/apple.png"
-                                            alt="Apple"
-                                        >
-
-                                        <a
-                                            href="#"
-                                            class="appleLink"
-                                        >
-                                            Continue with Apple
-                                        </a>
-
+                                        <img src="./public/apple.png" alt="Apple">
+                                        <a href="#" class="appleLink">Continue with Apple</a>
                                     </div>
-
 
                                     <div class="googl">
+                                        <img src="./public/google.png" alt="Google">
+                                        <a href="#" class="googleLink">Continue with Google</a>
+                                    </div>
+                                </div>
 
-                                        <img
-                                            src="./public/google.png"
-                                            alt="Google"
-                                        >
+                            </form>
 
-                                        <a
-                                            href="#"
-                                            class="googleLink"
+                            <!-- =====================================================
+                                 TAB 2: OTP LOGIN REQUEST FORM
+                            ====================================================== -->
+                            <form id="otpRequestForm" style="display: none;">
+
+                                <div>
+                                    <label for="otpLoginPhone">
+                                        Mobile Number
+                                    </label>
+                                    <div class="kx-phone-group">
+                                        <select id="otpCountryCode" class="kx-country-select" aria-label="Country Code">
+                                            <option value="+91" selected>🇮🇳 +91</option>
+                                            <option value="+1">🇺🇸 +1</option>
+                                            <option value="+44">🇬🇧 +44</option>
+                                            <option value="+971">🇦🇪 +971</option>
+                                            <option value="+65">🇸🇬 +65</option>
+                                            <option value="+61">🇦🇺 +61</option>
+                                        </select>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            id="otpLoginPhone"
+                                            placeholder="98765 43210"
+                                            required
+                                            maxlength="15"
+                                            inputmode="tel"
+                                            autocomplete="tel"
                                         >
-                                            Continue with Google
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button
+                                        id="sendOtpButton"
+                                        type="submit"
+                                        style="width: 100%; height: 2.9375rem; border: none; outline: none; border-radius: 1.5625rem; background: linear-gradient(135deg, var(--kx-accent, #22ff88) 0%, var(--kx-accent-highlight, #80ffbb) 100%); color: #07090b; font-size: 0.875rem; font-weight: 800; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease;"
+                                    >
+                                        Send OTP Code
+                                    </button>
+                                </div>
+
+                            </form>
+
+                            <!-- =====================================================
+                                 VERIFY OTP FORM (For OTP Login & Unverified Users)
+                            ====================================================== -->
+                            <form id="loginOtpVerifyForm" style="display: none;">
+
+                                <div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                        <label style="margin: 0;">
+                                            Enter 6-Digit OTP
+                                        </label>
+                                        <a href="#" id="loginChangeNumberLink" class="kx-change-number">
+                                            Change Number
                                         </a>
-
                                     </div>
 
+                                    <!-- 6 Individual OTP Boxes -->
+                                    <div class="kx-otp-boxes" id="loginOtpBoxes">
+                                        <input type="text" class="kx-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="0" autocomplete="one-time-code" aria-label="Digit 1">
+                                        <input type="text" class="kx-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="1" aria-label="Digit 2">
+                                        <input type="text" class="kx-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="2" aria-label="Digit 3">
+                                        <input type="text" class="kx-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="3" aria-label="Digit 4">
+                                        <input type="text" class="kx-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="4" aria-label="Digit 5">
+                                        <input type="text" class="kx-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="5" aria-label="Digit 6">
+                                    </div>
+                                </div>
+
+                                <!-- Verify Button -->
+                                <div>
+                                    <button
+                                        id="loginVerifyOtpBtn"
+                                        type="submit"
+                                        style="width: 100%; height: 2.9375rem; border: none; outline: none; border-radius: 1.5625rem; background: linear-gradient(135deg, var(--kx-accent, #22ff88) 0%, var(--kx-accent-highlight, #80ffbb) 100%); color: #07090b; font-size: 0.875rem; font-weight: 800; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease;"
+                                    >
+                                        Verify & Sign In
+                                    </button>
+                                </div>
+
+                                <!-- Resend OTP & Countdown -->
+                                <div class="kx-resend-row">
+                                    <span>Didn't receive the SMS code?</span>
+                                    <button type="button" id="loginResendOtpBtn" class="kx-resend-btn" disabled>
+                                        Resend OTP (<span id="loginResendTimer">60</span>s)
+                                    </button>
                                 </div>
 
                             </form>
@@ -174,26 +241,18 @@
                     <div class="signUplastContent">
 
                         <div class="signUpLoginLink">
-
                             <p class="signUplastContfirstTest">
-
                                 Don't have an account?
-
                                 <a href="./signUp.html">
                                     Sign Up
                                 </a>
-
                             </p>
-
                         </div>
 
-
                         <div class="signUpterm">
-
-                            <a href="#">
+                            <a href="./terms.html">
                                 Terms and Conditions
                             </a>
-
                         </div>
 
                     </div>
@@ -204,10 +263,8 @@
                 <!-- =========================
                      RIGHT IMAGE
                 ========================== -->
-
                 <div class="signUpimg">
-                    <img src="./public/loginImage.png" alt="Image">
-
+                    <img src="./public/loginImage.png" alt="KSAM Deal">
                 </div>
 
             </div>

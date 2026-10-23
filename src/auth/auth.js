@@ -1,5 +1,5 @@
 /**
- * KSAM DEAL - SHARED AUTH MODULE
+ * KSAM DEAL - SHARED PHONE OTP AUTH MODULE
  * Works from both React pages and vanilla JS pages.
  * No React dependencies.
  */
@@ -46,7 +46,314 @@ export function clearProfileCache() {
   hasWarnedProfileError = false;
 }
 
-// Listen to Supabase auth events to keep cache updated
+// =============================================================================
+// PHONE VALIDATION & FORMATTING (E.164)
+// =============================================================================
+
+/**
+ * Normalizes input to E.164 format.
+ * Default country code is +91 (India).
+ * Examples:
+ *   "9876543210"    -> "+919876543210"
+ *   "09876543210"   -> "+919876543210"
+ *   "+91 98765 43210" -> "+919876543210"
+ *   "+1 (555) 012-3456" -> "+15550123456"
+ */
+export function formatToE164(rawPhone, defaultCountryCode = "+91") {
+  if (!rawPhone || typeof rawPhone !== "string") return "";
+
+  // Trim whitespace
+  let clean = rawPhone.trim();
+
+  // If already starts with '+', remove spaces, dashes, parentheses
+  if (clean.startsWith("+")) {
+    const digitsOnly = clean.slice(1).replace(/\D/g, "");
+    return digitsOnly ? `+${digitsOnly}` : "";
+  }
+
+  // Remove any non-digits
+  const digits = clean.replace(/\D/g, "");
+
+  // If starts with leading 0 (common in India trunk calls, e.g. 09876543210)
+  if (digits.startsWith("0") && digits.length === 11) {
+    const normalizedPrefix = defaultCountryCode.startsWith("+") ? defaultCountryCode : `+${defaultCountryCode}`;
+    return `${normalizedPrefix}${digits.slice(1)}`;
+  }
+
+  // If 10 digits (standard Indian mobile)
+  if (digits.length === 10) {
+    const normalizedPrefix = defaultCountryCode.startsWith("+") ? defaultCountryCode : `+${defaultCountryCode}`;
+    return `${normalizedPrefix}${digits}`;
+  }
+
+  // If 12 digits starting with 91
+  if (digits.length === 12 && digits.startsWith("91")) {
+    return `+${digits}`;
+  }
+
+  // Default fallback
+  const prefix = defaultCountryCode.startsWith("+") ? defaultCountryCode : `+${defaultCountryCode}`;
+  return `${prefix}${digits}`;
+}
+
+/**
+ * Validates whether a phone number adheres to E.164 format.
+ * Specifically checks for valid 10-15 digit global E.164 and Indian mobile numbers (starts with 6-9).
+ */
+export function validatePhone(phone, countryCode = "+91") {
+  const formatted = formatToE164(phone, countryCode);
+
+  if (!formatted) {
+    return { valid: false, error: "Please enter your mobile number." };
+  }
+
+  // Global E.164 standard regex: + followed by 8 to 15 digits
+  const e164Regex = /^\+[1-9]\d{7,14}$/;
+  if (!e164Regex.test(formatted)) {
+    return { valid: false, error: "Invalid mobile number format. Please check your country code and digits." };
+  }
+
+  // Extra check for India (+91)
+  if (formatted.startsWith("+91")) {
+    const indianDigits = formatted.slice(3);
+    if (!/^[6-9]\d{9}$/.test(indianDigits)) {
+      return {
+        valid: false,
+        error: "Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9."
+      };
+    }
+  }
+
+  return { valid: true, formatted };
+}
+
+/**
+ * Checks if a user has verified their phone number (phone_confirmed_at).
+ */
+export function isPhoneVerified(user) {
+  if (!user) return false;
+  return Boolean(user.phone_confirmed_at || user.confirmed_at);
+}
+
+// =============================================================================
+// FRIENDLY AUTH ERROR PARSER
+// =============================================================================
+
+export function formatAuthError(error) {
+  if (!error) return "An unexpected error occurred. Please try again.";
+
+  const message = error.message || String(error);
+  const lowerMsg = message.toLowerCase();
+
+  // Network & Connectivity
+  if (
+    lowerMsg.includes("failed to fetch") ||
+    lowerMsg.includes("network") ||
+    lowerMsg.includes("fetch failed") ||
+    error.status === 0 ||
+    error.name === "AuthRetryableFetchError"
+  ) {
+    return "Unable to connect to the authentication server. Please check your internet connection or verify that your Supabase project is active.";
+  }
+
+  // Wrong / Expired OTP
+  if (
+    lowerMsg.includes("token is invalid") ||
+    lowerMsg.includes("token has expired") ||
+    lowerMsg.includes("invalid token") ||
+    lowerMsg.includes("otp expired") ||
+    lowerMsg.includes("invalid otp")
+  ) {
+    return "The OTP code entered is incorrect or has expired. Please check the code or tap 'Resend OTP'.";
+  }
+
+  // User already exists
+  if (
+    lowerMsg.includes("already registered") ||
+    lowerMsg.includes("user already exists") ||
+    lowerMsg.includes("phone number already exists")
+  ) {
+    return "An account with this mobile number already exists. Please sign in.";
+  }
+
+  // Unconfirmed / Unverified phone
+  if (
+    lowerMsg.includes("phone not confirmed") ||
+    lowerMsg.includes("unconfirmed") ||
+    lowerMsg.includes("phone is not confirmed")
+  ) {
+    return "Your mobile number is not verified yet. We have sent a verification code to complete verification.";
+  }
+
+  // Invalid credentials
+  if (
+    lowerMsg.includes("invalid login credentials") ||
+    lowerMsg.includes("invalid_grant") ||
+    lowerMsg.includes("wrong password")
+  ) {
+    return "Wrong mobile number or password. Please verify your credentials or sign in with OTP.";
+  }
+
+  // Rate Limiting
+  if (
+    lowerMsg.includes("rate limit") ||
+    lowerMsg.includes("too many requests") ||
+    lowerMsg.includes("sms rate limit") ||
+    error.status === 429
+  ) {
+    return "Too many OTP attempts. Please wait 60 seconds before trying again.";
+  }
+
+  // Password requirements
+  if (lowerMsg.includes("weak password") || lowerMsg.includes("password should be")) {
+    return "Password is too weak. Please choose a password with at least 6 characters.";
+  }
+
+  return message;
+}
+
+// =============================================================================
+// REUSABLE PHONE AUTH SERVICES
+// =============================================================================
+
+/**
+ * Sign up with mobile number and password
+ */
+export async function signUpWithPhone({ phone, password, fullName, countryCode = "+91" }) {
+  const validation = validatePhone(phone, countryCode);
+  if (!validation.valid) {
+    return { data: null, error: { message: validation.error } };
+  }
+
+  const formattedPhone = validation.formatted;
+
+  const { data, error } = await supabase.auth.signUp({
+    phone: formattedPhone,
+    password,
+    options: {
+      data: {
+        full_name: fullName || "",
+        name: fullName || ""
+      }
+    }
+  });
+
+  return { data, error, formattedPhone };
+}
+
+/**
+ * Verify 6-digit SMS OTP token
+ */
+export async function verifyPhoneOtp({ phone, token, type = "sms", countryCode = "+91" }) {
+  const validation = validatePhone(phone, countryCode);
+  const formattedPhone = validation.formatted || phone;
+
+  const cleanToken = String(token || "").trim();
+  if (cleanToken.length !== 6) {
+    return { data: null, error: { message: "Please enter the complete 6-digit OTP code." } };
+  }
+
+  const { data, error } = await supabase.auth.verifyOtp({
+    phone: formattedPhone,
+    token: cleanToken,
+    type
+  });
+
+  if (!error && data?.session) {
+    cachedSession = data.session;
+    clearProfileCache();
+  }
+
+  return { data, error };
+}
+
+/**
+ * Resend SMS OTP
+ */
+export async function resendPhoneOtp({ phone, type = "sms", countryCode = "+91" }) {
+  const validation = validatePhone(phone, countryCode);
+  const formattedPhone = validation.formatted || phone;
+
+  const { data, error } = await supabase.auth.resend({
+    type,
+    phone: formattedPhone
+  });
+
+  return { data, error };
+}
+
+/**
+ * Sign in with mobile number and password
+ */
+export async function signInWithPhonePassword({ phone, password, countryCode = "+91" }) {
+  const validation = validatePhone(phone, countryCode);
+  if (!validation.valid) {
+    return { data: null, error: { message: validation.error } };
+  }
+
+  const formattedPhone = validation.formatted;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    phone: formattedPhone,
+    password
+  });
+
+  if (!error && data?.session) {
+    cachedSession = data.session;
+    clearProfileCache();
+  }
+
+  return { data, error, formattedPhone };
+}
+
+/**
+ * Passwordless Sign In with Phone OTP
+ */
+export async function signInWithPhoneOtp({ phone, countryCode = "+91" }) {
+  const validation = validatePhone(phone, countryCode);
+  if (!validation.valid) {
+    return { data: null, error: { message: validation.error } };
+  }
+
+  const formattedPhone = validation.formatted;
+
+  const { data, error } = await supabase.auth.signInWithOtp({
+    phone: formattedPhone
+  });
+
+  return { data, error, formattedPhone };
+}
+
+/**
+ * Reset password using phone OTP
+ */
+export async function resetPasswordWithPhoneOtp({ phone, token, newPassword, countryCode = "+91" }) {
+  const validation = validatePhone(phone, countryCode);
+  const formattedPhone = validation.formatted || phone;
+
+  // 1. Verify OTP
+  const { data: verifyData, error: verifyErr } = await verifyPhoneOtp({
+    phone: formattedPhone,
+    token,
+    type: "sms"
+  });
+
+  if (verifyErr) {
+    return { data: null, error: verifyErr };
+  }
+
+  // 2. Set new password
+  const { data: updateData, error: updateErr } = await supabase.auth.updateUser({
+    password: newPassword
+  });
+
+  return { data: updateData, error: updateErr };
+}
+
+// =============================================================================
+// SESSION & AUTH STATE LISTENER
+// =============================================================================
+
 supabase.auth.onAuthStateChange((event, session) => {
   if (session?.user?.id !== cachedSession?.user?.id || event === "SIGNED_OUT") {
     clearProfileCache();
@@ -58,10 +365,7 @@ supabase.auth.onAuthStateChange((event, session) => {
     const path = window.location.pathname;
     const isProtected = path.endsWith("profile.html");
     if (isProtected) {
-      if (event === "TOKEN_REFRESH_FAILED") {
-        redirectToSessionExpired(window.location.href);
-      } else if (event === "SIGNED_OUT") {
-        // If user was signed out unexpectedly while on profile page
+      if (event === "TOKEN_REFRESH_FAILED" || event === "SIGNED_OUT") {
         redirectToSessionExpired(window.location.href);
       }
     }
@@ -158,8 +462,6 @@ export function onAuthChange(cb) {
 
 /**
  * Fetches user profile from public.profiles
- * Resilient: returns a fallback profile on error, logs ONE short warning per session,
- * caches per session, and never throws.
  */
 export async function getProfile(forceRefresh = false) {
   try {
@@ -172,6 +474,7 @@ export async function getProfile(forceRefresh = false) {
     const user = session.user;
     const buildFallback = () => ({
       id: user.id,
+      phone: user.phone || "",
       email: user.email || "",
       full_name: user.user_metadata?.full_name || user.user_metadata?.name || "",
       avatar_url: user.user_metadata?.avatar_url || null,
@@ -248,13 +551,15 @@ export function clearPendingAction() {
 
 /**
  * requireAuth(pendingAction?)
- * If there is a session, returns true.
- * If not, saves { returnTo, pending: pendingAction } in sessionStorage,
- * navigates to `${BASE_URL}login.html?next=...` and returns false.
+ * Strictly protects routes:
+ * Requires user to have an active session AND a confirmed phone (phone_confirmed_at is not null).
  */
 export function requireAuth(pendingAction = null) {
   const session = cachedSession || getStoredSessionSync();
-  if (session) {
+  const user = session?.user;
+
+  // Protect routes: verified phone required!
+  if (session && user && isPhoneVerified(user)) {
     return true;
   }
 
@@ -275,7 +580,9 @@ export function requireAuth(pendingAction = null) {
     console.warn("[Auth] Failed to write pending action to sessionStorage", err);
   }
 
-  const loginUrl = `${BASE_URL}login.html?next=${encodeURIComponent(validatedNext)}`;
+  // If session exists but unconfirmed phone, add query param so login can switch directly to OTP
+  const phoneParam = user?.phone ? `&unverified=1&phone=${encodeURIComponent(user.phone)}` : "";
+  const loginUrl = `${BASE_URL}login.html?next=${encodeURIComponent(validatedNext)}${phoneParam}`;
   window.location.href = loginUrl;
   return false;
 }
@@ -296,9 +603,9 @@ export async function signOut() {
 }
 
 /**
- * Lightweight toast for legacy plain JS pages
+ * Lightweight toast for plain JS pages
  */
-export function showAuthToast(message, duration = 3500) {
+export function showAuthToast(message, type = "success", duration = 3500) {
   if (typeof document === "undefined") return;
 
   let toast = document.getElementById("ksam-auth-toast");
@@ -330,7 +637,14 @@ export function showAuthToast(message, duration = 3500) {
     document.body.appendChild(toast);
   }
 
-  toast.innerHTML = `<span style="color:#22FF88;font-size:16px;">✓</span> <span>${message}</span>`;
+  const isError = type === "error";
+  toast.style.borderColor = isError ? "rgba(239, 68, 68, 0.6)" : "rgba(34, 255, 136, 0.45)";
+  toast.style.boxShadow = isError
+    ? "0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(239, 68, 68, 0.25)"
+    : "0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(34, 255, 136, 0.2)";
+
+  const icon = isError ? `<span style="color:#ef4444;font-size:16px;">✕</span>` : `<span style="color:#22FF88;font-size:16px;">✓</span>`;
+  toast.innerHTML = `${icon} <span>${message}</span>`;
   toast.style.opacity = "1";
   toast.style.transform = "translateY(0)";
 
@@ -379,7 +693,7 @@ export function initAuthGate() {
   const pending = getPendingAction();
   const session = cachedSession || getStoredSessionSync();
 
-  if (pending && session && !isDealsPage) {
+  if (pending && session && isPhoneVerified(session.user) && !isDealsPage) {
     showAuthToast("Signed in. Tap the button again.");
     clearPendingAction();
   }
@@ -397,8 +711,10 @@ export function initAuthGate() {
       // Allow elements explicitly marked as not needing auth
       if (gatedEl.getAttribute("data-requires-auth") === "false") return;
 
-      const hasSession = Boolean(cachedSession || getStoredSessionSync());
-      if (!hasSession) {
+      const session = cachedSession || getStoredSessionSync();
+      const hasVerifiedSession = Boolean(session && isPhoneVerified(session.user));
+
+      if (!hasVerifiedSession) {
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();

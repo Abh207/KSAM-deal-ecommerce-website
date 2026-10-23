@@ -613,7 +613,8 @@
 
 .kx-page .signForm input[type="text"],
 .kx-page .signForm input[type="email"],
-.kx-page .signForm input[type="password"] {
+.kx-page .signForm input[type="password"],
+.kx-page .signForm input[type="tel"] {
   background: var(--kx-surface-2) !important;
   border: 1px solid var(--kx-border) !important;
   color: var(--kx-text) !important;
@@ -726,3 +727,158 @@
   opacity: 0.9;
   filter: contrast(1.05);
 }
+
+/* =============================================================================
+   PHONE OTP & AUTH TABS ADDITIONS
+============================================================================= */
+
+/* Phone Input with Country Code Selector */
+.kx-phone-group {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+}
+
+.kx-country-select {
+  flex: 0 0 95px !important;
+  background: var(--kx-surface-2) !important;
+  border: 1px solid var(--kx-border) !important;
+  color: var(--kx-text) !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 200ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2322ff88%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.kx-country-select:focus {
+  border-color: var(--kx-accent) !important;
+  box-shadow: 0 0 16px var(--kx-accent-glow) !important;
+}
+
+.kx-phone-group input[type="tel"] {
+  flex: 1 !important;
+}
+
+/* OTP 6-Digit Inputs Grid */
+.kx-otp-boxes {
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 8px !important;
+  margin: 18px 0 !important;
+}
+
+@media (max-width: 480px) {
+  .kx-otp-boxes {
+    gap: 6px !important;
+  }
+}
+
+.kx-otp-digit {
+  width: 100% !important;
+  height: 52px !important;
+  text-align: center !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  border-radius: 12px !important;
+  background: var(--kx-surface-2) !important;
+  border: 1px solid var(--kx-border) !important;
+  color: var(--kx-text) !important;
+  outline: none !important;
+  padding: 0 !important;
+  transition: all 180ms ease !important;
+  box-sizing: border-box !important;
+}
+
+.kx-otp-digit:focus {
+  border-color: var(--kx-accent) !important;
+  background: var(--kx-surface-3) !important;
+  box-shadow: 0 0 18px var(--kx-accent-glow) !important;
+  transform: translateY(-1px);
+}
+
+.kx-otp-digit.filled {
+  border-color: rgba(34, 255, 136, 0.4) !important;
+  color: var(--kx-accent) !important;
+}
+
+/* Resend OTP Bar */
+.kx-resend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--kx-text-muted);
+}
+
+.kx-resend-btn {
+  background: transparent;
+  border: none;
+  color: var(--kx-accent);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 200ms;
+}
+
+.kx-resend-btn:disabled {
+  color: var(--kx-text-dim);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.kx-change-number {
+  color: var(--kx-cyan);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.kx-change-number:hover {
+  text-decoration: underline;
+  color: var(--kx-accent);
+}
+
+/* Auth Mode Tabs (Password vs OTP Login) */
+.kx-auth-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--kx-surface-2);
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid var(--kx-border);
+  margin-bottom: 20px;
+}
+
+.kx-auth-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--kx-text-muted);
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-align: center;
+}
+
+.kx-auth-tab-btn.active {
+  background: var(--kx-surface-3);
+  color: var(--kx-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+

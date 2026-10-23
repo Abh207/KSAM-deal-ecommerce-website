@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { KeyRound, Mail, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
-import { supabase } from "../../lib/supabase.js";
-import { BASE_URL } from "../auth.js";
+import { KeyRound, Phone, ArrowLeft, CheckCircle2, AlertCircle, Lock, ShieldCheck } from "lucide-react";
+import {
+  BASE_URL,
+  validatePhone,
+  signInWithPhoneOtp,
+  resetPasswordWithPhoneOtp,
+  resendPhoneOtp,
+  formatAuthError
+} from "../auth.js";
 import Navbar from "../../deals/components/Navbar.jsx";
 import Newsletter from "../../deals/components/Newsletter.jsx";
 import Footer from "../../deals/components/Footer.jsx";
@@ -12,11 +18,16 @@ import "../../styles/kx-tokens.css";
 import "../../styles/kx-motion.css";
 
 export function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+91");
+  const [phone, setPhone] = useState("");
+  const [step, setStep] = useState(1); // 1: Enter Phone, 2: Enter OTP & New Password, 3: Success
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [error, setError] = useState("");
+  const [formattedTargetPhone, setFormattedTargetPhone] = useState("");
 
   useEffect(() => {
     let timer;
@@ -26,15 +37,12 @@ export function ForgotPasswordPage() {
     return () => clearTimeout(timer);
   }, [cooldown]);
 
-  const handleSubmit = async (e) => {
+  // Step 1: Send SMS OTP
+  const handleSendOtp = async (e) => {
     e.preventDefault();
-    const cleanEmail = email.trim();
-    if (!cleanEmail) {
-      setError("Please enter your email address.");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      setError("Please enter a valid email address.");
+    const validation = validatePhone(phone, countryCode);
+    if (!validation.valid) {
+      setError(validation.error);
       return;
     }
 
@@ -44,21 +52,130 @@ export function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const redirectUrl = new URL(`${BASE_URL}reset-password.html`, window.location.origin).href;
-      await supabase.auth.resetPasswordForEmail(cleanEmail, {
-        redirectTo: redirectUrl
+      const { error: otpErr, formattedPhone } = await signInWithPhoneOtp({
+        phone,
+        countryCode
       });
-      // Always show uniform success message to prevent account enumeration
-      setSubmitted(true);
+
+      if (otpErr) {
+        setError(formatAuthError(otpErr));
+        return;
+      }
+
+      setFormattedTargetPhone(formattedPhone);
+      setStep(2);
       setCooldown(60);
     } catch (err) {
-      // Even on rate-limits, do not leak user existence; show clean notice
       console.warn("[ForgotPassword]", err);
-      setSubmitted(true);
-      setCooldown(60);
+      setError(formatAuthError(err));
     } finally {
       setLoading(false);
     }
+  };
+
+  // Step 2: Verify OTP and Reset Password
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    const token = otp.join("");
+    if (token.length !== 6) {
+      setError("Please enter the complete 6-digit OTP code.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setError("New password must be at least 6 characters long.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const { error: resetErr } = await resetPasswordWithPhoneOtp({
+        phone: formattedTargetPhone,
+        token,
+        newPassword
+      });
+
+      if (resetErr) {
+        setError(formatAuthError(resetErr));
+        return;
+      }
+
+      setStep(3);
+      setTimeout(() => {
+        window.location.href = `${BASE_URL}login.html`;
+      }, 2000);
+    } catch (err) {
+      setError(formatAuthError(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resend OTP
+  const handleResendOtp = async () => {
+    if (cooldown > 0 || !formattedTargetPhone) return;
+    setError("");
+    try {
+      const { error: resendErr } = await resendPhoneOtp({
+        phone: formattedTargetPhone,
+        type: "sms"
+      });
+      if (resendErr) {
+        setError(formatAuthError(resendErr));
+      } else {
+        setCooldown(60);
+      }
+    } catch (err) {
+      setError(formatAuthError(err));
+    }
+  };
+
+  // OTP box input handling
+  const handleOtpChange = (index, value) => {
+    const clean = value.replace(/\D/g, "").slice(-1);
+    const newOtp = [...otp];
+    newOtp[index] = clean;
+    setOtp(newOtp);
+
+    if (clean && index < 5) {
+      const nextInput = document.getElementById(`pwd-otp-${index + 1}`);
+      nextInput?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace") {
+      if (!otp[index] && index > 0) {
+        const prevInput = document.getElementById(`pwd-otp-${index - 1}`);
+        prevInput?.focus();
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
+      }
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pasted = (e.clipboardData || window.clipboardData).getData("text");
+    const digits = pasted.replace(/\D/g, "").slice(0, 6);
+    if (!digits) return;
+
+    const newOtp = [...otp];
+    digits.split("").forEach((char, i) => {
+      newOtp[i] = char;
+    });
+    setOtp(newOtp);
+
+    const focusIdx = Math.min(digits.length, 5);
+    document.getElementById(`pwd-otp-${focusIdx}`)?.focus();
   };
 
   return (
@@ -86,60 +203,62 @@ export function ForgotPasswordPage() {
             Reset Password
           </h1>
           <p className="mt-2 text-sm text-[var(--kx-text-muted)] leading-relaxed">
-            Enter the email associated with your KSAM Deal account and we will send you a secure link to reset your password.
+            {step === 1 && "Enter the mobile number associated with your KSAM Deal account to receive a secure SMS OTP."}
+            {step === 2 && `Enter the 6-digit code sent to ${formattedTargetPhone} and choose a new password.`}
+            {step === 3 && "Your password has been successfully updated."}
           </p>
 
-          {submitted ? (
-            <div className="mt-6 rounded-2xl border border-[var(--kx-accent)]/30 bg-[var(--kx-accent-soft)] p-5">
-              <div className="flex items-start gap-3">
-                <CheckCircle2 size={20} className="text-[var(--kx-accent)] shrink-0 mt-0.5" />
-                <div className="text-sm">
-                  <p className="font-bold text-[var(--kx-text)]">Check your email</p>
-                  <p className="mt-1 text-xs text-[var(--kx-text-muted)] leading-relaxed">
-                    If an account exists for <strong className="text-[var(--kx-text)]">{email}</strong>, we have sent a password reset link. Please check your inbox and spam folder.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-[var(--kx-border)] flex items-center justify-between">
-                <button
-                  type="button"
-                  disabled={cooldown > 0 || loading}
-                  onClick={handleSubmit}
-                  className="text-xs font-bold text-[var(--kx-accent)] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {cooldown > 0 ? `Resend available in ${cooldown}s` : "Resend reset link"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSubmitted(false)}
-                  className="text-xs text-[var(--kx-text-muted)] hover:text-[var(--kx-text)]"
-                >
-                  Try another email
-                </button>
-              </div>
+          {/* STEP 3: SUCCESS */}
+          {step === 3 && (
+            <div className="mt-6 rounded-2xl border border-[var(--kx-accent)]/30 bg-[var(--kx-accent-soft)] p-6 text-center">
+              <CheckCircle2 size={36} className="mx-auto text-[var(--kx-accent)] mb-3" />
+              <p className="text-lg font-bold text-[var(--kx-text)]">Password Reset Successful!</p>
+              <p className="mt-1 text-xs text-[var(--kx-text-muted)]">
+                Your account password has been updated. Redirecting to sign in...
+              </p>
+              <a
+                href={`${BASE_URL}login.html`}
+                className="mt-6 inline-flex w-full items-center justify-center kx-btn kx-btn--primary py-3 text-sm font-black"
+              >
+                Go to Sign In
+              </a>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          )}
+
+          {/* STEP 1: PHONE INPUT */}
+          {step === 1 && (
+            <form onSubmit={handleSendOtp} className="mt-6 space-y-4">
               <div>
-                <label htmlFor="email" className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
-                  Email Address
+                <label className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
+                  Mobile Number
                 </label>
-                <div className="relative flex items-center">
-                  <Mail size={18} className="absolute left-4 text-[var(--kx-text-dim)] pointer-events-none" />
+                <div className="flex gap-2">
+                  <select
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="w-24 rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-3 text-sm font-bold text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
+                    aria-label="Country Code"
+                  >
+                    <option value="+91">🇮🇳 +91</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+61">🇦🇺 +61</option>
+                  </select>
                   <input
-                    id="email"
-                    type="email"
-                    value={email}
+                    type="tel"
+                    value={phone}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setPhone(e.target.value);
                       setError("");
                     }}
-                    placeholder="name@example.com"
-                    autoComplete="email"
+                    placeholder="98765 43210"
                     required
-                    className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3.5 pl-11 pr-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
+                    maxLength={15}
+                    inputMode="tel"
+                    autoComplete="tel"
+                    className="flex-1 rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3.5 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
                   />
                 </div>
                 {error && (
@@ -154,8 +273,112 @@ export function ForgotPasswordPage() {
                 disabled={loading}
                 className="kx-btn kx-btn--primary w-full py-3.5 mt-2 flex items-center justify-center font-black"
               >
-                {loading ? "Sending link..." : "Send Reset Link"}
+                {loading ? "Sending SMS Code..." : "Send Verification Code"}
               </button>
+            </form>
+          )}
+
+          {/* STEP 2: OTP & NEW PASSWORD */}
+          {step === 2 && (
+            <form onSubmit={handleResetPassword} className="mt-6 space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider">
+                    6-Digit Verification Code
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStep(1);
+                      setError("");
+                    }}
+                    className="text-xs font-bold text-[var(--kx-cyan)] hover:underline"
+                  >
+                    Change Number
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-6 gap-2" onPaste={handleOtpPaste}>
+                  {otp.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      id={`pwd-otp-${idx}`}
+                      type="text"
+                      maxLength={1}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={digit}
+                      onChange={(e) => handleOtpChange(idx, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                      className="h-12 w-full text-center text-xl font-bold rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_15px_var(--kx-accent-glow)]"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
+                  New Password (min. 6 chars)
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Enter new password"
+                  required
+                  minLength={6}
+                  autoComplete="new-password"
+                  className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Re-enter new password"
+                  required
+                  minLength={6}
+                  autoComplete="new-password"
+                  className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
+                />
+              </div>
+
+              {error && (
+                <p className="mt-2 text-xs text-[var(--kx-red)] flex items-center gap-1">
+                  <AlertCircle size={13} /> {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="kx-btn kx-btn--primary w-full py-3.5 mt-2 flex items-center justify-center font-black"
+              >
+                {loading ? "Updating Password..." : "Update Password & Sign In"}
+              </button>
+
+              <div className="pt-2 flex items-center justify-between text-xs text-[var(--kx-text-muted)]">
+                <span>Didn't get the code?</span>
+                <button
+                  type="button"
+                  disabled={cooldown > 0}
+                  onClick={handleResendOtp}
+                  className="font-bold text-[var(--kx-accent)] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend OTP"}
+                </button>
+              </div>
             </form>
           )}
 

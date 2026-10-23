@@ -1,5 +1,16 @@
-import { supabase } from "../lib/supabase.js";
-import { BASE_URL, validateReturnTo, getPendingAction, getSession } from "./auth.js";
+import {
+  BASE_URL,
+  validateReturnTo,
+  getPendingAction,
+  getSession,
+  isPhoneVerified,
+  validatePhone,
+  signUpWithPhone,
+  verifyPhoneOtp,
+  resendPhoneOtp,
+  formatAuthError,
+  showAuthToast
+} from "./auth.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -36,40 +47,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // If already logged in, redirect immediately
+  // If already logged in with verified phone, redirect immediately
   const existingSession = await getSession();
-  if (existingSession?.user) {
+  if (existingSession?.user && isPhoneVerified(existingSession.user)) {
     window.location.href = nextTarget;
     return;
   }
 
-  const form = document.querySelector(".signForm form");
+  // UI Elements
+  const authTitle = document.getElementById("authTitle");
+  const authSubtitle = document.getElementById("authSubtitle");
+  const messageBox = document.getElementById("authStatusMessage");
+
+  // Step 1 Form Elements
+  const step1Form = document.getElementById("step1RegistrationForm");
   const nameInput = document.getElementById("name");
-  const emailInput = document.getElementById("email");
+  const countryCodeSelect = document.getElementById("countryCode");
+  const phoneInput = document.getElementById("phone");
   const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
   const termsCheckbox = document.getElementById("termsAgree");
-  const submitBtn = document.getElementById("signButton");
+  const signButton = document.getElementById("signButton");
   const googleBtn = document.querySelector(".googleLink");
   const appleBtn = document.querySelector(".appleLink");
 
-  // Create message banner element
-  let messageBox = document.getElementById("authStatusMessage");
-  if (!messageBox && form) {
-    messageBox = document.createElement("div");
-    messageBox.id = "authStatusMessage";
-    messageBox.style.cssText = `
-      margin-bottom: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      line-height: 1.4;
-      display: none;
-      text-align: center;
-      transition: all 0.3s ease;
-    `;
-    form.insertBefore(messageBox, form.firstChild);
-  }
+  // Step 2 Form Elements
+  const step2Form = document.getElementById("step2OtpForm");
+  const otpContainer = document.getElementById("otpContainer");
+  const otpDigits = Array.from(document.querySelectorAll(".kx-otp-digit"));
+  const verifyOtpButton = document.getElementById("verifyOtpButton");
+  const changeNumberLink = document.getElementById("changeNumberLink");
+  const resendOtpBtn = document.getElementById("resendOtpBtn");
+  const resendTimerEl = document.getElementById("resendTimer");
+
+  // State
+  let registeredPhone = "";
+  let resendCooldown = 60;
+  let cooldownInterval = null;
 
   function showMessage(text, type = "error") {
     if (!messageBox) return;
@@ -86,179 +100,350 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  function formatSignUpError(error) {
-    if (!error) return "An unexpected error occurred during sign up.";
-
-    const message = error.message || String(error);
-    const lowerMsg = message.toLowerCase();
-
-    // Distinguish network/connection/DNS/server-down failures:
-    if (
-      lowerMsg.includes("failed to fetch") ||
-      lowerMsg.includes("network") ||
-      lowerMsg.includes("fetch failed") ||
-      error.status === 0 ||
-      error.name === "AuthRetryableFetchError"
-    ) {
-      return "Unable to connect to the authentication server. Please check your internet connection or verify that your Supabase project is active and not paused.";
+  function hideMessage() {
+    if (messageBox) {
+      messageBox.style.display = "none";
+      messageBox.textContent = "";
     }
-
-    // Already registered / exists:
-    if (lowerMsg.includes("already registered") || lowerMsg.includes("user already exists")) {
-      return "An account with this email already exists. Please sign in.";
-    }
-
-    // Password requirements:
-    if (lowerMsg.includes("weak password") || lowerMsg.includes("password should be")) {
-      return "Password is too weak. Please choose a password with at least 6 characters.";
-    }
-
-    // Rate limiting:
-    if (lowerMsg.includes("rate limit") || lowerMsg.includes("too many requests") || error.status === 429) {
-      return "Too many sign-up attempts. Please wait a few moments before trying again.";
-    }
-
-    return message;
   }
 
-  if (form) {
-    form.addEventListener("submit", async (e) => {
+  function startCooldownTimer() {
+    if (cooldownInterval) clearInterval(cooldownInterval);
+    resendCooldown = 60;
+    if (resendOtpBtn) {
+      resendOtpBtn.disabled = true;
+      resendOtpBtn.innerHTML = `Resend OTP (<span id="resendTimer">${resendCooldown}</span>s)`;
+    }
+
+    cooldownInterval = setInterval(() => {
+      resendCooldown -= 1;
+      const timerSpan = document.getElementById("resendTimer");
+      if (timerSpan) timerSpan.textContent = String(resendCooldown);
+
+      if (resendCooldown <= 0) {
+        clearInterval(cooldownInterval);
+        cooldownInterval = null;
+        if (resendOtpBtn) {
+          resendOtpBtn.disabled = false;
+          resendOtpBtn.textContent = "Resend OTP";
+        }
+      }
+    }, 1000);
+  }
+
+  // ===========================================================================
+  // STEP 1: SUBMIT REGISTRATION (Send SMS OTP)
+  // ===========================================================================
+  if (step1Form) {
+    step1Form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const fullName = nameInput?.value?.trim();
-      const email = emailInput?.value?.trim();
-      const password = passwordInput?.value;
+      hideMessage();
+
+      const fullName = nameInput?.value?.trim() || "";
+      const countryCode = countryCodeSelect?.value || "+91";
+      const rawPhone = phoneInput?.value?.trim() || "";
+      const password = passwordInput?.value || "";
+      const confirmPassword = confirmPasswordInput?.value || "";
       const termsAccepted = termsCheckbox ? termsCheckbox.checked : true;
 
+      // Validation
       if (!fullName) {
         showMessage("Please enter your full name.", "error");
+        nameInput?.focus();
         return;
       }
-      if (!email) {
-        showMessage("Please enter your email address.", "error");
+
+      const phoneValidation = validatePhone(rawPhone, countryCode);
+      if (!phoneValidation.valid) {
+        showMessage(phoneValidation.error, "error");
+        phoneInput?.focus();
         return;
       }
+
       if (!password || password.length < 6) {
-        showMessage("Password should be at least 6 characters long.", "error");
+        showMessage("Password must be at least 6 characters long.", "error");
+        passwordInput?.focus();
         return;
       }
+
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match. Please re-enter your password.", "error");
+        confirmPasswordInput?.focus();
+        return;
+      }
+
       if (termsCheckbox && !termsAccepted) {
         showMessage("Please agree to the Terms and Privacy Policy to continue.", "error");
         return;
       }
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Creating Account...";
+      // Submit
+      if (signButton) {
+        signButton.disabled = true;
+        signButton.textContent = "Sending Verification Code...";
       }
 
       try {
-        const emailRedirectUrl = new URL(`${BASE_URL}email-verified.html`, window.location.origin).href;
-        const { data, error } = await supabase.auth.signUp({
-          email,
+        const { data, error, formattedPhone } = await signUpWithPhone({
+          phone: rawPhone,
           password,
-          options: {
-            emailRedirectTo: emailRedirectUrl,
-            data: {
-              full_name: fullName,
-              name: fullName
-            }
-          }
+          fullName,
+          countryCode
         });
 
         if (error) {
-          console.error("[Auth] Sign up failed:", error);
-          showMessage(formatSignUpError(error), "error");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Submit";
+          console.error("[SignUp] Phone signup error:", error);
+          showMessage(formatAuthError(error), "error");
+          if (signButton) {
+            signButton.disabled = false;
+            signButton.textContent = "Send Verification Code";
           }
           return;
         }
 
-        // If user already exists (Supabase sometimes returns empty user/identities with no error)
-        if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
-          showMessage("An account with this email already exists. Please sign in.", "error");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Submit";
-          }
-          return;
+        // Successfully sent OTP
+        registeredPhone = formattedPhone;
+
+        // Switch UI to Step 2 without navigating away
+        step1Form.style.display = "none";
+        step2Form.style.display = "block";
+
+        if (authTitle) authTitle.textContent = "Verify Mobile Number";
+        if (authSubtitle) {
+          authSubtitle.innerHTML = `We sent a 6-digit OTP code to <strong style="color:var(--kx-text);">${registeredPhone}</strong>`;
         }
 
-        const nowIso = new Date().toISOString();
+        showMessage("Verification code sent! Please check your mobile SMS.", "success");
 
-        // Update profile consent if user is established
-        if (data?.user?.id) {
-          try {
-            await supabase.from("profiles").upsert({
-              id: data.user.id,
-              email: email,
-              full_name: fullName,
-              consent_accepted_at: nowIso
-            });
-          } catch (profileErr) {
-            console.warn("[SignUp] profile upsert note:", profileErr);
-          }
+        // Focus first OTP box
+        setTimeout(() => {
+          otpDigits[0]?.focus();
+        }, 150);
+
+        // Start Resend OTP Cooldown
+        startCooldownTimer();
+      } catch (err) {
+        console.error("[SignUp] Unexpected error:", err);
+        showMessage(formatAuthError(err), "error");
+        if (signButton) {
+          signButton.disabled = false;
+          signButton.textContent = "Send Verification Code";
         }
+      }
+    });
+  }
 
-        // Check if session was granted or confirmation is needed
-        if (data?.session) {
-          showMessage("Account created successfully! Redirecting...", "success");
-          setTimeout(() => {
-            window.location.href = nextTarget;
-          }, 800);
+  // ===========================================================================
+  // STEP 2: OTP INPUT NAVIGATION & AUTO-ADVANCE
+  // ===========================================================================
+  function getOtpValue() {
+    return otpDigits.map((input) => input.value.trim()).join("");
+  }
+
+  function clearOtpInputs() {
+    otpDigits.forEach((input) => {
+      input.value = "";
+      input.classList.remove("filled");
+    });
+    otpDigits[0]?.focus();
+  }
+
+  otpDigits.forEach((input, index) => {
+    // Only permit digits
+    input.addEventListener("input", (e) => {
+      const val = e.target.value.replace(/\D/g, "");
+      e.target.value = val ? val.slice(-1) : "";
+
+      if (e.target.value) {
+        input.classList.add("filled");
+        if (index < otpDigits.length - 1) {
+          otpDigits[index + 1].focus();
+        }
+      } else {
+        input.classList.remove("filled");
+      }
+
+      // Check if all filled -> Auto trigger or clear message
+      if (getOtpValue().length === 6) {
+        hideMessage();
+      }
+    });
+
+    // Handle Backspace and Arrow navigation
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace") {
+        if (!input.value && index > 0) {
+          otpDigits[index - 1].focus();
+          otpDigits[index - 1].value = "";
+          otpDigits[index - 1].classList.remove("filled");
         } else {
-          showMessage("Account created! Redirecting to email verification...", "success");
-          setTimeout(() => {
-            window.location.href = `${BASE_URL}verify-email.html?email=${encodeURIComponent(email)}&next=${encodeURIComponent(nextTarget)}`;
-          }, 600);
+          input.value = "";
+          input.classList.remove("filled");
         }
+      } else if (e.key === "ArrowLeft" && index > 0) {
+        otpDigits[index - 1].focus();
+      } else if (e.key === "ArrowRight" && index < otpDigits.length - 1) {
+        otpDigits[index + 1].focus();
+      }
+    });
+
+    // Handle Paste of full 6-digit code
+    input.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const pastedData = (e.clipboardData || window.clipboardData).getData("text");
+      const digits = pastedData.replace(/\D/g, "").slice(0, 6);
+
+      if (!digits) return;
+
+      digits.split("").forEach((char, i) => {
+        if (otpDigits[i]) {
+          otpDigits[i].value = char;
+          otpDigits[i].classList.add("filled");
+        }
+      });
+
+      const nextIndex = Math.min(digits.length, otpDigits.length - 1);
+      otpDigits[nextIndex]?.focus();
+
+      if (digits.length === 6 && step2Form) {
+        // Automatically submit when full 6 digits are pasted
+        step2Form.dispatchEvent(new Event("submit", { cancelable: true }));
+      }
+    });
+  });
+
+  // ===========================================================================
+  // STEP 2: VERIFY OTP SUBMISSION
+  // ===========================================================================
+  if (step2Form) {
+    step2Form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideMessage();
+
+      const otpToken = getOtpValue();
+      if (otpToken.length !== 6) {
+        showMessage("Please enter the complete 6-digit OTP code.", "error");
+        return;
+      }
+
+      if (verifyOtpButton) {
+        verifyOtpButton.disabled = true;
+        verifyOtpButton.textContent = "Verifying...";
+      }
+
+      try {
+        const { data, error } = await verifyPhoneOtp({
+          phone: registeredPhone,
+          token: otpToken,
+          type: "sms"
+        });
+
+        if (error) {
+          console.error("[SignUp] Verify OTP error:", error);
+          showMessage(formatAuthError(error), "error");
+          if (verifyOtpButton) {
+            verifyOtpButton.disabled = false;
+            verifyOtpButton.textContent = "Verify & Activate Account";
+          }
+          return;
+        }
+
+        // Successfully verified
+        showMessage("Account verified successfully! Redirecting...", "success");
+        showAuthToast("Mobile number verified successfully!");
+
+        setTimeout(() => {
+          window.location.href = nextTarget;
+        }, 800);
       } catch (err) {
-        console.error("[Auth] Unexpected sign up error:", err);
-        showMessage(formatSignUpError(err), "error");
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit";
+        console.error("[SignUp] Verify OTP unexpected error:", err);
+        showMessage(formatAuthError(err), "error");
+        if (verifyOtpButton) {
+          verifyOtpButton.disabled = false;
+          verifyOtpButton.textContent = "Verify & Activate Account";
         }
       }
     });
   }
 
-  // Google OAuth button
+  // ===========================================================================
+  // RESEND OTP
+  // ===========================================================================
+  if (resendOtpBtn) {
+    resendOtpBtn.addEventListener("click", async () => {
+      if (resendCooldown > 0 || !registeredPhone) return;
+
+      resendOtpBtn.disabled = true;
+      resendOtpBtn.textContent = "Resending...";
+      hideMessage();
+
+      try {
+        const { error } = await resendPhoneOtp({
+          phone: registeredPhone,
+          type: "sms"
+        });
+
+        if (error) {
+          showMessage(formatAuthError(error), "error");
+          resendOtpBtn.disabled = false;
+          resendOtpBtn.textContent = "Resend OTP";
+          return;
+        }
+
+        showMessage("A new verification code has been sent to your mobile.", "success");
+        showAuthToast("OTP resent successfully!");
+        clearOtpInputs();
+        startCooldownTimer();
+      } catch (err) {
+        showMessage(formatAuthError(err), "error");
+        resendOtpBtn.disabled = false;
+        resendOtpBtn.textContent = "Resend OTP";
+      }
+    });
+  }
+
+  // ===========================================================================
+  // CHANGE NUMBER (Back to Step 1)
+  // ===========================================================================
+  if (changeNumberLink) {
+    changeNumberLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideMessage();
+
+      if (cooldownInterval) {
+        clearInterval(cooldownInterval);
+        cooldownInterval = null;
+      }
+
+      // Switch views
+      step2Form.style.display = "none";
+      step1Form.style.display = "block";
+
+      if (authTitle) authTitle.textContent = "Create New Account";
+      if (authSubtitle) authSubtitle.textContent = "Sign up with your mobile number to get started";
+
+      if (signButton) {
+        signButton.disabled = false;
+        signButton.textContent = "Send Verification Code";
+      }
+
+      phoneInput?.focus();
+    });
+  }
+
+  // Google OAuth button fallback
   if (googleBtn) {
-    googleBtn.addEventListener("click", async (e) => {
+    googleBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      try {
-        const fullRedirect = new URL(nextTarget, window.location.origin).href;
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "google",
-          options: { redirectTo: fullRedirect }
-        });
-        if (error) {
-          showMessage("Google sign-up is not configured yet in Supabase. Please sign up with email and password.", "error");
-        }
-      } catch (err) {
-        showMessage("Google sign-up is not configured yet in Supabase. Please sign up with email and password.", "error");
-      }
+      showMessage("Please sign up with your mobile number to receive instant SMS order updates.", "error");
     });
   }
 
-  // Apple OAuth button
+  // Apple OAuth button fallback
   if (appleBtn) {
-    appleBtn.addEventListener("click", async (e) => {
+    appleBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      try {
-        const fullRedirect = new URL(nextTarget, window.location.origin).href;
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "apple",
-          options: { redirectTo: fullRedirect }
-        });
-        if (error) {
-          showMessage("Apple sign-up is not configured yet in Supabase. Please sign up with email and password.", "error");
-        }
-      } catch (err) {
-        showMessage("Apple sign-up is not configured yet in Supabase. Please sign up with email and password.", "error");
-      }
+      showMessage("Please sign up with your mobile number to receive instant SMS order updates.", "error");
     });
   }
 });
