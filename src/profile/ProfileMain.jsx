@@ -307,7 +307,7 @@ export function ProfileApp() {
   const loadData = useCallback(async () => {
     try {
       const currentSession = await getSession();
-      if (!currentSession?.user?.id) {
+      if (!currentSession?.user?.id || !currentSession.user.email_confirmed_at) {
         setSession(null);
         setProfile(null);
         setLoading(false);

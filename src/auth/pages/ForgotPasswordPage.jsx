@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { KeyRound, Phone, ArrowLeft, CheckCircle2, AlertCircle, Lock, ShieldCheck } from "lucide-react";
+import { KeyRound, Mail, ArrowLeft, CheckCircle2, AlertCircle, Lock } from "lucide-react";
 import {
   BASE_URL,
-  validatePhone,
-  signInWithPhoneOtp,
-  resetPasswordWithPhoneOtp,
-  resendPhoneOtp,
+  validateEmail,
+  sendPasswordResetOtp,
+  verifyEmailOtp,
+  updateUserPassword,
   formatAuthError
 } from "../auth.js";
 import Navbar from "../../deals/components/Navbar.jsx";
@@ -18,16 +18,15 @@ import "../../styles/kx-tokens.css";
 import "../../styles/kx-motion.css";
 
 export function ForgotPasswordPage() {
-  const [countryCode, setCountryCode] = useState("+91");
-  const [phone, setPhone] = useState("");
-  const [step, setStep] = useState(1); // 1: Enter Phone, 2: Enter OTP & New Password, 3: Success
+  const [email, setEmail] = useState("");
+  const [step, setStep] = useState(1); // 1: Enter Email, 2: Enter 6-digit OTP, 3: Set New Password, 4: Success
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [error, setError] = useState("");
-  const [formattedTargetPhone, setFormattedTargetPhone] = useState("");
+  const [targetEmail, setTargetEmail] = useState("");
 
   useEffect(() => {
     let timer;
@@ -37,12 +36,12 @@ export function ForgotPasswordPage() {
     return () => clearTimeout(timer);
   }, [cooldown]);
 
-  // Step 1: Send SMS OTP
-  const handleSendOtp = async (e) => {
+  // Step 1: Send Password Reset Code
+  const handleSendResetCode = async (e) => {
     e.preventDefault();
-    const validation = validatePhone(phone, countryCode);
-    if (!validation.valid) {
-      setError(validation.error);
+    const cleanEmail = email.trim().toLowerCase();
+    if (!validateEmail(cleanEmail)) {
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -52,36 +51,59 @@ export function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const { error: otpErr, formattedPhone } = await signInWithPhoneOtp({
-        phone,
-        countryCode
-      });
+      const { error: resetErr } = await sendPasswordResetOtp({ email: cleanEmail });
 
-      if (otpErr) {
-        setError(formatAuthError(otpErr));
+      if (resetErr) {
+        setError(formatAuthError(resetErr));
         return;
       }
 
-      setFormattedTargetPhone(formattedPhone);
+      setTargetEmail(cleanEmail);
       setStep(2);
       setCooldown(60);
     } catch (err) {
-      console.warn("[ForgotPassword]", err);
       setError(formatAuthError(err));
     } finally {
       setLoading(false);
     }
   };
 
-  // Step 2: Verify OTP and Reset Password
-  const handleResetPassword = async (e) => {
+  // Step 2: Verify Recovery OTP Code
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
     const token = otp.join("");
     if (token.length !== 6) {
-      setError("Please enter the complete 6-digit OTP code.");
+      setError("Please enter the complete 6-digit verification code.");
       return;
     }
 
+    setError("");
+    setLoading(true);
+
+    try {
+      const { error: verifyErr } = await verifyEmailOtp({
+        email: targetEmail,
+        token,
+        type: "recovery"
+      });
+
+      if (verifyErr) {
+        setError(formatAuthError(verifyErr));
+        return;
+      }
+
+      // Session established via recovery OTP! Proceed to set new password.
+      setStep(3);
+    } catch (err) {
+      setError(formatAuthError(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 3: Set New Password
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
     if (newPassword.length < 6) {
       setError("New password must be at least 6 characters long.");
       return;
@@ -96,18 +118,14 @@ export function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const { error: resetErr } = await resetPasswordWithPhoneOtp({
-        phone: formattedTargetPhone,
-        token,
-        newPassword
-      });
+      const { error: updateErr } = await updateUserPassword({ password: newPassword });
 
-      if (resetErr) {
-        setError(formatAuthError(resetErr));
+      if (updateErr) {
+        setError(formatAuthError(updateErr));
         return;
       }
 
-      setStep(3);
+      setStep(4);
       setTimeout(() => {
         window.location.href = `${BASE_URL}login.html`;
       }, 2000);
@@ -118,15 +136,12 @@ export function ForgotPasswordPage() {
     }
   };
 
-  // Resend OTP
-  const handleResendOtp = async () => {
-    if (cooldown > 0 || !formattedTargetPhone) return;
+  // Resend Recovery Code
+  const handleResendCode = async () => {
+    if (cooldown > 0 || !targetEmail) return;
     setError("");
     try {
-      const { error: resendErr } = await resendPhoneOtp({
-        phone: formattedTargetPhone,
-        type: "sms"
-      });
+      const { error: resendErr } = await sendPasswordResetOtp({ email: targetEmail });
       if (resendErr) {
         setError(formatAuthError(resendErr));
       } else {
@@ -203,13 +218,14 @@ export function ForgotPasswordPage() {
             Reset Password
           </h1>
           <p className="mt-2 text-sm text-[var(--kx-text-muted)] leading-relaxed">
-            {step === 1 && "Enter the mobile number associated with your KSAM Deal account to receive a secure SMS OTP."}
-            {step === 2 && `Enter the 6-digit code sent to ${formattedTargetPhone} and choose a new password.`}
-            {step === 3 && "Your password has been successfully updated."}
+            {step === 1 && "Enter the email associated with your KSAM Deal account to receive a 6-digit recovery code."}
+            {step === 2 && `Enter the 6-digit code sent to ${targetEmail}.`}
+            {step === 3 && "Enter your new account password below."}
+            {step === 4 && "Your password has been successfully updated."}
           </p>
 
-          {/* STEP 3: SUCCESS */}
-          {step === 3 && (
+          {/* STEP 4: SUCCESS */}
+          {step === 4 && (
             <div className="mt-6 rounded-2xl border border-[var(--kx-accent)]/30 bg-[var(--kx-accent-soft)] p-6 text-center">
               <CheckCircle2 size={36} className="mx-auto text-[var(--kx-accent)] mb-3" />
               <p className="text-lg font-bold text-[var(--kx-text)]">Password Reset Successful!</p>
@@ -225,40 +241,26 @@ export function ForgotPasswordPage() {
             </div>
           )}
 
-          {/* STEP 1: PHONE INPUT */}
+          {/* STEP 1: EMAIL INPUT */}
           {step === 1 && (
-            <form onSubmit={handleSendOtp} className="mt-6 space-y-4">
+            <form onSubmit={handleSendResetCode} className="mt-6 space-y-4">
               <div>
                 <label className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
-                  Mobile Number
+                  Email Address
                 </label>
-                <div className="flex gap-2">
-                  <select
-                    value={countryCode}
-                    onChange={(e) => setCountryCode(e.target.value)}
-                    className="w-24 rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-3 text-sm font-bold text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
-                    aria-label="Country Code"
-                  >
-                    <option value="+91">🇮🇳 +91</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+971">🇦🇪 +971</option>
-                    <option value="+65">🇸🇬 +65</option>
-                    <option value="+61">🇦🇺 +61</option>
-                  </select>
+                <div className="relative flex items-center">
+                  <Mail size={18} className="absolute left-4 text-[var(--kx-text-dim)] pointer-events-none" />
                   <input
-                    type="tel"
-                    value={phone}
+                    type="email"
+                    value={email}
                     onChange={(e) => {
-                      setPhone(e.target.value);
+                      setEmail(e.target.value);
                       setError("");
                     }}
-                    placeholder="98765 43210"
+                    placeholder="name@example.com"
                     required
-                    maxLength={15}
-                    inputMode="tel"
-                    autoComplete="tel"
-                    className="flex-1 rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3.5 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
+                    autoComplete="email"
+                    className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3.5 pl-11 pr-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)] focus:shadow-[0_0_20px_var(--kx-accent-glow)]"
                   />
                 </div>
                 {error && (
@@ -273,14 +275,14 @@ export function ForgotPasswordPage() {
                 disabled={loading}
                 className="kx-btn kx-btn--primary w-full py-3.5 mt-2 flex items-center justify-center font-black"
               >
-                {loading ? "Sending SMS Code..." : "Send Verification Code"}
+                {loading ? "Sending Recovery Code..." : "Send Verification Code"}
               </button>
             </form>
           )}
 
-          {/* STEP 2: OTP & NEW PASSWORD */}
+          {/* STEP 2: 6-DIGIT OTP INPUT */}
           {step === 2 && (
-            <form onSubmit={handleResetPassword} className="mt-6 space-y-4">
+            <form onSubmit={handleVerifyOtp} className="mt-6 space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider">
@@ -294,7 +296,7 @@ export function ForgotPasswordPage() {
                     }}
                     className="text-xs font-bold text-[var(--kx-cyan)] hover:underline"
                   >
-                    Change Number
+                    Change Email
                   </button>
                 </div>
 
@@ -314,44 +316,81 @@ export function ForgotPasswordPage() {
                     />
                   ))}
                 </div>
+
+                {error && (
+                  <p className="mt-2 text-xs text-[var(--kx-red)] flex items-center gap-1">
+                    <AlertCircle size={13} /> {error}
+                  </p>
+                )}
               </div>
 
+              <button
+                type="submit"
+                disabled={loading}
+                className="kx-btn kx-btn--primary w-full py-3.5 mt-2 flex items-center justify-center font-black"
+              >
+                {loading ? "Verifying Code..." : "Verify Code"}
+              </button>
+
+              <div className="pt-2 flex items-center justify-between text-xs text-[var(--kx-text-muted)]">
+                <span>Didn't get the code?</span>
+                <button
+                  type="button"
+                  disabled={cooldown > 0}
+                  onClick={handleResendCode}
+                  className="font-bold text-[var(--kx-accent)] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend Code"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* STEP 3: NEW PASSWORD */}
+          {step === 3 && (
+            <form onSubmit={handleUpdatePassword} className="mt-6 space-y-4">
               <div>
                 <label className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
-                  New Password (min. 6 chars)
+                  New Password (min. 6 characters)
                 </label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => {
-                    setNewPassword(e.target.value);
-                    setError("");
-                  }}
-                  placeholder="Enter new password"
-                  required
-                  minLength={6}
-                  autoComplete="new-password"
-                  className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
-                />
+                <div className="relative flex items-center">
+                  <Lock size={18} className="absolute left-4 text-[var(--kx-text-dim)] pointer-events-none" />
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      setError("");
+                    }}
+                    placeholder="Enter new password"
+                    required
+                    minLength={6}
+                    autoComplete="new-password"
+                    className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3.5 pl-11 pr-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-[var(--kx-text-muted)] uppercase tracking-wider mb-2">
                   Confirm New Password
                 </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    setError("");
-                  }}
-                  placeholder="Re-enter new password"
-                  required
-                  minLength={6}
-                  autoComplete="new-password"
-                  className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3 px-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
-                />
+                <div className="relative flex items-center">
+                  <Lock size={18} className="absolute left-4 text-[var(--kx-text-dim)] pointer-events-none" />
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      setError("");
+                    }}
+                    placeholder="Re-enter new password"
+                    required
+                    minLength={6}
+                    autoComplete="new-password"
+                    className="w-full rounded-xl border border-[var(--kx-border)] bg-[var(--kx-surface-2)] py-3.5 pl-11 pr-4 text-sm text-[var(--kx-text)] outline-none transition focus:border-[var(--kx-accent)]"
+                  />
+                </div>
               </div>
 
               {error && (
@@ -367,18 +406,6 @@ export function ForgotPasswordPage() {
               >
                 {loading ? "Updating Password..." : "Update Password & Sign In"}
               </button>
-
-              <div className="pt-2 flex items-center justify-between text-xs text-[var(--kx-text-muted)]">
-                <span>Didn't get the code?</span>
-                <button
-                  type="button"
-                  disabled={cooldown > 0}
-                  onClick={handleResendOtp}
-                  className="font-bold text-[var(--kx-accent)] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend OTP"}
-                </button>
-              </div>
             </form>
           )}
 

@@ -26,7 +26,7 @@
                                 Create New Account
                             </h2>
                             <p class="signUpPara" id="authSubtitle">
-                                Sign up with your mobile number to get started
+                                Sign up with your email to get started
                             </p>
                         </div>
 
@@ -46,31 +46,19 @@
                                     <input type="text" name="name" id="name" placeholder="Enter your full name" required autocomplete="name">
                                 </div>
 
-                                <!-- Mobile Number (with Country Code) -->
+                                <!-- Email -->
                                 <div>
-                                    <label for="phone">
-                                        Mobile Number
+                                    <label for="email">
+                                        Email Address
                                     </label>
-                                    <div class="kx-phone-group">
-                                        <select id="countryCode" class="kx-country-select" aria-label="Country Code">
-                                            <option value="+91" selected>🇮🇳 +91</option>
-                                            <option value="+1">🇺🇸 +1</option>
-                                            <option value="+44">🇬🇧 +44</option>
-                                            <option value="+971">🇦🇪 +971</option>
-                                            <option value="+65">🇸🇬 +65</option>
-                                            <option value="+61">🇦🇺 +61</option>
-                                        </select>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            id="phone"
-                                            placeholder="98765 43210"
-                                            required
-                                            maxlength="15"
-                                            inputmode="tel"
-                                            autocomplete="tel"
-                                        >
-                                    </div>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        placeholder="name@example.com"
+                                        required
+                                        autocomplete="email"
+                                    >
                                 </div>
 
                                 <!-- Password -->
@@ -124,12 +112,12 @@
                                 <div class="appGoogle">
                                     <div class="apple">
                                         <img src="./public/apple.png" alt="Apple">
-                                        <a href="#" class="appleLink">Apple</a>
+                                        <a href="#" class="appleLink">Continue with Apple</a>
                                     </div>
 
                                     <div class="googl">
                                         <img src="./public/google.png" alt="Google">
-                                        <a href="#" class="googleLink">Google</a>
+                                        <a href="#" class="googleLink">Continue with Google</a>
                                     </div>
                                 </div>
                             </form>
@@ -141,10 +129,10 @@
                                 <div>
                                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                                         <label style="margin: 0;">
-                                            Enter 6-Digit OTP
+                                            Enter 6-Digit Code
                                         </label>
-                                        <a href="#" id="changeNumberLink" class="kx-change-number">
-                                            Change Number
+                                        <a href="#" id="changeEmailLink" class="kx-change-number">
+                                            Change Email
                                         </a>
                                     </div>
 
@@ -166,11 +154,11 @@
                                     </button>
                                 </div>
 
-                                <!-- Resend OTP & Countdown -->
+                                <!-- Resend Code & Countdown -->
                                 <div class="kx-resend-row">
-                                    <span>Didn't receive the SMS code?</span>
+                                    <span>Didn't receive the email code?</span>
                                     <button type="button" id="resendOtpBtn" class="kx-resend-btn" disabled>
-                                        Resend OTP (<span id="resendTimer">60</span>s)
+                                        Resend Code (<span id="resendTimer">60</span>s)
                                     </button>
                                 </div>
                             </form>
@@ -192,7 +180,7 @@
                 <div class="signUpimg">
                     <img
                         src="./public/signupImage.png"
-                        alt="Ksam Deal"
+                        alt="KSAM Deal"
                     >
                 </div>
             </div>

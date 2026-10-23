@@ -68,31 +68,19 @@
                             ====================================================== -->
                             <form id="passwordLoginForm">
 
-                                <!-- MOBILE NUMBER -->
+                                <!-- EMAIL -->
                                 <div>
-                                    <label for="loginPhone">
-                                        Mobile Number
+                                    <label for="loginEmail">
+                                        Email Address
                                     </label>
-                                    <div class="kx-phone-group">
-                                        <select id="loginCountryCode" class="kx-country-select" aria-label="Country Code">
-                                            <option value="+91" selected>🇮🇳 +91</option>
-                                            <option value="+1">🇺🇸 +1</option>
-                                            <option value="+44">🇬🇧 +44</option>
-                                            <option value="+971">🇦🇪 +971</option>
-                                            <option value="+65">🇸🇬 +65</option>
-                                            <option value="+61">🇦🇺 +61</option>
-                                        </select>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            id="loginPhone"
-                                            placeholder="98765 43210"
-                                            required
-                                            maxlength="15"
-                                            inputmode="tel"
-                                            autocomplete="tel"
-                                        >
-                                    </div>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="loginEmail"
+                                        placeholder="Enter your email"
+                                        required
+                                        autocomplete="email"
+                                    >
                                 </div>
 
                                 <!-- PASSWORD -->
@@ -148,29 +136,17 @@
                             <form id="otpRequestForm" style="display: none;">
 
                                 <div>
-                                    <label for="otpLoginPhone">
-                                        Mobile Number
+                                    <label for="otpLoginEmail">
+                                        Email Address
                                     </label>
-                                    <div class="kx-phone-group">
-                                        <select id="otpCountryCode" class="kx-country-select" aria-label="Country Code">
-                                            <option value="+91" selected>🇮🇳 +91</option>
-                                            <option value="+1">🇺🇸 +1</option>
-                                            <option value="+44">🇬🇧 +44</option>
-                                            <option value="+971">🇦🇪 +971</option>
-                                            <option value="+65">🇸🇬 +65</option>
-                                            <option value="+61">🇦🇺 +61</option>
-                                        </select>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            id="otpLoginPhone"
-                                            placeholder="98765 43210"
-                                            required
-                                            maxlength="15"
-                                            inputmode="tel"
-                                            autocomplete="tel"
-                                        >
-                                    </div>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="otpLoginEmail"
+                                        placeholder="Enter your registered email"
+                                        required
+                                        autocomplete="email"
+                                    >
                                 </div>
 
                                 <div>
@@ -193,10 +169,10 @@
                                 <div>
                                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                                         <label style="margin: 0;">
-                                            Enter 6-Digit OTP
+                                            Enter 6-Digit Code
                                         </label>
-                                        <a href="#" id="loginChangeNumberLink" class="kx-change-number">
-                                            Change Number
+                                        <a href="#" id="loginChangeEmailLink" class="kx-change-number">
+                                            Change Email
                                         </a>
                                     </div>
 
@@ -224,9 +200,9 @@
 
                                 <!-- Resend OTP & Countdown -->
                                 <div class="kx-resend-row">
-                                    <span>Didn't receive the SMS code?</span>
+                                    <span>Didn't receive the email code?</span>
                                     <button type="button" id="loginResendOtpBtn" class="kx-resend-btn" disabled>
-                                        Resend OTP (<span id="loginResendTimer">60</span>s)
+                                        Resend Code (<span id="loginResendTimer">60</span>s)
                                     </button>
                                 </div>
 

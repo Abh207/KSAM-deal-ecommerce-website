@@ -3,11 +3,11 @@ import {
   validateReturnTo,
   getPendingAction,
   getSession,
-  isPhoneVerified,
-  validatePhone,
-  signUpWithPhone,
-  verifyPhoneOtp,
-  resendPhoneOtp,
+  isEmailVerified,
+  validateEmail,
+  signUpWithEmail,
+  verifyEmailOtp,
+  resendSignupOtp,
   formatAuthError,
   showAuthToast
 } from "./auth.js";
@@ -47,9 +47,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // If already logged in with verified phone, redirect immediately
+  // If already logged in with verified email, redirect immediately
   const existingSession = await getSession();
-  if (existingSession?.user && isPhoneVerified(existingSession.user)) {
+  if (existingSession?.user && isEmailVerified(existingSession.user)) {
     window.location.href = nextTarget;
     return;
   }
@@ -62,8 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Step 1 Form Elements
   const step1Form = document.getElementById("step1RegistrationForm");
   const nameInput = document.getElementById("name");
-  const countryCodeSelect = document.getElementById("countryCode");
-  const phoneInput = document.getElementById("phone");
+  const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const confirmPasswordInput = document.getElementById("confirmPassword");
   const termsCheckbox = document.getElementById("termsAgree");
@@ -76,12 +75,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const otpContainer = document.getElementById("otpContainer");
   const otpDigits = Array.from(document.querySelectorAll(".kx-otp-digit"));
   const verifyOtpButton = document.getElementById("verifyOtpButton");
-  const changeNumberLink = document.getElementById("changeNumberLink");
+  const changeEmailLink = document.getElementById("changeEmailLink");
   const resendOtpBtn = document.getElementById("resendOtpBtn");
   const resendTimerEl = document.getElementById("resendTimer");
 
   // State
-  let registeredPhone = "";
+  let registeredEmail = "";
   let resendCooldown = 60;
   let cooldownInterval = null;
 
@@ -112,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     resendCooldown = 60;
     if (resendOtpBtn) {
       resendOtpBtn.disabled = true;
-      resendOtpBtn.innerHTML = `Resend OTP (<span id="resendTimer">${resendCooldown}</span>s)`;
+      resendOtpBtn.innerHTML = `Resend Code (<span id="resendTimer">${resendCooldown}</span>s)`;
     }
 
     cooldownInterval = setInterval(() => {
@@ -125,14 +124,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         cooldownInterval = null;
         if (resendOtpBtn) {
           resendOtpBtn.disabled = false;
-          resendOtpBtn.textContent = "Resend OTP";
+          resendOtpBtn.textContent = "Resend Code";
         }
       }
     }, 1000);
   }
 
   // ===========================================================================
-  // STEP 1: SUBMIT REGISTRATION (Send SMS OTP)
+  // STEP 1: SUBMIT REGISTRATION (Send Email OTP)
   // ===========================================================================
   if (step1Form) {
     step1Form.addEventListener("submit", async (e) => {
@@ -140,8 +139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       hideMessage();
 
       const fullName = nameInput?.value?.trim() || "";
-      const countryCode = countryCodeSelect?.value || "+91";
-      const rawPhone = phoneInput?.value?.trim() || "";
+      const email = emailInput?.value?.trim().toLowerCase() || "";
       const password = passwordInput?.value || "";
       const confirmPassword = confirmPasswordInput?.value || "";
       const termsAccepted = termsCheckbox ? termsCheckbox.checked : true;
@@ -153,10 +151,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      const phoneValidation = validatePhone(rawPhone, countryCode);
-      if (!phoneValidation.valid) {
-        showMessage(phoneValidation.error, "error");
-        phoneInput?.focus();
+      if (!validateEmail(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        emailInput?.focus();
         return;
       }
 
@@ -184,15 +181,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        const { data, error, formattedPhone } = await signUpWithPhone({
-          phone: rawPhone,
+        const { data, error, cleanEmail, isAlreadyRegistered } = await signUpWithEmail({
+          email,
           password,
-          fullName,
-          countryCode
+          fullName
         });
 
+        if (isAlreadyRegistered) {
+          showMessage("This email is already registered. Please sign in.", "error");
+          if (signButton) {
+            signButton.disabled = false;
+            signButton.textContent = "Send Verification Code";
+          }
+          return;
+        }
+
         if (error) {
-          console.error("[SignUp] Phone signup error:", error);
           showMessage(formatAuthError(error), "error");
           if (signButton) {
             signButton.disabled = false;
@@ -202,18 +206,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Successfully sent OTP
-        registeredPhone = formattedPhone;
+        registeredEmail = cleanEmail;
 
         // Switch UI to Step 2 without navigating away
         step1Form.style.display = "none";
         step2Form.style.display = "block";
 
-        if (authTitle) authTitle.textContent = "Verify Mobile Number";
+        if (authTitle) authTitle.textContent = "Verify Your Email";
         if (authSubtitle) {
-          authSubtitle.innerHTML = `We sent a 6-digit OTP code to <strong style="color:var(--kx-text);">${registeredPhone}</strong>`;
+          authSubtitle.innerHTML = `We sent a 6-digit verification code to <strong style="color:var(--kx-text);">${registeredEmail}</strong>`;
         }
 
-        showMessage("Verification code sent! Please check your mobile SMS.", "success");
+        showMessage("Verification code sent! Please check your email inbox or spam folder.", "success");
 
         // Focus first OTP box
         setTimeout(() => {
@@ -223,7 +227,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Start Resend OTP Cooldown
         startCooldownTimer();
       } catch (err) {
-        console.error("[SignUp] Unexpected error:", err);
         showMessage(formatAuthError(err), "error");
         if (signButton) {
           signButton.disabled = false;
@@ -322,7 +325,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const otpToken = getOtpValue();
       if (otpToken.length !== 6) {
-        showMessage("Please enter the complete 6-digit OTP code.", "error");
+        showMessage("Please enter the complete 6-digit verification code.", "error");
         return;
       }
 
@@ -332,14 +335,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        const { data, error } = await verifyPhoneOtp({
-          phone: registeredPhone,
+        const { data, error } = await verifyEmailOtp({
+          email: registeredEmail,
           token: otpToken,
-          type: "sms"
+          type: "signup"
         });
 
         if (error) {
-          console.error("[SignUp] Verify OTP error:", error);
           showMessage(formatAuthError(error), "error");
           if (verifyOtpButton) {
             verifyOtpButton.disabled = false;
@@ -350,13 +352,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Successfully verified
         showMessage("Account verified successfully! Redirecting...", "success");
-        showAuthToast("Mobile number verified successfully!");
+        showAuthToast("Account verified successfully!");
 
         setTimeout(() => {
           window.location.href = nextTarget;
         }, 800);
       } catch (err) {
-        console.error("[SignUp] Verify OTP unexpected error:", err);
         showMessage(formatAuthError(err), "error");
         if (verifyOtpButton) {
           verifyOtpButton.disabled = false;
@@ -371,42 +372,41 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ===========================================================================
   if (resendOtpBtn) {
     resendOtpBtn.addEventListener("click", async () => {
-      if (resendCooldown > 0 || !registeredPhone) return;
+      if (resendCooldown > 0 || !registeredEmail) return;
 
       resendOtpBtn.disabled = true;
       resendOtpBtn.textContent = "Resending...";
       hideMessage();
 
       try {
-        const { error } = await resendPhoneOtp({
-          phone: registeredPhone,
-          type: "sms"
+        const { error } = await resendSignupOtp({
+          email: registeredEmail
         });
 
         if (error) {
           showMessage(formatAuthError(error), "error");
           resendOtpBtn.disabled = false;
-          resendOtpBtn.textContent = "Resend OTP";
+          resendOtpBtn.textContent = "Resend Code";
           return;
         }
 
-        showMessage("A new verification code has been sent to your mobile.", "success");
-        showAuthToast("OTP resent successfully!");
+        showMessage("A new verification code has been sent to your email.", "success");
+        showAuthToast("Verification code resent!");
         clearOtpInputs();
         startCooldownTimer();
       } catch (err) {
         showMessage(formatAuthError(err), "error");
         resendOtpBtn.disabled = false;
-        resendOtpBtn.textContent = "Resend OTP";
+        resendOtpBtn.textContent = "Resend Code";
       }
     });
   }
 
   // ===========================================================================
-  // CHANGE NUMBER (Back to Step 1)
+  // CHANGE EMAIL (Back to Step 1)
   // ===========================================================================
-  if (changeNumberLink) {
-    changeNumberLink.addEventListener("click", (e) => {
+  if (changeEmailLink) {
+    changeEmailLink.addEventListener("click", (e) => {
       e.preventDefault();
       hideMessage();
 
@@ -420,14 +420,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       step1Form.style.display = "block";
 
       if (authTitle) authTitle.textContent = "Create New Account";
-      if (authSubtitle) authSubtitle.textContent = "Sign up with your mobile number to get started";
+      if (authSubtitle) authSubtitle.textContent = "Sign up with your email to get started";
 
       if (signButton) {
         signButton.disabled = false;
         signButton.textContent = "Send Verification Code";
       }
 
-      phoneInput?.focus();
+      emailInput?.focus();
     });
   }
 
@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (googleBtn) {
     googleBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      showMessage("Please sign up with your mobile number to receive instant SMS order updates.", "error");
+      showMessage("Sign up with your email above to receive order and price drop alerts.", "error");
     });
   }
 
@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (appleBtn) {
     appleBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      showMessage("Please sign up with your mobile number to receive instant SMS order updates.", "error");
+      showMessage("Sign up with your email above to receive order and price drop alerts.", "error");
     });
   }
 });

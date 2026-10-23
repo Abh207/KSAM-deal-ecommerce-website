@@ -3,12 +3,12 @@ import {
   validateReturnTo,
   getPendingAction,
   getSession,
-  isPhoneVerified,
-  validatePhone,
-  signInWithPhonePassword,
-  signInWithPhoneOtp,
-  verifyPhoneOtp,
-  resendPhoneOtp,
+  isEmailVerified,
+  validateEmail,
+  signInWithEmailPassword,
+  signInWithEmailOtp,
+  verifyEmailOtp,
+  resendSignupOtp,
   formatAuthError,
   showAuthToast
 } from "./auth.js";
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const rawNext = urlParams.get("next");
   const isUnverifiedParam = urlParams.get("unverified") === "1";
-  const phoneParam = urlParams.get("phone");
+  const emailParam = urlParams.get("email");
   const pending = getPendingAction();
   const nextTarget = validateReturnTo(rawNext) || validateReturnTo(pending?.returnTo) || `${BASE_URL}index.html`;
 
@@ -50,9 +50,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // If already logged in with confirmed phone, redirect immediately
+  // If already logged in with confirmed email, redirect immediately
   const existingSession = await getSession();
-  if (existingSession?.user && isPhoneVerified(existingSession.user)) {
+  if (existingSession?.user && isEmailVerified(existingSession.user)) {
     window.location.href = nextTarget;
     return;
   }
@@ -67,8 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Form 1: Password Login
   const passwordLoginForm = document.getElementById("passwordLoginForm");
-  const loginCountryCode = document.getElementById("loginCountryCode");
-  const loginPhone = document.getElementById("loginPhone");
+  const loginEmail = document.getElementById("loginEmail");
   const loginPassword = document.getElementById("loginPassword");
   const signButton = document.getElementById("signButton");
   const googleBtn = document.querySelector(".googleLink");
@@ -76,21 +75,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Form 2: OTP Request
   const otpRequestForm = document.getElementById("otpRequestForm");
-  const otpCountryCode = document.getElementById("otpCountryCode");
-  const otpLoginPhone = document.getElementById("otpLoginPhone");
+  const otpLoginEmail = document.getElementById("otpLoginEmail");
   const sendOtpButton = document.getElementById("sendOtpButton");
 
   // Form 3: OTP Verification
   const loginOtpVerifyForm = document.getElementById("loginOtpVerifyForm");
   const otpDigits = Array.from(document.querySelectorAll("#loginOtpBoxes .kx-otp-digit"));
   const loginVerifyOtpBtn = document.getElementById("loginVerifyOtpBtn");
-  const loginChangeNumberLink = document.getElementById("loginChangeNumberLink");
+  const loginChangeEmailLink = document.getElementById("loginChangeEmailLink");
   const loginResendOtpBtn = document.getElementById("loginResendOtpBtn");
   const loginResendTimerEl = document.getElementById("loginResendTimer");
 
   // State
   let activeTab = "password"; // 'password' | 'otp'
-  let targetPhone = "";
+  let targetEmail = "";
+  let otpVerificationType = "email"; // 'signup' | 'email'
   let resendCooldown = 60;
   let cooldownInterval = null;
 
@@ -121,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     resendCooldown = 60;
     if (loginResendOtpBtn) {
       loginResendOtpBtn.disabled = true;
-      loginResendOtpBtn.innerHTML = `Resend OTP (<span id="loginResendTimer">${resendCooldown}</span>s)`;
+      loginResendOtpBtn.innerHTML = `Resend Code (<span id="loginResendTimer">${resendCooldown}</span>s)`;
     }
 
     cooldownInterval = setInterval(() => {
@@ -134,22 +133,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         cooldownInterval = null;
         if (loginResendOtpBtn) {
           loginResendOtpBtn.disabled = false;
-          loginResendOtpBtn.textContent = "Resend OTP";
+          loginResendOtpBtn.textContent = "Resend Code";
         }
       }
     }, 1000);
   }
 
-  function switchToOtpVerification(phone, messageText = "Verification code sent to your mobile SMS.") {
-    targetPhone = phone;
+  function switchToOtpVerification(email, type = "email", messageText = "Verification code sent to your email inbox.") {
+    targetEmail = email;
+    otpVerificationType = type;
+
     passwordLoginForm.style.display = "none";
     otpRequestForm.style.display = "none";
     loginOtpVerifyForm.style.display = "block";
     if (tabsContainer) tabsContainer.style.display = "none";
 
-    if (loginTitle) loginTitle.textContent = "Verify Mobile Number";
+    if (loginTitle) loginTitle.textContent = "Verify Your Email";
     if (loginSubtitle) {
-      loginSubtitle.innerHTML = `Enter the 6-digit OTP code sent to <strong style="color:var(--kx-text);">${targetPhone}</strong>`;
+      loginSubtitle.innerHTML = `Enter the 6-digit code sent to <strong style="color:var(--kx-text);">${targetEmail}</strong>`;
     }
 
     showMessage(messageText, "success");
@@ -179,24 +180,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       otpRequestForm.style.display = "block";
       passwordLoginForm.style.display = "none";
       loginOtpVerifyForm.style.display = "none";
-      if (loginTitle) loginTitle.textContent = "OTP Sign In";
-      if (loginSubtitle) loginSubtitle.textContent = "Sign in quickly using an SMS verification code";
+      if (loginTitle) loginTitle.textContent = "Email OTP Sign In";
+      if (loginSubtitle) loginSubtitle.textContent = "Sign in quickly using a 6-digit email code";
     }
   }
 
   tabPasswordBtn?.addEventListener("click", () => switchTab("password"));
   tabOtpBtn?.addEventListener("click", () => switchTab("otp"));
 
-  // If redirected with unverified phone
-  if (isUnverifiedParam && phoneParam) {
-    const valid = validatePhone(phoneParam);
-    if (valid.valid) {
-      resendPhoneOtp({ phone: valid.formatted }).catch(() => {});
-      switchToOtpVerification(
-        valid.formatted,
-        "Please complete phone verification to access your account."
-      );
-    }
+  // If redirected with unverified email
+  if (isUnverifiedParam && emailParam && validateEmail(emailParam)) {
+    const cleanEmail = emailParam.trim().toLowerCase();
+    resendSignupOtp({ email: cleanEmail }).catch(() => {});
+    switchToOtpVerification(
+      cleanEmail,
+      "signup",
+      "Email not confirmed. We've sent a verification code to your email."
+    );
   }
 
   // ===========================================================================
@@ -207,14 +207,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       e.preventDefault();
       hideMessage();
 
-      const countryCode = loginCountryCode?.value || "+91";
-      const rawPhone = loginPhone?.value?.trim() || "";
+      const email = loginEmail?.value?.trim().toLowerCase() || "";
       const password = loginPassword?.value || "";
 
-      const phoneValidation = validatePhone(rawPhone, countryCode);
-      if (!phoneValidation.valid) {
-        showMessage(phoneValidation.error, "error");
-        loginPhone?.focus();
+      if (!validateEmail(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        loginEmail?.focus();
         return;
       }
 
@@ -230,27 +228,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        const { data, error, formattedPhone } = await signInWithPhonePassword({
-          phone: rawPhone,
-          password,
-          countryCode
+        const { data, error, cleanEmail } = await signInWithEmailPassword({
+          email,
+          password
         });
 
         if (error) {
-          console.error("[Login] Sign in failed:", error);
           const errorMsg = error.message || "";
 
-          // If phone is unconfirmed, automatically send OTP and switch to OTP screen
+          // If email is unconfirmed, automatically send OTP and switch to OTP screen
           if (
-            errorMsg.toLowerCase().includes("phone not confirmed") ||
+            errorMsg.toLowerCase().includes("email not confirmed") ||
             errorMsg.toLowerCase().includes("unconfirmed") ||
-            errorMsg.toLowerCase().includes("phone is not confirmed")
+            errorMsg.toLowerCase().includes("email is not confirmed")
           ) {
-            // Trigger OTP resend
-            await resendPhoneOtp({ phone: formattedPhone, type: "sms" });
+            // Trigger signup OTP resend
+            await resendSignupOtp({ email: cleanEmail });
             switchToOtpVerification(
-              formattedPhone,
-              "Your mobile number is not verified yet. We just sent an SMS OTP code to verify your account."
+              cleanEmail,
+              "signup",
+              "Email not confirmed. We've sent a verification code to your email."
             );
             return;
           }
@@ -263,14 +260,15 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        // Check if user is phone verified
+        // Check if user is email verified
         if (data?.user) {
-          if (!isPhoneVerified(data.user)) {
+          if (!isEmailVerified(data.user)) {
             // Send OTP and prompt verification
-            await resendPhoneOtp({ phone: formattedPhone, type: "sms" });
+            await resendSignupOtp({ email: cleanEmail });
             switchToOtpVerification(
-              formattedPhone,
-              "Please verify your mobile number to complete signing in."
+              cleanEmail,
+              "signup",
+              "Email not confirmed. We've sent a verification code to your email."
             );
             return;
           }
@@ -282,7 +280,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           }, 600);
         }
       } catch (err) {
-        console.error("[Login] Unexpected error:", err);
         showMessage(formatAuthError(err), "error");
         if (signButton) {
           signButton.disabled = false;
@@ -300,25 +297,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       e.preventDefault();
       hideMessage();
 
-      const countryCode = otpCountryCode?.value || "+91";
-      const rawPhone = otpLoginPhone?.value?.trim() || "";
+      const email = otpLoginEmail?.value?.trim().toLowerCase() || "";
 
-      const phoneValidation = validatePhone(rawPhone, countryCode);
-      if (!phoneValidation.valid) {
-        showMessage(phoneValidation.error, "error");
-        otpLoginPhone?.focus();
+      if (!validateEmail(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        otpLoginEmail?.focus();
         return;
       }
 
       if (sendOtpButton) {
         sendOtpButton.disabled = true;
-        sendOtpButton.textContent = "Sending OTP...";
+        sendOtpButton.textContent = "Sending Code...";
       }
 
       try {
-        const { error, formattedPhone } = await signInWithPhoneOtp({
-          phone: rawPhone,
-          countryCode
+        const { error, cleanEmail } = await signInWithEmailOtp({
+          email
         });
 
         if (error) {
@@ -330,7 +324,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        switchToOtpVerification(formattedPhone, "SMS verification code sent to your mobile!");
+        switchToOtpVerification(
+          cleanEmail,
+          "email",
+          "Verification code sent! Please check your email inbox or spam folder."
+        );
       } catch (err) {
         showMessage(formatAuthError(err), "error");
         if (sendOtpButton) {
@@ -423,7 +421,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const otpToken = getOtpValue();
       if (otpToken.length !== 6) {
-        showMessage("Please enter the complete 6-digit OTP code.", "error");
+        showMessage("Please enter the complete 6-digit verification code.", "error");
         return;
       }
 
@@ -433,14 +431,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        const { data, error } = await verifyPhoneOtp({
-          phone: targetPhone,
+        const { data, error } = await verifyEmailOtp({
+          email: targetEmail,
           token: otpToken,
-          type: "sms"
+          type: otpVerificationType
         });
 
         if (error) {
-          console.error("[Login] Verify OTP error:", error);
           showMessage(formatAuthError(error), "error");
           if (loginVerifyOtpBtn) {
             loginVerifyOtpBtn.disabled = false;
@@ -456,7 +453,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           window.location.href = nextTarget;
         }, 700);
       } catch (err) {
-        console.error("[Login] Verify OTP unexpected error:", err);
         showMessage(formatAuthError(err), "error");
         if (loginVerifyOtpBtn) {
           loginVerifyOtpBtn.disabled = false;
@@ -469,40 +465,44 @@ document.addEventListener("DOMContentLoaded", async () => {
   // RESEND OTP
   if (loginResendOtpBtn) {
     loginResendOtpBtn.addEventListener("click", async () => {
-      if (resendCooldown > 0 || !targetPhone) return;
+      if (resendCooldown > 0 || !targetEmail) return;
 
       loginResendOtpBtn.disabled = true;
       loginResendOtpBtn.textContent = "Resending...";
       hideMessage();
 
       try {
-        const { error } = await resendPhoneOtp({
-          phone: targetPhone,
-          type: "sms"
-        });
+        let resendErr = null;
+        if (otpVerificationType === "signup") {
+          const res = await resendSignupOtp({ email: targetEmail });
+          resendErr = res.error;
+        } else {
+          const res = await signInWithEmailOtp({ email: targetEmail });
+          resendErr = res.error;
+        }
 
-        if (error) {
-          showMessage(formatAuthError(error), "error");
+        if (resendErr) {
+          showMessage(formatAuthError(resendErr), "error");
           loginResendOtpBtn.disabled = false;
-          loginResendOtpBtn.textContent = "Resend OTP";
+          loginResendOtpBtn.textContent = "Resend Code";
           return;
         }
 
-        showMessage("A new verification code has been sent to your mobile.", "success");
-        showAuthToast("OTP resent successfully!");
+        showMessage("A new verification code has been sent to your email.", "success");
+        showAuthToast("Verification code resent!");
         clearOtpInputs();
         startCooldownTimer();
       } catch (err) {
         showMessage(formatAuthError(err), "error");
         loginResendOtpBtn.disabled = false;
-        loginResendOtpBtn.textContent = "Resend OTP";
+        loginResendOtpBtn.textContent = "Resend Code";
       }
     });
   }
 
-  // CHANGE NUMBER (Back to Sign-in)
-  if (loginChangeNumberLink) {
-    loginChangeNumberLink.addEventListener("click", (e) => {
+  // CHANGE EMAIL (Back to Sign-in)
+  if (loginChangeEmailLink) {
+    loginChangeEmailLink.addEventListener("click", (e) => {
       e.preventDefault();
       hideMessage();
 
@@ -529,14 +529,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (googleBtn) {
     googleBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      showMessage("Please sign in with your mobile number to receive order SMS alerts.", "error");
+      showMessage("Sign in with your email and password or email code above.", "error");
     });
   }
 
   if (appleBtn) {
     appleBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      showMessage("Please sign in with your mobile number to receive order SMS alerts.", "error");
+      showMessage("Sign in with your email and password or email code above.", "error");
     });
   }
 });
