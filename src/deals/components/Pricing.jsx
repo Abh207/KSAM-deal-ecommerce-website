@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { requireAuth } from "../../auth/auth.js";
+import { requireAuth, BASE_URL } from "../../auth/auth.js";
 
 /* ============================================================
    DATA
@@ -138,7 +138,7 @@ function Billing({ yearly, setYearly }) {
   );
 }
 
-function PlanCard({ plan, index, shown, selected, onSelect, yearly }) {
+function PlanCard({ plan, index, shown, selected, onSelect, yearly, currentPlan }) {
   const { name, amount, description, icon, accent, features, popular } = plan;
 
   const move = (e) => {
@@ -159,6 +159,7 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly }) {
 
   const yearlyTotal = Math.round(amount * (1 - YEARLY_DISCOUNT) * 12);
   const isSelected = selected === name;
+  const isCurrentPlan = currentPlan && String(currentPlan).toLowerCase() === name.toLowerCase();
 
   return (
     <div
@@ -183,20 +184,28 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly }) {
           {popular && <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#22FF88]/10 blur-3xl" />}
 
           {/* Top row: icon + badge */}
-          <div className="relative flex items-start justify-between gap-3">
+          <div className="relative flex items-start justify-between gap-2">
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl border transition-all duration-500 group-hover:-rotate-6 group-hover:scale-110"
+              className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border transition-all duration-500 group-hover:-rotate-6 group-hover:scale-110 shrink-0"
               style={{ color: accent, borderColor: `${accent}40`, background: `${accent}14`, boxShadow: `0 0 0 0 ${accent}00` }}
             >
-              <Icon name={icon} size={24} />
+              <Icon name={icon} size={22} />
             </div>
 
-            {popular && (
-              <span className="pr-shimmer inline-flex items-center gap-1.5 rounded-full bg-[#FFD60A] pr-pill text-xs font-black text-black">
-                <Icon name="spark" size={13} />
-                MOST POPULAR
-              </span>
-            )}
+            <div className="flex flex-col items-end gap-1.5 shrink-0">
+              {popular && (
+                <span className="pr-shimmer inline-flex items-center gap-1 rounded-full bg-[#FFD60A] pr-pill text-[10px] sm:text-xs font-black text-black shrink-0 shadow-[0_0_15px_rgba(255,214,10,.35)]">
+                  <Icon name="spark" size={12} />
+                  <span>MOST POPULAR</span>
+                </span>
+              )}
+              {isCurrentPlan && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#22FF88]/15 border border-[#22FF88]/40 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-[#22FF88] shrink-0">
+                  <Icon name="check" size={11} />
+                  <span>Current plan</span>
+                </span>
+              )}
+            </div>
           </div>
 
           <h3 className="pr-name relative text-2xl font-black text-white">{name}</h3>
@@ -235,10 +244,14 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly }) {
           <button
             type="button"
             onClick={() => {
-              if (!requireAuth({ type: "pricing", planName: name })) {
+              const returnUrl = `${BASE_URL}profile.html#pricing`;
+              if (!requireAuth({ type: "pricing", planName: name, returnTo: returnUrl })) {
                 return;
               }
               onSelect(isSelected ? null : name);
+              try {
+                localStorage.setItem("ksam_user_plan", name);
+              } catch (e) {}
             }}
             aria-pressed={isSelected}
             className={`pr-cta group/btn relative flex w-full items-center justify-center overflow-hidden rounded-2xl border text-sm font-black transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22FF88] active:scale-[0.97] ${
@@ -262,9 +275,34 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly }) {
 /* ============================================================
    PRICING
 ============================================================ */
-function Pricing() {
+function Pricing({ currentPlan: propPlan }) {
   const [yearly, setYearly] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [userPlan, setUserPlan] = useState(() => {
+    if (propPlan) return propPlan;
+    try {
+      return localStorage.getItem("ksam_user_plan") || null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    if (propPlan) setUserPlan(propPlan);
+  }, [propPlan]);
+
+  // Smooth scroll to #pricing if hash is present
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#pricing") {
+      const timer = setTimeout(() => {
+        const el = document.getElementById("pricing");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const [headRef, headShown] = useReveal(0.3);
   const [gridRef, gridShown] = useReveal(0.12);
@@ -278,56 +316,198 @@ function Pricing() {
 
   const [activePlanIdx, setActivePlanIdx] = useState(1);
 
+  // Activate carousel JS behaviors strictly below 1025px (mobile & tablet only)
+  const [isMobileTablet, setIsMobileTablet] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 1024px)").matches;
+  });
+
   useEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
-
-    const onScroll = () => {
-      const card = el.firstElementChild;
-      if (!card) return;
-      const step = card.offsetWidth + 12;
-      const idx = Math.min(plans.length - 1, Math.max(0, Math.round(el.scrollLeft / step)));
-      setActivePlanIdx(idx);
-    };
-
-    el.addEventListener("scroll", onScroll, { passive: true });
-
-    // Center on Deal Hunter plan on mobile/tablet
-    const timer = setTimeout(() => {
-      if (window.innerWidth < 1024) {
-        const card = el.children[1];
-        if (card) {
-          const left = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
-          el.scrollLeft = Math.max(0, left);
-          setActivePlanIdx(1);
-        }
-      }
-    }, 100);
-
-    return () => {
-      el.removeEventListener("scroll", onScroll);
-      clearTimeout(timer);
-    };
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 1024px)");
+    const handler = (e) => setIsMobileTablet(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const handleGridScroll = (e) => {
-    const el = e.currentTarget;
-    if (!el || el.clientWidth === 0) return;
-    const card = el.firstElementChild;
-    const step = card ? card.offsetWidth + 12 : el.scrollWidth / plans.length;
-    const idx = Math.min(plans.length - 1, Math.max(0, Math.round(el.scrollLeft / step)));
-    setActivePlanIdx(idx);
-  };
+  // Check prefers-reduced-motion
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // Interaction & Visibility refs for Auto-slide
+  const isInteractingRef = useRef(false);
+  const resumeTimerRef = useRef(null);
+  const isCarouselVisibleRef = useRef(true);
+  const isTabVisibleRef = useRef(typeof document !== "undefined" ? !document.hidden : true);
 
   const scrollToPlan = (idx) => {
-    if (!gridRef.current) return;
+    if (!isMobileTablet || !gridRef.current) return;
     const el = gridRef.current;
     const card = el.children[idx];
     if (card) {
-      const left = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+      const left = card.offsetLeft - 16;
       el.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
       setActivePlanIdx(idx);
     }
+  };
+
+  const handlePrev = () => {
+    if (!isMobileTablet) return;
+    const newIdx = Math.max(0, activePlanIdx - 1);
+    scrollToPlan(newIdx);
+  };
+
+  const handleNext = () => {
+    if (!isMobileTablet) return;
+    const newIdx = Math.min(plans.length - 1, activePlanIdx + 1);
+    scrollToPlan(newIdx);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!isMobileTablet) return;
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      handlePrev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      handleNext();
+    }
+  };
+
+  // Interaction handlers for pausing auto-slide on touch/hover/focus
+  const handleInteractionStart = () => {
+    if (!isMobileTablet) return;
+    isInteractingRef.current = true;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  };
+
+  const handleInteractionEnd = () => {
+    if (!isMobileTablet) return;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    // Resume auto-slide 5 seconds after interaction ends
+    resumeTimerRef.current = setTimeout(() => {
+      isInteractingRef.current = false;
+    }, 5000);
+  };
+
+  // Pause when browser tab is hidden
+  useEffect(() => {
+    if (!isMobileTablet) return;
+    const handleVisibility = () => {
+      isTabVisibleRef.current = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [isMobileTablet]);
+
+  // Pause when carousel is off-screen
+  useEffect(() => {
+    if (!isMobileTablet || !gridRef.current) return;
+    const el = gridRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isCarouselVisibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isMobileTablet]);
+
+  // AUTO-SLIDE: advance every 3.5 seconds on mobile & tablet
+  useEffect(() => {
+    if (!isMobileTablet || prefersReducedMotion) return;
+
+    const interval = setInterval(() => {
+      if (
+        isInteractingRef.current ||
+        !isCarouselVisibleRef.current ||
+        !isTabVisibleRef.current ||
+        !gridRef.current
+      ) {
+        return;
+      }
+
+      setActivePlanIdx((prev) => {
+        const next = (prev + 1) % plans.length;
+        const el = gridRef.current;
+        if (el && el.children[next]) {
+          const card = el.children[next];
+          const left = card.offsetLeft - 16;
+          el.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+        }
+        return next;
+      });
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isMobileTablet, prefersReducedMotion]);
+
+  // Observe card visibility on scroll to sync active dot
+  useEffect(() => {
+    if (!isMobileTablet || !gridRef.current) return;
+    const el = gridRef.current;
+    const cards = Array.from(el.children);
+    if (!cards.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let bestIdx = -1;
+        let maxRatio = 0;
+        entries.forEach((entry) => {
+          const idx = cards.indexOf(entry.target);
+          if (idx !== -1 && entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            bestIdx = idx;
+          }
+        });
+        if (bestIdx !== -1 && maxRatio >= 0.35) {
+          setActivePlanIdx(bestIdx);
+        }
+      },
+      {
+        root: el,
+        threshold: [0.35, 0.6, 0.85],
+      }
+    );
+
+    cards.forEach((c) => observer.observe(c));
+    return () => observer.disconnect();
+  }, [isMobileTablet]);
+
+  // Center Deal Hunter on mobile/tablet after mount
+  useEffect(() => {
+    if (!isMobileTablet || !gridRef.current) return;
+    const el = gridRef.current;
+    const timer = setTimeout(() => {
+      const card = el.children[1];
+      if (card) {
+        const left = card.offsetLeft - 16;
+        el.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+        setActivePlanIdx(1);
+      }
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [isMobileTablet]);
+
+  const handleGridScroll = (e) => {
+    if (!isMobileTablet) return;
+    const el = e.currentTarget;
+    if (!el || el.clientWidth === 0) return;
+    const card = el.firstElementChild;
+    const step = card ? card.offsetWidth + 14 : el.scrollWidth / plans.length;
+    const idx = Math.min(plans.length - 1, Math.max(0, Math.round(el.scrollLeft / step)));
+    setActivePlanIdx(idx);
   };
 
   return (
@@ -370,15 +550,52 @@ function Pricing() {
         </div>
 
         {/* Plans */}
-        <div ref={gridRef} onScroll={handleGridScroll} className="pr-grid grid items-stretch">
+        <div
+          ref={gridRef}
+          onScroll={handleGridScroll}
+          onKeyDown={handleKeyDown}
+          onTouchStart={handleInteractionStart}
+          onTouchEnd={handleInteractionEnd}
+          onPointerDown={handleInteractionStart}
+          onPointerUp={handleInteractionEnd}
+          onMouseEnter={handleInteractionStart}
+          onMouseLeave={handleInteractionEnd}
+          onFocus={handleInteractionStart}
+          onBlur={handleInteractionEnd}
+          tabIndex={isMobileTablet ? 0 : undefined}
+          aria-label={isMobileTablet ? "Membership plans carousel. Use left and right arrow keys to navigate." : undefined}
+          className="pr-grid grid items-stretch"
+        >
           {plans.map((plan, i) => (
             <PlanCard key={plan.name} plan={plan} index={i} shown={gridShown}
-              selected={selected} onSelect={setSelected} yearly={yearly} />
+              selected={selected} onSelect={setSelected} yearly={yearly} currentPlan={userPlan} />
           ))}
         </div>
 
+        {/* Previous/Next arrow buttons on tablet only, hidden on phone and desktop */}
+        <div className="pr-arrows" aria-label="Plan carousel navigation">
+          <button
+            type="button"
+            onClick={handlePrev}
+            disabled={activePlanIdx === 0}
+            aria-label="Previous plan"
+            className="pr-arrow-btn pr-arrow-prev"
+          >
+            <Icon name="arrow" size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={activePlanIdx === plans.length - 1}
+            aria-label="Next plan"
+            className="pr-arrow-btn pr-arrow-next"
+          >
+            <Icon name="arrow" size={18} />
+          </button>
+        </div>
+
         {/* Dot indicators for horizontal scroll on mobile/tablet */}
-        <div className="pr-dots" aria-label="Plan indicators">
+        <div className="pr-dots" aria-label="Plan page indicators">
           {plans.map((p, i) => (
             <button
               key={p.name}
@@ -461,7 +678,7 @@ function Pricing() {
         .pr-section .pr-notes { margin-top: 4rem; gap: 1rem 2.5rem; }
         .pr-b110 { filter: blur(110px); }
         .pr-b120 { filter: blur(120px); }
-        .pr-dots { display: none; }
+        .pr-dots, .pr-arrows { display: none; }
         @media (min-width: 640px) {
           .pr-section { padding: 9rem 0; }
           .pr-section .pr-wrap { padding: 0 2rem; }

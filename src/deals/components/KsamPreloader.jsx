@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Sparkles, Flame, Percent, ShoppingBag, ShieldCheck } from "lucide-react";
 import "./KsamPreloader.css";
 
-const STATUS_STEPS = [
-  { threshold: 0, text: "Initializing deal discovery engine..." },
-  { threshold: 28, text: "Scanning top verified retailers..." },
-  { threshold: 58, text: "Curating best discounts & price drops..." },
-  { threshold: 88, text: "Finalizing your experience..." },
-  { threshold: 98, text: "Welcome to KSAM Deal" }
+// Configurable timing constants (milliseconds)
+export const SPLASH_DURATION_MS = 6000; // 12 seconds total duration
+export const REDUCED_MOTION_DURATION_MS = 1500; // 2 seconds for prefers-reduced-motion
+
+export const STATUS_STEPS = [
+  { threshold: 0, text: "Finding the best deals..." },
+  { threshold: 25, text: "Comparing prices across stores..." },
+  { threshold: 50, text: "Curating top discounts & drops..." },
+  { threshold: 75, text: "Almost ready..." },
+  { threshold: 94, text: "Welcome to KSAM Deal" }
 ];
 
 export function KsamPreloader({ isExiting = false, onComplete }) {
@@ -15,6 +19,7 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
   const [currentStatus, setCurrentStatus] = useState(STATUS_STEPS[0].text);
   const animationFrameRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isCompletedRef = useRef(false);
 
   // Deterministic micro-particles for the background
   const particles = useMemo(() => {
@@ -25,25 +30,52 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
       size: `${(i % 3) * 1.5 + 2.5}px`,
       color: i % 2 === 0 ? "rgba(34, 255, 136, 0.75)" : "rgba(56, 189, 248, 0.75)",
       delay: `${(i * 0.45).toFixed(2)}s`,
-      duration: `${(6 + (i % 4)).toFixed(1)}s`
+      duration: `${(8 + (i % 4)).toFixed(1)}s`
     }));
   }, []);
 
+  const triggerSkip = useCallback(() => {
+    if (isCompletedRef.current) return;
+    isCompletedRef.current = true;
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    setInternalProgress(100);
+    setCurrentStatus("Welcome to KSAM Deal");
+    if (onComplete) {
+      onComplete();
+    }
+  }, [onComplete]);
+
+  // Keyboard shortcut: Esc or Enter skips the splash immediately
   useEffect(() => {
-    const DURATION = 1800; // 1.8 seconds smooth cinematic assembly
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" || e.key === "Enter") {
+        e.preventDefault();
+        triggerSkip();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [triggerSkip]);
+
+  useEffect(() => {
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const DURATION = prefersReduced ? REDUCED_MOTION_DURATION_MS : SPLASH_DURATION_MS;
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const progressFraction = Math.min(1, elapsed / DURATION);
 
-      // Ease out cubic for a fluid deceleration toward 100%
-      const easedProgress = 1 - Math.pow(1 - progressFraction, 3);
-      const currentPct = Math.min(100, Math.round(easedProgress * 100));
-
+      // Smooth linear-to-gentle-eased counter reaching 100% exactly at DURATION
+      const currentPct = Math.min(100, Math.floor(progressFraction * 100));
       setInternalProgress(currentPct);
 
-      // Update status message naturally based on current progress
+      // Update status message dynamically through stages
       for (let i = STATUS_STEPS.length - 1; i >= 0; i--) {
         if (currentPct >= STATUS_STEPS[i].threshold) {
           setCurrentStatus(STATUS_STEPS[i].text);
@@ -54,8 +86,12 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
       if (progressFraction < 1) {
         animationFrameRef.current = requestAnimationFrame(updateProgress);
       } else {
-        if (onComplete) {
-          onComplete();
+        if (!isCompletedRef.current) {
+          isCompletedRef.current = true;
+          setInternalProgress(100);
+          if (onComplete) {
+            onComplete();
+          }
         }
       }
     };
@@ -68,6 +104,9 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
       }
     };
   }, [onComplete]);
+
+  // Stage reveal: Tagline appears smoothly after initial brand title reveal (~18% progress)
+  const isTaglineRevealed = internalProgress >= 18;
 
   return (
     <div
@@ -204,7 +243,7 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
           <span className="ksam-word-deal">DEAL</span>
         </h1>
 
-        <p className="ksam-loader-tagline">
+        <p className={`ksam-loader-tagline ${isTaglineRevealed ? "is-revealed" : ""}`}>
           <span>Discover</span>
           <span className="ksam-tagline-dot" />
           <span>Compare</span>
@@ -233,6 +272,30 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
           </span>
         </div>
       </div>
+
+      {/* 6. Subtle Glass Skip Button (44px tap target, Esc/Enter key hint) */}
+      <button
+        type="button"
+        onClick={triggerSkip}
+        className="ksam-loader-skip-btn"
+        aria-label="Skip loading intro"
+        title="Press Esc or Enter to skip"
+      >
+        <span>Skip</span>
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
     </div>
   );
 }

@@ -28,6 +28,9 @@ export const INLINE_PRODUCTS = [
 
 export function useMarquee() {
   const [products, setProducts] = useState(INLINE_PRODUCTS);
+  const [sectionVisible, setSectionVisible] = useState(false);
+  const isSectionVisibleRef = useRef(true);
+
   const track1Ref = useRef(null);
   const track2Ref = useRef(null);
 
@@ -57,6 +60,34 @@ export function useMarquee() {
 
     return () => {
       active = false;
+    };
+  }, []);
+
+  // IntersectionObserver to observe #showcase for gentle fade-in and off-screen pause
+  useEffect(() => {
+    const showcaseEl = document.getElementById("showcase");
+    if (!showcaseEl || !("IntersectionObserver" in window)) {
+      setSectionVisible(true);
+      isSectionVisibleRef.current = true;
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isSectionVisibleRef.current = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            setSectionVisible(true);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(showcaseEl);
+
+    return () => {
+      observer.disconnect();
     };
   }, []);
 
@@ -114,19 +145,27 @@ export function useMarquee() {
     window.addEventListener("scroll", onScroll, { passive: true });
 
     function marqueeLoop() {
+      // Pause animation if prefers-reduced-motion is active
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reducedMotion) {
         animId = requestAnimationFrame(marqueeLoop);
         return;
       }
 
-      let speed1 = isHoveringRow1Ref.current ? 0.35 : 1.1;
-      let speed2 = isHoveringRow2Ref.current ? 0.35 : 1.1;
+      // Pause animation when the section is off screen to save performance
+      if (!isSectionVisibleRef.current) {
+        animId = requestAnimationFrame(marqueeLoop);
+        return;
+      }
+
+      // Hovering/touching a row pauses that row completely (speed = 0)
+      let speed1 = isHoveringRow1Ref.current ? 0 : 1.1;
+      let speed2 = isHoveringRow2Ref.current ? 0 : 1.1;
 
       if (scrollVelocity > 0) {
         const boost = Math.min(scrollVelocity * 0.12, 5.0);
-        speed1 += boost;
-        speed2 += boost;
+        if (speed1 > 0) speed1 += boost;
+        if (speed2 > 0) speed2 += boost;
       }
 
       if (track1Ref.current && halfWidth1 > 0) {
@@ -161,6 +200,7 @@ export function useMarquee() {
     repeatedRow1,
     repeatedRow2,
     isHoveringRow1Ref,
-    isHoveringRow2Ref
+    isHoveringRow2Ref,
+    sectionVisible
   };
 }

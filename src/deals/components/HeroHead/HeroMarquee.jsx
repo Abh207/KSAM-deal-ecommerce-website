@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { resolveAsset } from "./useHeroHead.js";
 import { useMarquee } from "./useMarquee.js";
 import { requireAuth } from "../../../auth/auth.js";
@@ -40,139 +40,70 @@ function burstSparks(originX, originY) {
   }
 }
 
-function ProductCard({ product, onAdd }) {
+function ProductCard({ product, onAdd, onOpenDetails }) {
   const [imgError, setImgError] = useState(false);
   const initialLetter = product.name ? product.name.trim().charAt(0).toUpperCase() : "P";
   const imgSrc = resolveAsset(product.image);
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cardX = (e.clientX - rect.left) / rect.width - 0.5;
-    const cardY = (e.clientY - rect.top) / rect.height - 0.5;
-    e.currentTarget.style.transform = `perspective(800px) rotateY(${cardX * 8}deg) rotateX(${-cardY * 8}deg) translateY(-4px) scale(1.02)`;
+  const numericPrice = typeof product.price === "number"
+    ? product.price
+    : Number(String(product.price || "").replace(/[^0-9.]/g, "")) || 49;
+  const numericOldPrice = typeof product.oldPrice === "number"
+    ? product.oldPrice
+    : Number(String(product.oldPrice || "").replace(/[^0-9.]/g, "")) || Math.round(numericPrice * 1.5);
+  const numericDiscount = typeof product.discount === "number"
+    ? product.discount
+    : Number(String(product.discount || "").replace(/[^0-9]/g, "")) || 40;
+
+  const productPayload = {
+    id: product.id,
+    name: product.name,
+    price: numericPrice,
+    oldPrice: numericOldPrice,
+    discount: numericDiscount,
+    rating: product.rating ? Number(product.rating) : 4.8,
+    image: imgSrc,
+    category: product.category || "Electronics",
+    store: product.store || "Amazon",
+    url: product.url || product.affiliateUrl || "https://www.amazon.in/"
   };
 
-  const handleMouseLeave = (e) => {
-    e.currentTarget.style.transform = "";
+  const handleOpenModal = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (onOpenDetails) {
+      onOpenDetails(productPayload);
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("open-product-details", { detail: productPayload }));
+    window.location.hash = `product-${product.id}`;
   };
 
   const handleAddClick = (e) => {
-    e.stopPropagation();
+    handleOpenModal(e);
+  };
 
-    const productPayload = {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      oldPrice: product.oldPrice,
-      image: imgSrc,
-      category: product.category,
-      store: product.store || "KSAM Deal"
-    };
-
-    if (!requireAuth({ type: "add_to_cart", product: productPayload })) {
-      return;
-    }
-
-    // Visual button feedback
-    const btn = e.currentTarget;
-    btn.classList.add("added");
-    setTimeout(() => {
-      btn.classList.remove("added");
-    }, 1200);
-
-    const cartBtn = document.querySelector("[data-ksam-cart]");
-    if (!cartBtn) {
-      if (onAdd) {
-        onAdd({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          oldPrice: product.oldPrice,
-          image: imgSrc,
-          category: product.category,
-          store: product.store || "KSAM Deal"
-        });
-      }
-      return;
-    }
-
-    const sourceRect = btn.getBoundingClientRect();
-    const cartRect = cartBtn.getBoundingClientRect();
-
-    const clone = document.createElement("div");
-    clone.className = "flying-cart-clone";
-    clone.innerHTML = `<img src="${imgSrc}" alt="" />`;
-    const startX = sourceRect.left + sourceRect.width / 2 - 28;
-    const startY = sourceRect.top + sourceRect.height / 2 - 28;
-    const endX = cartRect.left + cartRect.width / 2 - 24;
-    const endY = cartRect.top + cartRect.height / 2 - 24;
-
-    clone.style.left = `${startX}px`;
-    clone.style.top = `${startY}px`;
-    document.body.appendChild(clone);
-
-    const anim = clone.animate(
-      [
-        {
-          transform: "translate(0, 0) scale(1)",
-          opacity: 1
-        },
-        {
-          transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0.28)`,
-          opacity: 0.4
-        }
-      ],
-      {
-        duration: 650,
-        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-        fill: "forwards"
-      }
-    );
-
-    anim.onfinish = () => {
-      clone.remove();
-
-      // Squash and bounce on Cart Button
-      cartBtn.animate(
-        [
-          { transform: "scale(1)" },
-          { transform: "scale(0.85, 1.15)" },
-          { transform: "scale(1.15, 0.85)" },
-          { transform: "scale(0.95, 1.05)" },
-          { transform: "scale(1)" }
-        ],
-        {
-          duration: 600,
-          easing: "cubic-bezier(0.34, 1.56, 0.64, 1)"
-        }
-      );
-
-      // Spark Burst
-      burstSparks(cartRect.left + cartRect.width / 2, cartRect.top + cartRect.height / 2);
-
-      // Update React cart state & Toast in Deals.jsx
-      if (onAdd) {
-        onAdd({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          oldPrice: product.oldPrice,
-          image: imgSrc,
-          category: product.category,
-          store: product.store || "KSAM Deal"
-        });
-      }
-    };
+  const handleCardClick = (e) => {
+    handleOpenModal(e);
   };
 
   return (
     <div
       className={`product-card accent-${product.accent || "green"}`}
       data-id={product.id}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
     >
-      {/* 1. Header Row */}
+      {/* 1. Top Header Row: Category tag on left, discount badge on right */}
       <div className="card-header-row">
         <span className="card-category-tag" title={product.category}>
           {product.category}
@@ -180,7 +111,7 @@ function ProductCard({ product, onAdd }) {
         <span className="card-discount-badge">{product.discount}</span>
       </div>
 
-      {/* 2. Image Area */}
+      {/* 2. Image Area: 1:1 rounded panel with soft light-gray gradient */}
       <div className="card-img-wrap">
         {!imgError ? (
           <img
@@ -189,8 +120,8 @@ function ProductCard({ product, onAdd }) {
             className="card-prod-img"
             loading="lazy"
             decoding="async"
-            width="200"
-            height="135"
+            width="170"
+            height="170"
             onError={() => setImgError(true)}
           />
         ) : (
@@ -200,34 +131,33 @@ function ProductCard({ product, onAdd }) {
         )}
       </div>
 
-      {/* 3. Product Name */}
+      {/* 3. Product Name (Dark, bold 600, max 2 lines with ellipsis, fixed min-height) */}
       <h3 className="prod-name" title={product.name}>
         {product.name}
       </h3>
 
-      {/* 4. Rating */}
+      {/* 4. Rating (Directly under name, NO divider line) */}
       <div className="prod-rating">
         <span className="rating-star">★</span>
         <span>{product.rating}</span>
       </div>
 
-      {/* 5. Footer Row with Price and Add Button */}
+      {/* 5. Footer Row with Price and Add Button (NO horizontal divider line anywhere) */}
       <div className="card-footer-row">
         <div className="card-price-group">
-          {/* Note: product.price and product.oldPrice render raw price strings (e.g. "$799") */}
           <span className="prod-new-price">{product.price}</span>
           <span className="prod-old-price">{product.oldPrice}</span>
         </div>
         <button
           type="button"
           className="btn-add-cart-round"
-          aria-label={`Add ${product.name} to cart`}
-          title="Add to cart"
+          aria-label={`Open details for ${product.name}`}
+          title="View product details"
           onClick={handleAddClick}
         >
           <svg
-            width="12"
-            height="12"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -244,19 +174,50 @@ function ProductCard({ product, onAdd }) {
   );
 }
 
-export function HeroMarquee({ onAdd }) {
+export function HeroMarquee({ onAdd, onOpenDetails }) {
   const {
     track1Ref,
     track2Ref,
     repeatedRow1,
     repeatedRow2,
     isHoveringRow1Ref,
-    isHoveringRow2Ref
+    isHoveringRow2Ref,
+    sectionVisible
   } = useMarquee();
+
+  const row1TouchTimer = useRef(null);
+  const row2TouchTimer = useRef(null);
+
+  const handleRow1TouchStart = () => {
+    if (row1TouchTimer.current) clearTimeout(row1TouchTimer.current);
+    isHoveringRow1Ref.current = true;
+  };
+
+  const handleRow1TouchEnd = () => {
+    if (row1TouchTimer.current) clearTimeout(row1TouchTimer.current);
+    row1TouchTimer.current = setTimeout(() => {
+      isHoveringRow1Ref.current = false;
+    }, 2000);
+  };
+
+  const handleRow2TouchStart = () => {
+    if (row2TouchTimer.current) clearTimeout(row2TouchTimer.current);
+    isHoveringRow2Ref.current = true;
+  };
+
+  const handleRow2TouchEnd = () => {
+    if (row2TouchTimer.current) clearTimeout(row2TouchTimer.current);
+    row2TouchTimer.current = setTimeout(() => {
+      isHoveringRow2Ref.current = false;
+    }, 2000);
+  };
 
   return (
     <div className="kh-root">
-      <section className="showcase-section" id="showcase">
+      <section
+        className={`showcase-section ${sectionVisible ? "showcase-visible" : ""}`}
+        id="showcase"
+      >
         {/* Section Header */}
         <div className="showcase-header">
           <div className="showcase-eyebrow">Curated Selections</div>
@@ -269,39 +230,56 @@ export function HeroMarquee({ onAdd }) {
           </p>
         </div>
 
-        {/* Dual Marquee Arena */}
-        <div className="marquee-arena" aria-label="Auto-scrolling product showcase">
-          {/* Row 1: Left to Right */}
-          <div
-            className="marquee-row row-left"
-            onMouseEnter={() => {
-              isHoveringRow1Ref.current = true;
-            }}
-            onMouseLeave={() => {
-              isHoveringRow1Ref.current = false;
-            }}
-          >
-            <div className="marquee-track" ref={track1Ref}>
-              {repeatedRow1.map((prod, idx) => (
-                <ProductCard key={`r1-${prod.id}-${idx}`} product={prod} onAdd={onAdd} />
-              ))}
+        {/* Centered Marquee Container (matching product grid max-w-7xl and padding) */}
+        <div className="marquee-container mx-auto max-w-7xl px-3 sm:px-6">
+          {/* Dual Marquee Arena */}
+          <div className="marquee-arena" aria-label="Auto-scrolling product showcase">
+            {/* Row 1: Left to Right */}
+            <div
+              className="marquee-row row-left"
+              onMouseEnter={() => {
+                isHoveringRow1Ref.current = true;
+              }}
+              onMouseLeave={() => {
+                isHoveringRow1Ref.current = false;
+              }}
+              onTouchStart={handleRow1TouchStart}
+              onTouchEnd={handleRow1TouchEnd}
+            >
+              <div className="marquee-track" ref={track1Ref}>
+                {repeatedRow1.map((prod, idx) => (
+                  <ProductCard
+                    key={`r1-${prod.id}-${idx}`}
+                    product={prod}
+                    onAdd={onAdd}
+                    onOpenDetails={onOpenDetails}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Row 2: Right to Left */}
-          <div
-            className="marquee-row row-right"
-            onMouseEnter={() => {
-              isHoveringRow2Ref.current = true;
-            }}
-            onMouseLeave={() => {
-              isHoveringRow2Ref.current = false;
-            }}
-          >
-            <div className="marquee-track" ref={track2Ref}>
-              {repeatedRow2.map((prod, idx) => (
-                <ProductCard key={`r2-${prod.id}-${idx}`} product={prod} onAdd={onAdd} />
-              ))}
+            {/* Row 2: Right to Left */}
+            <div
+              className="marquee-row row-right"
+              onMouseEnter={() => {
+                isHoveringRow2Ref.current = true;
+              }}
+              onMouseLeave={() => {
+                isHoveringRow2Ref.current = false;
+              }}
+              onTouchStart={handleRow2TouchStart}
+              onTouchEnd={handleRow2TouchEnd}
+            >
+              <div className="marquee-track" ref={track2Ref}>
+                {repeatedRow2.map((prod, idx) => (
+                  <ProductCard
+                    key={`r2-${prod.id}-${idx}`}
+                    product={prod}
+                    onAdd={onAdd}
+                    onOpenDetails={onOpenDetails}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

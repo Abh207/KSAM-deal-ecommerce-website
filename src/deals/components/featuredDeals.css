@@ -1,0 +1,753 @@
+/* ==========================================================================
+   KSAM DEAL - FEATURED DEALS HEADER & FILTER CSS
+   Clean, modern e-commerce filter bar styling (Amazon/Flipkart/Myntra style)
+   ========================================================================== */
+
+:root {
+  --fd-accent: #22FF88;
+  --fd-accent-2: #38BDF8;
+  --fd-accent-yellow: #FFD60A;
+  --fd-card: rgba(255, 255, 255, 0.04);
+  --fd-card-hover: rgba(255, 255, 255, 0.07);
+  --fd-border: rgba(255, 255, 255, 0.10);
+  --fd-border-focus: rgba(34, 255, 136, 0.55);
+  --fd-radius: 14px;
+  --fd-text-muted: #9CA3AF;
+  --fd-bg-sticky: rgba(6, 8, 12, 0.94);
+}
+
+/* Base Container & Section */
+#deals {
+  position: relative;
+  width: 100%;
+}
+
+.fd-container {
+  width: 100%;
+  animation: fdFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fdFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   ROW 1: TITLE & SEARCH ROW (Laptop 1025px+)
+   ========================================================================== */
+.fd-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 1025px) {
+  .fd-title-row {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 32px;
+  }
+}
+
+.fd-title-group {
+  flex: 1;
+  max-width: 640px;
+}
+
+/* Live Badge with Pulsing Green Dot */
+.fd-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(34, 255, 136, 0.08);
+  border: 1px solid rgba(34, 255, 136, 0.25);
+  color: var(--fd-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.fd-live-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--fd-accent);
+  box-shadow: 0 0 10px var(--fd-accent);
+}
+
+.fd-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fd-accent);
+  opacity: 0.75;
+  animation: fdLivePulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes fdLivePulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Heading: ~40px on laptop, white and yellow */
+.fd-heading {
+  font-size: clamp(24px, 3.2vw, 40px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.fd-heading-highlight {
+  color: var(--fd-accent-yellow);
+}
+
+.fd-subtitle {
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: var(--fd-text-muted);
+  line-height: 1.5;
+  max-width: 560px;
+}
+
+/* Search Box: 420px on laptop, 52px tall, rounded 14px, soft green glow ring */
+.fd-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 52px;
+  background: var(--fd-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--fd-border);
+  border-radius: var(--fd-radius);
+  padding: 0 14px 0 16px;
+  gap: 10px;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1025px) {
+  .fd-search-box {
+    width: 420px;
+    max-width: 420px;
+    flex-shrink: 0;
+  }
+}
+
+.fd-search-box:focus-within {
+  border-color: var(--fd-border-focus);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.18), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.fd-search-icon {
+  color: var(--fd-accent-2);
+  flex-shrink: 0;
+}
+
+.fd-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  min-width: 0;
+  padding: 0;
+}
+
+.fd-search-input::placeholder {
+  color: #6B7280;
+  font-size: 13.5px;
+}
+
+.fd-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.fd-search-clear:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.08);
+}
+
+.fd-shortcut-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #9CA3AF;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ==========================================================================
+   ROW 2: ONE TIDY FILTER BAR (Rounded Glass Panel with 16px padding)
+   ========================================================================== */
+.fd-filter-panel {
+  position: relative;
+  background: var(--fd-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--fd-border);
+  border-radius: var(--fd-radius);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (min-width: 1025px) {
+  .fd-filter-panel {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    gap: 20px;
+  }
+}
+
+/* Left: Category Chips Wrapper */
+.fd-chips-wrapper {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Subtle fade at right/left overflow edges */
+.fd-chips-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 2px 0;
+}
+
+.fd-chips-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Chip: 40px tall pill, padding 0 16px */
+.fd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid var(--fd-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--fd-text-muted);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  user-select: none;
+}
+
+@media (hover: hover) {
+  .fd-chip:hover {
+    background: var(--fd-card-hover);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+}
+
+.fd-chip:focus-visible {
+  border-color: var(--fd-accent);
+  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.35);
+}
+
+/* Selected Chip: Solid green-to-cyan gradient with dark text and soft glow */
+.fd-chip-active {
+  background: linear-gradient(135deg, var(--fd-accent) 0%, var(--fd-accent-2) 100%) !important;
+  color: #041009 !important;
+  font-weight: 700 !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 18px rgba(34, 255, 136, 0.32), 0 0 10px rgba(56, 189, 248, 0.2) !important;
+}
+
+@media (hover: hover) {
+  .fd-chip-active:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 22px rgba(34, 255, 136, 0.42) !important;
+  }
+}
+
+.fd-chip-icon {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fd-chip-label {
+  line-height: 1;
+}
+
+/* Right: Selects Group (Store & Sort) */
+.fd-selects-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.fd-select-wrapper {
+  position: relative;
+  min-width: 175px;
+  flex: 1;
+}
+
+@media (min-width: 1025px) {
+  .fd-select-wrapper {
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
+}
+
+/* Select: 44px tall, min-width 170px+, single-line text without wrapping */
+.fd-select {
+  width: 100%;
+  height: 44px;
+  padding: 0 36px 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--fd-border);
+  background: rgba(14, 16, 22, 0.85);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 42px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.fd-select:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(20, 24, 32, 0.95);
+}
+
+.fd-select:focus {
+  border-color: var(--fd-accent);
+  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.25);
+}
+
+.fd-select option {
+  background: #0d1117;
+  color: #ffffff;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+/* Single Chevron Inside Right Edge (Never wraps) */
+.fd-select-chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  pointer-events: none;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.fd-select-wrapper:focus-within .fd-select-chevron {
+  color: var(--fd-accent);
+}
+
+/* ==========================================================================
+   ROW 3: RESULT BAR (No divider line, tidy spacing)
+   ========================================================================== */
+.fd-result-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.fd-result-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Count: Number bold in white, "deals shown" muted */
+.fd-count-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 13.5px;
+  line-height: 1;
+}
+
+.fd-count-num {
+  font-weight: 800;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.fd-count-label {
+  color: var(--fd-text-muted);
+  font-weight: 500;
+}
+
+/* Active Filter Removable Chips */
+.fd-active-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.fd-active-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: rgba(34, 255, 136, 0.08);
+  border: 1px solid rgba(34, 255, 136, 0.3);
+  color: var(--fd-accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.fd-active-chip:hover {
+  background: rgba(34, 255, 136, 0.18);
+  border-color: var(--fd-accent);
+  transform: scale(1.03);
+}
+
+.fd-clear-all-btn {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.15s ease;
+}
+
+.fd-clear-all-btn:hover {
+  color: #ffffff;
+}
+
+/* Right: Refresh Button (40px tall, outlined pill, icon & text separated 8px) */
+.fd-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fd-border);
+  color: #E5E7EB;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.fd-refresh-btn:hover:not(:disabled) {
+  border-color: var(--fd-accent);
+  color: var(--fd-accent);
+  background: rgba(34, 255, 136, 0.06);
+  transform: translateY(-1px);
+}
+
+.fd-refresh-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.fd-refresh-icon {
+  flex-shrink: 0;
+  color: #9CA3AF;
+  transition: color 0.2s ease;
+}
+
+.fd-refresh-btn:hover:not(:disabled) .fd-refresh-icon {
+  color: var(--fd-accent);
+}
+
+/* Note Row: Muted 13px line with small ⓘ icon */
+.fd-note-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6B7280;
+  line-height: 1.4;
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+.fd-note-icon {
+  color: #6B7280;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   TABLET RESPONSIVE (768px to 1024px)
+   Search on its own row, chips in one scroll row, selects + result bar on next
+   ========================================================================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .fd-title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .fd-search-box {
+    width: 100%;
+    max-width: 100%;
+    height: 50px;
+  }
+
+  .fd-filter-panel {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .fd-selects-group {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .fd-select-wrapper {
+    min-width: 0;
+  }
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE (max-width: 767px)
+   ========================================================================== */
+@media (max-width: 767px) {
+  .fd-title-row {
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .fd-live-badge {
+    padding: 3px 10px;
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  .fd-heading {
+    font-size: clamp(24px, 6.5vw, 30px);
+  }
+
+  .fd-subtitle {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .fd-search-box {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    padding: 0 12px;
+  }
+
+  .fd-search-input {
+    font-size: 13.5px;
+  }
+
+  .fd-shortcut-hint {
+    display: none; /* Hide keyboard hint on touch phones */
+  }
+
+  /* Sticky Filter Bar on Mobile */
+  .fd-filter-panel {
+    position: sticky;
+    top: var(--nav-height, 64px);
+    z-index: 45;
+    background: var(--fd-bg-sticky);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0;
+    margin-left: -12px;
+    margin-right: -12px;
+    padding: 10px 12px;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .fd-chips-scroll {
+    scroll-snap-type: x mandatory;
+    gap: 6px;
+    mask-image: linear-gradient(to right, #000 0%, #000 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 90%, transparent 100%);
+    padding-bottom: 2px;
+  }
+
+  .fd-chip {
+    height: 38px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    scroll-snap-align: start;
+    min-height: 44px; /* Accessible tap target */
+  }
+
+  /* Selects: 2 Equal-Width Columns Side by Side on Mobile */
+  .fd-selects-group {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .fd-select-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .fd-select {
+    height: 44px;
+    padding: 0 30px 0 10px;
+    font-size: 12px;
+  }
+
+  .fd-select-chevron {
+    right: 8px;
+  }
+
+  /* Result Bar on Mobile: Count on left, Refresh on right */
+  .fd-result-bar {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .fd-result-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .fd-active-chips {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .fd-refresh-btn {
+    height: 38px;
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+
+  .fd-note-row {
+    font-size: 12px;
+    line-height: 1.35;
+    margin-bottom: 20px;
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .fd-container,
+  .fd-live-dot::after,
+  .fd-chip,
+  .fd-select,
+  .fd-refresh-btn,
+  .fd-search-box {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

@@ -2,13 +2,14 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { createRoot } from "react-dom/client";
 
 import { supabase } from "../lib/supabase";
-import { getSession, onAuthChange, BASE_URL } from "../auth/auth.js";
+import { getSession, onAuthChange, BASE_URL, getPendingAction, clearPendingAction, getStoredSessionSync } from "../auth/auth.js";
 import { getPriceAlerts, getRecentlyViewed } from "../deals/services/accountActivityService.js";
 
 import Footer from "../deals/components/Footer.jsx";
 import Navbar from "../deals/components/Navbar.jsx";
 import Newsletter from "../deals/components/Newsletter.jsx";
 import Toast from "../deals/components/Toast.jsx";
+import Pricing from "../deals/components/Pricing.jsx";
 
 import ProfileHero from "./components/ProfileHero.jsx";
 import SectionNav, { SECTIONS } from "./components/SectionNav.jsx";
@@ -32,6 +33,7 @@ import UnsavedChangesModal from "./components/UnsavedChangesModal.jsx";
 
 import "../deals/tailwind-generated.css";
 import "../deals/deals.css";
+import "../deals/responsive-cards.css";
 import "./profile.css";
 import "./kx-spotlight.css";
 import "../styles/kx-tokens.css";
@@ -207,6 +209,35 @@ export function ProfileApp() {
     };
     window.addEventListener("ksam-theme-changed", handleThemeChange);
     return () => window.removeEventListener("ksam-theme-changed", handleThemeChange);
+  }, []);
+
+  // Handle pending action (e.g. from pricing login redirect)
+  useEffect(() => {
+    const pending = getPendingAction();
+    const hasSession = Boolean(getStoredSessionSync());
+    if (pending && hasSession) {
+      if (pending.pending?.type === "pricing") {
+        const planName = pending.pending.planName || "plan";
+        setToast(`Membership ${planName} selected!`);
+        try {
+          localStorage.setItem("ksam_user_plan", planName);
+        } catch (e) {}
+      }
+      clearPendingAction();
+    }
+  }, []);
+
+  // Smooth-scroll to #pricing if loaded with that hash
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#pricing") {
+      const scrollTimer = setTimeout(() => {
+        const el = document.getElementById("pricing");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 400);
+      return () => clearTimeout(scrollTimer);
+    }
   }, []);
 
   // Unsaved changes confirmation dialog state
@@ -750,6 +781,9 @@ export function ProfileApp() {
 
       {/* Dynamic Products Showcase Strip (Dual-row seamless loop) */}
       <ProfileProductStrip />
+
+      {/* Pricing Section (Moved from Deals / Home Page) */}
+      <Pricing currentPlan={profile?.preferences?.plan || profile?.plan} />
 
       {/* Newsletter Section with 48px bottom spacing */}
       <div className="ks-profile-newsletter-wrap relative z-10 pb-12">

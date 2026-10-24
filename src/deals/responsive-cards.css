@@ -748,3 +748,1329 @@
     }
   }
 }
+
+/* ==========================================================================
+   PHONE BLOCK: @media (max-width: 767px)
+   Covers Jobs 1, 2, 3 and Job 4 (Phone layout)
+   Strictly scoped to phone viewports.
+========================================================================== */
+@media (max-width: 767px) {
+  /* ------------------------------------------------------------------------
+     JOB 1: "Why KSAM Deal" Feature Cards (Phone)
+     - 2 cards per row (repeat(2, minmax(0, 1fr)))
+     - 12px gap, 16px side padding
+     - 14px inner padding, min 14px body text, 16-18px headings
+     - Wide cards (Multiple Stores & Smart Discovery) span 2 columns
+  ------------------------------------------------------------------------ */
+  .ft-section {
+    padding: clamp(2.5rem, 6vw, 3.75rem) 0 !important;
+  }
+  .ft-section .ft-wrap {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .ft-section .ft-head h2 {
+    font-size: clamp(24px, 7vw, 34px) !important;
+    line-height: 1.15 !important;
+  }
+  .ft-section .ft-head-right p {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 2 cards per row */
+  .ft-section .ft-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-top: 1.75rem !important;
+    width: 100% !important;
+  }
+  .ft-section .ft-grid > div {
+    order: initial !important;
+    grid-column: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Wide cards span both columns so the 6 cards fill 4 rows with zero gaps */
+  .ft-section .ft-grid > div:nth-child(5) {
+    grid-column: 1 / -1 !important;
+  }
+  .ft-section .ft-grid > div:nth-child(6) {
+    grid-column: 1 / -1 !important;
+  }
+
+  .ft-section .ft-card {
+    height: 100% !important;
+    border-radius: 20px !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  .ft-section .ft-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .ft-section .ft-article {
+    padding: 14px !important; /* reduced to 14px inner padding */
+    border-radius: 19px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+  }
+  .ft-section .ft-icon {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    border-radius: 10px !important;
+  }
+  .ft-section .ft-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .ft-section .ft-body {
+    margin-top: 0.65rem !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+  }
+  .ft-section .ft-body h3 {
+    font-size: clamp(15.5px, 3.5vw, 17.5px) !important;
+    line-height: 1.25 !important;
+  }
+  .ft-section .ft-text {
+    font-size: clamp(14px, 3vw, 14.5px) !important; /* minimum 14px body text */
+    line-height: 1.45 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+  }
+  .ft-section .ft-vis {
+    margin-top: 0.85rem !important;
+    padding-top: 0.75rem !important;
+    min-height: 3rem !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  /* Mini visuals shrink and wrap cleanly */
+  .ft-section .ft-vis-search {
+    min-height: 38px !important;
+    padding: 0.35rem 0.65rem !important;
+    border-radius: 10px !important;
+    font-size: 11.5px !important;
+    width: 100% !important;
+    gap: 0.4rem !important;
+  }
+  .ft-section .ft-vis-compare {
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+  .ft-section .ft-bar-row {
+    grid-template-columns: 2.8rem 1fr 2.8rem !important;
+    gap: 0.35rem !important;
+    font-size: 10.5px !important;
+  }
+  .ft-section .ft-vis-savings {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: baseline !important;
+    justify-content: space-between !important;
+    gap: 4px 8px !important;
+    width: 100% !important;
+  }
+  .ft-section .ft-vis-savings .text-2xl {
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+  }
+  .ft-section .ft-off {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    padding: 0.25rem 0.55rem !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+  .ft-section .ft-vis-alerts {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .ft-section .ft-bell {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    border-radius: 999px !important;
+  }
+  .ft-section .ft-toast {
+    padding: 0.35rem 0.65rem !important;
+    border-radius: 8px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+  }
+  .ft-section .ft-vis-stores {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+  }
+  .ft-section .ft-avatar {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
+  }
+  .ft-section .ft-vis-smart {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+  .ft-section .ft-chip-smart {
+    padding: 0.25rem 0.55rem !important;
+    font-size: 11px !important;
+    border-radius: 999px !important;
+  }
+  .ft-section .ft-link {
+    min-height: 44px !important;
+    padding: 0.65rem 1.25rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    font-size: 14px !important;
+  }
+  .ft-section .ft-cta-btn {
+    min-height: 44px !important;
+    padding: 0.75rem 1.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     JOB 2: Pricing Plans Carousel (Phone)
+     - Horizontal scroll-snap carousel
+     - 2 cards visible at once (calc((100% - 14px) / 2))
+     - 14px gap, 16px side padding
+     - Fixed MOST POPULAR badge and Secure checkout overlap
+     - Dot progress animation
+  ------------------------------------------------------------------------ */
+  .pr-section {
+    padding: clamp(2.5rem, 6vw, 3.75rem) 0 !important;
+  }
+  .pr-section .pr-wrap {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .pr-section .pr-head h2 {
+    font-size: clamp(24px, 7vw, 34px) !important;
+    line-height: 1.15 !important;
+  }
+  .pr-section .pr-bill-btn {
+    min-height: 44px !important;
+  }
+
+  /* Scroll-snap carousel container */
+  .pr-section .pr-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-padding-left: 16px !important;
+    scroll-padding-right: 16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.75rem !important;
+    gap: 14px !important;
+    margin-top: 1.75rem !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .pr-section .pr-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* 2 cards visible */
+  .pr-section .pr-grid > div {
+    flex: 0 0 calc((100% - 14px) / 2) !important;
+    width: calc((100% - 14px) / 2) !important;
+    min-width: 140px !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: normal !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  .pr-section .pr-card {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 20px !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  .pr-section .pr-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .pr-section .pr-clip {
+    border-radius: 20px !important;
+  }
+  .pr-section .pr-article {
+    padding: 12px 10px !important;
+    border-radius: 19px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Most Popular badge fix */
+  .pr-section .pr-pill {
+    padding: 2px 5px !important;
+    font-size: clamp(8px, 1.8vw, 9.5px) !important;
+    gap: 2px !important;
+    letter-spacing: 0.02em !important;
+    white-space: nowrap !important;
+  }
+  .pr-section .pr-pill svg {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  .pr-section .pr-name {
+    margin-top: 0.65rem !important;
+    font-size: clamp(14px, 3.6vw, 17px) !important;
+    line-height: 1.2 !important;
+    word-break: normal !important;
+  }
+  .pr-section .pr-desc {
+    margin-top: 0.2rem !important;
+    font-size: clamp(10px, 2.4vw, 11.5px) !important;
+    line-height: 1.3 !important;
+    min-height: 2rem !important;
+  }
+
+  /* Price without "₹9..." clipping */
+  .pr-section .pr-price {
+    margin-top: 0.65rem !important;
+    width: 100% !important;
+  }
+  .pr-section .pr-price > div {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: baseline !important;
+    gap: 2px 4px !important;
+  }
+  .pr-section .pr-price .text-5xl {
+    font-size: clamp(19px, 5vw, 24px) !important;
+    line-height: 1 !important;
+  }
+  .pr-section .pr-price .pr-sub {
+    font-size: clamp(10px, 2.5vw, 12px) !important;
+    line-height: 1 !important;
+    padding-bottom: 0 !important;
+  }
+  .pr-section .pr-note {
+    margin-top: 0.25rem !important;
+    font-size: clamp(9px, 2vw, 10.5px) !important;
+    line-height: 1.3 !important;
+    min-height: 1.6rem !important;
+  }
+  .pr-section .pr-sep {
+    margin: 0.55rem 0 !important;
+  }
+
+  /* Features list without "Eve..." clipping */
+  .pr-section .pr-list {
+    gap: 0.4rem !important;
+    flex: 1 1 auto !important;
+    margin-bottom: 0.65rem !important;
+  }
+  .pr-section .pr-list li {
+    font-size: clamp(10px, 2.5vw, 11.5px) !important;
+    line-height: 1.3 !important;
+    gap: 4px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    white-space: normal !important;
+    word-break: normal !important;
+  }
+  .pr-section .pr-tick {
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
+    margin-top: 1px !important;
+  }
+  .pr-section .pr-tick svg {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  /* Pinned Get Started Button */
+  .pr-section .pr-cta {
+    margin-top: auto !important;
+    min-height: 44px !important;
+    padding: 0.5rem 0.4rem !important;
+    font-size: clamp(11px, 2.7vw, 12.5px) !important;
+    border-radius: 12px !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+
+  /* Dots indicator with auto-slide timer progress */
+  .pr-dots {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 1.25rem !important;
+    width: 100% !important;
+  }
+  .pr-dot {
+    width: 8px !important;
+    height: 8px !important;
+    min-width: 8px !important;
+    min-height: 8px !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  .pr-dot-active {
+    width: 24px !important;
+    background: #22FF88 !important;
+    box-shadow: 0 0 10px rgba(34, 255, 136, 0.5) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  @keyframes dotProgressAnim {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+  .pr-dot-active::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.45);
+    transform-origin: left center;
+    animation: dotProgressAnim 3.5s linear infinite;
+  }
+
+  .pr-arrows {
+    display: none !important;
+  }
+
+  /* Trust badges row on phone: padded bottom to avoid scroll-to-top overlap */
+  .pr-section .pr-notes {
+    margin-top: 1.5rem !important;
+    padding-bottom: 5.5rem !important; /* Prevents scroll-to-top button from overlapping */
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px 16px !important;
+    width: 100% !important;
+  }
+  .pr-section .pr-notes span {
+    white-space: nowrap !important;
+    font-size: clamp(11.5px, 2.8vw, 13px) !important;
+    gap: 6px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     JOB 3: Deals Toolbar on Phone
+     - Clean modern layout now managed in featuredDeals.css
+  ------------------------------------------------------------------------ */
+  #deals {
+    padding: 2.5rem 0 !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     JOB 4: Products / Deals Grid (Phone)
+     - Exactly TWO product cards per row
+     - 12px gap, 12px side padding
+     - 4/5 aspect ratio for image
+  ------------------------------------------------------------------------ */
+  #deals > div {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  #deals .deals-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-top: 1.25rem !important;
+  }
+  .deal-product-card .deal-card-img-wrap,
+  .product-card .product-card-img-panel,
+  .ksam-product-card .ksam-card-img-wrap {
+    aspect-ratio: 4 / 5 !important;
+  }
+  .product-card,
+  .deal-product-card {
+    border-radius: 24px !important;
+    padding: 12px !important;
+    height: 100% !important;
+    background-color: #0b0b0d !important;
+  }
+}
+
+/* ==========================================================================
+   TABLET BLOCK: @media (min-width: 768px) and (max-width: 1024px)
+   Covers Jobs 1, 2, 3 and Job 4 (Tablet layout)
+   Strictly scoped to tablet viewports.
+========================================================================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* ------------------------------------------------------------------------
+     JOB 1: "Why KSAM Deal" Feature Cards (Tablet)
+     - 2 cards per row (repeat(2, minmax(0, 1fr)))
+     - 20px gap, 24px side padding, 20px inner padding
+  ------------------------------------------------------------------------ */
+  .ft-section {
+    padding: 4.5rem 0 !important;
+  }
+  .ft-section .ft-wrap {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  .ft-section .ft-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+    margin-top: 2.75rem !important;
+    width: 100% !important;
+  }
+  .ft-section .ft-grid > div {
+    order: initial !important;
+    grid-column: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .ft-section .ft-card {
+    height: 100% !important;
+    border-radius: 24px !important;
+  }
+  .ft-section .ft-article {
+    padding: 20px !important;
+    border-radius: 23px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+  }
+  .ft-section .ft-icon {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 12px !important;
+  }
+  .ft-section .ft-body {
+    margin-top: 1rem !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  .ft-section .ft-body h3 {
+    font-size: 18px !important;
+    line-height: 1.25 !important;
+  }
+  .ft-section .ft-text {
+    font-size: 14.5px !important;
+    line-height: 1.55 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+  }
+  .ft-section .ft-vis {
+    margin-top: 1.15rem !important;
+    padding-top: 0.85rem !important;
+    min-height: 3.5rem !important;
+  }
+  .ft-section .ft-link {
+    min-height: 44px !important;
+    padding: 0.75rem 1.5rem !important;
+  }
+  .ft-section .ft-cta-btn {
+    min-height: 44px !important;
+    padding: 0.85rem 1.75rem !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     JOB 2: Pricing Plans Carousel (Tablet)
+     - 2 cards fully visible with 24px gap
+     - Arrow buttons visible
+     - Dot progress animation
+  ------------------------------------------------------------------------ */
+  .pr-section {
+    padding: 4.5rem 0 !important;
+  }
+  .pr-section .pr-wrap {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  .pr-section .pr-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-padding-left: 24px !important;
+    scroll-padding-right: 24px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    gap: 24px !important;
+    margin-top: 2.75rem !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .pr-section .pr-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  .pr-section .pr-grid > div {
+    flex: 0 0 calc((100% - 24px) / 2) !important;
+    width: calc((100% - 24px) / 2) !important;
+    scroll-snap-align: start !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  .pr-section .pr-card {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 24px !important;
+  }
+  .pr-section .pr-article {
+    padding: 22px !important;
+    border-radius: 23px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+  }
+  .pr-section .pr-cta {
+    margin-top: auto !important;
+    min-height: 44px !important;
+    padding: 0.85rem 1.25rem !important;
+    font-size: 14px !important;
+  }
+  .pr-dots {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 1.5rem !important;
+  }
+  .pr-dot-active {
+    width: 24px !important;
+    background: #22FF88 !important;
+    box-shadow: 0 0 10px rgba(34, 255, 136, 0.5) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  .pr-dot-active::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.45);
+    transform-origin: left center;
+    animation: dotProgressAnim 3.5s linear infinite;
+  }
+  .pr-arrows {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    margin-top: 1.25rem !important;
+  }
+  .pr-arrow-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 999px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+  }
+  .pr-arrow-btn:hover {
+    background: rgba(34, 255, 136, 0.15) !important;
+    border-color: #22FF88 !important;
+    color: #22FF88 !important;
+  }
+  .pr-arrow-prev svg {
+    transform: rotate(180deg) !important;
+  }
+  .pr-section .pr-notes {
+    margin-top: 2.5rem !important;
+    gap: 12px 24px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     JOB 3: Deals Toolbar on Tablet
+     - Clean modern layout now managed in featuredDeals.css
+  ------------------------------------------------------------------------ */
+
+  /* ------------------------------------------------------------------------
+     JOB 4: Products / Deals Grid (Tablet)
+     - Exactly THREE product cards per row, 16px gap
+  ------------------------------------------------------------------------ */
+  #deals .deals-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+  .deal-product-card .deal-card-img-wrap,
+  .product-card .product-card-img-panel,
+  .ksam-product-card .ksam-card-img-wrap {
+    aspect-ratio: 1 / 1 !important;
+  }
+  .product-card,
+  .deal-product-card {
+    border-radius: 24px !important;
+    padding: 14px !important;
+    height: 100% !important;
+    background-color: #0b0b0d !important;
+  }
+}
+
+/* ==========================================================================
+   DESKTOP BLOCK: @media (min-width: 1025px)
+   Covers Job 4 Exception: Products / deals grid redesigned for ALL screens
+   Desktop layout for Jobs 1-3 remains 100% untouched.
+========================================================================== */
+@media (min-width: 1025px) {
+  /* ------------------------------------------------------------------------
+     JOB 4: Products / Deals Grid (Desktop)
+     - Exactly FOUR per row
+     - 24px gap
+     - Centered container
+     - 1/1 image aspect ratio
+  ------------------------------------------------------------------------ */
+  #deals .deals-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 24px !important;
+    width: 100% !important;
+    max-width: 80rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .deal-product-card .deal-card-img-wrap,
+  .product-card .product-card-img-panel {
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .product-card,
+  .deal-product-card {
+    border-radius: 24px !important;
+    padding: 16px !important;
+    height: 100% !important;
+    background-color: #0b0b0d !important;
+  }
+}
+
+/* ==========================================================================
+   PRODUCT CARDS (IMAGE 2) & PRODUCT DETAILS (IMAGE 3) - PIXEL-EXACT STYLES
+   ========================================================================== */
+:root {
+  --card-bg: linear-gradient(145deg, #000000 0%, #0d0d0d 35%, #2b2b2b 70%, #5a5a5a 100%);
+  --card-glow: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 62%);
+  --details-bg: linear-gradient(135deg, #000000 0%, #121212 40%, #3a3a3a 75%, #bdbdbd 130%);
+}
+
+/* 1. Base Product Card (Laptop & Default) */
+.ksam-product-card {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  width: 100% !important;
+  background: var(--card-bg) !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 22px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+  overflow: hidden !important;
+  outline: none !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  animation: cardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ksam-product-card:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 2px !important;
+}
+
+/* Soft white glow layer behind product image */
+.ksam-card-glow-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--card-glow);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Badge (top-left) */
+.ksam-card-badge-wrap {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.ksam-card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  background-color: #0a6cff !important;
+  color: #ffffff !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1;
+  box-shadow: 0 2px 14px rgba(10, 108, 255, 0.5);
+}
+
+/* Heart button (top-right) */
+.ksam-card-heart-btn {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ksam-card-heart-icon {
+  width: 34px;
+  height: 34px;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.ksam-card-heart-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  border-radius: 50%;
+}
+
+/* Image container: Centered at top, aspect ratio 1/1, contain, directly on dark gradient */
+.ksam-card-img-wrap {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  aspect-ratio: 1 / 1 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ksam-card-img {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  max-height: 55%;
+  object-fit: contain;
+  padding: 8px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.ksam-card-img-skeleton {
+  position: absolute;
+  inset: 12px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.03) 100%);
+  animation: pulse 1.8s infinite ease-in-out;
+}
+
+.ksam-card-img-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border-radius: 16px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Content Area */
+.ksam-card-content {
+  position: relative;
+  z-index: 10;
+  margin-top: 14px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Product title: white, bold 700, 20px laptop, exactly 1 line ellipsis */
+.ksam-card-title {
+  color: #ffffff !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  text-align: left !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-height: 26px !important;
+}
+
+/* Price row on one line */
+.ksam-card-price-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ksam-card-price-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ksam-card-price {
+  font-size: 31px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em;
+}
+
+.ksam-card-old-price {
+  font-size: 13px !important;
+  color: #9ca3af !important;
+  margin-top: 3px !important;
+  font-weight: 400 !important;
+  text-decoration: line-through;
+}
+
+.ksam-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ksam-card-rating-num {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+/* Button: Full-width WHITE pill (#ffffff), border-radius 999px, height 54px laptop */
+.ksam-card-btn-wrap {
+  margin-top: auto;
+  padding-top: 18px;
+  width: 100%;
+}
+
+.ksam-view-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  height: 54px !important;
+  border-radius: 9999px !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15) !important;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.ksam-view-btn:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 3px !important;
+}
+
+/* Laptop hover interactions (laptop only: @media (hover: hover) and min-width: 1025px) */
+@media (hover: hover) and (min-width: 1025px) {
+  .ksam-product-card {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.3s ease,
+                box-shadow 0.3s ease !important;
+  }
+  .ksam-product-card:hover {
+    transform: translateY(-4px) !important;
+    border-color: rgba(255, 255, 255, 0.28) !important;
+    box-shadow: 0 16px 36px -8px rgba(255, 255, 255, 0.14), 0 0 24px rgba(255, 255, 255, 0.08) !important;
+  }
+  .ksam-product-card:hover .ksam-card-img {
+    transform: scale(1.05) !important;
+  }
+  .ksam-view-btn:hover {
+    background-color: #e8e8e8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.28) !important;
+  }
+}
+
+/* Phone media query (max-width: 767px): 2 cards per row, gap 12px, padding 12px, inner padding 14px */
+@media (max-width: 767px) {
+  .ksam-product-card {
+    padding: 14px !important;
+  }
+  .ksam-card-badge-wrap {
+    top: 14px;
+    left: 14px;
+  }
+  .ksam-card-badge {
+    height: 28px;
+    padding: 0 12px;
+    font-size: 13px !important;
+  }
+  .ksam-card-heart-btn {
+    top: 14px;
+    right: 14px;
+  }
+  .ksam-card-heart-icon {
+    width: 26px;
+    height: 26px;
+  }
+  .ksam-card-img-wrap {
+    aspect-ratio: 4 / 5 !important;
+  }
+  .ksam-card-title {
+    font-size: clamp(14px, 4vw, 16px) !important;
+    white-space: normal !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    min-height: 40px !important;
+  }
+  .ksam-card-price {
+    font-size: clamp(20px, 5.5vw, 24px) !important;
+  }
+  .ksam-card-rating-num {
+    font-size: 15px !important;
+  }
+  .ksam-view-btn {
+    height: 46px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Tablet media query (768px to 1024px): 3 per row, gap 16px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .ksam-product-card {
+    padding: 16px !important;
+  }
+  .ksam-card-badge-wrap {
+    top: 16px;
+    left: 16px;
+  }
+  .ksam-card-heart-btn {
+    top: 16px;
+    right: 16px;
+  }
+  .ksam-card-title {
+    font-size: 18px !important;
+  }
+  .ksam-card-price {
+    font-size: 26px !important;
+  }
+  .ksam-view-btn {
+    height: 50px !important;
+    font-size: 19px !important;
+  }
+}
+
+/* Animations */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   PRODUCT DETAILS MODAL (IMAGE 3) - EXACT RECREATION
+   ========================================================================== */
+.product-details-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.88) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1.5rem !important;
+  box-sizing: border-box !important;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.product-details-modal {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 1100px !important;
+  max-height: 92vh !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95), 0 0 50px rgba(255, 255, 255, 0.08) !important;
+  background: linear-gradient(135deg, #020611 0%, #060b18 45%, #0b1224 80%, #111a33 100%) !important;
+  color: #ffffff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  box-sizing: border-box !important;
+}
+
+.product-details-modal * {
+  box-sizing: border-box;
+}
+
+/* Glass Round Buttons (48px heart, 44px close, 36px bell) */
+.details-glass-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+}
+.details-glass-btn:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+  transform: scale(1.05) !important;
+}
+.details-glass-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Left Image Stage */
+.details-left-stage {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 480px !important;
+  border-radius: 24px !important;
+  background: rgba(7, 11, 20, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1.5rem !important;
+  overflow: hidden !important;
+}
+
+/* Big translucent frosted pale circle behind product with bright rim light */
+.details-frosted-circle {
+  position: absolute !important;
+  width: 320px !important;
+  height: 320px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.7) !important;
+  border-right: 2px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.2) !important;
+  pointer-events: none !important;
+}
+
+/* Glowing circular pedestal: dark disc with bright blue-white glowing rim */
+.details-pedestal {
+  position: relative !important;
+  width: 270px !important;
+  max-width: 80% !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(180deg, #1c2230 0%, #080b12 100%) !important;
+  border-top: 2.5px solid #ffffff !important;
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.75), 0 0 20px rgba(56, 189, 248, 0.4), 0 15px 30px rgba(0, 0, 0, 0.95) !important;
+  margin-top: -8px !important;
+}
+
+.details-pedestal-shadow {
+  width: 200px !important;
+  max-width: 60% !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+  filter: blur(4px) !important;
+}
+
+/* CTA: 64px tall pill, white-to-light-blue gradient with soft blue glow */
+.details-cta-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  height: 64px !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(90deg, #ffffff 0%, #f0f7ff 50%, #e0f0ff 100%) !important;
+  padding: 0 10px 0 24px !important;
+  color: #000000 !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 28px rgba(56, 189, 248, 0.35), 0 0 15px rgba(255, 255, 255, 0.4) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+.details-cta-btn:hover {
+  box-shadow: 0 6px 36px rgba(56, 189, 248, 0.5), 0 0 22px rgba(255, 255, 255, 0.6) !important;
+  transform: translateY(-1px) !important;
+}
+.details-cta-btn:active {
+  transform: scale(0.98) !important;
+}
+
+.details-cta-arrow {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: #090e1a !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease !important;
+}
+.details-cta-btn:hover .details-cta-arrow {
+  transform: scale(1.08) !important;
+}
+
+/* Thin horizontal dividers (rgba(255, 255, 255, 0.15)) */
+.details-divider {
+  border: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  margin: 14px 0 !important;
+  width: 100% !important;
+}
+
+/* Phone & Tablet (max-width: 1024px): Full-screen sheet with stacked columns */
+@media (max-width: 1024px) {
+  .product-details-backdrop {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+  .product-details-modal {
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+  .details-left-stage {
+    min-height: 44vh !important;
+    max-height: 48vh !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .pr-section .pr-grid {
+    scroll-behavior: auto !important;
+  }
+  .pr-dot-active::after {
+    animation: none !important;
+  }
+  .product-card,
+  .product-card *,
+  .deal-product-card,
+  .deal-product-card *,
+  .ksam-product-card,
+  .ksam-product-card *,
+  .product-details-backdrop,
+  .product-details-modal {
+    transition: none !important;
+    animation: none !important;
+  }
+}

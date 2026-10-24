@@ -9,6 +9,7 @@ import {
   ArrowRight,
   TrendingDown,
 } from "lucide-react";
+import { BASE_URL, getStoredSessionSync } from "../../auth/auth.js";
 
 /* ============================================================
    DATA
@@ -271,6 +272,24 @@ function Features() {
   const [gridRef, gridShown] = useReveal(0.1);
   const [ctaRef, ctaShown] = useReveal(0.4);
 
+  const [pricingHref, setPricingHref] = useState(() => {
+    const profilePricingUrl = `${BASE_URL}profile.html#pricing`;
+    const session = typeof window !== "undefined" ? getStoredSessionSync() : null;
+    return session
+      ? profilePricingUrl
+      : `${BASE_URL}login.html?next=${encodeURIComponent(profilePricingUrl)}`;
+  });
+
+  useEffect(() => {
+    const profilePricingUrl = `${BASE_URL}profile.html#pricing`;
+    const session = getStoredSessionSync();
+    setPricingHref(
+      session
+        ? profilePricingUrl
+        : `${BASE_URL}login.html?next=${encodeURIComponent(profilePricingUrl)}`
+    );
+  }, []);
+
   const parallax = (e) => {
     const s = e.currentTarget.style;
     s.setProperty("--px", `${(e.clientX / window.innerWidth - 0.5) * 60}px`);
@@ -308,7 +327,7 @@ function Features() {
             <p className="text-base text-white/45" style={{ lineHeight: 1.8 }}>
               Search once, compare everywhere and get told the moment a price drops. Less tab-hopping, more saving.
             </p>
-            <a href="#pricing" className="ft-link group/link">
+            <a href={pricingHref} className="ft-link group/link">
               See membership plans
               <ArrowRight size={16} className="transition-transform duration-300 group-hover/link:translate-x-1.5" />
             </a>

@@ -30,8 +30,6 @@ import FeaturedDeals
 import Testimonials
     from "./components/Testimonials.jsx";
 
-import Pricing
-    from "./components/Pricing.jsx";
 
 import FAQ
     from "./components/FAQ.jsx";
@@ -53,6 +51,24 @@ import ScrollProgress
 import { cartStore } from "./store/cartStore.js";
 import "./responsive-cards.css";
 
+export const SPLASH_SESSION_KEY = "ksam_splash_seen";
+
+function checkHasSeenSplash() {
+    try {
+        return sessionStorage.getItem(SPLASH_SESSION_KEY) === "true";
+    } catch {
+        return false;
+    }
+}
+
+function markSplashSeen() {
+    try {
+        sessionStorage.setItem(SPLASH_SESSION_KEY, "true");
+    } catch {
+        // Safe fallback
+    }
+}
+
 function Deals() {
     const [toast, setToast] =
         useState("");
@@ -64,33 +80,35 @@ function Deals() {
     const [searchPageQuery, setSearchPageQuery] =
         useState("");
 
-
     /*
     ==========================================
     PRELOADER (Cinematic Futuristic Experience)
+    Show once per session, 12s duration, scroll lock
     ==========================================
     */
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(() => !checkHasSeenSplash());
     const [isPreloaderExiting, setIsPreloaderExiting] = useState(false);
 
     const handlePreloaderComplete = useCallback(() => {
+        markSplashSeen();
         setIsPreloaderExiting(true);
         const exitTimer = setTimeout(() => {
             setLoading(false);
-        }, 550);
+        }, 600); // 0.6s smooth fade out
         return () => clearTimeout(exitTimer);
     }, []);
 
-    // Fallback timer ensures loading screen never hangs
+    // Lock page scroll while preloader is active, unlock when complete
     useEffect(() => {
-        const fallbackTimer = setTimeout(() => {
-            setIsPreloaderExiting(true);
-            setTimeout(() => setLoading(false), 550);
-        }, 2800);
-
-        return () => clearTimeout(fallbackTimer);
-    }, []);
+        if (loading) {
+            const originalOverflow = document.body.style.overflow;
+            document.body.style.overflow = "hidden";
+            return () => {
+                document.body.style.overflow = originalOverflow;
+            };
+        }
+    }, [loading]);
 
 
     /*
@@ -344,25 +362,29 @@ function Deals() {
 
     <HeroHead />
 
-    <Stats />
+    
 
     <PromoCarousel />
 
+    <Stats />
+
     <HeroMarquee onAdd={handleAdd} />
 
-    <Features />
+    {/* <Features /> */}
 
-    <HowItWorks />
+    {/* <HowItWorks /> */}
 
     <FeaturedDeals
         onAdd={handleAdd}
     />
 
+    <Features />
+
     <Testimonials />
 
-    <Pricing />
 
     <FAQ />
+    <HowItWorks />
 
     <Newsletter />
 
