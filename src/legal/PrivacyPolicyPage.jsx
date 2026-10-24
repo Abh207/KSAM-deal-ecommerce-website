@@ -10,7 +10,6 @@ import {
 import gsap from "gsap";
 import { BASE_URL } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
-import Newsletter from "../deals/components/Newsletter.jsx";
 import LiveBackdrop from "../profile/components/LiveBackdrop.jsx";
 import KxFaq from "../components/KxFaq.jsx";
 import { ReadingProgressBar, Aurora, useThemeSync } from "../lib/pageEffects.jsx";
@@ -286,9 +285,6 @@ export function PrivacyPolicyPage() {
           </div>
         </main>
       </div>
-
-      <Newsletter variant="kx-dark" />
-      <div className="kx-legal-bottom-pad" />
     </div>
   );
 }
