@@ -11,6 +11,7 @@ import "./Navbar.css";
 ===================================================== */
 const LINKS = [
   ["Home", "#home"],
+  ["Shop", "shop.html"],
   ["Deals", "#deals"],
   ["How It Works", "#how"],
   ["Features", "#features"],
@@ -162,11 +163,59 @@ function ProductCard({ p, onClick, cta = "View deal" }) {
    MAIN NAVBAR COMPONENT
 ===================================================== */
 export default function Navbar({ onProductClick, onViewAll }) {
+  // Cross-page detection: check if on deals/home page vs category/shop page
+  const isShopPage = typeof window !== "undefined" && window.location.pathname.includes("shop.html");
+
+  const isHomePage = (() => {
+    if (typeof window === "undefined") return true;
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
+    if (path === "/" || path === "" || path === base || path === `${base}/index.html` || path.endsWith("/index.html")) {
+      return true;
+    }
+    return false;
+  })();
+
+  const getLinkHref = (href) => {
+    if (href === "shop.html") {
+      const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
+      return `${base}/shop.html`;
+    }
+    if (isHomePage) return href;
+    const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    return `${normalizedBase}index.html${href}`;
+  };
+
+  const handleNavLinkClick = (e, href) => {
+    if (href === "shop.html") {
+      return;
+    }
+    if (isHomePage && href.startsWith("#")) {
+      const targetId = href.replace("#", "");
+      const el = document.getElementById(targetId);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth" });
+        try {
+          window.history.pushState(null, "", href);
+        } catch {}
+        setActiveSection(href);
+      }
+    }
+  };
+
+  const isActiveLink = (href) => {
+    if (href === "shop.html") return isShopPage;
+    if (!isHomePage) return false;
+    return activeSection === href;
+  };
+
   // Shared Cart
   const { items, count, subtotal, savings, setQty, remove } = useCart();
 
   // Navigation State
-  const [activeSection, setActiveSection] = useState("#home");
+  const [activeSection, setActiveSection] = useState(() => (isHomePage ? "#home" : ""));
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -265,6 +314,10 @@ export default function Navbar({ onProductClick, onViewAll }) {
      2. Active Section Spy via IntersectionObserver
      -------------------------------------------------------------------------- */
   useEffect(() => {
+    if (!isHomePage) {
+      setActiveSection("");
+      return;
+    }
     const sectionIds = ["home", "deals", "how", "features", "faq"];
     const elements = sectionIds
       .map((id) => document.getElementById(id))
@@ -285,7 +338,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [isHomePage]);
 
   /* --------------------------------------------------------------------------
      3. Rotating Search Placeholder (2.5s)
@@ -689,7 +742,13 @@ export default function Navbar({ onProductClick, onViewAll }) {
      -------------------------------------------------------------------------- */
   const handleLogoClick = (e) => {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!isHomePage) {
+      const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
+      const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+      window.location.href = `${normalizedBase}index.html#home`;
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   /* --------------------------------------------------------------------------
@@ -974,7 +1033,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
 
           {/* 1. Animated KSAM Deal Inline SVG Logo Lockup */}
           <a
-            href="#home"
+            href={!isHomePage ? `${(BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "")}/index.html#home` : "#home"}
             className="kh-nav-brand"
             id="navBrandLogo"
             aria-label="KSAM Deal - Home"
@@ -1082,8 +1141,9 @@ export default function Navbar({ onProductClick, onViewAll }) {
               {LINKS.map(([label, href]) => (
                 <li key={label}>
                   <a
-                    href={href}
-                    className={`kh-nav-link${activeSection === href ? " kh-nav-active" : ""}`}
+                    href={getLinkHref(href)}
+                    className={`kh-nav-link${isActiveLink(href) ? " kh-nav-active" : ""}`}
+                    onClick={(e) => handleNavLinkClick(e, href)}
                   >
                     {label}
                   </a>
@@ -1270,9 +1330,12 @@ export default function Navbar({ onProductClick, onViewAll }) {
             {LINKS.map(([label, href]) => (
               <li key={label} className="kh-nav-mobile-item">
                 <a
-                  href={href}
-                  className={`kh-nav-mobile-link${activeSection === href ? " kh-nav-active" : ""}`}
-                  onClick={() => setIsMobileNavOpen(false)}
+                  href={getLinkHref(href)}
+                  className={`kh-nav-mobile-link${isActiveLink(href) ? " kh-nav-active" : ""}`}
+                  onClick={(e) => {
+                    setIsMobileNavOpen(false);
+                    handleNavLinkClick(e, href);
+                  }}
                 >
                   <span className="kh-nav-mobile-dot" />
                   {label}
@@ -1390,8 +1453,14 @@ export default function Navbar({ onProductClick, onViewAll }) {
               className="kh-nav-cart-empty-browse-btn"
               onClick={() => {
                 setIsCartOpen(false);
-                const el = document.getElementById("deals") || document.getElementById("showcase");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
+                if (!isHomePage) {
+                  const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
+                  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+                  window.location.href = `${normalizedBase}index.html#deals`;
+                } else {
+                  const el = document.getElementById("deals") || document.getElementById("showcase");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }
               }}
             >
               Browse Products
@@ -1510,6 +1579,31 @@ export default function Navbar({ onProductClick, onViewAll }) {
             <span>Proceed to Checkout</span>
             <ArrowUpRight size={18} />
           </button>
+
+          <a
+            href={`${(BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "")}/addToCart.html`}
+            className="kh-nav-cart-view-cart-btn"
+            onClick={() => setIsCartOpen(false)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              width: "100%",
+              padding: "10px 16px",
+              marginTop: "8px",
+              borderRadius: "12px",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              color: "#94a3b8",
+              fontSize: "13px",
+              fontWeight: 500,
+              textDecoration: "none",
+              transition: "all 0.2s ease"
+            }}
+          >
+            <span>View Full Cart Page (addToCart.html)</span>
+          </a>
         </div>
       </aside>
 

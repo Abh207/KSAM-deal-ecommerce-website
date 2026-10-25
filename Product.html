@@ -24,46 +24,13 @@
     >
   <link 
   rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css">
-  
+  <script type="module" src="./src/mountNavbar.jsx"></script>
 </head>
 <body>
-<header class = "section navbar">
-  <div class="container">
-    <div class="navbar-brand">
-      <a href="#" target="_blank">
-        <img src="./public/ksam-deal logo.png"
-         alt="KSAM Deal Logo" 
-         class="logo" 
-         >
-      </a>
-    </div>
-    <nav class="navbar">
-      <ul>
-        <li class="nav-item">
-          <a href="./shoes.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link">ChatBox</a>
-        </li>
-        <li class="nav-item">
-          <a href="#about" class="nav-link">About</a>
-        </li>
-        <li class="nav-item">
-          <a href="./Product.html" class="nav-link">Products</a>
-        </li>
-        <li class="nav-item">
-          <a href="./contact.html" class="nav-link">Contact</a>
-        </li>
-        <li class="nav-item">
-          <a href="./addToCart.html" class="nav-link-cart" id="cartValue" target="_parent">
-            <i class="fa-notdog fa-solid fa-cart-shopping">0</i>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</header>
-<section class="section-extra-product">
+<div id="navbar-root"></div>
+<span id="cartValue" style="display:none"></span>
+
+<section class="section-extra-product" style="padding-top: 72px;">
   <div class="container grid grid-three--cols">
     <div class="div-extra grid grid-two--cols">
       <div class="extra-text">

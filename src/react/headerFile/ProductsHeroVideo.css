@@ -1,0 +1,195 @@
+/* =========================================================
+   PRODUCTS PAGE - VIDEO HERO SECTION
+   Full-screen video hero section for shop.html.
+   Displays glowing teal circuit camera on dark background.
+   Fills the first screen: height: calc(100svh - var(--navbar-height)).
+   Category section starts BELOW the fold at all resolutions.
+========================================================= */
+
+:root {
+  --navbar-height: 72px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 64px;
+  }
+}
+
+/* Reset home-products-app top padding so the video starts flush right beneath fixed navbar */
+.home-products-app {
+  padding-top: var(--navbar-height) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Maintain proper horizontal gutters on the product grid and filters below */
+.home-products-header,
+.home-products-filter,
+.home-products-grid,
+.products-pagination {
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+@media (max-width: 900px) {
+  .home-products-header,
+  .home-products-filter,
+  .home-products-grid,
+  .products-pagination {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-products-header,
+  .home-products-filter,
+  .home-products-grid,
+  .products-pagination {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+}
+
+.products-hero-section {
+  position: relative;
+  width: 100%;
+  background-color: #05080d;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Soft top and bottom edge fades so video blends seamlessly into page background */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 90%, transparent 100%);
+  
+  /* First-screen fill formula: height = calc(100svh - var(--navbar-height)) */
+  height: calc(100vh - var(--navbar-height));
+  min-height: 480px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+@supports (height: 100dvh) {
+  .products-hero-section {
+    height: calc(100dvh - var(--navbar-height));
+  }
+}
+
+@supports (height: 100svh) {
+  .products-hero-section {
+    height: calc(100svh - var(--navbar-height));
+  }
+}
+
+/* Inner video wrapper */
+.products-hero-video-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #05080d;
+}
+
+/* Video element */
+.products-hero-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Watermark hiding & camera positioning:
+     Gemini sparkle watermark sits in bottom-right corner (~1160x600 in 1280x720).
+     Scaling by 1.10 with origin at 35% 35% pushes the watermark completely outside
+     the overflow:hidden wrapper on all aspect ratios, and the bottom mask fade
+     (starting at 90%) seamlessly blends away any corner artifact. */
+  transform: scale(1.10);
+  transform-origin: 35% 35%;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Loop transition dip class */
+.products-hero-video.loop-dipping {
+  opacity: 0.92;
+}
+
+/* Screen-reader only H1 for SEO & Accessibility */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Spacing for the category section directly following the hero */
+.home-products-app .category-section {
+  margin-top: 32px !important;
+}
+
+/* =========================================================
+   SUBTLE SCROLL DOWN CUE (Bottom Center)
+   Sits in the lower empty dark floor space, well below the camera.
+========================================================= */
+
+.products-hero-scroll-cue {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(5, 8, 13, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  z-index: 10;
+  padding: 6px 16px 8px;
+  border-radius: 999px;
+  transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+  user-select: none;
+}
+
+.products-hero-scroll-cue:hover {
+  color: #22ff88;
+  border-color: rgba(34, 255, 136, 0.35);
+  background: rgba(5, 8, 13, 0.85);
+  transform: translateX(-50%) translateY(2px);
+}
+
+.scroll-cue-text {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.scroll-cue-chevron {
+  animation: heroChevronBounce 2s infinite ease-in-out;
+}
+
+@keyframes heroChevronBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-chevron {
+    animation: none;
+  }
+}

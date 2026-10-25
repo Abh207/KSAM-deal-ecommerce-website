@@ -30,12 +30,17 @@ function readStorage() {
   }
 }
 
+let isWritingInternal = false;
+
 function writeStorage(items) {
   if (typeof window === "undefined") return;
   try {
+    isWritingInternal = true;
     localStorage.setItem(CART_KEY, JSON.stringify(items));
   } catch (e) {
     console.error("Error saving cart to localStorage:", e);
+  } finally {
+    isWritingInternal = false;
   }
 }
 
@@ -47,18 +52,42 @@ function emitChange() {
   for (const listener of listeners) {
     listener();
   }
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("cartUpdated"));
+  }
 }
 
-// Sync across multiple tabs
+// Sync across multiple tabs, same-window localStorage changes, and custom events
 if (typeof window !== "undefined") {
-  window.addEventListener("storage", (e) => {
-    if (e.key === CART_KEY) {
-      memoryCart = readStorage();
+  const syncCart = () => {
+    if (isWritingInternal) return;
+    const fresh = readStorage();
+    if (JSON.stringify(fresh) !== JSON.stringify(memoryCart)) {
+      memoryCart = fresh;
       for (const listener of listeners) {
         listener();
       }
     }
+  };
+
+  window.addEventListener("storage", (e) => {
+    if (!e.key || e.key === CART_KEY) syncCart();
   });
+  window.addEventListener("cartUpdated", syncCart);
+  window.addEventListener("focus", syncCart);
+
+  // Same-window bridge: safely update cartStore whenever category pages write to cartProductLS
+  try {
+    const origSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function (key, val) {
+      origSetItem(key, val);
+      if (key === CART_KEY && !isWritingInternal) {
+        syncCart();
+      }
+    };
+  } catch (e) {
+    // ignore if localStorage is restricted
+  }
 }
 
 export const cartStore = {

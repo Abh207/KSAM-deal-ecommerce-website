@@ -6,21 +6,18 @@ import React, {
 } from "react";
 
 
-import AnnouncementBar from "./AnnouncementBar";
-import HomeNavbar from "./HomeNavbar";
+import Navbar from "../../deals/components/Navbar.jsx";
+import Footer from "../../deals/components/Footer.jsx";
+import ScrollProgress from "../../deals/components/ScrollProgress.jsx";
+import "../../deals/tailwind-generated.css";
+import "../../deals/deals.css";
 import { requireAuth } from "../../auth/auth.js";
 
-import NewsletterSection from "./NewsletterSection";
-
 import DiscountBanner from "./DiscountBanner";
-
-import BenefitsSection from "./BenefitsSection";
 
 import TestimonialsSection from "./Testimonials";
 
 import PocketFriendlyStores from "./PocketFriendlyStores";
-
-import HomeFooter from "./headerHomeFooter";
 import CategorySection from "./CategorySection";
 
 import HorizontalProducts from "./HorizontalProducts";
@@ -28,7 +25,7 @@ import HorizontalProducts from "./HorizontalProducts";
 import FlashDeals from "./FlashDeals";
 
 import { createRoot } from "react-dom/client";
-import HeroSection from "./HeroSection";
+import ProductsHeroVideo from "./ProductsHeroVideo.jsx";
 import ProductCard from "./ProductCard";
 import productsData from "../../api/headerproducts.json";
 import "./homeProducts.css";
@@ -787,35 +784,30 @@ function HomeProducts() {
     return (
     <>
 
-        <AnnouncementBar />
+        <ScrollProgress />
 
-        <HomeNavbar />
+        <Navbar />
 
         <main
             className="home-products-app"
             ref={productsSectionRef}
         >
 
-            <HeroSection />
+            <ProductsHeroVideo />
 
 
            
 
 
 <CategorySection
-    products={products}
-    onCategorySelect={(category) => {
-
-        setSelectedCategory(category);
-
+    onViewAllClick={() => {
+        setSelectedCategory("All");
         document
             .querySelector(".home-products-grid")
             ?.scrollIntoView({
                 behavior: "smooth"
             });
-
     }}
-    
 />
 
 
@@ -1947,13 +1939,10 @@ function HomeProducts() {
         </main>
 
         <PocketFriendlyStores />
-        <BenefitsSection />
 
         <TestimonialsSection />
 
-        <NewsletterSection />
-
-        <HomeFooter />
+        <Footer />
 
 
 

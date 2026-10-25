@@ -9,6 +9,7 @@ import CategorySection from "./watch-components/CategorySection";
 import ProductSection from "./watch-components/ProductSection";
 import ProductPopup from "./watch-components/ProductPopup";
 import Footer from "./watch-components/Footer";
+import Navbar from "../deals/components/Navbar";
 
 
 function WatchShop() {
@@ -120,67 +121,8 @@ function WatchShop() {
         <div className="watchshop-app">
 
 
-            {/* =========================================
-                HEADER
-            ========================================= */}
-
-            <header className="watch-header">
-
-
-                {/* LOGO */}
-
-                <div className="watch-logo">
-                    KSAM <span>DEAL</span>
-                </div>
-
-
-                {/* NAVIGATION */}
-
-                <nav className="watch-nav">
-
-                    <a href="./shop.html">
-                        HOME
-                    </a>
-
-
-                    <a href="#products">
-                        WATCHES
-                    </a>
-
-
-                    <a href="#categories">
-                        CATEGORIES
-                    </a>
-
-
-                    <a href="#contact">
-                        CONTACT
-                    </a>
-
-
-                    <a href="./watchwishlist.html">
-                        WISHLIST
-                    </a>
-
-                </nav>
-
-
-                {/* CART */}
-
-                <a
-                    href="./addToCart.html"
-                    className="watch-cart"
-                >
-
-                    🛒 CART
-
-                    <span className="watch-cart-count">
-                        {cartCount}
-                    </span>
-
-                </a>
-
-            </header>
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
 
 
 

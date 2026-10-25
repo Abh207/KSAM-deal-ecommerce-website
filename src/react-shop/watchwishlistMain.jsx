@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import "./watchshopApp.css";
 import "./watchwishlist.css";
+import Navbar from "../deals/components/Navbar.jsx";
 
 const getImagePath = (image) => {
     if (!image) return "";
@@ -53,40 +54,8 @@ function WatchWishlist() {
         <div className="watch-wishlist-page">
 
 
-            {/* HEADER */}
-
-            <header className="watch-header">
-
-                <div className="watch-logo">
-                    KSAM <span>DEAL</span>
-                </div>
-
-
-                <nav className="watch-nav">
-
-                    <a href="/KSAM-deal-ecommerce-website/">
-                        HOME
-                    </a>
-
-                    <a href="/KSAM-deal-ecommerce-website/watchshop.html">
-                        WATCHES
-                    </a>
-
-                    <a href="/KSAM-deal-ecommerce-website/watchwishlist.html">
-                        WISHLIST
-                    </a>
-
-                </nav>
-
-
-                <a
-                    href="/KSAM-deal-ecommerce-website/addToCart.html"
-                    className="watch-cart"
-                >
-                    🛒 CART
-                </a>
-
-            </header>
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
 
 
 

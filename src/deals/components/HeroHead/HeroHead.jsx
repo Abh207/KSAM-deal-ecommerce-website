@@ -18,6 +18,7 @@ export function HeroHead({ paused = false }) {
     heroData,
     countdown,
     videoFailed,
+    setVideoFailed,
     isMobile,
     isSaveDataOrReducedMotion
   } = useHeroHead({ paused });
@@ -61,10 +62,11 @@ export function HeroHead({ paused = false }) {
 
           {/* Video Container positioned on the right */}
           <div className="hero-video-wrapper">
-            {!isSaveDataOrReducedMotion && (
+            {/* Strictly ONE visual element: video OR poster fallback */}
+            {!isSaveDataOrReducedMotion && !videoFailed ? (
               <video
                 ref={videoRef}
-                className={`hero-video ${videoFailed ? "video-fallback-poster" : ""}`}
+                className="hero-video"
                 autoPlay
                 muted
                 playsInline
@@ -72,17 +74,25 @@ export function HeroHead({ paused = false }) {
                 preload="metadata"
                 poster={posterUrl}
                 aria-hidden="true"
+                onPlaying={() => setVideoFailed(false)}
               >
                 <source src={videoMobileWebm} type="video/webm" media="(max-width: 767px)" />
                 <source src={videoWebm} type="video/webm" media="(min-width: 768px)" />
                 <source src={videoWebm} type="video/webm" />
                 <source src={videoMobileMp4} type="video/mp4" media="(max-width: 767px)" />
                 <source src={videoMp4} type="video/mp4" media="(min-width: 768px)" />
-                <source src={videoMp4} type="video/mp4" />
+                <source
+                  src={videoMp4}
+                  type="video/mp4"
+                  onError={(e) => {
+                    // Only fail if video really cannot play
+                    if (videoRef.current && videoRef.current.readyState === 0) {
+                      setVideoFailed(true);
+                    }
+                  }}
+                />
               </video>
-            )}
-
-            {(isSaveDataOrReducedMotion || videoFailed) && (
+            ) : (
               <img
                 src={posterUrl}
                 alt="KSAM Deal Phone Showcase"

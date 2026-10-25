@@ -13,6 +13,7 @@ import ClothesHero from "./ClothesHero";
 
 import clothesData from "../../api/clothesproducts.json";
 import { requireAuth } from "../../auth/auth.js";
+import Navbar from "../../deals/components/Navbar.jsx";
 
 import "./clothes.css";
 
@@ -746,6 +747,9 @@ function ClothesMain() {
 
         <div className="clothes-page">
 
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
+
 
             {/* =================================================
                 TOP ANNOUNCEMENT
@@ -788,153 +792,7 @@ function ClothesMain() {
             </div>
 
 
-            {/* =================================================
-                NAVBAR
-            ================================================== */}
 
-            <header className="clothes-navbar">
-
-
-                {/* LOGO */}
-
-                <a
-                    href="./shop.html"
-                    className="clothes-logo"
-                >
-
-                    <strong>
-                        KSAM
-                    </strong>
-
-                    <span>
-                        DEAL
-                    </span>
-
-                </a>
-
-
-                {/* NAVIGATION */}
-
-                <nav
-                    className="clothes-nav-links"
-                    aria-label="Fashion navigation"
-                >
-
-                    <a href="#new">
-                        NEW IN
-                    </a>
-
-                    <a href="#women">
-                        WOMEN
-                    </a>
-
-                    <a href="#men">
-                        MEN
-                    </a>
-
-                    <a href="#categories">
-                        ACCESSORIES
-                    </a>
-
-                    <a href="#sale">
-                        SALE
-                    </a>
-
-                </nav>
-
-
-                {/* SEARCH */}
-
-                <div className="clothes-navbar-search">
-
-                    <i className="fa-solid fa-magnifying-glass"></i>
-
-
-                    <input
-                        type="search"
-                        placeholder="Search clothes, brands..."
-                        value={search}
-                        onChange={(event) => {
-
-                            setSearch(
-                                event.target.value
-                            );
-
-                            setVisibleProducts(8);
-
-                        }}
-                    />
-
-
-                    {search && (
-
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setSearch("")
-                            }
-                            aria-label="Clear search"
-                        >
-
-                            <i className="fa-solid fa-xmark"></i>
-
-                        </button>
-
-                    )}
-
-                </div>
-
-
-                {/* NAV ACTIONS */}
-
-                <div className="clothes-nav-actions">
-
-
-                    {/* THEME CIRCLE */}
-
-                    <button
-                        type="button"
-                        className="clothes-theme-button"
-                        onClick={toggleTheme}
-                        title="Change webpage color"
-                        aria-label="Change webpage color"
-                    >
-
-                        <span></span>
-
-                    </button>
-
-
-                    {/* CART */}
-
-                    <button
-                        type="button"
-                        className="clothes-cart-button"
-                        onClick={() => {
-
-                            window.location.href =
-                                "./addToCart.html";
-
-                        }}
-                        aria-label="Open shopping cart"
-                    >
-
-                        <i className="fa-solid fa-bag-shopping"></i>
-
-
-                        {cartCount > 0 && (
-
-                            <b>
-                                {cartCount}
-                            </b>
-
-                        )}
-
-                    </button>
-
-                </div>
-
-            </header>
 
 
             {/* =================================================

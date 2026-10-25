@@ -11,6 +11,7 @@ import AudioHero from "./AudioHero";
 
 import audioData from "../../api/audio-products.json";
 import { requireAuth } from "../../auth/auth.js";
+import Navbar from "../../deals/components/Navbar.jsx";
 
 import "./audio.css";
 
@@ -2440,6 +2441,9 @@ function AudioMain() {
 
         <div className="audio-page">
 
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
+
             {/* =================================================
                 ANNOUNCEMENT BAR
             ================================================= */}
@@ -2477,95 +2481,7 @@ function AudioMain() {
             </div>
 
 
-            {/* =================================================
-                NAVBAR
-            ================================================= */}
 
-            <header className="audio-navbar">
-
-                <a
-                    href="./shop.html"
-                    className="audio-brand"
-                >
-                    <span>KSAM</span>
-                    <strong>DEAL</strong>
-                </a>
-
-
-                <nav className="audio-nav">
-
-                    <a href="#audio-products">
-                        NEW IN
-                    </a>
-
-                    <a href="#audio-categories">
-                        EARBUDS
-                    </a>
-
-                    <a href="#audio-categories">
-                        HEADPHONES
-                    </a>
-
-                    <a href="#audio-categories">
-                        SPEAKERS
-                    </a>
-
-                    <a href="#audio-offers">
-                        SALE
-                    </a>
-
-                </nav>
-
-
-                <div className="audio-nav-right">
-
-                    <div className="audio-nav-search">
-
-                        <i className="fa-solid fa-magnifying-glass"></i>
-
-                        <input
-                            type="text"
-                            placeholder="Search audio, brands..."
-                            value={search}
-                            onChange={(e) =>
-                                setSearch(e.target.value)
-                            }
-                        />
-
-                    </div>
-
-
-                    <button
-                        className="audio-nav-icon"
-                        title="Wishlist"
-                    >
-                        <i className="fa-regular fa-heart"></i>
-
-                        {wishlist.length > 0 && (
-                            <span>
-                                {wishlist.length}
-                            </span>
-                        )}
-
-                    </button>
-
-
-                    <a
-                        href="./addToCart.html"
-                        className="audio-cart-button"
-                    >
-
-                        <i className="fa-solid fa-bag-shopping"></i>
-
-                        <span>
-                            {cartCount}
-                        </span>
-
-                    </a>
-
-                </div>
-
-            </header>
 
 
             {/* =================================================

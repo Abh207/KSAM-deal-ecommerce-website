@@ -12,6 +12,7 @@ import { createRoot } from "react-dom/client";
 
 import ShoeCard from "./ShoeCard";
 import { requireAuth } from "../auth/auth.js";
+import Navbar from "../deals/components/Navbar.jsx";
 
 import shoesData from "../api/shoes-products.json";
 
@@ -655,6 +656,8 @@ useEffect(() => {
 
         <div className="shoes-page">
 
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
 
             {/* =================================================
                ANNOUNCEMENT
@@ -687,71 +690,6 @@ useEffect(() => {
                 </div>
 
             </div>
-
-
-
-            {/* =================================================
-               NAVBAR
-               ================================================= */}
-
-            <header className="shoes-navbar">
-
-                <a
-                    href="./shop.html"
-                    className="shoes-logo"
-                >
-
-                    <img
-    src={`${import.meta.env.BASE_URL}ksam-deal%20logo.png`}
-    alt="KSAM Deal"
-/>
-
-                </a>
-
-
-                <nav>
-
-                    <a href="./shop.html">
-                        Home
-                    </a>
-
-                    <a href="./Product.html">
-                        Products
-                    </a>
-
-                    <a className="active">
-                        Shoes
-                    </a>
-
-                    <a href="./contact.html">
-                        Contact
-                    </a>
-
-                </nav>
-
-
-                <button
-                    type="button"
-                    className="shoes-cart-button"
-                    onClick={() =>
-                        window.location.href =
-                            "./addToCart.html"
-                    }
-                >
-
-                    <i className="fa-solid fa-cart-shopping"></i>
-
-                    <span>
-                        Cart
-                    </span>
-
-                    <b>
-                        {cartCount}
-                    </b>
-
-                </button>
-
-            </header>
 
 
 

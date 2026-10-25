@@ -118,7 +118,7 @@ function ProductCard({ product, onAdd, onOpenDetails }) {
             src={imgSrc}
             alt={product.name}
             className="card-prod-img"
-            loading="lazy"
+            loading="eager"
             decoding="async"
             width="170"
             height="170"

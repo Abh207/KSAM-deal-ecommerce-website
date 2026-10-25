@@ -2,7 +2,7 @@
     "section": {
         "eyebrow": "EXPLORE & SHOP",
         "title": "Shop by Category",
-        "description": "Find exactly what you need from our most popular categories.",
+        "description": "Smart choices for a better tomorrow.",
         "showProductCount": true,
         "showArrow": true,
         "showViewAll": true
@@ -16,7 +16,8 @@
             "productIds": [],
             "icon": "⌚",
             "color": "#edf9f8",
-            "link": "./watchshop.html"
+            "link": "./watchshop.html",
+            "bannerImage": ""
         },
         {
             "id": "electronics",
@@ -25,7 +26,8 @@
             "productIds": [],
             "icon": "⚡",
             "color": "#e8f1ff",
-            "link": "./fashionSpeaker.html"
+            "link": "./fashionSpeaker.html",
+            "bannerImage": ""
         },
         {
             "id": "Shoes",
@@ -34,7 +36,8 @@
             "productIds": [],
             "icon": "👟",
             "color": "#f0f8ff",
-            "link": "./shoes.html"
+            "link": "./shoes.html",
+            "bannerImage": ""
         },
 
         {
@@ -44,7 +47,8 @@
             "productIds": [],
             "icon": "👕",
             "color": "#fff0f5",
-            "link": "./Product.html"
+            "link": "./Product.html",
+            "bannerImage": ""
         },
 
         {
@@ -54,7 +58,8 @@
             "productIds": [],
             "icon": "✨",
             "color": "#fff5e8",
-            "link": "./beauty.html"
+            "link": "./beauty.html",
+            "bannerImage": ""
         },
 
         {
@@ -64,7 +69,8 @@
             "productIds": [],
             "icon": "👕",
             "color": "#eefbea",
-            "link": "./clothes.html"
+            "link": "./clothes.html",
+            "bannerImage": ""
         },
 
         {
@@ -74,7 +80,8 @@
             "productIds": [],
             "icon": "🪑",
             "color": "#f3edff",
-            "link": "./moreChairProd.html"
+            "link": "./moreChairProd.html",
+            "bannerImage": ""
         },
         {
             "id": "Speakers",
@@ -83,7 +90,8 @@
             "productIds": [],
             "icon": "🔊",
             "color": "#f0f8ff",
-            "link": "./audio.html"
+            "link": "./audio.html",
+            "bannerImage": ""
         }
     ]
 }

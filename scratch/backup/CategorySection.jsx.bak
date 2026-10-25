@@ -1,0 +1,365 @@
+import React, { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import categoryData from "../../api/categorySection.json";
+import "./CategorySection.css";
+
+function CategorySection({
+    products = [],
+    onCategorySelect
+}) {
+    const [activeCategory, setActiveCategory] = useState(null);
+    const scrollerRef = useRef(null);
+
+    // Scroll state for controls
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [scrollProgress, setScrollProgress] = useState(0);
+
+    // Mouse drag-to-scroll state
+    const isDownRef = useRef(false);
+    const startXRef = useRef(0);
+    const scrollLeftRef = useRef(0);
+    const hasDraggedRef = useRef(false);
+    const [isDragging, setIsDragging] = useState(false);
+
+    /*
+     * Build category list using categorySection.json and products from headerproducts.json.
+     * Keep data accurate and truthfully report product counts.
+     */
+    const categories = useMemo(() => {
+        return categoryData.categories.map((category) => {
+            let categoryProducts = [];
+
+            if (
+                Array.isArray(category.productIds) &&
+                category.productIds.length > 0
+            ) {
+                categoryProducts = products.filter((product) =>
+                    category.productIds.includes(Number(product.id))
+                );
+            }
+
+            if (categoryProducts.length === 0) {
+                categoryProducts = products.filter((product) => {
+                    const productCategory =
+                        product.category ||
+                        product.Category ||
+                        product.type ||
+                        "";
+
+                    return (
+                        String(productCategory).toLowerCase() ===
+                        String(category.id).toLowerCase()
+                    );
+                });
+            }
+
+            const imageProduct = categoryProducts[0];
+
+            return {
+                ...category,
+                productCount: categoryProducts.length,
+                image: imageProduct?.image ? `${import.meta.env.BASE_URL}${imageProduct.image}` : null
+            };
+        });
+    }, [products]);
+
+    // Update scroll indicator and button disabled states
+    const updateScrollMetrics = useCallback(() => {
+        const el = scrollerRef.current;
+        if (!el) return;
+
+        const { scrollLeft, scrollWidth, clientWidth } = el;
+        const maxScroll = Math.max(0, scrollWidth - clientWidth);
+
+        setCanScrollLeft(scrollLeft > 6);
+        setCanScrollRight(scrollLeft < maxScroll - 6);
+
+        const pct = maxScroll > 0 ? Math.min(100, Math.max(0, (scrollLeft / maxScroll) * 100)) : 0;
+        setScrollProgress(pct);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollerRef.current;
+        if (!el) return;
+
+        updateScrollMetrics();
+
+        const handleScrollEvent = () => {
+            updateScrollMetrics();
+        };
+
+        el.addEventListener("scroll", handleScrollEvent, { passive: true });
+        window.addEventListener("resize", updateScrollMetrics);
+
+        return () => {
+            el.removeEventListener("scroll", handleScrollEvent);
+            window.removeEventListener("resize", updateScrollMetrics);
+        };
+    }, [categories, updateScrollMetrics]);
+
+    // Arrow button handler (scroll by one card + gap)
+    const handleScrollStep = (direction) => {
+        const el = scrollerRef.current;
+        if (!el) return;
+
+        const firstCard = el.querySelector(".category-card");
+        const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : 240;
+        const gap = 18;
+        const step = (cardWidth + gap) * (direction > 0 ? 1 : -1);
+
+        el.scrollBy({
+            left: step,
+            behavior: "smooth"
+        });
+    };
+
+    // Mouse drag-to-scroll handlers
+    const handleMouseDown = (e) => {
+        if (e.button !== 0) return; // Only primary mouse button
+        const el = scrollerRef.current;
+        if (!el) return;
+
+        isDownRef.current = true;
+        hasDraggedRef.current = false;
+        startXRef.current = e.pageX - el.offsetLeft;
+        scrollLeftRef.current = el.scrollLeft;
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDownRef.current) return;
+        const el = scrollerRef.current;
+        if (!el) return;
+
+        const currentX = e.pageX - el.offsetLeft;
+        const distance = (currentX - startXRef.current) * 1.35;
+
+        if (Math.abs(distance) > 6) {
+            hasDraggedRef.current = true;
+            if (!isDragging) setIsDragging(true);
+        }
+
+        el.scrollLeft = scrollLeftRef.current - distance;
+    };
+
+    const handleMouseUpOrLeave = () => {
+        if (!isDownRef.current) return;
+        isDownRef.current = false;
+        setTimeout(() => {
+            setIsDragging(false);
+        }, 60);
+    };
+
+    // Keyboard navigation (ArrowLeft & ArrowRight)
+    const handleKeyDown = (e) => {
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            handleScrollStep(-1);
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            handleScrollStep(1);
+        }
+    };
+
+    const handleCategoryClick = (category) => {
+        // Prevent click trigger if the user was dragging
+        if (hasDraggedRef.current) {
+            hasDraggedRef.current = false;
+            return;
+        }
+
+        setActiveCategory(category.id);
+
+        if (onCategorySelect) {
+            onCategorySelect(category.id);
+        }
+
+        if (category.link) {
+            window.location.href = category.link;
+        }
+    };
+
+    return (
+        <section className="category-section" aria-label="Shop by Category">
+            {/* Header: Readable white title, green eyebrow, gray-300 description, accent View All */}
+            <div className="category-section-header">
+                <div className="category-heading">
+                    {categoryData.section.eyebrow && (
+                        <span className="category-eyebrow">
+                            <span className="category-eyebrow-dot" aria-hidden="true" />
+                            {categoryData.section.eyebrow}
+                        </span>
+                    )}
+
+                    <h2>
+                        {categoryData.section.title}
+                    </h2>
+
+                    <p>
+                        {categoryData.section.description}
+                    </p>
+                </div>
+
+                {categoryData.section.showViewAll && (
+                    <button
+                        type="button"
+                        className="category-view-all"
+                        onClick={() => {
+                            setActiveCategory(null);
+                            if (onCategorySelect) {
+                                onCategorySelect(null);
+                            }
+                        }}
+                        aria-label="View all categories"
+                    >
+                        View All
+                        <span aria-hidden="true">→</span>
+                    </button>
+                )}
+            </div>
+
+            {/* Horizontal Scroller Carousel Wrapper with Prev / Next Arrow Controls */}
+            <div className="category-scroller-wrap">
+                {/* Previous 44px round button (Laptop/Tablet only) */}
+                <button
+                    type="button"
+                    className="category-arrow-btn prev"
+                    onClick={() => handleScrollStep(-1)}
+                    disabled={!canScrollLeft}
+                    aria-label="Scroll categories left"
+                >
+                    <ChevronLeft size={22} />
+                </button>
+
+                {/* Soft Edge Fade Overlays */}
+                <div
+                    className={`category-edge-fade-left${canScrollLeft ? " is-visible" : ""}`}
+                    aria-hidden="true"
+                />
+                <div
+                    className={`category-edge-fade-right${canScrollRight ? " is-visible" : ""}`}
+                    aria-hidden="true"
+                />
+
+                {/* The single-row horizontally scrolling carousel */}
+                <div
+                    ref={scrollerRef}
+                    className={`category-scroller${isDragging ? " is-dragging" : ""}`}
+                    tabIndex={0}
+                    role="region"
+                    aria-label="Category Carousel - Use left and right arrow keys to browse"
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUpOrLeave}
+                    onMouseLeave={handleMouseUpOrLeave}
+                    onKeyDown={handleKeyDown}
+                >
+                    {categories.map((category) => {
+                        const isActive = activeCategory === category.id;
+                        const isEmpty = category.productCount === 0;
+
+                        return (
+                            <button
+                                type="button"
+                                key={category.id}
+                                className={`category-card${isActive ? " active" : ""}${isEmpty ? " is-empty" : ""}`}
+                                onClick={() => handleCategoryClick(category)}
+                                style={{
+                                    "--category-bg": category.color || "#f5f5f5"
+                                }}
+                                aria-label={`${category.name} category with ${category.productCount} products`}
+                            >
+                                {/* Uniform Circular Image / Icon Area (Same 80px size for every card) */}
+                                <div className="category-image-wrapper">
+                                    {category.image ? (
+                                        <img
+                                            src={category.image}
+                                            alt={category.name}
+                                            className="category-image"
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <div className="category-icon" aria-hidden="true">
+                                            {category.icon}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Card Content */}
+                                <div className="category-content">
+                                    <h3>{category.name}</h3>
+                                    <p>{category.description}</p>
+                                </div>
+
+                                {/* Meta Row: Product Count, Coming soon pill, and Arrow button */}
+                                <div className="category-meta-row">
+                                    <div className="category-count-group">
+                                        <span className={`category-count${isEmpty ? " is-empty" : ""}`}>
+                                            {category.productCount}{" "}
+                                            {category.productCount === 1 ? "Product" : "Products"}
+                                        </span>
+                                        {isEmpty && (
+                                            <span className="category-coming-soon">Coming soon</span>
+                                        )}
+                                    </div>
+
+                                    {categoryData.section.showArrow && (
+                                        <span className="category-arrow" aria-hidden="true">
+                                            →
+                                        </span>
+                                    )}
+                                </div>
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Next 44px round button (Laptop/Tablet only) */}
+                <button
+                    type="button"
+                    className="category-arrow-btn next"
+                    onClick={() => handleScrollStep(1)}
+                    disabled={!canScrollRight}
+                    aria-label="Scroll categories right"
+                >
+                    <ChevronRight size={22} />
+                </button>
+            </div>
+
+            {/* Scroll Progress Bar (Visible on mobile and desktop) */}
+            <div className="category-progress-track" aria-hidden="true">
+                <div
+                    className="category-progress-bar"
+                    style={{ width: `${scrollProgress}%` }}
+                />
+            </div>
+
+            {/* Active category message */}
+            {activeCategory && (
+                <div className="category-active-message">
+                    <span>Showing:</span>
+                    <strong>
+                        {
+                            categories.find(
+                                (category) => category.id === activeCategory
+                            )?.name
+                        }
+                    </strong>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setActiveCategory(null);
+                            if (onCategorySelect) {
+                                onCategorySelect(null);
+                            }
+                        }}
+                    >
+                        Clear ×
+                    </button>
+                </div>
+            )}
+        </section>
+    );
+}
+
+export default CategorySection;

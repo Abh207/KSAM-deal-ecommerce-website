@@ -122,14 +122,14 @@ const TICKER_B = [
 ];
 
 function TickerRow({ items, reverse }) {
-  const list = [...items, ...items];
+  const list = [...items, ...items, ...items];
   return (
     <div className="ks-marquee-wrap ks-trow flex w-max whitespace-nowrap">
-      <div className={`${reverse ? "ks-marquee-rev" : "ks-marquee"} ks-tgap flex`}>
+      <div className={`${reverse ? "ks-marquee-rev" : "ks-marquee"} ks-tgap flex items-center`}>
         {list.map((t, i) => (
-          <span key={i} className="flex items-center ks-tgap text-sm font-semibold text-white/50">
+          <span key={i} className="ks-ticker-item flex items-center ks-tgap text-sm font-semibold text-[#e5e7eb]">
             {t}
-            <span className="text-[#22FF88]"><Icon name="flame" size={14} /></span>
+            <span className="ks-ticker-dot" aria-hidden="true" />
           </span>
         ))}
       </div>
@@ -157,15 +157,18 @@ function TrustBadge({ icon, title, description, index, shown }) {
   return (
     <div
       className={`group relative ks-badge flex items-center overflow-hidden border border-white/10 bg-white/[0.025] transition-all duration-700 hover:-translate-y-2 hover:border-[#22FF88]/40 hover:bg-[#22FF88]/[0.04] hover:shadow-[0_20px_50px_-20px_rgba(34,255,136,.25)] ${shown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-      style={{ transitionDelay: shown ? `${index * 110}ms` : "0ms" }}
+      style={{
+        borderRadius: "20px",
+        transitionDelay: shown ? `${index * 110}ms` : "0ms"
+      }}
     >
       <span className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#22FF88]/0 blur-2xl transition-all duration-700 group-hover:bg-[#22FF88]/20" />
-      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#22FF88]/20 bg-[#22FF88]/10 text-[#22FF88] transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(34,255,136,.3)]">
+      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#22FF88]/25 bg-gradient-to-br from-[#22FF88]/15 to-[#38BDF8]/15 text-[#22FF88] transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(34,255,136,.3)]">
         <Icon name={icon} size={23} />
       </div>
       <div className="relative">
         <h4 className="text-base font-bold text-white">{title}</h4>
-        <p className="mt-1.5 text-sm text-white/40">{description}</p>
+        <p className="mt-1 text-sm text-[#cbd5e1]">{description}</p>
       </div>
     </div>
   );
@@ -199,7 +202,7 @@ function TimeBox({ value, label }) {
         <span key={value} className="ks-tick block">{String(value).padStart(2, "0")}</span>
         <span className="absolute inset-x-0 top-1/2 h-px bg-white/10" />
       </div>
-      <span className="mt-2.5 text-[11px] text-white/35">{label}</span>
+      <span className="mt-2 text-[11px] font-bold tracking-wider text-white/45 uppercase">{label}</span>
     </div>
   );
 }
@@ -430,7 +433,7 @@ function Footer() {
                   <br />your first order.
                 </h2>
 
-                <p className="max-w-md text-base leading-8 text-white/50">
+                <p className="max-w-md text-base leading-relaxed text-[#cbd5e1]">
                   Join KSAM Deal for new offers and price drops before everyone else. Your code arrives the moment you join.
                 </p>
 
@@ -480,7 +483,8 @@ function Footer() {
                   {!subscribed ? (
                     <form onSubmit={handleSubscribe} noValidate className="ks-form">
                       <label htmlFor="newsletter-email" className="block text-sm font-semibold text-white/55">Email address</label>
-                      <div className={`ks-input ks-field flex items-center border bg-black/50 transition-all duration-300 ${emailError ? "border-red-500/60" : "border-white/10 focus-within:border-[#22FF88]/60 focus-within:shadow-[0_0_40px_rgba(34,255,136,.12)]"}`}>
+                      <div className={`ks-input ks-field flex items-center border bg-black/50 transition-all duration-300 ${emailError ? "border-red-500/60" : "border-white/10 focus-within:border-[#22FF88]/60 focus-within:shadow-[0_0_40px_rgba(34,255,136,.12)]"}`}
+                        style={{ height: "48px", minHeight: "48px", borderRadius: "14px" }}>
                         <span className="text-white/40"><Icon name="mail" size={20} /></span>
                         <input
                           id="newsletter-email" type="email" value={email} autoComplete="email"
@@ -508,8 +512,8 @@ function Footer() {
                       <button type="submit" disabled={loading}
                         onMouseMove={magnetMove}
                         onMouseLeave={() => setMagnet({ x: 0, y: 0 })}
-                        style={{ transform: `translate(${magnet.x}px, ${magnet.y}px)` }}
-                        className="group/button ks-submit relative flex w-full items-center justify-center overflow-hidden bg-gradient-to-r from-[#22FF88] via-[#35e6a0] to-[#38BDF8] text-sm font-black text-black transition-[box-shadow,opacity] duration-300 hover:shadow-[0_0_45px_rgba(34,255,136,.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22FF88] active:brightness-95 disabled:cursor-not-allowed disabled:opacity-70">
+                        style={{ transform: `translate(${magnet.x}px, ${magnet.y}px)`, height: "48px", minHeight: "48px", borderRadius: "14px" }}
+                        className="group/button ks-submit relative flex w-full items-center justify-center overflow-hidden bg-gradient-to-r from-[#22FF88] via-[#35e6a0] to-[#38BDF8] text-base font-black text-black transition-[box-shadow,opacity,transform] duration-300 hover:shadow-[0_0_45px_rgba(34,255,136,.4)] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22FF88] active:brightness-95 disabled:cursor-not-allowed disabled:opacity-70">
                         <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 group-hover/button:translate-x-full" />
                         {loading ? (
                           <span className="relative z-10 flex items-center gap-2.5">
@@ -741,43 +745,66 @@ function Footer() {
           background: linear-gradient(90deg, transparent, rgba(34,255,136,.5), rgba(56,189,248,.5), rgba(168,85,247,.5), transparent);
           background-size: 200% 100%; animation: ksDivider 8s linear infinite; opacity: .5;
         }
-        .ks-outline { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.1); }
+        .ks-wordmark-wrap { position: relative; width: 100%; max-width: 100vw; overflow: hidden; }
+        .ks-outline { position: relative; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.12); }
         .ks-word-fill {
+          position: absolute !important; inset: 0 !important;
           color: transparent;
           background-image: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), #22FF88, #38BDF8 45%, transparent 70%);
           -webkit-background-clip: text; background-clip: text;
         }
         .ks-word-sweep {
+          position: absolute !important; inset: 0 !important;
           color: transparent;
           background-image: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
           background-size: 250% 100%; -webkit-background-clip: text; background-clip: text;
           animation: ksSweep 7s ease-in-out infinite;
         }
 
+        .ks-ticker-dot {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #22FF88;
+          box-shadow: 0 0 8px #22FF88;
+        }
+
+        .ksam-footer a {
+          color: rgba(255, 255, 255, 0.55);
+          text-decoration: none !important;
+        }
+        .ksam-footer a:hover {
+          color: #22FF88 !important;
+        }
+        .ksam-footer a:visited {
+          color: rgba(255, 255, 255, 0.55);
+        }
 
         /* ---- Layout & spacing (scoped + specific, so global CSS resets or missing utilities can't collapse it) ---- */
+        .ksam-footer { overflow-x: hidden !important; width: 100% !important; max-width: 100vw !important; }
         .ksam-footer .ks-wrap { max-width: 80rem; margin: 0 auto; padding: 5rem 1.5rem; }
         .ksam-footer .ks-trow { padding: .875rem 0; gap: 3.5rem; }
         .ksam-footer .ks-tgap { gap: 3.5rem; }
         .ksam-footer .ks-badges { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-        .ksam-footer .ks-badge { gap: 1.25rem; padding: 1.75rem 1.5rem; border-radius: 1.5rem; }
+        .ksam-footer .ks-badge { gap: 1.25rem; padding: 1.75rem 1.5rem; border-radius: 20px; }
         .ksam-footer .ks-news { margin-top: 6rem; padding: 1.5px; border-radius: 36px; }
         .ksam-footer .ks-news-in { border-radius: 35px; }
         .ksam-footer .ks-news-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; padding: 3.5rem 2rem; align-items: center; }
         .ksam-footer .ks-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 2rem; }
         .ksam-footer .ks-tag { padding: .625rem 1.25rem; gap: .625rem; }
         .ksam-footer .ks-countdown { display: flex; flex-direction: column; gap: 1rem; }
-        .ksam-footer .ks-time-gap { gap: .75rem; }
+        .ksam-footer .ks-time-gap { display: flex !important; flex-direction: row !important; align-items: flex-start !important; gap: .75rem !important; }
         .ksam-footer .ks-card { border-radius: 28px; padding: 1.75rem; }
         .ksam-footer .ks-card-head { margin-bottom: 2.25rem; gap: 1rem; }
         .ksam-footer .ks-glow { inset: -1.5rem; border-radius: 36px; }
         .ksam-footer .ks-form { display: flex; flex-direction: column; gap: .875rem; }
         .ksam-footer .ks-form > p { margin-top: .5rem; }
-        .ksam-footer .ks-field { padding: 0 1.25rem; gap: .75rem; border-radius: 1rem; }
+        .ksam-footer .ks-field { padding: 0 1.25rem; gap: .75rem; border-radius: 14px; }
         .ksam-footer .ks-inp { padding: 1.125rem 0; }
         .ksam-footer .ks-chip-gap { gap: .5rem; }
         .ksam-footer .ks-minichip { padding: .375rem .875rem; }
-        .ksam-footer .ks-submit { padding: 1.125rem 1.5rem; gap: .75rem; border-radius: 1rem; margin-top: .5rem; }
+        .ksam-footer .ks-submit { padding: 1.125rem 1.5rem; gap: .75rem; border-radius: 14px; margin-top: .5rem; }
         .ksam-footer .ks-success { min-height: 290px; gap: 1rem; }
         .ksam-footer .ks-coupon { gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; margin: .5rem 0; }
         .ksam-footer .ks-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 6rem; }
@@ -847,7 +874,7 @@ function Footer() {
             animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important; scroll-behavior: auto !important;
           }
-          .ks-marquee, .ks-marquee-rev { animation: none; }
+          .ks-marquee, .ks-marquee-rev { animation: none !important; }
         }
       `}</style>
     </footer>

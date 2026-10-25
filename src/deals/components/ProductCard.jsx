@@ -96,28 +96,29 @@ export function ProductCard({ product, onOpenDetails }) {
       {/* Soft white glow layer behind image */}
       <div className="ksam-card-glow-bg" aria-hidden="true" />
 
-      {/* Top-Left: Solid blue pill #0a6cff for "New" or discount */}
-      <div className="ksam-card-badge-wrap">
-        <span className="ksam-card-badge">{badgeText}</span>
-      </div>
+      {/* Top row: Badge on left, heart on right, vertically centered on the same line */}
+      <div className="ksam-card-top-row">
+        <div className="ksam-card-badge-wrap">
+          <span className="ksam-card-badge">{badgeText}</span>
+        </div>
 
-      {/* Top-Right: Plain white OUTLINE heart icon (~34px laptop, 44px tap target) */}
-      <button
-        onClick={handleToggleSave}
-        type="button"
-        aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-        title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-        className="ksam-card-heart-btn"
-      >
-        <Heart
-          strokeWidth={1.8}
-          fill={isSaved ? "#ffffff" : "none"}
-          color="#ffffff"
-          className={`ksam-card-heart-icon ${
-            isSaved ? "scale-105" : "hover:scale-105"
-          }`}
-        />
-      </button>
+        <button
+          onClick={handleToggleSave}
+          type="button"
+          aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+          title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+          className="ksam-card-heart-btn"
+        >
+          <Heart
+            strokeWidth={1.8}
+            fill={isSaved ? "#ffffff" : "none"}
+            color="#ffffff"
+            className={`ksam-card-heart-icon ${
+              isSaved ? "scale-105" : "hover:scale-105"
+            }`}
+          />
+        </button>
+      </div>
 
       {/* 1. Image Area: Photo sits directly on the dark gradient */}
       <div className="ksam-card-img-wrap">

@@ -7,6 +7,7 @@ import ProductCard from "./ProductCard.jsx";
 import Countdown from "./Countdown.jsx";
 import Toast from "./Toast.jsx";
 import { requireAuth } from "../auth/auth.js";
+import Navbar from "../deals/components/Navbar.jsx";
 
 import "./BeautyHome.css";
 
@@ -190,14 +191,16 @@ const BeautyHome = () => {
     return (
         <div className="beauty-page">
 
-            {/* Header */}
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
+
+            {/* Header (Search and Category Filter Pills) */}
             <Header
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 categories={categories}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
-                cartCount={cartCount}
             />
 
             {/* Hero Section */}

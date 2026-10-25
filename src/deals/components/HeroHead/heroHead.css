@@ -311,7 +311,7 @@
   object-fit: cover;
   object-position: center center;
   mix-blend-mode: screen;
-  opacity: 0.9;
+  opacity: 0.95;
   z-index: 2;
   display: block;
   border: none;
@@ -319,11 +319,11 @@
   box-shadow: none;
   pointer-events: none;
   -webkit-mask-image: 
-    linear-gradient(90deg, transparent 0%, #000 25%, #000 95%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 18%, #000 95%, transparent 100%),
     radial-gradient(ellipse 90% 90% at 50% 50%, #000 60%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-image: 
-    linear-gradient(90deg, transparent 0%, #000 25%, #000 95%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 18%, #000 95%, transparent 100%),
     radial-gradient(ellipse 90% 90% at 50% 50%, #000 60%, transparent 100%);
   mask-composite: intersect;
 }
@@ -350,9 +350,9 @@
   pointer-events: none;
   background: linear-gradient(
     90deg,
-    rgba(6, 9, 19, 0.9) 0%,
-    rgba(6, 9, 19, 0.6) 40%,
-    rgba(6, 9, 19, 0.1) 100%
+    rgba(6, 9, 19, 0.92) 0%,
+    rgba(6, 9, 19, 0.7) 45%,
+    rgba(6, 9, 19, 0.15) 100%
   );
 }
 
@@ -1670,72 +1670,130 @@
     --card-btn-size: 30px;
   }
 
+  /* Two-Part Stacked Hero (Phone Only): follows content height */
   .kh-root .hero {
-    --safe-top: calc(var(--nav-h) + 16px);
+    --safe-top: calc(var(--nav-h) + 12px);
     --safe-bottom: 24px;
-    min-height: 100svh;
-    min-height: 100dvh;
     height: auto;
+    min-height: auto;
     max-height: none;
-    padding-top: calc(var(--nav-h) + 20px);
-    padding-bottom: 32px;
+    padding-top: var(--nav-h);
+    padding-bottom: 24px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: stretch;
     position: relative;
     overflow-x: clip;
+    background: #010204;
   }
 
-  /* Phone: video layer fills the hero horizontally (width 120%, centered) */
-  .kh-root .hero-video-wrapper {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    right: auto;
-    bottom: 0;
-    width: 120%;
-    height: 100%;
-    transform: translateX(-50%);
+  /* Background layer acts as top block in document flow */
+  .kh-root .hero-bg-layer {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #010204;
     overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
   }
 
+  /* 1. TOP VIDEO SECTION: 100% width, aspect-ratio 16/10, bottom fade into content */
+  .kh-root .hero-video-wrapper {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 55vh;
+    background: #010204;
+    transform: none;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Soft left/right fade & 20% bottom fade into the dark content area */
+    -webkit-mask-image: 
+      linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    mask-image: 
+      linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  /* Video inside: full opacity, centered, complete phone artwork visible */
   .kh-root .hero-video,
   .kh-root .hero-poster-fallback {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
-    opacity: 0.45;
+    opacity: 1;
     mix-blend-mode: screen;
     transform: none;
-    -webkit-mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 70%, transparent 100%);
-    mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 70%, transparent 100%);
+    -webkit-mask-image: none;
+    mask-image: none;
     z-index: 2;
   }
 
-  /* Full overlay of rgba(6,9,19,0.7) so heading and buttons stay readable */
-  .kh-root .hero-readability-overlay {
-    background: rgba(6, 9, 19, 0.7);
+  /* Hide overlays on phones so video is 100% clear with no text over it */
+  .kh-root .hero-readability-overlay,
+  .kh-root .hero-overlay-left,
+  .kh-root .hero-overlay-top,
+  .kh-root .hero-overlay-bottom,
+  .kh-root .hero-floor-glow,
+  .kh-root .bg-huge-text-container {
+    display: none !important;
   }
 
+  /* 2. BOTTOM CONTENT SECTION: sits directly below video with smooth 10px overlap */
   .kh-root .hero-content-wrap {
-    margin-top: 0;
-    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+    margin-top: -10px;
+    padding: 0 20px 20px 20px;
     width: 100%;
-    max-width: 540px;
+    max-width: 100%;
     height: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     box-sizing: border-box;
+    background: transparent;
+    pointer-events: auto;
   }
 
   .kh-root .hero-content {
     max-width: 100%;
     width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  /* Keep scroll indicator at the bottom of hero content flow */
+  .kh-root .hero-scroll-indicator {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 16px auto 4px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .kh-root .marquee-arena {
@@ -1751,6 +1809,7 @@
 
 @media (max-width: 640px) {
   .kh-root .hero-content-wrap {
+    margin-top: -10px;
     padding: 0 16px 24px 16px;
     width: 100%;
     max-width: 100%;

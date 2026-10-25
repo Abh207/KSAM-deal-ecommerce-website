@@ -1,37 +1,9 @@
 import React from "react";
 import "./Header.css";
 
-const Header = ({ searchTerm, setSearchTerm, categories, selectedCategory, setSelectedCategory, cartCount }) => {
+const Header = ({ searchTerm, setSearchTerm, categories, selectedCategory, setSelectedCategory }) => {
     return (
         <header className="beauty-header">
-
-            {/* Top Navigation */}
-            <div className="beauty-header-top">
-
-                <div className="beauty-logo">
-                    <span className="beauty-logo-main">KSAM</span>
-                    <span className="beauty-logo-sub">BEAUTY</span>
-                </div>
-
-                <nav className="beauty-nav">
-                    <a href="#home">Home</a>
-                    <a href="#products">Products</a>
-                    <a href="#offers">Offers</a>
-                    <a href="#categories">Categories</a>
-                </nav>
-
-                <a
-                    href="./addToCart.html"
-                    className="beauty-cart-link"
-                    aria-label="Open shopping cart"
-                >
-                    🛒
-                    <span className="beauty-cart-count">
-                        {cartCount}
-                    </span>
-                </a>
-
-            </div>
 
             {/* Search */}
             <div className="beauty-search-container">

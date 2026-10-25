@@ -1222,8 +1222,7 @@
     margin-top: 1.25rem !important;
   }
   .deal-product-card .deal-card-img-wrap,
-  .product-card .product-card-img-panel,
-  .ksam-product-card .ksam-card-img-wrap {
+  .product-card .product-card-img-panel {
     aspect-ratio: 4 / 5 !important;
   }
   .product-card,
@@ -1550,11 +1549,45 @@
   z-index: 0;
 }
 
+/* Top Row: One flex row containing badge at top-left and heart at top-right (vertically centered on same line) */
+.ksam-card-top-row {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.ksam-card-top-row .ksam-card-badge-wrap {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
+.ksam-card-top-row .ksam-card-heart-btn {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: auto !important;
+  margin: 0 !important;
+}
+
 /* Badge (top-left) */
 .ksam-card-badge-wrap {
   position: absolute;
-  top: 22px;
-  left: 22px;
+  top: 12px;
+  left: 12px;
   z-index: 20;
   pointer-events: none;
 }
@@ -1577,8 +1610,8 @@
 /* Heart button (top-right) */
 .ksam-card-heart-btn {
   position: absolute;
-  top: 22px;
-  right: 22px;
+  top: 12px;
+  right: 12px;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -1603,12 +1636,13 @@
   border-radius: 50%;
 }
 
-/* Image container: Centered at top, aspect ratio 1/1, contain, directly on dark gradient */
+/* Image container: Centered directly under top row, aspect ratio 1/1, contain, directly on dark gradient */
 .ksam-card-img-wrap {
   position: relative;
   z-index: 10;
   width: 100%;
   aspect-ratio: 1 / 1 !important;
+  margin-top: 36px !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1620,7 +1654,7 @@
   z-index: 10;
   width: 100%;
   height: 100%;
-  max-height: 55%;
+  max-height: 82% !important;
   object-fit: contain;
   padding: 8px;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
@@ -1769,31 +1803,100 @@
   }
 }
 
-/* Phone media query (max-width: 767px): 2 cards per row, gap 12px, padding 12px, inner padding 14px */
+/* Phone media query (max-width: 767px): 2 cards per row, gap 12px, padding 12px */
 @media (max-width: 767px) {
   .ksam-product-card {
-    padding: 14px !important;
+    position: relative !important;
+    padding: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
   }
+
+  /* 1. Badge & Heart in ONE row at the top of the card:
+     Badge at top-left, heart at top-right, both vertically centered on the same line,
+     both 12px from top and the sides. */
   .ksam-card-badge-wrap {
-    top: 14px;
-    left: 14px;
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    z-index: 20 !important;
+    pointer-events: none !important;
+    margin: 0 !important;
   }
+
   .ksam-card-badge {
-    height: 28px;
-    padding: 0 12px;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 28px !important;
+    padding: 0 12px !important;
     font-size: 13px !important;
+    line-height: 1 !important;
   }
+
   .ksam-card-heart-btn {
-    top: 14px;
-    right: 14px;
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    height: 28px !important;
+    width: 28px !important;
+    min-height: 28px !important;
+    min-width: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 20 !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
+
+  .ksam-card-heart-btn::before {
+    content: "";
+    position: absolute;
+    inset: -8px; /* 44px tap target */
+  }
+
   .ksam-card-heart-icon {
-    width: 26px;
-    height: 26px;
+    width: 24px !important;
+    height: 24px !important;
   }
+
+  /* 2. Image Area: Directly under the badge & heart row, filling the image area.
+     Centered, object-fit contain, using full width of card's image area,
+     with NO blank block above it and NO large gap below it. */
   .ksam-card-img-wrap {
-    aspect-ratio: 4 / 5 !important;
+    margin-top: 32px !important;
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    position: relative !important;
   }
+
+  .ksam-card-img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    padding: 4px !important;
+  }
+
+  /* 3. Product info & content follows right under the image */
+  .ksam-card-content {
+    margin-top: 10px !important;
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
   .ksam-card-title {
     font-size: clamp(14px, 4vw, 16px) !important;
     white-space: normal !important;
@@ -1802,12 +1905,15 @@
     -webkit-box-orient: vertical !important;
     min-height: 40px !important;
   }
+
   .ksam-card-price {
     font-size: clamp(20px, 5.5vw, 24px) !important;
   }
+
   .ksam-card-rating-num {
     font-size: 15px !important;
   }
+
   .ksam-view-btn {
     height: 46px !important;
     font-size: 16px !important;
@@ -1819,14 +1925,7 @@
   .ksam-product-card {
     padding: 16px !important;
   }
-  .ksam-card-badge-wrap {
-    top: 16px;
-    left: 16px;
-  }
-  .ksam-card-heart-btn {
-    top: 16px;
-    right: 16px;
-  }
+
   .ksam-card-title {
     font-size: 18px !important;
   }

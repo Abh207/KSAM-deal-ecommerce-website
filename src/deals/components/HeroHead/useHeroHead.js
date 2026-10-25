@@ -32,7 +32,7 @@ export function resolveAsset(path) {
   const viteBase = typeof import.meta !== "undefined" && import.meta.env?.BASE_URL && import.meta.env.BASE_URL !== "/"
     ? import.meta.env.BASE_URL.replace(/\/+$/, "")
     : "";
-  if (clean.startsWith("videos/") || clean.startsWith("assets/") || clean.startsWith("ksamhead/")) {
+  if (clean.startsWith("videos/") || clean.startsWith("ksamhead/")) {
     return `${viteBase}/${clean}`.replace(/\/+/g, "/");
   }
   return `${viteBase}${BASE}${clean}`.replace(/\/+/g, "/");
@@ -227,6 +227,13 @@ export function useHeroHead({ paused = false } = {}) {
   // 4. Parallax & Huge Background Text Slide
   useEffect(() => {
     const handleScroll = () => {
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        if (heroContentRef.current) {
+          heroContentRef.current.style.transform = "";
+          heroContentRef.current.style.opacity = "";
+        }
+        return;
+      }
       const currentScrollY = window.scrollY;
 
       if (hugeTextRef.current) {
@@ -326,16 +333,22 @@ export function useHeroHead({ paused = false } = {}) {
       if (shouldPlay) {
         const rate = heroData.playbackRate || 0.9;
         if (vid) {
+          vid.defaultMuted = true;
+          vid.muted = true;
           vid.playbackRate = rate;
           try {
             const p = vid.play();
             if (p !== undefined) {
               p.catch(() => {
-                setVideoFailed(true);
+                if (vid.error) {
+                  setVideoFailed(true);
+                }
               });
             }
           } catch {
-            setVideoFailed(true);
+            if (vid.error) {
+              setVideoFailed(true);
+            }
           }
         }
         if (ambVid) {
@@ -389,7 +402,9 @@ export function useHeroHead({ paused = false } = {}) {
 
     // Video error handling
     const onVideoError = () => {
-      setVideoFailed(true);
+      if (vid && vid.error) {
+        setVideoFailed(true);
+      }
     };
     if (vid) {
       vid.addEventListener("error", onVideoError);
@@ -433,6 +448,7 @@ export function useHeroHead({ paused = false } = {}) {
     heroData,
     countdown,
     videoFailed,
+    setVideoFailed,
     isMobile,
     isSaveDataOrReducedMotion
   };

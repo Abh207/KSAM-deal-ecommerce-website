@@ -4,6 +4,7 @@ import { requireAuth } from "../auth/auth.js";
 
 import ShopProductCard from "./ShopProductCard.jsx";
 import shopProducts from "./shopProducts.json";
+import Navbar from "../deals/components/Navbar.jsx";
 
 
 /* =========================================================
@@ -325,77 +326,8 @@ function ShopHome() {
         <div className="shop-page">
 
 
-            {/* =================================================
-                HEADER
-            ================================================= */}
-
-            <header className="shop-header">
-
-                <div className="shop-logo">
-
-                    <span>
-                        KSAM
-                    </span>
-
-                    Deal
-
-                </div>
-
-
-                <nav className="shop-navigation">
-
-                    <a href="./shop.html">
-                        Home
-                    </a>
-
-                    <a href="#shop-categories">
-                        Categories
-                    </a>
-
-                    <a href="#shop-products">
-                        Products
-                    </a>
-
-                    <a href="#shop-deals">
-                        Deals
-                    </a>
-
-                    <a href="#shop-services">
-                        Services
-                    </a>
-
-                </nav>
-
-
-                <div className="shop-header-actions">
-
-                    <button
-                        className="shop-search-button"
-                        onClick={() => {
-
-                            document
-                                .getElementById(
-                                    "shop-search"
-                                )
-                                ?.focus();
-
-                        }}
-                        aria-label="Search products"
-                    >
-                        🔍
-                    </button>
-
-
-                    <a
-                        href="./addToCart.html"
-                        className="shop-cart-button"
-                    >
-                        🛒 Cart
-                    </a>
-
-                </div>
-
-            </header>
+            {/* Shared Deals-style Navbar */}
+            <Navbar />
 
 
             {/* =================================================

@@ -21,6 +21,10 @@ async function run() {
   });
 
   const page = await browser.newPage();
+  await page.evaluateOnNewDocument(() => {
+    sessionStorage.setItem('ksam_splash_seen', 'true');
+  });
+
   const url = 'http://localhost:5173/KSAM-deal-ecommerce-website/';
   console.log('Navigating to', url);
 
@@ -30,19 +34,9 @@ async function run() {
     await page.setViewport({ width: vp.width, height: vp.height });
     await page.goto(url, { waitUntil: 'networkidle2' });
 
-    // Handle splash screen if present: click SKIP or wait for it to fade
-    try {
-      const skipBtn = await page.waitForSelector('.splash-screen button, .splash-skip-btn, button:has-text("SKIP")', { timeout: 1500 });
-      if (skipBtn) {
-        await skipBtn.click();
-      }
-    } catch {
-      // splash might have completed or not shown
-    }
-
-    // Wait for hero to be ready and splash to be removed
-    await page.waitForFunction(() => !document.querySelector('.splash-screen') || window.getComputedStyle(document.querySelector('.splash-screen')).opacity === '0', { timeout: 8000 }).catch(() => {});
-    await new Promise(r => setTimeout(r, 1200));
+    // Wait for hero to be rendered and video playback to begin
+    await page.waitForSelector('.kh-root .hero', { timeout: 10000 });
+    await new Promise(r => setTimeout(r, 1600));
 
     const check = await page.evaluate((vpWidth) => {
       const hero = document.querySelector('.kh-root .hero');
