@@ -12,9 +12,10 @@
       "Audio Gear"
     ],
     "video": [
-      "assets/video/iphone-explode.webm",
-      "assets/video/iphone-explode.mp4"
+      "videos/hero/hero_bg_new.webm",
+      "videos/hero/hero_bg_new.mp4"
     ],
+    "poster": "videos/hero/hero_bg_new_poster.webp",
     "frames": {
       "folder": "assets/sequence/product-1/",
       "frameCount": 111,

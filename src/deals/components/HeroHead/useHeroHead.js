@@ -16,10 +16,10 @@ export const INLINE_DATA = {
       "Audio Gear"
     ],
     video: [
-      "assets/video/iphone-explode.webm",
-      "assets/video/iphone-explode.mp4"
+      "videos/hero/hero_bg_new.webm",
+      "videos/hero/hero_bg_new.mp4"
     ],
-    poster: "assets/products/iphone-blue.png"
+    poster: "videos/hero/hero_bg_new_poster.webp"
   }
 };
 
@@ -32,6 +32,9 @@ export function resolveAsset(path) {
   const viteBase = typeof import.meta !== "undefined" && import.meta.env?.BASE_URL && import.meta.env.BASE_URL !== "/"
     ? import.meta.env.BASE_URL.replace(/\/+$/, "")
     : "";
+  if (clean.startsWith("videos/") || clean.startsWith("assets/") || clean.startsWith("ksamhead/")) {
+    return `${viteBase}/${clean}`.replace(/\/+/g, "/");
+  }
   return `${viteBase}${BASE}${clean}`.replace(/\/+/g, "/");
 }
 
@@ -48,6 +51,28 @@ export function useHeroHead({ paused = false } = {}) {
   const [heroData, setHeroData] = useState(INLINE_DATA.hero);
   const [countdown, setCountdown] = useState("00:00:00");
   const [videoFailed, setVideoFailed] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 767 : false
+  );
+  const [isSaveDataOrReducedMotion, setIsSaveDataOrReducedMotion] = useState(false);
+
+  // Check Save-Data, slow connection, reduced motion, and mobile screen size
+  useEffect(() => {
+    const checkSettings = () => {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const navConn = typeof navigator !== "undefined" ? navigator.connection : null;
+      const saveData = Boolean(
+        navConn?.saveData ||
+        (navConn?.effectiveType && ["slow-2g", "2g", "3g"].includes(navConn.effectiveType))
+      );
+      setIsSaveDataOrReducedMotion(reducedMotion || saveData);
+      setIsMobile(window.innerWidth <= 767);
+    };
+
+    checkSettings();
+    window.addEventListener("resize", checkSettings, { passive: true });
+    return () => window.removeEventListener("resize", checkSettings);
+  }, []);
 
   // 1. Fetch data with inline fallback
   useEffect(() => {
@@ -283,7 +308,13 @@ export function useHeroHead({ paused = false } = {}) {
 
     function managePlayback() {
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reducedMotion) {
+      const navConn = typeof navigator !== "undefined" ? navigator.connection : null;
+      const isSaveData = Boolean(
+        navConn?.saveData ||
+        (navConn?.effectiveType && ["slow-2g", "2g", "3g"].includes(navConn.effectiveType))
+      );
+
+      if (reducedMotion || isSaveData) {
         if (vid) vid.pause();
         if (ambVid) ambVid.pause();
         drawAmbientFrame();
@@ -296,11 +327,15 @@ export function useHeroHead({ paused = false } = {}) {
         const rate = heroData.playbackRate || 0.9;
         if (vid) {
           vid.playbackRate = rate;
-          const p = vid.play();
-          if (p !== undefined) {
-            p.catch(() => {
-              setVideoFailed(true);
-            });
+          try {
+            const p = vid.play();
+            if (p !== undefined) {
+              p.catch(() => {
+                setVideoFailed(true);
+              });
+            }
+          } catch {
+            setVideoFailed(true);
           }
         }
         if (ambVid) {
@@ -397,6 +432,8 @@ export function useHeroHead({ paused = false } = {}) {
     headlineRef,
     heroData,
     countdown,
-    videoFailed
+    videoFailed,
+    isMobile,
+    isSaveDataOrReducedMotion
   };
 }

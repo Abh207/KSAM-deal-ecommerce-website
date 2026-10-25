@@ -266,21 +266,6 @@
   z-index: 1;
 }
 
-/* Ambient Fill Layer (Video + Canvas) */
-.kh-root .hero-ambient-video,
-.kh-root .hero-ambient-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(40px) saturate(1.2) brightness(0.6);
-  transform: scale(1.3);
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 1;
-}
-
 /* Studio Floor Glow */
 .kh-root .hero-floor-glow {
   position: absolute;
@@ -301,38 +286,51 @@
   mix-blend-mode: screen;
 }
 
-/* Video: Safe Area Framing */
-.kh-root .hero-video {
+/* Video Layer Wrapper (Laptop: 1025px and above) */
+.kh-root .hero-video-wrapper {
   position: absolute;
-  top: var(--safe-top);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 68%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Video & Poster Fallback - Pure Black blend & Edge masks */
+.kh-root .hero-video,
+.kh-root .hero-poster-fallback {
+  position: absolute;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   width: 100%;
-  height: calc(100% - var(--safe-top));
-  object-fit: contain;
-  object-position: var(--phone-x) 44%;
-  transform: scale(var(--phone-scale, 0.88));
-  transform-origin: var(--phone-x) 44%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
   mix-blend-mode: screen;
+  opacity: 0.9;
   z-index: 2;
   display: block;
   border: none;
   outline: none;
   box-shadow: none;
+  pointer-events: none;
   -webkit-mask-image: 
-    linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 78%, transparent 100%);
+    linear-gradient(90deg, transparent 0%, #000 25%, #000 95%, transparent 100%),
+    radial-gradient(ellipse 90% 90% at 50% 50%, #000 60%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-image: 
-    linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 78%, transparent 100%);
+    linear-gradient(90deg, transparent 0%, #000 25%, #000 95%, transparent 100%),
+    radial-gradient(ellipse 90% 90% at 50% 50%, #000 60%, transparent 100%);
   mask-composite: intersect;
 }
 
 @keyframes khPosterSlowZoom {
   0% { transform: scale(1); }
-  50% { transform: scale(1.04); }
+  50% { transform: scale(1.03); }
   100% { transform: scale(1); }
 }
 
@@ -340,31 +338,22 @@
   animation: khPosterSlowZoom 18s ease-in-out infinite alternate;
 }
 
-/* Poster Image Fallback (When Video Mode Fails) */
 .kh-root .hero-poster-fallback {
-  position: absolute;
-  top: var(--safe-top);
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: calc(100% - var(--safe-top));
-  object-fit: contain;
-  object-position: var(--phone-x) 44%;
-  transform: scale(var(--phone-scale, 0.88));
-  transform-origin: var(--phone-x) 44%;
-  mix-blend-mode: screen;
-  z-index: 2;
-  pointer-events: none;
   animation: khPosterSlowZoom 18s ease-in-out infinite alternate;
-  -webkit-mask-image: 
-    linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 78%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: 
-    linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 78%, transparent 100%);
-  mask-composite: intersect;
+}
+
+/* Readability Overlay between video and text */
+.kh-root .hero-readability-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(6, 9, 19, 0.9) 0%,
+    rgba(6, 9, 19, 0.6) 40%,
+    rgba(6, 9, 19, 0.1) 100%
+  );
 }
 
 /* 3 Seamless Blend Overlays */
@@ -1524,7 +1513,7 @@
 
 @media (max-width: 1024px) {
   .kh-root {
-    --phone-x: 50%;
+    --phone-x: 60%;
     /* Tablet card sizing (768px - 1024px) - Compact 150px */
     --card-w: 150px;
     --card-gap: 12px;
@@ -1533,8 +1522,6 @@
     --card-name-size: 12px;
     --card-price-size: 15px;
     --card-btn-size: 30px;
-    --product-stage-h: clamp(260px, 32vh, 320px);
-    --hero-clearance: 28px;
   }
 
   .kh-root .hero-accent-line {
@@ -1544,69 +1531,71 @@
   .kh-root .hero {
     --safe-top: calc(var(--nav-h) + 12px);
     --safe-bottom: 32px;
-    height: auto;
+    height: 100svh;
     min-height: 100svh;
-    min-height: 100dvh;
-    max-height: none;
+    max-height: 920px;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
+    justify-content: flex-start;
     position: relative;
-    padding-top: 0;
-    padding-bottom: 36px;
+    padding-top: var(--nav-h);
+    padding-bottom: 0;
+  }
+
+  /* Tablet: Video layer width about 80%, right aligned */
+  .kh-root .hero-video-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: auto;
+    width: 80%;
+    height: 100%;
+    transform: none;
+    overflow: hidden;
   }
 
   .kh-root .hero-video,
   .kh-root .hero-poster-fallback {
     position: absolute;
-    top: var(--safe-top);
-    left: 0;
-    right: 0;
+    inset: 0;
     width: 100%;
-    height: var(--product-stage-h);
-    bottom: auto;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
     object-position: center center;
+    opacity: 0.85;
+    mix-blend-mode: screen;
     transform: none;
-    transform-origin: center center;
-    mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 65%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 65%, transparent 100%);
+    -webkit-mask-image: 
+      linear-gradient(90deg, transparent 0%, #000 20%, #000 95%, transparent 100%),
+      radial-gradient(ellipse 90% 90% at 50% 50%, #000 65%, transparent 100%);
+    mask-image: 
+      linear-gradient(90deg, transparent 0%, #000 20%, #000 95%, transparent 100%),
+      radial-gradient(ellipse 90% 90% at 50% 50%, #000 65%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
     z-index: 2;
   }
 
-  .kh-root .hero-ambient-video,
-  .kh-root .hero-ambient-canvas {
-    height: calc(var(--safe-top) + var(--product-stage-h) + 60px);
-    bottom: auto;
-    object-position: center center;
-  }
-
-  .kh-root .hero-floor-glow {
-    top: calc(var(--safe-top) + var(--product-stage-h) - 80px);
-    bottom: auto;
-    height: 160px;
-  }
-
-  .kh-root .hero-overlay-left {
+  /* Stronger left overlay (0.92 to 0.5) */
+  .kh-root .hero-readability-overlay {
     background: linear-gradient(
-      180deg,
-      rgba(1, 2, 4, 0) 0%,
-      rgba(1, 2, 4, 0.25) calc(var(--safe-top) + var(--product-stage-h) * 0.4),
-      rgba(1, 2, 4, 0.88) calc(var(--safe-top) + var(--product-stage-h)),
-      rgba(1, 2, 4, 0.98) calc(var(--safe-top) + var(--product-stage-h) + var(--hero-clearance)),
-      #010204 100%
+      90deg,
+      rgba(6, 9, 19, 0.94) 0%,
+      rgba(6, 9, 19, 0.82) 42%,
+      rgba(6, 9, 19, 0.5) 100%
     );
   }
 
   .kh-root .hero-content-wrap {
-    margin-top: calc(var(--safe-top) + var(--product-stage-h) + var(--hero-clearance));
-    padding: 0 24px 32px 24px;
-    max-width: 640px;
+    margin-top: 0;
+    padding: 0 32px;
+    max-width: 600px;
     width: 100%;
-    height: auto;
+    height: 100%;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   .kh-root .hero-content {
@@ -1670,6 +1659,8 @@
 /* Phone Card Sizing & Spacing (max-width: 767px) - Compact 128-135px */
 @media (max-width: 767px) {
   .kh-root {
+    --nav-height: 64px;
+    --nav-h: 64px;
     --card-w: clamp(128px, 36vw, 135px);
     --card-gap: 10px;
     --card-pad: 8px;
@@ -1678,6 +1669,75 @@
     --card-price-size: clamp(14.5px, 4vw, 15.5px);
     --card-btn-size: 30px;
   }
+
+  .kh-root .hero {
+    --safe-top: calc(var(--nav-h) + 16px);
+    --safe-bottom: 24px;
+    min-height: 100svh;
+    min-height: 100dvh;
+    height: auto;
+    max-height: none;
+    padding-top: calc(var(--nav-h) + 20px);
+    padding-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: clip;
+  }
+
+  /* Phone: video layer fills the hero horizontally (width 120%, centered) */
+  .kh-root .hero-video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: auto;
+    bottom: 0;
+    width: 120%;
+    height: 100%;
+    transform: translateX(-50%);
+    overflow: hidden;
+  }
+
+  .kh-root .hero-video,
+  .kh-root .hero-poster-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    opacity: 0.45;
+    mix-blend-mode: screen;
+    transform: none;
+    -webkit-mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 70%, transparent 100%);
+    mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 70%, transparent 100%);
+    z-index: 2;
+  }
+
+  /* Full overlay of rgba(6,9,19,0.7) so heading and buttons stay readable */
+  .kh-root .hero-readability-overlay {
+    background: rgba(6, 9, 19, 0.7);
+  }
+
+  .kh-root .hero-content-wrap {
+    margin-top: 0;
+    padding: 0 20px;
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .kh-root .hero-content {
+    max-width: 100%;
+    width: 100%;
+  }
+
   .kh-root .marquee-arena {
     gap: 12px;
   }
@@ -1690,73 +1750,7 @@
 }
 
 @media (max-width: 640px) {
-  .kh-root {
-    --nav-height: 64px;
-    --nav-h: 64px;
-    --phone-x: 50%;
-    --product-stage-h: clamp(185px, 28vh, 220px);
-    --hero-clearance: 26px;
-  }
-
-  .kh-root .hero {
-    --safe-top: calc(var(--nav-h) + 8px);
-    --safe-bottom: 20px;
-    min-height: 100svh;
-    min-height: 100dvh;
-    height: auto;
-    max-height: none;
-    padding-top: 0;
-    padding-bottom: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .kh-root .hero-video,
-  .kh-root .hero-poster-fallback {
-    position: absolute;
-    top: var(--safe-top);
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: var(--product-stage-h);
-    bottom: auto;
-    object-fit: contain;
-    object-position: center center;
-    transform: none;
-    transform-origin: center center;
-    mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, #000 70%, transparent 100%);
-    z-index: 2;
-  }
-
-  .kh-root .hero-ambient-video,
-  .kh-root .hero-ambient-canvas {
-    height: calc(var(--safe-top) + var(--product-stage-h) + 40px);
-    bottom: auto;
-    object-position: center center;
-  }
-
-  .kh-root .hero-floor-glow {
-    top: calc(var(--safe-top) + var(--product-stage-h) - 60px);
-    bottom: auto;
-    height: 120px;
-  }
-
-  .kh-root .hero-overlay-left {
-    background: linear-gradient(
-      180deg,
-      rgba(1, 2, 4, 0) 0%,
-      rgba(1, 2, 4, 0.25) calc(var(--safe-top) + var(--product-stage-h) * 0.4),
-      rgba(1, 2, 4, 0.88) calc(var(--safe-top) + var(--product-stage-h)),
-      rgba(1, 2, 4, 0.98) calc(var(--safe-top) + var(--product-stage-h) + var(--hero-clearance)),
-      #010204 100%
-    );
-  }
-
   .kh-root .hero-content-wrap {
-    margin-top: calc(var(--safe-top) + var(--product-stage-h) + var(--hero-clearance));
     padding: 0 16px 24px 16px;
     width: 100%;
     max-width: 100%;
@@ -1883,6 +1877,14 @@
     transform: none !important;
     opacity: 1 !important;
     transition: none !important;
+  }
+
+  .kh-root .hero-video {
+    display: none !important;
+  }
+
+  .kh-root .hero-poster-fallback {
+    display: block !important;
   }
 
   .kh-root .product-card:hover,

@@ -17,12 +17,16 @@ export function HeroHead({ paused = false }) {
     headlineRef,
     heroData,
     countdown,
-    videoFailed
+    videoFailed,
+    isMobile,
+    isSaveDataOrReducedMotion
   } = useHeroHead({ paused });
 
-  const posterUrl = resolveAsset(heroData.poster || "assets/products/iphone-blue.png");
-  const videoWebm = resolveAsset("assets/video/iphone-explode.webm");
-  const videoMp4 = resolveAsset("assets/video/iphone-explode.mp4");
+  const posterUrl = resolveAsset("videos/hero/hero_bg_new_poster.webp");
+  const videoWebm = resolveAsset("videos/hero/hero_bg_new.webm");
+  const videoMp4 = resolveAsset("videos/hero/hero_bg_new.mp4");
+  const videoMobileWebm = resolveAsset("videos/hero/hero_bg_new_mobile.webm");
+  const videoMobileMp4 = resolveAsset("videos/hero/hero_bg_new_mobile.mp4");
 
   const scrollToShowcase = (e) => {
     e.preventDefault();
@@ -51,60 +55,49 @@ export function HeroHead({ paused = false }) {
           </div>
         </div>
 
-        {/* Layer 1: Background Video & Ambient Canvas */}
-        <div className="hero-bg-layer">
-          <video
-            ref={ambientVideoRef}
-            className="hero-ambient-video"
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            poster={posterUrl}
-            aria-hidden="true"
-          >
-            <source src={videoWebm} type="video/webm" />
-            <source src={videoMp4} type="video/mp4" />
-          </video>
+        {/* Layer 1: Background Video Layer */}
+        <div className="hero-bg-layer" aria-hidden="true">
+          <div className="hero-floor-glow" />
 
-          <canvas
-            ref={ambientCanvasRef}
-            className="hero-ambient-canvas"
-            width={320}
-            height={180}
-            aria-hidden="true"
-          />
+          {/* Video Container positioned on the right */}
+          <div className="hero-video-wrapper">
+            {!isSaveDataOrReducedMotion && (
+              <video
+                ref={videoRef}
+                className={`hero-video ${videoFailed ? "video-fallback-poster" : ""}`}
+                autoPlay
+                muted
+                playsInline
+                loop
+                preload="metadata"
+                poster={posterUrl}
+                aria-hidden="true"
+              >
+                <source src={videoMobileWebm} type="video/webm" media="(max-width: 767px)" />
+                <source src={videoWebm} type="video/webm" media="(min-width: 768px)" />
+                <source src={videoWebm} type="video/webm" />
+                <source src={videoMobileMp4} type="video/mp4" media="(max-width: 767px)" />
+                <source src={videoMp4} type="video/mp4" media="(min-width: 768px)" />
+                <source src={videoMp4} type="video/mp4" />
+              </video>
+            )}
 
-          <div className="hero-floor-glow" aria-hidden="true" />
+            {(isSaveDataOrReducedMotion || videoFailed) && (
+              <img
+                src={posterUrl}
+                alt="KSAM Deal Phone Showcase"
+                className="hero-poster-fallback"
+                draggable="false"
+              />
+            )}
 
-          <video
-            ref={videoRef}
-            className={`hero-video ${videoFailed ? "video-fallback-poster" : ""}`}
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            poster={posterUrl}
-            aria-hidden="true"
-          >
-            <source src={videoWebm} type="video/webm" />
-            <source src={videoMp4} type="video/mp4" />
-          </video>
+            {/* Readability Overlay between video and text */}
+            <div className="hero-readability-overlay" />
+          </div>
 
-          {videoFailed && (
-            <img
-              src={posterUrl}
-              alt="iPhone 15 Pro Titanium"
-              className="hero-poster-fallback"
-              draggable="false"
-            />
-          )}
-
-          <div className="hero-overlay hero-overlay-left" aria-hidden="true" />
-          <div className="hero-overlay hero-overlay-top" aria-hidden="true" />
-          <div className="hero-overlay hero-overlay-bottom" aria-hidden="true" />
+          <div className="hero-overlay hero-overlay-left" />
+          <div className="hero-overlay hero-overlay-top" />
+          <div className="hero-overlay hero-overlay-bottom" />
         </div>
 
         {/* Layer 2: Hero Content Block */}

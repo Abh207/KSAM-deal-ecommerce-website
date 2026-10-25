@@ -18,7 +18,13 @@ import {
   Handshake,
   MessageSquare,
   X,
-  UserCheck
+  UserCheck,
+  User,
+  Phone,
+  Tag,
+  MapPin,
+  Users,
+  ChevronDown
 } from "lucide-react";
 import { supabase } from "../lib/supabase.js";
 import { BASE_URL } from "../auth/auth.js";
@@ -322,6 +328,7 @@ export function ContactUsPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: SUBJECTS[0],
     message: "",
     website: "" // Hidden honeypot
@@ -344,12 +351,25 @@ export function ContactUsPage() {
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Image load fallback states
-  const [heroImgFailed, setHeroImgFailed] = useState(false);
+  // Video Background & Fallback States
+  const heroRef = useRef(null);
+  const videoRef = useRef(null);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [isMobileScreen, setIsMobileScreen] = useState(() => typeof window !== "undefined" && window.innerWidth <= 767);
+  const [disableVideo, setDisableVideo] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const conn = navigator.connection;
+    const isSaveData = Boolean(conn?.saveData);
+    const isSlow = Boolean(conn?.effectiveType && (conn.effectiveType === "2g" || conn.effectiveType === "3g" || conn.effectiveType === "slow-2g"));
+    return isReduced || isSaveData || isSlow;
+  });
   const [agentImgFailed, setAgentImgFailed] = useState(false);
   const [teamImgFailed, setTeamImgFailed] = useState(false);
   const [statsBannerFailed, setStatsBannerFailed] = useState(false);
   const [ctaImgFailed, setCtaImgFailed] = useState(false);
+  const [characterImgFailed, setCharacterImgFailed] = useState(false);
+  const [plantImgFailed, setPlantImgFailed] = useState(false);
 
   useThemeSync();
 
@@ -418,6 +438,63 @@ export function ContactUsPage() {
 
     return () => clearTimeout(typeTimer);
   }, [currentText, isDeleting, currentPhraseIndex]);
+
+  // Screen resize listener for mobile video source selection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 767);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Video Playback & Viewport/Tab Visibility Observer
+  useEffect(() => {
+    const heroEl = heroRef.current;
+    const vid = videoRef.current;
+    if (!heroEl || !vid || disableVideo) return;
+
+    let isHeroInView = true;
+    let isPageVisible = !document.hidden;
+
+    const managePlayback = () => {
+      if (isHeroInView && isPageVisible && !disableVideo) {
+        const playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            setVideoFailed(true);
+          });
+        }
+      } else {
+        vid.pause();
+      }
+    };
+
+    const handleVisibility = () => {
+      isPageVisible = !document.hidden;
+      managePlayback();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isHeroInView = entry.isIntersecting;
+        managePlayback();
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(heroEl);
+
+    // Initial playback attempt
+    managePlayback();
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      observer.disconnect();
+    };
+  }, [disableVideo, isMobileScreen]);
 
   // IntersectionObserver for Stats Strip count-up
   useEffect(() => {
@@ -550,8 +627,9 @@ export function ContactUsPage() {
 
     const name = formData.name.trim();
     const email = formData.email.trim();
+    const phone = formData.phone?.trim() || "";
     const subject = formData.subject.trim();
-    const message = formData.message.trim();
+    let message = formData.message.trim();
 
     if (name.length < 2 || name.length > 80) {
       setError("Name must be between 2 and 80 characters.");
@@ -568,6 +646,10 @@ export function ContactUsPage() {
     if (message.length < 10 || message.length > 2000) {
       setError("Message must be between 10 and 2000 characters.");
       return;
+    }
+
+    if (phone) {
+      message = `${message}\n\nPhone: ${phone}`;
     }
 
     setLoading(true);
@@ -619,120 +701,131 @@ export function ContactUsPage() {
         <div className="ct-grid-overlay" />
       </div>
 
-      <main className="ct-container">
-        {/* ==================================================================
-            1. HERO SECTION (Inspired by Image 4 Layout)
-            ================================================================== */}
-        <section className="ct-hero-section">
-          <div className="ct-hero-grid">
-            {/* Left: Illustration with Floating Chips */}
-            <div className="ct-hero-visual">
-              <div className="ct-hero-blob-stage">
-                {!heroImgFailed ? (
-                  <img
-                    src={`${import.meta.env.BASE_URL}contact/hero-illustration-opt.jpg`}
-                    alt="Customer support, messaging, and deal assistance illustration"
-                    width="440"
-                    height="440"
-                    loading="eager"
-                    className="ct-hero-img"
-                    onError={() => setHeroImgFailed(true)}
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-[#0c1b33] to-[#04210f] rounded-3xl border border-white/10">
-                    <Headphones size={54} className="text-[#34f5a1] mb-3" />
-                    <h3 className="text-xl font-bold text-white mb-1">Direct Support</h3>
-                    <p className="text-xs text-[#9ca3af]">We're here to assist you with every deal</p>
-                  </div>
-                )}
+      {/* ==================================================================
+          1. HERO SECTION (Full-Hero Background Video Loop)
+          ================================================================== */}
+      <section className="ct-hero-section" ref={heroRef} id="contact-hero">
+        {/* Full-Hero Background Video Layer */}
+        <div className="ct-hero-bg-layer" aria-hidden="true">
+          {disableVideo || videoFailed ? (
+            <img
+              src={`${import.meta.env.BASE_URL}videos/contact/hero_bg_poster.webp`}
+              alt=""
+              className="ct-hero-bg-poster"
+              draggable="false"
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              key={isMobileScreen ? "mobile-bg-vid" : "desktop-bg-vid"}
+              className="ct-hero-bg-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={`${import.meta.env.BASE_URL}videos/contact/hero_bg_poster.webp`}
+              aria-hidden="true"
+              onError={() => setVideoFailed(true)}
+            >
+              <source
+                src={
+                  isMobileScreen
+                    ? `${import.meta.env.BASE_URL}videos/contact/hero_bg_mobile.webm`
+                    : `${import.meta.env.BASE_URL}videos/contact/hero_bg.webm`
+                }
+                type="video/webm"
+              />
+              <source
+                src={
+                  isMobileScreen
+                    ? `${import.meta.env.BASE_URL}videos/contact/hero_bg_mobile.mp4`
+                    : `${import.meta.env.BASE_URL}videos/contact/hero_bg.mp4`
+                }
+                type="video/mp4"
+              />
+            </video>
+          )}
 
-                {/* Floating Satellite Chips */}
-                <div className="ct-floating-chip ct-chip-1">
-                  <MessageSquare size={14} className="text-[#34f5a1]" />
-                  <span>Live Chat</span>
-                </div>
-                <div className="ct-floating-chip ct-chip-2">
-                  <Mail size={14} className="text-[#38bdf8]" />
-                  <span>Instant Reply</span>
-                </div>
-                <div className="ct-floating-chip ct-chip-3">
-                  <Clock size={14} className="text-[#a78bfa]" />
-                  <span>24/7 Coverage</span>
-                </div>
-                <div className="ct-floating-chip ct-chip-4">
-                  <ShieldCheck size={14} className="text-[#34f5a1]" />
-                  <span>Verified Deals</span>
-                </div>
-              </div>
+          {/* Edge Fade Radial Mask + Soft Vignette Overlay */}
+          <div className="ct-hero-vignette" />
+
+          {/* Text Readability Gradient Overlay */}
+          <div className="ct-hero-readability-overlay" />
+          <div className="ct-hero-overlay-top" />
+          <div className="ct-hero-overlay-bottom" />
+        </div>
+
+        {/* Content Container - Hero Text on Left */}
+        <div className="ct-hero-container">
+          <div className="ct-hero-content">
+            <div>
+              <span className="ct-pill-badge mb-3">
+                <span className="ct-pulsing-dot" />
+                We're here to help
+              </span>
             </div>
 
-            {/* Right: Hero Messaging & Call to Action */}
-            <div className="ct-hero-content">
-              <div>
-                <span className="ct-pill-badge mb-3">
-                  <span className="ct-pulsing-dot" />
-                  We're here to help
-                </span>
-              </div>
+            <h1 className="ct-hero-title">
+              Let's start a{" "}
+              <span className="ct-heading-gradient">conversation.</span>
+            </h1>
 
-              <h1 className="ct-hero-title">
-                Let's start a{" "}
-                <span className="ct-heading-gradient">conversation.</span>
-              </h1>
+            {/* Typing Effect Cycling Questions */}
+            <div className="ct-typing-wrap" aria-live="polite">
+              <span>{currentText}</span>
+              <span className="ct-cursor" aria-hidden="true" />
+            </div>
 
-              {/* Typing Effect Cycling Questions */}
-              <div className="ct-typing-wrap" aria-live="polite">
-                <span>{currentText}</span>
-                <span className="ct-cursor" aria-hidden="true" />
-              </div>
+            <p className="ct-hero-desc">
+              Have an inquiry about a price drop, store redirection, or need help with your account? Our team reviews every request promptly and delivers real assistance.
+            </p>
 
-              <p className="ct-hero-desc">
-                Have an inquiry about a price drop, store redirection, or need help with your account? Our team reviews every request promptly and delivers real assistance.
-              </p>
+            <div className="ct-hero-actions">
+              <a
+                href="#contact-form-section"
+                className="ct-btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("contact-form-section")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                <Send size={16} />
+                <span>Send a Message</span>
+              </a>
+              <a
+                href="#support-channels"
+                className="ct-btn-glass"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("support-channels")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                <Headphones size={16} />
+                <span>View Support Channels</span>
+              </a>
+            </div>
 
-              <div className="ct-hero-actions">
-                <a
-                  href="#contact-form-section"
-                  className="ct-btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById("contact-form-section")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                >
-                  <Send size={16} />
-                  <span>Send a Message</span>
-                </a>
-                <a
-                  href="#support-channels"
-                  className="ct-btn-glass"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById("support-channels")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                >
-                  <Headphones size={16} />
-                  <span>View Support Channels</span>
-                </a>
-              </div>
-
-              {/* Row of Glass Trust Chips */}
-              <div className="ct-hero-trust">
-                <span className="ct-trust-chip">
-                  <ShieldCheck size={14} /> 24/7 Monitoring
-                </span>
-                <span className="ct-trust-chip">
-                  <Zap size={14} /> Fast Replies
-                </span>
-                <span className="ct-trust-chip">
-                  <Lock size={14} /> Privacy First
-                </span>
-                <span className="ct-trust-chip">
-                  <UserCheck size={14} /> Real Human Team
-                </span>
-              </div>
+            {/* Row of Glass Trust Chips */}
+            <div className="ct-hero-trust">
+              <span className="ct-trust-chip">
+                <ShieldCheck size={14} /> 24/7 Monitoring
+              </span>
+              <span className="ct-trust-chip">
+                <Zap size={14} /> Fast Replies
+              </span>
+              <span className="ct-trust-chip">
+                <Lock size={14} /> Privacy First
+              </span>
+              <span className="ct-trust-chip">
+                <UserCheck size={14} /> Real Human Team
+              </span>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+
+      <main className="ct-container">
 
         {/* ==================================================================
             2. LIVE STATS SECTION (Dynamic 4 Glass Cards & Companion Visuals)
@@ -1004,215 +1097,431 @@ export function ContactUsPage() {
         </section>
 
         {/* ==================================================================
-            5. CONTACT FORM & HELP AGENT SECTION (IMAGE 2)
+            5. DIRECT MESSAGE (REDESIGNED EXACTLY FROM IMAGE 2 - message.png)
             ================================================================== */}
-        <section id="contact-form-section" className="ct-form-section">
-          <div className="ct-form-grid">
-            {/* Left Column: Contact Form */}
-            <div className="ct-form-card">
-              <div className="ct-form-header">
-                <span className="ct-pill-badge mb-2">Send a ticket</span>
-                <h2>Direct Message</h2>
-                <p>Fill out the form below. We usually review and respond within 24 hours.</p>
+        <section id="contact-form-section" className="ct-direct-message-section">
+          <div className="ct-msg-frame">
+            {/* LEFT PANEL: Light white & pale-blue gradient, blob shapes, character illustration */}
+            <div className="ct-msg-left">
+              {/* Subtle background curved wave SVG */}
+              <div className="ct-msg-left-backdrop" aria-hidden="true">
+                <svg className="ct-msg-wave-svg" viewBox="0 0 500 500" preserveAspectRatio="none">
+                  <path d="M0,0 C150,90 350,-40 500,60 L500,500 L0,500 Z" fill="rgba(240, 246, 255, 0.6)" />
+                  <path d="M0,120 C200,40 300,240 500,160 L500,500 L0,500 Z" fill="rgba(224, 237, 255, 0.45)" />
+                </svg>
               </div>
 
-              {submitted ? (
-                <div className="ct-success-card">
-                  <div className="ct-success-icon-wrap">
-                    <CheckCircle2 size={38} strokeWidth={2.5} />
-                  </div>
-                  <h3>Message Sent!</h3>
-                  <p>
-                    Thank you for contacting KSAM Deal. We have received your details and our support team will reply within 24 hours.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData((prev) => ({
-                        ...prev,
-                        subject: SUBJECTS[0],
-                        message: ""
-                      }));
-                    }}
-                    className="ct-btn-primary"
-                  >
-                    <span>Send Another Message</span>
-                  </button>
+              {/* Foreground blurred plant in bottom-left corner */}
+              {!plantImgFailed && (
+                <img
+                  src={`${import.meta.env.BASE_URL}contact/message_plant.png`}
+                  alt=""
+                  width="240"
+                  height="247"
+                  loading="lazy"
+                  className="ct-msg-corner-plant"
+                  aria-hidden="true"
+                  onError={() => setPlantImgFailed(true)}
+                />
+              )}
+
+              {/* Character Illustration with Laptop, Mug, Plant, Desk, Bubbles, Paper Plane */}
+              {!characterImgFailed ? (
+                <div className="ct-msg-character-wrap" aria-hidden="true">
+                  <img
+                    src={`${import.meta.env.BASE_URL}contact/message_character.png`}
+                    alt="Friendly KSAM Deal support specialist assisting shoppers"
+                    width="505"
+                    height="857"
+                    loading="lazy"
+                    className="ct-msg-character-img"
+                    onError={() => setCharacterImgFailed(true)}
+                  />
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} noValidate>
-                  {/* Hidden Spam Honeypot */}
-                  <input
-                    type="text"
-                    name="website"
-                    value={formData.website}
-                    onChange={(e) => handleChange("website", e.target.value)}
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                    style={{ display: "none" }}
-                  />
-
-                  {/* Full Name */}
-                  <div className="ct-field-group">
-                    <label htmlFor="ct-name" className="ct-field-label">
-                      Full Name <span className="text-[#34f5a1]">*</span>
-                    </label>
-                    <input
-                      id="ct-name"
-                      type="text"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => handleChange("name", e.target.value)}
-                      onBlur={() => handleBlur("name")}
-                      placeholder="e.g. Abhay Chauhan"
-                      className="ct-input"
-                    />
-                    {touched.name && formData.name.trim().length < 2 && (
-                      <div className="ct-field-error">
-                        Please enter your name (at least 2 characters).
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Email Address */}
-                  <div className="ct-field-group">
-                    <label htmlFor="ct-email" className="ct-field-label">
-                      Email Address <span className="text-[#34f5a1]">*</span>
-                    </label>
-                    <input
-                      id="ct-email"
-                      type="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => handleChange("email", e.target.value)}
-                      onBlur={() => handleBlur("email")}
-                      placeholder="you@example.com"
-                      className="ct-input"
-                    />
-                    {touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
-                      <div className="ct-field-error">
-                        Please enter a valid email address.
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Subject Dropdown */}
-                  <div className="ct-field-group">
-                    <label htmlFor="ct-subject" className="ct-field-label">
-                      Inquiry Topic
-                    </label>
-                    <select
-                      id="ct-subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={(e) => handleChange("subject", e.target.value)}
-                      className="ct-select"
-                    >
-                      {SUBJECTS.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Message */}
-                  <div className="ct-field-group">
-                    <label htmlFor="ct-message" className="ct-field-label">
-                      Message <span className="text-[#34f5a1]">*</span>
-                    </label>
-                    <textarea
-                      id="ct-message"
-                      name="message"
-                      rows={5}
-                      maxLength={2000}
-                      required
-                      value={formData.message}
-                      onChange={(e) => handleChange("message", e.target.value)}
-                      onBlur={() => handleBlur("message")}
-                      placeholder="Tell us what you need help with (deal link, problem description, or inquiry)..."
-                      className="ct-textarea"
-                    />
-                    <div className="ct-char-row">
-                      <span>Minimum 10 characters</span>
-                      <span className={msgLen > 1900 ? "text-[#ff8a80] font-bold" : ""}>
-                        {msgLen} / 2000
-                      </span>
-                    </div>
-                    {touched.message && formData.message.trim().length < 10 && (
-                      <div className="ct-field-error">
-                        Message must be at least 10 characters long.
-                      </div>
-                    )}
-                  </div>
-
-                  {error && (
-                    <div className="p-3 mb-4 rounded-xl bg-red-950/40 border border-red-500/30 text-[#ff8a80] text-sm font-semibold">
-                      {error}
-                    </div>
-                  )}
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={loading || cooldown > 0}
-                    className="ct-submit-btn"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 size={18} className="animate-spin" />
-                        <span>Sending message...</span>
-                      </>
-                    ) : cooldown > 0 ? (
-                      <span>Please wait ({cooldown}s)</span>
-                    ) : (
-                      <>
-                        <Send size={16} />
-                        <span>Send Message</span>
-                      </>
-                    )}
-                  </button>
-                </form>
+                <div className="ct-msg-character-fallback" aria-hidden="true" />
               )}
+
+              {/* Left Panel Content */}
+              <div className="ct-msg-left-content">
+                {/* 1. Top-left Pill */}
+                <div className="ct-msg-pill">
+                  <span className="ct-msg-pill-icon" aria-hidden="true">
+                    <MessageSquare size={13} fill="#2563eb" color="#2563eb" />
+                  </span>
+                  <span>Contact Us</span>
+                </div>
+
+                {/* 2. Heading */}
+                <h2 className="ct-msg-title">
+                  We're Here
+                  <br />
+                  <span className="ct-msg-title-gradient">to Help!</span>
+                  <span className="ct-msg-spark-tick" aria-hidden="true">
+                    <span className="ct-tick-ray ct-tick-1" />
+                    <span className="ct-tick-ray ct-tick-2" />
+                    <span className="ct-tick-ray ct-tick-3" />
+                  </span>
+                </h2>
+
+                {/* 3. Description Paragraph */}
+                <p className="ct-msg-desc">
+                  Have a question, suggestion, or partnership idea? Fill out the form and our team will get back to you as soon as possible.
+                </p>
+
+                {/* 4. Three Feature Rows */}
+                <div className="ct-msg-features">
+                  <div className="ct-msg-feature-item">
+                    <div className="ct-msg-feat-icon ct-feat-blue">
+                      <Send size={18} className="text-white" />
+                    </div>
+                    <div className="ct-msg-feat-text">
+                      <strong className="ct-msg-feat-title">Quick Response</strong>
+                      <span className="ct-msg-feat-sub">Usually within 24 hours</span>
+                    </div>
+                  </div>
+
+                  <div className="ct-msg-feature-item">
+                    <div className="ct-msg-feat-icon ct-feat-violet">
+                      <ShieldCheck size={18} className="text-white" />
+                    </div>
+                    <div className="ct-msg-feat-text">
+                      <strong className="ct-msg-feat-title">Reliable Support</strong>
+                      <span className="ct-msg-feat-sub">Real People, Real Help</span>
+                    </div>
+                  </div>
+
+                  <div className="ct-msg-feature-item">
+                    <div className="ct-msg-feat-icon ct-feat-cyan-blue">
+                      <Users size={18} className="text-white" />
+                    </div>
+                    <div className="ct-msg-feat-text">
+                      <strong className="ct-msg-feat-title">Open to Partnerships</strong>
+                      <span className="ct-msg-feat-sub">Let's Grow Together</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Right Column: Help Agent Photo (IMAGE 2) with Floating Card */}
-            <div className="ct-agent-visual-wrap">
-              <div className="ct-agent-frame">
-                {!agentImgFailed ? (
-                  <img
-                    src={`${import.meta.env.BASE_URL}contact/help-agent-opt.jpg`}
-                    alt="KSAM Deal customer support specialist assisting shopper"
-                    width="600"
-                    height="700"
-                    loading="lazy"
-                    className="ct-agent-img"
-                    onError={() => setAgentImgFailed(true)}
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-tr from-[#060913] to-[#0e2a38]">
-                    <Headphones size={60} className="text-[#34f5a1] mb-4" />
-                    <h3 className="text-2xl font-black text-white">Dedicated Support</h3>
-                    <p className="text-sm text-[#9ca3af] text-center max-w-sm mt-2">
-                      Real people, real help. We make sure every deal is genuine and verified.
+            {/* RIGHT PANEL: Dark navy-to-black gradient, glow streaks, glass form card */}
+            <div className="ct-msg-right">
+              {/* Corner Glow Streaks */}
+              <div className="ct-msg-glow-streak ct-glow-tr" aria-hidden="true" />
+              <div className="ct-msg-glow-streak ct-glow-bl" aria-hidden="true" />
+
+              {/* Glass Form Card */}
+              <div className="ct-msg-glass-card">
+                {/* Header Row */}
+                <div className="ct-msg-card-header">
+                  <div className="ct-msg-envelope-circle" aria-hidden="true">
+                    <Mail size={36} className="text-white" />
+                  </div>
+                  <div className="ct-msg-card-header-text">
+                    <h3 className="ct-msg-card-title">
+                      Send Us a{" "}
+                      <span className="ct-msg-card-title-grad">Message</span>
+                      <span className="ct-msg-card-sparks" aria-hidden="true">
+                        <span className="ct-card-spark-ray ct-csr-1" />
+                        <span className="ct-card-spark-ray ct-csr-2" />
+                        <span className="ct-card-spark-ray ct-csr-3" />
+                      </span>
+                    </h3>
+                    <p className="ct-msg-card-sub">
+                      We'd love to hear from you. Fill out the form below and we'll get back to you soon.
                     </p>
                   </div>
+                </div>
+
+                {submitted ? (
+                  <div className="ct-msg-success-box">
+                    <div className="ct-msg-success-icon-ring">
+                      <CheckCircle2 size={44} strokeWidth={2.4} />
+                    </div>
+                    <h4 className="ct-msg-success-title">Message Sent!</h4>
+                    <p className="ct-msg-success-desc">
+                      Thank you for contacting KSAM Deal. We have received your details and our support team will reply within 24 hours.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData((prev) => ({
+                          ...prev,
+                          phone: "",
+                          subject: SUBJECTS[0],
+                          message: ""
+                        }));
+                      }}
+                      className="ct-msg-submit-btn"
+                    >
+                      <span>Send Another Message</span>
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} noValidate>
+                    {/* Hidden Honeypot */}
+                    <input
+                      type="text"
+                      name="website"
+                      value={formData.website}
+                      onChange={(e) => handleChange("website", e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      style={{ display: "none" }}
+                    />
+
+                    {/* 2-Column Fields Grid */}
+                    <div className="ct-msg-fields-grid">
+                      {/* Full Name */}
+                      <div className="ct-msg-field-wrap">
+                        <div
+                          className={`ct-msg-field-tile ${
+                            touched.name && formData.name.trim().length < 2 ? "has-error" : ""
+                          }`}
+                        >
+                          <label htmlFor="ct-msg-name" className="ct-msg-tile-label">
+                            <User size={13} className="ct-tile-top-icon" />
+                            <span>Full Name</span>
+                          </label>
+                          <input
+                            id="ct-msg-name"
+                            type="text"
+                            name="name"
+                            required
+                            value={formData.name}
+                            onChange={(e) => handleChange("name", e.target.value)}
+                            onBlur={() => handleBlur("name")}
+                            placeholder="Enter your name"
+                            className="ct-msg-input"
+                            aria-invalid={touched.name && formData.name.trim().length < 2}
+                            aria-describedby={
+                              touched.name && formData.name.trim().length < 2
+                                ? "ct-name-err"
+                                : undefined
+                            }
+                          />
+                        </div>
+                        {touched.name && formData.name.trim().length < 2 && (
+                          <div id="ct-name-err" className="ct-msg-field-err">
+                            Please enter your name (at least 2 characters).
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Email Address */}
+                      <div className="ct-msg-field-wrap">
+                        <div
+                          className={`ct-msg-field-tile ${
+                            touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                              ? "has-error"
+                              : ""
+                          }`}
+                        >
+                          <label htmlFor="ct-msg-email" className="ct-msg-tile-label">
+                            <Mail size={13} className="ct-tile-top-icon" />
+                            <span>Email Address</span>
+                          </label>
+                          <input
+                            id="ct-msg-email"
+                            type="email"
+                            name="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => handleChange("email", e.target.value)}
+                            onBlur={() => handleBlur("email")}
+                            placeholder="you@example.com"
+                            className="ct-msg-input"
+                            aria-invalid={
+                              touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                            }
+                            aria-describedby={
+                              touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                                ? "ct-email-err"
+                                : undefined
+                            }
+                          />
+                        </div>
+                        {touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                          <div id="ct-email-err" className="ct-msg-field-err">
+                            Please enter a valid email address.
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Phone Number (Optional) */}
+                      <div className="ct-msg-field-wrap">
+                        <div className="ct-msg-field-tile">
+                          <label htmlFor="ct-msg-phone" className="ct-msg-tile-label">
+                            <Phone size={13} className="ct-tile-top-icon" />
+                            <span>Phone Number</span>
+                            <span className="ct-msg-optional-chip">(Optional)</span>
+                          </label>
+                          <input
+                            id="ct-msg-phone"
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={(e) => handleChange("phone", e.target.value)}
+                            placeholder="+91 98765 43210"
+                            className="ct-msg-input"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Subject */}
+                      <div className="ct-msg-field-wrap">
+                        <div className="ct-msg-field-tile ct-msg-select-tile">
+                          <label htmlFor="ct-msg-subject" className="ct-msg-tile-label">
+                            <Tag size={13} className="ct-tile-top-icon" />
+                            <span>Subject</span>
+                          </label>
+                          <div className="ct-msg-select-wrap">
+                            <select
+                              id="ct-msg-subject"
+                              name="subject"
+                              value={formData.subject}
+                              onChange={(e) => handleChange("subject", e.target.value)}
+                              className="ct-msg-select"
+                            >
+                              {SUBJECTS.map((s) => (
+                                <option key={s} value={s}>
+                                  {s}
+                                </option>
+                              ))}
+                            </select>
+                            <ChevronDown size={14} className="ct-msg-select-arrow" aria-hidden="true" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Your Message (Full Width) */}
+                      <div className="ct-msg-field-wrap ct-msg-msg-wrap">
+                        <div
+                          className={`ct-msg-field-tile ct-msg-textarea-tile ${
+                            touched.message && formData.message.trim().length < 10 ? "has-error" : ""
+                          }`}
+                        >
+                          <label htmlFor="ct-msg-message" className="ct-msg-tile-label">
+                            <MessageSquare size={13} className="ct-tile-top-icon" />
+                            <span>Your Message</span>
+                          </label>
+                          <textarea
+                            id="ct-msg-message"
+                            name="message"
+                            rows={3}
+                            maxLength={2000}
+                            required
+                            value={formData.message}
+                            onChange={(e) => handleChange("message", e.target.value)}
+                            onBlur={() => handleBlur("message")}
+                            placeholder="Tell us how we can help..."
+                            className="ct-msg-textarea"
+                            aria-invalid={touched.message && formData.message.trim().length < 10}
+                            aria-describedby={
+                              touched.message && formData.message.trim().length < 10
+                                ? "ct-msg-err"
+                                : undefined
+                            }
+                          />
+                          <div className="ct-msg-counter-row">
+                            <span
+                              className={`ct-msg-counter ${
+                                msgLen > 1900 ? "ct-counter-warn" : ""
+                              }`}
+                            >
+                              {msgLen}/2000
+                            </span>
+                          </div>
+                        </div>
+                        {touched.message && formData.message.trim().length < 10 && (
+                          <div id="ct-msg-err" className="ct-msg-field-err">
+                            Message must be at least 10 characters long.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {error && (
+                      <div className="ct-msg-alert-err" role="alert">
+                        {error}
+                      </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={loading || cooldown > 0}
+                      className="ct-msg-submit-btn"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 size={18} className="animate-spin" />
+                          <span>Sending message...</span>
+                        </>
+                      ) : cooldown > 0 ? (
+                        <span>Please wait ({cooldown}s)</span>
+                      ) : (
+                        <>
+                          <Send size={18} />
+                          <span>Send Message</span>
+                          <ArrowRight size={18} className="ct-msg-btn-arrow" />
+                        </>
+                      )}
+                    </button>
+                  </form>
                 )}
 
-                <div className="ct-agent-overlay" />
+                {/* Divider Row */}
+                <div className="ct-msg-divider" aria-hidden="true">
+                  <span className="ct-msg-div-line" />
+                  <span className="ct-msg-div-text">OR REACH US DIRECTLY</span>
+                  <span className="ct-msg-div-line" />
+                </div>
 
-                <div className="ct-agent-floating-card">
-                  <h4>
-                    <Sparkles size={16} className="text-[#34f5a1]" />
-                    Real people, real help
-                  </h4>
-                  <p>
-                    Every inquiry is reviewed by our deal research team, not outsourced bots.
-                  </p>
+                {/* Three Contact Tiles */}
+                <div className="ct-msg-contact-tiles">
+                  {/* Email Us */}
+                  <a
+                    href="mailto:support@ksamdeal.in"
+                    className="ct-msg-contact-tile"
+                    title="Email our support team directly at support@ksamdeal.in"
+                  >
+                    <div className="ct-msg-tile-icon ct-tile-blue" aria-hidden="true">
+                      <Mail size={16} className="text-white" />
+                    </div>
+                    <div className="ct-msg-tile-info">
+                      <span className="ct-msg-tile-heading">Email Us</span>
+                      <span className="ct-msg-tile-val">support@ksamdeal.in</span>
+                    </div>
+                  </a>
+
+                  {/* Call Us */}
+                  <a
+                    href="tel:+917906706679"
+                    className="ct-msg-contact-tile"
+                    title="Call KSAM Deal support desk at +91 7906706679"
+                  >
+                    <div className="ct-msg-tile-icon ct-tile-green" aria-hidden="true">
+                      <Phone size={16} className="text-white" />
+                    </div>
+                    <div className="ct-msg-tile-info">
+                      <span className="ct-msg-tile-heading">Call Us</span>
+                      <span className="ct-msg-tile-val">+91 7906706679</span>
+                    </div>
+                  </a>
+
+                  {/* Our Office */}
+                  <div className="ct-msg-contact-tile" title="KSAM Deal Headquarters">
+                    <div className="ct-msg-tile-icon ct-tile-purple" aria-hidden="true">
+                      <MapPin size={16} className="text-white" />
+                    </div>
+                    <div className="ct-msg-tile-info">
+                      <span className="ct-msg-tile-heading">Our Office</span>
+                      <span className="ct-msg-tile-val">India</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
