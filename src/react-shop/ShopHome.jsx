@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ShopPromo from "./ShopPromo.jsx";
 import { requireAuth } from "../auth/auth.js";
 
@@ -60,6 +60,95 @@ function ShopHome() {
     const [cartMessage, setCartMessage] =
         useState("");
 
+    const heroVideoRef = useRef(null);
+    const heroSectionRef = useRef(null);
+
+    const ROTATING_WORDS = ["Better.", "Smarter.", "Faster.", "Easier."];
+    const [wordIndex, setWordIndex] = useState(0);
+    const [isFlipping, setIsFlipping] = useState(false);
+    const [parallax, setParallax] = useState({ x: 0, y: 0 });
+
+    /* -----------------------------------------------------
+       ROTATING WORDS (EVERY 3 SECONDS)
+    ----------------------------------------------------- */
+    useEffect(() => {
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) return;
+
+        const interval = setInterval(() => {
+            setIsFlipping(true);
+            setTimeout(() => {
+                setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
+                setIsFlipping(false);
+            }, 320);
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    /* -----------------------------------------------------
+       HERO MOUSE PARALLAX (DESKTOP ONLY: 10-15PX OPPOSITE)
+    ----------------------------------------------------- */
+    const handleHeroMouseMove = (e) => {
+        if (typeof window === "undefined" || window.innerWidth <= 768) return;
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) return;
+
+        const rect = heroSectionRef.current?.getBoundingClientRect();
+        if (!rect) return;
+
+        const relativeX = (e.clientX - rect.left) / rect.width - 0.5;
+        const relativeY = (e.clientY - rect.top) / rect.height - 0.5;
+
+        setParallax({
+            x: Math.round(relativeX * -24),
+            y: Math.round(relativeY * -20)
+        });
+    };
+
+    const handleHeroMouseLeave = () => {
+        setParallax({ x: 0, y: 0 });
+    };
+
+    /* -----------------------------------------------------
+       HERO VIDEO CONTROLS & OBSERVER
+    ----------------------------------------------------- */
+    useEffect(() => {
+        const video = heroVideoRef.current;
+        const section = heroSectionRef.current;
+        if (!video || !section) return;
+
+        // Respect prefers-reduced-motion: pause video so poster is shown
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) {
+            video.pause();
+            return;
+        }
+
+        // Pause video when out of view, play when in view
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const playPromise = video.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(() => {});
+                        }
+                    } else {
+                        video.pause();
+                    }
+                });
+            },
+            { threshold: 0.15 }
+        );
+
+        observer.observe(section);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
 
     /* -----------------------------------------------------
        FILTER PRODUCTS
@@ -88,36 +177,16 @@ function ShopHome() {
 
         });
 
-
     /* -----------------------------------------------------
        SCROLL TO PRODUCTS
     ----------------------------------------------------- */
-
     const scrollToProducts = () => {
-
         document
             .getElementById("shop-products")
             ?.scrollIntoView({
                 behavior: "smooth"
             });
-
     };
-
-
-    /* -----------------------------------------------------
-       SCROLL TO DEALS
-    ----------------------------------------------------- */
-
-    const scrollToDeals = () => {
-
-        document
-            .getElementById("shop-deals")
-            ?.scrollIntoView({
-                behavior: "smooth"
-            });
-
-    };
-
 
     /* -----------------------------------------------------
        ADD PRODUCT TO CART
@@ -334,65 +403,73 @@ function ShopHome() {
                 HERO
             ================================================= */}
 
-            <section className="shop-hero">
+            <section
+                className="shop-hero"
+                ref={heroSectionRef}
+                onMouseMove={handleHeroMouseMove}
+                onMouseLeave={handleHeroMouseLeave}
+            >
 
-                <div className="shop-hero-content">
+                {/* Looping Cinematic Video Background */}
+                <video
+                    ref={heroVideoRef}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    poster={`${import.meta.env.BASE_URL}videos/hero-keyboard-poster.webp`}
+                    className="shop-hero-video"
+                    aria-hidden="true"
+                >
+                    <source
+                        src={`${import.meta.env.BASE_URL}videos/hero-keyboard.mp4`}
+                        type="video/mp4"
+                    />
+                </video>
 
-                    <span className="shop-hero-label">
-                        NEW COLLECTION
-                    </span>
+                {/* Soft Ambient Radial Glow behind text */}
+                <div className="shop-hero-glow" aria-hidden="true" />
 
+                {/* Left-to-right gradient overlay for text readability */}
+                <div className="shop-hero-overlay-gradient" aria-hidden="true" />
 
-                    <h1>
+                {/* Bottom-right watermark cover backup */}
+                <div className="shop-hero-watermark-cover" aria-hidden="true" />
 
-                        Technology
-                        <br />
+                <div
+                    className="shop-hero-content"
+                    style={{
+                        transform: `translate3d(${parallax.x}px, ${parallax.y}px, 0)`
+                    }}
+                >
 
-                        That Makes
-                        <br />
-
-                        <span>
-                            Life Better.
-                        </span>
-
+                    <h1 className="shop-hero-title">
+                        <div className="shop-hero-line-mask">
+                            <span className="shop-hero-line shop-hero-line-1">
+                                Technology
+                            </span>
+                        </div>
+                        <div className="shop-hero-line-mask">
+                            <span className="shop-hero-line shop-hero-line-2">
+                                That Makes
+                            </span>
+                        </div>
+                        <div className="shop-hero-line-mask">
+                            <span className="shop-hero-line shop-hero-line-3 shop-hero-gradient-text">
+                                <span>Life</span>
+                                <span className={`shop-hero-rotating-word ${isFlipping ? "is-flipping" : ""}`}>
+                                    {ROTATING_WORDS[wordIndex]}
+                                </span>
+                            </span>
+                        </div>
                     </h1>
 
+                    <div className="shop-hero-underline" aria-hidden="true" />
 
-                    <p>
-                        Discover the latest electronics,
-                        smart devices and accessories
-                        at amazing prices.
+                    <p className="shop-hero-description">
+                        Discover the latest <span className="shop-hero-highlight">electronics</span>, <span className="shop-hero-highlight">smart devices</span> and <span className="shop-hero-highlight">accessories</span> at amazing prices.
                     </p>
-
-
-                    <div className="shop-hero-buttons">
-
-                        <button
-                            onClick={scrollToProducts}
-                            className="shop-primary-button"
-                        >
-                            Shop Now →
-                        </button>
-
-
-                        <button
-                            onClick={scrollToDeals}
-                            className="shop-secondary-button"
-                        >
-                            View Deals
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div className="shop-hero-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1200"
-                        alt="Modern electronics"
-                    />
 
                 </div>
 

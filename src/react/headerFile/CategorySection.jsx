@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import categoryData from "../../api/categorySection.json";
 import {
   getCategoryProducts,
@@ -76,6 +76,100 @@ function getIconForCategory(id) {
   );
 }
 
+/* ---------- Redesigned Vertical Category Product Card ---------- */
+function CategoryProductCard({ product, category }) {
+  const [imgError, setImgError] = useState(false);
+  const resolvedImg = resolveProductImage(product.image);
+
+  const title = product.name && String(product.name).trim() !== ""
+    ? product.name
+    : `${category.name || "Featured"} Item`;
+
+  const subtext = (() => {
+    if (product.price !== undefined && product.price !== null && product.price !== "") {
+      const num = typeof product.price === "number"
+        ? product.price
+        : parseFloat(String(product.price).replace(/[^0-9.]/g, ""));
+      if (!isNaN(num)) {
+        const isRupee = ["shoes", "cloths", "beauty", "speakers"].includes(String(category.id).toLowerCase());
+        return `${isRupee ? "₹" : "$"}${num.toLocaleString("en-IN")}`;
+      }
+      return String(product.price);
+    }
+    return product.category || category.name || "Special Offer";
+  })();
+
+  const handleCardClick = () => {
+    const target = product.link || category.link;
+    if (target) window.location.href = target;
+  };
+
+  return (
+    <div
+      className="cs-product-card"
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
+      aria-label={`${title} - ${subtext}`}
+    >
+      {/* 1. IMAGE AREA at the top */}
+      <div className="cs-card-img-wrap">
+        {resolvedImg && !imgError ? (
+          <img
+            src={resolvedImg}
+            alt={title}
+            className="cs-card-img"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="cs-card-img-placeholder" aria-hidden="true">
+            <span className="cs-card-placeholder-icon">
+              {getIconForCategory(category.id)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* 2. TEXT AREA below image */}
+      <div className="cs-card-content">
+        <div className="cs-card-text">
+          <h4 className="cs-card-title" title={title}>
+            {title}
+          </h4>
+          <p className="cs-card-subtext">
+            {subtext}
+          </p>
+        </div>
+
+        {/* 3. FOOTER ROW: Explore Now link + Circular Arrow Button */}
+        <div className="cs-card-footer">
+          <span className="cs-card-explore">
+            Explore Now <span aria-hidden="true" className="cs-card-explore-arrow">→</span>
+          </span>
+          <button
+            type="button"
+            className="cs-card-arrow-btn"
+            aria-label={`Explore ${title}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+          >
+            <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function CategorySection({ onViewAllClick, onCategorySelect }) {
   /* ======================================================
@@ -108,8 +202,8 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
 
       const bannerImg = bannerRaw ? resolveProductImage(bannerRaw) : null;
 
-      // 3. Thumbnails: real product images up to 10
-      const thumbProducts = allCatProducts.slice(0, 10);
+      // 3. Thumbnails: real product images up to 16
+      const thumbProducts = allCatProducts.slice(0, 16);
 
       return {
         ...cat,
@@ -191,7 +285,9 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
   const scrollThumbs = (dir) => {
     const el = thumbRef.current;
     if (!el) return;
-    el.scrollBy({ left: dir * 220, behavior: "smooth" });
+    const card = el.querySelector(".cs-product-card");
+    const step = card ? card.offsetWidth + 12 : 217;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
 
@@ -416,29 +512,13 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
               </button>
 
               <div className="cs-thumb-row" ref={thumbRef}>
-                {activeCategory.products.map((p, idx) => {
-                  const resolvedImg = resolveProductImage(p.image);
-                  if (!resolvedImg) return null;
-                  return (
-                    <img
-                      key={p.id || idx}
-                      src={resolvedImg}
-                      alt={p.name || activeCategory.name}
-                      title={p.name ? `${p.name} - View Details` : activeCategory.name}
-                      className="cs-thumb-img"
-                      loading="lazy"
-                      width="140"
-                      height="140"
-                      onClick={() => {
-                        const target = p.link || activeCategory.link;
-                        if (target) window.location.href = target;
-                      }}
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                  );
-                })}
+                {activeCategory.products.map((p, idx) => (
+                  <CategoryProductCard
+                    key={p.id || idx}
+                    product={p}
+                    category={activeCategory}
+                  />
+                ))}
               </div>
 
               <button

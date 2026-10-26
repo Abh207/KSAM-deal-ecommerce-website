@@ -1,11 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&display=swap');
+
 /* =========================================================
    GLOBAL
 ========================================================= */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: #050b12;
+}
+
+#shop-root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
 
 .shop-page {
     width: 100%;
     min-height: 100vh;
     padding-top: 72px;
+    margin: 0;
 
     background: #ffffff;
     color: #111111;
@@ -42,135 +58,354 @@
    HERO
 ========================================================= */
 
+/* =========================================================
+   HERO (CINEMATIC DYNAMIC VIDEO HERO)
+========================================================= */
+
+:root {
+    --hero-bg: #050b12;
+    --accent: #14f1b2;
+    --accent-2: #2dd4ff;
+}
+
 .shop-hero {
+    position: relative;
     width: 100%;
-    min-height: 650px;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    align-items: center;
-
-    padding: 70px 6%;
-
-    background: #f5f5f3;
-}
-
-.shop-hero-content {
-    max-width: 600px;
-
-    padding-right: 40px;
-}
-
-.shop-hero-label {
-    display: inline-block;
-
-    margin-bottom: 22px;
-
-    color: #777777;
-
-    font-size: 12px;
-    font-weight: 800;
-
-    letter-spacing: 2px;
-}
-
-.shop-hero h1 {
     margin: 0;
-
-    font-size: clamp(48px, 6vw, 82px);
-
-    line-height: 0.98;
-
-    letter-spacing: -4px;
-
-    font-weight: 900;
-}
-
-.shop-hero h1 span {
-    color: #777777;
-}
-
-.shop-hero p {
-    max-width: 520px;
-
-    margin: 28px 0;
-
-    color: #666666;
-
-    font-size: 17px;
-    line-height: 1.7;
-}
-
-
-/* HERO BUTTONS */
-
-.shop-hero-buttons {
+    min-height: calc(100vh - 72px);
     display: flex;
-    gap: 12px;
-}
-
-.shop-primary-button,
-.shop-secondary-button {
-    min-height: 48px;
-
-    padding: 0 24px;
-
-    border-radius: 25px;
-
-    font-size: 14px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition: all 0.25s ease;
-}
-
-.shop-primary-button {
-    border: 1px solid #111111;
-
-    background: #111111;
-    color: #ffffff;
-}
-
-.shop-primary-button:hover {
-    background: #333333;
-}
-
-.shop-secondary-button {
-    border: 1px solid #cccccc;
-
-    background: #ffffff;
-    color: #111111;
-}
-
-.shop-secondary-button:hover {
-    border-color: #111111;
-}
-
-
-/* HERO IMAGE */
-
-.shop-hero-image {
-    width: 100%;
-    height: 100%;
-
-    min-height: 500px;
-
-    border-radius: 25px;
-
+    align-items: center;
+    padding: 70px 6%;
+    background-color: var(--hero-bg, #050b12);
     overflow: hidden;
-
-    background: #dddddd;
+    isolation: isolate;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(20, 241, 178, 0.25);
 }
 
-.shop-hero-image img {
+/* Looping Cinematic Video Background */
+.shop-hero-video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
+    object-position: 70% center;
+    transform: scale(1.1);
+    transform-origin: top left;
+    pointer-events: none;
+    z-index: 0;
     display: block;
+}
+
+/* Soft Ambient Radial Green Glow behind text */
+.shop-hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle at 20% 50%, rgba(20, 241, 178, 0.12), transparent 60%);
+    filter: blur(50px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Left-to-right gradient overlay for text readability */
+.shop-hero-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(5, 11, 18, 0.95) 0%,
+        rgba(5, 11, 18, 0.75) 40%,
+        rgba(5, 11, 18, 0.1) 70%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Backup watermark cover in the bottom-right corner */
+.shop-hero-watermark-cover {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 220px;
+    height: 120px;
+    background: radial-gradient(
+        circle at 100% 100%,
+        rgba(5, 11, 18, 0.95) 0%,
+        rgba(5, 11, 18, 0.7) 40%,
+        transparent 80%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Content Container (Vertically centered on the left, max-width 640px) */
+.shop-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
+    will-change: transform;
+}
+
+/* Heading: Modern Bold Display Font (Outfit) in 3 Lines */
+.shop-hero-title {
+    margin: 0;
+    font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+    font-size: clamp(48px, 6.5vw, 92px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hidden overflow mask for slide-up entrance animation */
+.shop-hero-line-mask {
+    overflow: hidden;
+    display: block;
+    line-height: 1.05;
+    padding-bottom: 6px;
+}
+
+.shop-hero-line {
+    display: inline-block;
+    color: #ffffff;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    transform: translateY(115%);
+    animation: heroLineSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.shop-hero-line-1 {
+    animation-delay: 0.1s;
+}
+
+.shop-hero-line-2 {
+    animation-delay: 0.25s;
+}
+
+.shop-hero-line-3 {
+    animation-delay: 0.4s;
+    display: inline-flex !important;
+    align-items: baseline;
+    gap: 0.28em;
+}
+
+@keyframes heroLineSlideUp {
+    0% {
+        transform: translateY(115%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* "Life [Rotating Word]": animated flowing gradient with soft glow */
+.shop-hero-gradient-text {
+    background: linear-gradient(
+        90deg,
+        var(--accent, #14f1b2),
+        var(--accent-2, #2dd4ff),
+        #a78bfa,
+        var(--accent, #14f1b2)
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: heroLineSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+               gradientFlow 6s linear infinite;
+    animation-delay: 0.4s, 0s;
+    filter: drop-shadow(0 0 18px rgba(20, 241, 178, 0.45));
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 300% 50%;
+    }
+}
+
+/* Rotating word transition */
+.shop-hero-rotating-word {
+    display: inline-block;
+    transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+
+.shop-hero-rotating-word.is-flipping {
+    opacity: 0;
+    transform: translateY(14px);
+}
+
+/* Short animated underline under "Life Better." */
+.shop-hero-underline {
+    width: 120px;
+    height: 4px;
+    margin-top: 14px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--accent, #14f1b2), var(--accent-2, #2dd4ff));
+    box-shadow: 0 0 14px rgba(20, 241, 178, 0.55);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: drawUnderline 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes drawUnderline {
+    0% {
+        transform: scaleX(0);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+/* Paragraph with 3px vertical gradient bar and highlighted keywords */
+.shop-hero-description {
+    font-size: 20px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 520px;
+    margin: 28px 0 0;
+    padding-left: 18px;
+    border-left: 3px solid transparent;
+    border-image: linear-gradient(to bottom, var(--accent, #14f1b2), transparent) 1;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroParaFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.7s;
+}
+
+@keyframes heroParaFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.shop-hero-highlight {
+    color: var(--accent, #14f1b2);
+    font-weight: 600;
+}
+
+/* Responsive Rules for Mobile */
+@media (max-width: 768px) {
+    .shop-hero {
+        min-height: calc(100vh - 72px);
+        padding: 55px 24px 65px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .shop-hero-video {
+        object-position: center bottom;
+        transform: scale(1.15);
+        transform-origin: center center;
+    }
+
+    .shop-hero-overlay-gradient {
+        background: linear-gradient(
+            180deg,
+            rgba(5, 11, 18, 0.85) 0%,
+            rgba(5, 11, 18, 0.65) 50%,
+            rgba(5, 11, 18, 0.4) 100%
+        );
+    }
+
+    .shop-hero-content {
+        max-width: 100%;
+        padding-right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transform: none !important;
+    }
+
+    .shop-hero-title {
+        align-items: center;
+        font-size: clamp(36px, 10vw, 52px);
+        line-height: 1.1;
+    }
+
+    .shop-hero-underline {
+        margin: 12px auto 0;
+        transform-origin: center;
+    }
+
+    .shop-hero-description {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 24px auto 0;
+        max-width: 480px;
+        padding-left: 0;
+        border-left: none;
+        border-top: 2px solid transparent;
+        border-image: linear-gradient(90deg, transparent, var(--accent, #14f1b2), transparent) 1;
+        padding-top: 14px;
+        text-align: center;
+    }
+
+    .shop-hero-glow {
+        left: 50%;
+        top: 40%;
+        width: 340px;
+        height: 340px;
+    }
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+    .shop-hero-content {
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .shop-hero-line {
+        transform: none !important;
+        animation: none !important;
+    }
+
+    .shop-hero-gradient-text {
+        animation: none !important;
+        background-position: 0% 50% !important;
+    }
+
+    .shop-hero-underline {
+        transform: scaleX(1) !important;
+        animation: none !important;
+    }
+
+    .shop-hero-description {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    .shop-hero-rotating-word {
+        transform: none !important;
+        opacity: 1 !important;
+        transition: none !important;
+    }
 }
 
 
@@ -713,35 +948,6 @@
     }
 
 
-    /* HERO */
-
-    .shop-hero {
-        grid-template-columns: 1fr;
-
-        min-height: auto;
-
-        padding: 55px 5%;
-    }
-
-    .shop-hero-content {
-        padding-right: 0;
-    }
-
-    .shop-hero h1 {
-        font-size: clamp(43px, 14vw, 65px);
-
-        letter-spacing: -2.5px;
-    }
-
-    .shop-hero p {
-        font-size: 14px;
-    }
-
-    .shop-hero-image {
-        min-height: 300px;
-
-        margin-top: 35px;
-    }
 
 
     /* FEATURES */

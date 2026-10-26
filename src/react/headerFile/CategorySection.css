@@ -621,24 +621,28 @@
 
 
 /* ═══════════════════════════════════════════════════════════
-   THUMBNAIL CAROUSEL
+   THUMBNAIL CAROUSEL & PRODUCT CARDS
    ═══════════════════════════════════════════════════════════ */
 .cs-thumb-wrap {
+  --card-w: 205px;
+  --img-h: 125px;
+  --card-gap: 12px;
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .cs-thumb-row {
   display: flex;
-  gap: 12px;
+  gap: var(--card-gap, 12px);
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
+  scroll-padding: 0 4px;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  padding: 4px 0;
+  padding: 6px 4px 10px 4px;
   flex: 1;
   /* Hide native scrollbar */
   scrollbar-width: none;
@@ -649,44 +653,235 @@
   display: none;
 }
 
-.cs-thumb-img {
-  flex-shrink: 0;
-  width: 140px;
-  height: 140px;
-  border-radius: var(--cs-radius-thumb);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  object-fit: cover;
-  background: rgba(255, 255, 255, 0.03);
-  scroll-snap-align: start;
+/* ── Vertical Product Card (Compact Reference Style) ── */
+.cs-product-card {
+  flex: 0 0 var(--card-w, 205px);
+  width: var(--card-w, 205px);
+  height: auto;
+  background: linear-gradient(165deg, #0d2b23 0%, #0a1f1a 100%);
+  border: 1px solid rgba(20, 241, 178, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.45), 0 0 10px rgba(20, 241, 178, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
   cursor: pointer;
-  transition: all var(--cs-transition);
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.cs-thumb-img:hover {
-  border-color: var(--cs-accent);
+.cs-product-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 16px rgba(20, 240, 192, 0.2);
+  border-color: rgba(20, 241, 178, 0.5);
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 0 18px rgba(20, 241, 178, 0.2);
+}
+
+.cs-product-card:focus-visible {
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 2px;
+}
+
+/* ── Image Area (Top) ── */
+.cs-card-img-wrap {
+  width: 100%;
+  height: var(--img-h, 125px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  position: relative;
+  overflow: visible;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cs-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.45));
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.cs-product-card:hover .cs-card-img {
+  transform: scale(1.06);
+}
+
+.cs-card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(20, 241, 178, 0.08), rgba(6, 26, 20, 0.5));
+  border-radius: 12px;
+  color: var(--cs-accent);
+  opacity: 0.75;
+}
+
+.cs-card-placeholder-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+/* ── Content / Text Area (Bottom) ── */
+.cs-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 2px 2px 2px;
+  gap: 5px;
+}
+
+.cs-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cs-card-title {
+  margin: 0;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-card-subtext {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+/* ── Card Footer: Explore Now + Circular Action Button ── */
+.cs-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding-top: 2px;
+}
+
+.cs-card-explore {
+  font-size: 13px;
+  font-weight: 600;
+  color: #14f1b2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.25s ease;
+}
+
+.cs-card-explore-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.cs-product-card:hover .cs-card-explore-arrow {
+  transform: translateX(3px);
+}
+
+.cs-card-arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(20, 241, 178, 0.25);
+  background: #113227;
+  color: #14f1b2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.cs-card-arrow-btn:hover,
+.cs-product-card:hover .cs-card-arrow-btn {
+  background: #14f1b2;
+  color: #030b0b;
+  border-color: #14f1b2;
+  box-shadow: 0 0 12px rgba(20, 241, 178, 0.4);
+}
+
+.cs-card-arrow-btn:focus-visible {
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 2px;
+}
+
+/* ── Responsive Scaling ── */
+@media (max-width: 1280px) {
+  .cs-thumb-wrap {
+    --card-w: 195px;
+    --img-h: 120px;
+    --card-gap: 10px;
+  }
+  .cs-card-title {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 1024px) {
-  .cs-thumb-img {
-    width: 120px;
-    height: 120px;
+  .cs-thumb-wrap {
+    --card-w: 185px;
+    --img-h: 115px;
+    --card-gap: 10px;
+  }
+  .cs-product-card {
+    padding: 10px;
+  }
+  .cs-card-title {
+    font-size: 14px;
   }
 }
 
 @media (max-width: 767px) {
-  .cs-thumb-img {
-    width: 110px;
-    height: 110px;
+  .cs-thumb-wrap {
+    --card-w: 175px;
+    --img-h: 110px;
+    --card-gap: 10px;
+  }
+  .cs-thumb-row {
+    padding: 6px 2px 10px 2px;
+  }
+  .cs-product-card {
+    border-radius: 14px;
+    padding: 10px;
+  }
+  .cs-card-title {
+    font-size: 14px;
+  }
+  .cs-card-subtext {
+    font-size: 12px;
+  }
+  .cs-card-explore {
+    font-size: 12px;
+  }
+  .cs-card-arrow-btn {
+    width: 28px;
+    height: 28px;
   }
 }
 
 /* Thumbnail arrow buttons */
 .cs-thumb-arrow {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid var(--cs-border);
   background: rgba(6, 21, 19, 0.9);
@@ -756,7 +951,10 @@
   }
   .cs-list-item,
   .cs-chip,
-  .cs-thumb-img,
+  .cs-product-card,
+  .cs-card-img,
+  .cs-card-arrow-btn,
+  .cs-card-explore-arrow,
   .cs-banner-btn,
   .cs-header-pill,
   .cs-thumb-arrow {
