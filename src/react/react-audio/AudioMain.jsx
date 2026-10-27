@@ -12,6 +12,8 @@ import AudioHero from "./AudioHero";
 import audioData from "../../api/audio-products.json";
 import { requireAuth } from "../../auth/auth.js";
 import Navbar from "../../deals/components/Navbar.jsx";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../../lib/cartHelper.js";
+import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 
 import "./audio.css";
 
@@ -2027,15 +2029,14 @@ function AudioMain() {
     const [sort, setSort] = useState("featured");
     const [maxPrice, setMaxPrice] = useState(store.maxPrice || 15000);
 
-    const [wishlist, setWishlist] = useState(() => {
-        try {
-            return JSON.parse(
-                localStorage.getItem(WISHLIST_KEY) || "[]"
-            );
-        } catch {
-            return [];
-        }
-    });
+    const [, setWishlistVersion] = useState(0);
+
+    useEffect(() => {
+        const unsub = subscribeWishlist(() => {
+            setWishlistVersion((v) => v + 1);
+        });
+        return unsub;
+    }, []);
 
     const [cartCount, setCartCount] = useState(0);
 
@@ -2100,41 +2101,11 @@ function AudioMain() {
     }, []);
 
 
-    /* =====================================================
-       WISHLIST
-    ===================================================== */
-
-    useEffect(() => {
-
-        localStorage.setItem(
-            WISHLIST_KEY,
-            JSON.stringify(wishlist)
-        );
-
-    }, [wishlist]);
-
-
     const toggleWishlist = (product) => {
         if (!requireAuth({ type: "wishlist", product })) {
             return;
         }
-
-        setWishlist((current) => {
-
-            if (current.includes(product.id)) {
-
-                showMessage("Removed from wishlist");
-
-                return current.filter(
-                    (id) => id !== product.id
-                );
-            }
-
-            showMessage("Added to wishlist ❤️");
-
-            return [...current, product.id];
-
-        });
+        sharedToggleWishlist(product);
     };
 
 
@@ -2148,48 +2119,17 @@ function AudioMain() {
         }
 
         try {
-
-            const cart =
-                JSON.parse(
-                    localStorage.getItem(CART_KEY) || "[]"
-                );
-
-            const existing =
-                cart.find(
-                    (item) => item.id === product.id
-                );
-
-            if (existing) {
-
-                existing.quantity =
-                    Number(existing.quantity || 1) + 1;
-
-            } else {
-
-                cart.push({
-                    ...product,
-                    quantity: 1
-                });
-
-            }
-
-            localStorage.setItem(
-                CART_KEY,
-                JSON.stringify(cart)
-            );
-
+            const normalized = normalizeCartItem(product, 1);
+            addProductToCart(product, 1);
             updateCartCount();
 
             showMessage(
-                `${product.name} added to cart`
+                `${normalized?.name || product.name || "Product"} added to cart`
             );
-
         } catch {
-
             showMessage(
                 "Unable to add product"
             );
-
         }
     };
 
@@ -3183,7 +3123,7 @@ function AudioMain() {
                                 key={product.id}
                                 product={product}
                                 isWishlisted={
-                                    wishlist.includes(
+                                    isInWishlist(
                                         product.id
                                     )
                                 }

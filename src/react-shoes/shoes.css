@@ -1284,47 +1284,41 @@
 
 
 .shoe-wishlist {
-
     position: absolute;
-
     z-index: 5;
-
     right: 12px;
     top: 12px;
-
-    width: 34px;
-    height: 34px;
-
+    width: 38px;
+    height: 38px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    border: 1px solid #e4ebe7;
-
+    border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 50%;
-
-    background:
-        rgba(255,255,255,.92);
-
-    color: #68736d;
-
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
     cursor: pointer;
-
-    transition: .2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-.shoe-wishlist:hover,
-.shoe-wishlist.active {
-
-    background: #fff0f2;
-
-    border-color: #ffd5dc;
-
-    color: #ec3e59;
-
+.shoe-wishlist:hover {
     transform: scale(1.08);
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+}
+
+.shoe-wishlist.active {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.shoe-wishlist.active:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
 }
 
 
@@ -3816,8 +3810,8 @@
 .ksam-shoe-hero {
     position: relative;
     overflow: hidden;
-    min-height: 850px;
-    padding: 0 5%;
+    min-height: 580px;
+    padding: 0 5% 45px;
     background:
         radial-gradient(
             circle at 5% 20%,
@@ -3978,20 +3972,113 @@
 
 
 /* =========================================================
+   HERO VIDEO LAYER (RIGHT-ANCHORED VIDEO 2)
+   ========================================================= */
+
+.ksam-hero-video-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 62%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@media (max-width: 1200px) {
+    .ksam-hero-video-wrapper {
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px) {
+    .ksam-hero-video-wrapper {
+        display: none !important;
+    }
+}
+
+.ksam-hero-video,
+.ksam-hero-video-poster {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.12);
+    transform-origin: top left;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 28%), linear-gradient(to bottom, #000 85%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 28%), linear-gradient(to bottom, #000 85%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+}
+
+.ksam-hero-video-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    /* Soft mint blend: fade from hero mint (#f0fff7) on the left over ~28%, subtle mint tint rgba(220,252,231,0.15), and soft bottom fade */
+    background:
+        linear-gradient(90deg, #f0fff7 0%, rgba(240, 255, 247, 0.85) 12%, transparent 28%),
+        linear-gradient(to bottom, transparent 82%, #f0fff7 100%),
+        radial-gradient(circle at 100% 100%, #f0fff7 0%, rgba(240, 255, 247, 0.85) 10%, transparent 25%),
+        rgba(220, 252, 231, 0.15);
+}
+
+/* MOBILE HERO VIDEO BLOCK (under 768px, appears below text) */
+.ksam-hero-mobile-video-wrap {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .ksam-hero-mobile-video-wrap {
+        display: block;
+        width: 100%;
+        height: 300px;
+        margin: 28px 0 10px;
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 18px 45px rgba(7, 34, 20, 0.12);
+        background: #eef8f3;
+    }
+
+    .ksam-hero-mobile-video,
+    .ksam-hero-mobile-poster {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        border-radius: 24px;
+        transform: scale(1.12);
+        transform-origin: top left;
+    }
+}
+
+
+/* =========================================================
    MAIN HERO
    ========================================================= */
 
 .ksam-hero-main {
     min-height: 535px;
     display: grid;
-    grid-template-columns: 0.95fr 1.05fr;
+    grid-template-columns: 1fr;
     align-items: center;
-    gap: 40px;
+    position: relative;
+    z-index: 3;
 }
 
 
 .ksam-hero-content {
-    padding: 65px 0 30px;
+    position: relative;
+    z-index: 3;
+    max-width: 620px;
+    padding: 45px 0 30px;
 }
 
 
@@ -4043,7 +4130,7 @@
 
 
 .ksam-hero-content h1 {
-    margin: 26px 0 18px;
+    margin: 0 0 18px;
     max-width: 650px;
     font-size: clamp(60px, 6.5vw, 105px);
     line-height: 0.88;
@@ -4645,7 +4732,7 @@
     }
 
     .ksam-hero-main {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
 
     .ksam-hero-content h1 {

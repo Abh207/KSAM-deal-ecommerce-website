@@ -67,6 +67,7 @@ import { getCartProductFromLS } from "./getCartProducts.js";
 import { showToast } from "./showToast.js";
 import { updateCartValue } from "./updateCartValue.js";
 import { requireAuth } from "./auth/auth.js";
+import { addProductToCart, findProductInCatalog, normalizeCartItem } from "./lib/cartHelper.js";
 
 
 export const addToCart =
@@ -136,98 +137,26 @@ export const addToCart =
         Number(price);
 
 
-    /* =========================================
-       CHECK EXISTING PRODUCT
-    ========================================= */
+    const catalogItem = findProductInCatalog(id) || {};
+    const nameElem = currentProdElem.querySelector(".productName");
+    const imgElem =
+        currentProdElem.querySelector(".productImage") ||
+        currentProdElem.querySelector("img");
+    const catElem = currentProdElem.querySelector(".category");
 
-    const existingProduct =
-        cartProducts.find(
-            (product) =>
-                Number(product.id) ===
-                Number(id)
-        );
-
-
-    /* =========================================
-       PRODUCT ALREADY EXISTS
-    ========================================= */
-
-    if (existingProduct) {
-
-        existingProduct.quantity =
-            Number(existingProduct.quantity) +
-            quantity;
-
-
-        existingProduct.price =
-            price;
-
-
-        localStorage.setItem(
-            "cartProductLS",
-            JSON.stringify(cartProducts)
-        );
-
-
-        updateCartValue(
-            cartProducts
-        );
-
-
-        showToast(
-            "add",
-            id
-        );
-
-
-        return;
-    }
-
-
-    /* =========================================
-       NEW PRODUCT
-    ========================================= */
-
-    const newProduct = {
-
-        id: Number(id),
-
-        quantity: quantity,
-
-        price: price
+    const productPayload = {
+        id: id,
+        name: catalogItem.name || (nameElem ? nameElem.innerText.trim() : "Product"),
+        price: price || catalogItem.price || 0,
+        oldPrice: catalogItem.oldPrice || price,
+        image: catalogItem.image || (imgElem ? imgElem.getAttribute("src") : ""),
+        category: catalogItem.category || (catElem ? catElem.innerText.trim() : "Deals"),
+        quantity: quantity
     };
 
+    const updatedCart = addProductToCart(productPayload, quantity);
 
-    cartProducts.push(
-        newProduct
-    );
+    updateCartValue(updatedCart);
 
-
-    /* =========================================
-       SAVE
-    ========================================= */
-
-    localStorage.setItem(
-        "cartProductLS",
-        JSON.stringify(cartProducts)
-    );
-
-
-    /* =========================================
-       UPDATE CART ICON
-    ========================================= */
-
-    updateCartValue(
-        cartProducts
-    );
-
-
-    /* =========================================
-       TOAST
-    ========================================= */
-
-    showToast(
-        "add",
-        id
-    );
+    showToast("add", id);
 };

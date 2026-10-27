@@ -377,13 +377,13 @@ export function ProductDetails({ product, onClose, onSelectProduct }) {
                   right: "18px",
                   top: "18px",
                   zIndex: 20,
-                  width: "48px",
-                  height: "48px",
+                  width: "44px",
+                  height: "44px",
                   boxShadow: isSaved ? "0 0 16px rgba(255,255,255,0.4)" : "none"
                 }}
               >
                 <Heart
-                  size={22}
+                  size={20}
                   strokeWidth={2}
                   fill={isSaved ? "#ffffff" : "none"}
                   color="#ffffff"

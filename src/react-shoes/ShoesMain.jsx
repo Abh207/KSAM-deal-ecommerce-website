@@ -4,6 +4,7 @@ console.log("SHOES MAIN JS IS RUNNING");
 import React, {
     useEffect,
     useMemo,
+    useRef,
     useState
 } from "react";
 
@@ -13,6 +14,8 @@ import { createRoot } from "react-dom/client";
 import ShoeCard from "./ShoeCard";
 import { requireAuth } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../lib/cartHelper.js";
+import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../lib/wishlist.js";
 
 import shoesData from "../api/shoes-products.json";
 
@@ -63,26 +66,14 @@ function ShoesMain() {
         );
 
 
-    const [wishlist, setWishlist] =
-        useState(() => {
+    const [, setWishlistVersion] = useState(0);
 
-            try {
-
-                return JSON.parse(
-                    localStorage.getItem(
-                        WISHLIST_KEY
-                    )
-                ) || [];
-
-            }
-
-            catch {
-
-                return [];
-
-            }
-
+    useEffect(() => {
+        const unsub = subscribeWishlist(() => {
+            setWishlistVersion((v) => v + 1);
         });
+        return unsub;
+    }, []);
 
 
     const [quickProduct, setQuickProduct] =
@@ -102,54 +93,68 @@ function ShoesMain() {
 
 
     /* =====================================================
-   DYNAMIC HERO
-   ===================================================== */
+       DYNAMIC HERO PRODUCTS (USED ACROSS PAGE)
+       ===================================================== */
+    const [heroIndex, setHeroIndex] = useState(0);
 
-const [heroIndex, setHeroIndex] = useState(0);
-
-const heroProducts = useMemo(() => {
-
-    const featured =
-        shoesData.products.filter(
+    const heroProducts = useMemo(() => {
+        const featured = shoesData.products.filter(
             (product) => product.featured
         );
+        return featured.length ? featured : shoesData.products;
+    }, []);
 
-    return featured.length
-        ? featured
-        : shoesData.products;
+    const heroProduct = heroProducts[heroIndex % heroProducts.length];
 
-}, []);
+    /* =====================================================
+       HERO VIDEO (VIDEO 2) STATE & LIFECYCLE
+       ===================================================== */
+    const heroVideoRef = useRef(null);
+    const heroSectionRef = useRef(null);
+    const [heroVideoFailed, setHeroVideoFailed] = useState(false);
+    const [heroInView, setHeroInView] = useState(true);
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+        return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    });
 
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const onChange = (e) => setPrefersReducedMotion(e.matches);
+        if (mq.addEventListener) mq.addEventListener("change", onChange);
+        return () => {
+            if (mq.removeEventListener) mq.removeEventListener("change", onChange);
+        };
+    }, []);
 
-const heroProduct =
-    heroProducts[
-        heroIndex % heroProducts.length
-    ];
-
-
-/* AUTOMATIC HERO CHANGE */
-
-useEffect(() => {
-
-    if (heroProducts.length <= 1) {
-        return;
-    }
-
-    const heroTimer = setInterval(() => {
-
-        setHeroIndex(
-            (current) =>
-                (current + 1) %
-                heroProducts.length
+    useEffect(() => {
+        const el = heroSectionRef.current;
+        if (!el || typeof IntersectionObserver === "undefined") return;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    setHeroInView(entry.isIntersecting);
+                });
+            },
+            { threshold: 0.1 }
         );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
 
-    }, 4000);
-
-    return () => {
-        clearInterval(heroTimer);
-    };
-
-}, [heroProducts.length]);
+    useEffect(() => {
+        const vid = heroVideoRef.current;
+        if (!vid) return;
+        if (heroInView && !prefersReducedMotion && !heroVideoFailed) {
+            const playPromise = vid.play();
+            if (playPromise && playPromise.catch) {
+                playPromise.catch(() => {
+                    setHeroVideoFailed(true);
+                });
+            }
+        } else {
+            vid.pause();
+        }
+    }, [heroInView, prefersReducedMotion, heroVideoFailed]);
 
 
 
@@ -202,18 +207,7 @@ useEffect(() => {
 
 
 
-    /* =====================================================
-       WISHLIST STORAGE
-       ===================================================== */
 
-    useEffect(() => {
-
-        localStorage.setItem(
-            WISHLIST_KEY,
-            JSON.stringify(wishlist)
-        );
-
-    }, [wishlist]);
 
 
 
@@ -446,47 +440,12 @@ useEffect(() => {
        WISHLIST
        ===================================================== */
 
-    const handleWishlist =
-        (product) => {
-
-            if (!requireAuth({ type: "wishlist", product })) {
-                return;
-            }
-
-            setWishlist((current) => {
-
-                if (
-                    current.includes(
-                        product.id
-                    )
-                ) {
-
-                    showToast(
-                        "Removed from wishlist"
-                    );
-
-
-                    return current.filter(
-                        (id) =>
-                            id !== product.id
-                    );
-
-                }
-
-
-                showToast(
-                    "Added to wishlist ❤️"
-                );
-
-
-                return [
-                    ...current,
-                    product.id
-                ];
-
-            });
-
-        };
+    const handleWishlist = (product) => {
+        if (!requireAuth({ type: "wishlist", product })) {
+            return;
+        }
+        sharedToggleWishlist(product);
+    };
 
 
 
@@ -502,86 +461,19 @@ useEffect(() => {
             }
 
             try {
-
-                const existingCart =
-                    JSON.parse(
-                        localStorage.getItem(
-                            CART_KEY
-                        )
-                    ) || [];
-
-
-                const existingIndex =
-                    existingCart.findIndex(
-                        (item) =>
-                            item.id ===
-                            product.id
-                    );
-
-
-                if (
-                    existingIndex !== -1
-                ) {
-
-                    existingCart[
-                        existingIndex
-                    ].quantity =
-                        Number(
-                            existingCart[
-                                existingIndex
-                            ].quantity || 1
-                        ) + 1;
-
-                }
-
-                else {
-
-                    existingCart.push({
-
-                        id: product.id,
-
-                        name: product.name,
-
-                        category:
-                            product.category,
-
-                        price: product.price,
-
-                        image: product.image,
-
-                        quantity: 1
-
-                    });
-
-                }
-
-
-                localStorage.setItem(
-                    CART_KEY,
-                    JSON.stringify(
-                        existingCart
-                    )
-                );
-
-
+                const normalized = normalizeCartItem(product, 1);
+                addProductToCart(product, 1);
                 updateCartCount();
 
-
                 showToast(
-                    `${product.name} added to cart 🛒`
+                    `${normalized?.name || product.name || "Product"} added to cart 🛒`
                 );
-
-            }
-
-            catch (error) {
-
+            } catch (error) {
                 console.error(
                     "Unable to add product:",
                     error
                 );
-
             }
-
         };
 
 
@@ -660,45 +552,41 @@ useEffect(() => {
             <Navbar />
 
             {/* =================================================
-               ANNOUNCEMENT
-               ================================================= */}
-
-            <div className="shoes-announcement">
-
-                <div>
-
-                    <i className="fa-solid fa-bolt"></i>
-
-                    New arrivals are here
-
-                </div>
-
-
-                <span>
-
-                    Free delivery above ₹999
-
-                </span>
-
-
-                <div>
-
-                    <i className="fa-solid fa-shield-halved"></i>
-
-                    Secure shopping
-
-                </div>
-
-            </div>
-
-
-
-            {/* =================================================
    MODERN DYNAMIC SHOE HERO
    ================================================= */}
 
-<section className="ksam-shoe-hero">
+<section className="ksam-shoe-hero" ref={heroSectionRef}>
 
+    {/* VIDEO 2 BACKGROUND LAYER ANCHORED TO RIGHT */}
+    <div className="ksam-hero-video-wrapper" aria-hidden="true">
+        {!prefersReducedMotion && !heroVideoFailed ? (
+            <video
+                ref={heroVideoRef}
+                className="ksam-hero-video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                controlsList="nodownload nofullscreen noremoteplayback"
+                poster={`${import.meta.env.BASE_URL}assets/videos/shoes-hero-poster.jpg`}
+                onError={() => setHeroVideoFailed(true)}
+            >
+                <source
+                    src={`${import.meta.env.BASE_URL}assets/videos/shoes-hero.mp4`}
+                    type="video/mp4"
+                />
+            </video>
+        ) : (
+            <img
+                src={`${import.meta.env.BASE_URL}assets/videos/shoes-hero-poster.jpg`}
+                alt="Sneaker exploded view"
+                className="ksam-hero-video-poster"
+            />
+        )}
+        <div className="ksam-hero-video-overlay" aria-hidden="true" />
+    </div>
 
     {/* BACKGROUND DECORATION */}
 
@@ -710,73 +598,6 @@ useEffect(() => {
 
 
 
-    {/* TOP HERO NAV */}
-
-    {/* <div className="ksam-hero-top">
-
-        <div className="ksam-hero-brand">
-
-            <span className="ksam-brand-symbol">
-                K
-            </span>
-
-            <div>
-
-                <strong>
-                    KSAM
-                </strong>
-
-                <small>
-                    SHOES
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <div className="ksam-hero-links">
-
-            <a href="#shoe-products">
-                FOOTWEAR
-            </a>
-
-            <a href="#shoe-products">
-                SHOP
-            </a>
-
-            <a href="#shoe-category-section">
-                CATEGORIES
-            </a>
-
-            <a href="#shoe-deals">
-                DEALS
-            </a>
-
-        </div>
-
-
-        <button
-            type="button"
-            className="ksam-account-button"
-            onClick={() => {
-                window.location.href =
-                    "./login.html";
-            }}
-        >
-
-            <span>
-                MY ACCOUNT
-            </span>
-
-            <i className="fa-regular fa-user"></i>
-
-        </button>
-
-    </div> */}
-
-
-
     {/* MAIN HERO */}
 
     <div className="ksam-hero-main">
@@ -785,20 +606,6 @@ useEffect(() => {
         {/* LEFT SIDE */}
 
         <div className="ksam-hero-content">
-
-
-            <div className="ksam-hero-label">
-
-                <span className="ksam-pulse"></span>
-
-                NEW SEASON
-
-                <span className="ksam-label-line"></span>
-
-                KSAM DEAL
-
-            </div>
-
 
             <h1>
 
@@ -906,385 +713,40 @@ useEffect(() => {
         </div>
 
 
+        {/* MOBILE VIDEO BLOCK (under 768px, appears below text) */}
 
-        {/* RIGHT SIDE PRODUCT */}
+        <div className="ksam-hero-mobile-video-wrap">
 
-        <div className="ksam-hero-product-area">
-
-
-            {/* DELIVERY FLOAT */}
-
-            <div className="ksam-floating-info ksam-delivery">
-
-                <i className="fa-solid fa-truck-fast"></i>
-
-                <div>
-
-                    <strong>
-                        Fast delivery
-                    </strong>
-
-                    <span>
-                        Above ₹999
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
-            {/* RATING FLOAT */}
-
-            <div className="ksam-floating-info ksam-rating">
-
-                <i className="fa-solid fa-star"></i>
-
-                <div>
-
-                    <strong>
-                        {heroProduct?.rating || 4.8}
-                    </strong>
-
-                    <span>
-                        Rated
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
-            {/* PRODUCT CARD */}
-
-            {heroProduct && (
-
-                <div
-                    className="ksam-main-product"
-                    key={heroProduct.id}
+            {!prefersReducedMotion && !heroVideoFailed ? (
+                <video
+                    className="ksam-hero-mobile-video"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    disablePictureInPicture
+                    controlsList="nodownload nofullscreen noremoteplayback"
+                    poster={`${import.meta.env.BASE_URL}assets/videos/shoes-hero-poster.jpg`}
                 >
-
-
-                    <div className="ksam-product-top">
-
-                        <span className="ksam-featured-label">
-
-                            FEATURED
-
-                        </span>
-
-
-                        <span className="ksam-product-badge">
-
-                            {heroProduct.badge ||
-                                "KSAM PICK"}
-
-                        </span>
-
-                    </div>
-
-
-                    {/* IMAGE */}
-
-                    <div className="ksam-product-image-wrap">
-
-                        <div className="ksam-image-circle"></div>
-
-                        <img
-                            src={`${import.meta.env.BASE_URL}${heroProduct.image.replace(/^\/+/, "")}`}
-                            alt={heroProduct.name}
-                            className="ksam-main-shoe-image"
-                        />
-
-                    </div>
-
-
-                    {/* PRODUCT INFO */}
-
-                    <div className="ksam-main-product-info">
-
-                        <span>
-                            {heroProduct.category}
-                        </span>
-
-
-                        <h2>
-                            {heroProduct.name}
-                        </h2>
-
-
-                        <div className="ksam-product-bottom">
-
-                            <strong>
-
-                                ₹
-                                {Number(
-                                    heroProduct.price
-                                ).toLocaleString("en-IN")}
-
-                            </strong>
-
-
-                            {heroProduct.oldPrice && (
-
-                                <del>
-
-                                    ₹
-                                    {Number(
-                                        heroProduct.oldPrice
-                                    ).toLocaleString(
-                                        "en-IN"
-                                    )}
-
-                                </del>
-
-                            )}
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+                    <source
+                        src={`${import.meta.env.BASE_URL}assets/videos/shoes-hero.mp4`}
+                        type="video/mp4"
+                    />
+                </video>
+            ) : (
+                <img
+                    src={`${import.meta.env.BASE_URL}assets/videos/shoes-hero-poster.jpg`}
+                    alt="Sneaker exploded view"
+                    className="ksam-hero-mobile-poster"
+                />
             )}
 
-
-
-            {/* SLIDER DOTS */}
-
-            <div className="ksam-hero-dots">
-
-                {heroProducts.map(
-                    (product, index) => (
-
-                        <button
-                            key={product.id}
-                            type="button"
-                            className={
-                                index === heroIndex
-                                    ? "active"
-                                    : ""
-                            }
-                            onClick={() =>
-                                setHeroIndex(index)
-                            }
-                            aria-label={
-                                `Show ${product.name}`
-                            }
-                        />
-
-                    )
-                )}
-
-            </div>
-
         </div>
 
     </div>
-
-
-
-    {/* FEATURED PRODUCT STRIP */}
-
-    <div className="ksam-featured-strip">
-
-
-        <div className="ksam-strip-heading">
-
-            <div>
-
-                <span>
-                    TRENDING NOW
-                </span>
-
-                <h2>
-                    Step up your rotation
-                </h2>
-
-            </div>
-
-
-            <button
-                type="button"
-                onClick={() =>
-                    document
-                        .getElementById(
-                            "shoe-products"
-                        )
-                        ?.scrollIntoView({
-                            behavior: "smooth"
-                        })
-                }
-            >
-
-                View collection
-
-                <i className="fa-solid fa-arrow-right"></i>
-
-            </button>
-
-        </div>
-
-
-
-        <div className="ksam-mini-products">
-
-            {heroProducts
-                .slice(0, 3)
-                .map((product, index) => (
-
-                    <article
-                        className={
-                            index ===
-                            heroIndex %
-                                Math.min(
-                                    heroProducts.length,
-                                    3
-                                )
-                                ? "ksam-mini-card active"
-                                : "ksam-mini-card"
-                        }
-                        key={product.id}
-                    >
-
-
-                        <div className="ksam-mini-image">
-
-                            <img
-                                src={`${import.meta.env.BASE_URL}${product.image.replace(/^\/+/, "")}`}
-                                alt={product.name}
-                            />
-
-                        </div>
-
-
-                        <div className="ksam-mini-content">
-
-                            <span>
-                                {product.category}
-                            </span>
-
-                            <h3>
-                                {product.name}
-                            </h3>
-
-
-                            <div>
-
-                                <strong>
-                                    ₹
-                                    {Number(
-                                        product.price
-                                    ).toLocaleString(
-                                        "en-IN"
-                                    )}
-                                </strong>
-
-
-                                <span>
-                                    ★ {product.rating}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <i className="fa-solid fa-arrow-up-right-from-square ksam-mini-icon"></i>
-
-                    </article>
-
-                ))}
-
-        </div>
-
-    </div>
-
 
 </section>
-
-            {/* =================================================
-               CATEGORY SECTION
-               ================================================= */}
-
-            <section className="shoe-category-section">
-
-                <div className="shoe-section-heading">
-
-                    <div>
-
-                        <span>
-                            SHOP YOUR STYLE
-                        </span>
-
-                        <h2>
-                            Explore by category
-                        </h2>
-
-                    </div>
-
-
-                    <p>
-                        Find the right pair for every occasion.
-                    </p>
-
-                </div>
-
-
-                <div className="shoe-category-list">
-
-                    {shoesData.categories.map(
-                        (item) => (
-
-                            <button
-                                type="button"
-                                key={item}
-                                className={
-                                    category === item
-                                        ? "shoe-category active"
-                                        : "shoe-category"
-                                }
-                                onClick={() =>
-                                    handleCategoryChange(
-                                        item
-                                    )
-                                }
-                            >
-
-                                <span>
-
-                                    {item === "All" && "✨"}
-
-                                    {item === "Sneakers" && "👟"}
-
-                                    {item === "Running" && "🏃"}
-
-                                    {item === "Sports" && "⚡"}
-
-                                    {item === "Casual" && "🧢"}
-
-                                    {item === "Formal" && "👞"}
-
-                                    {item === "Walking" && "🚶"}
-
-                                    {item === "Boots" && "🥾"}
-
-                                </span>
-
-
-                                {item}
-
-                            </button>
-
-                        )
-                    )}
-
-                </div>
-
-            </section>
-
-
 
             {/* =================================================
                PRODUCTS SECTION
@@ -1632,7 +1094,7 @@ useEffect(() => {
                                                 product
                                             }
                                             isWishlisted={
-                                                wishlist.includes(
+                                                isInWishlist(
                                                     product.id
                                                 )
                                             }

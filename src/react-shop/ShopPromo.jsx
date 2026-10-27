@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { requireAuth } from "../auth/auth.js";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../lib/cartHelper.js";
 import "./ShopPromo.css";
 
 const promoProducts = [
@@ -139,64 +140,22 @@ function ShopPromo() {
         }
 
         try {
-
-            const cart =
-                JSON.parse(
-                    localStorage.getItem(
-                        "cartProductLS"
-                    )
-                ) || [];
-
-            const existingProduct =
-                cart.find(
-                    (item) =>
-                        Number(item.id) ===
-                        Number(product.id)
-                );
-
-            if (existingProduct) {
-
-                existingProduct.quantity =
-                    Number(
-                        existingProduct.quantity || 1
-                    ) + 1;
-
-            } else {
-
-                cart.push({
-                    id: product.id,
-                    name: product.title,
-                    category: product.category,
-                    price: product.price,
-                    oldPrice: product.oldPrice,
-                    image: product.image,
-                    quantity: 1
-                });
-
-            }
-
-            localStorage.setItem(
-                "cartProductLS",
-                JSON.stringify(cart)
-            );
+            const normalized = normalizeCartItem(product, 1);
+            addProductToCart(product, 1);
 
             setCartMessage(
-                `${product.title} added to cart ✓`
+                `${normalized?.name || product.title || product.name || "Product"} added to cart ✓`
             );
 
             setTimeout(() => {
                 setCartMessage("");
             }, 2500);
-
         } catch (error) {
-
             console.error(
                 "Unable to add product:",
                 error
             );
-
         }
-
     };
 
 

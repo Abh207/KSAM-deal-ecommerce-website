@@ -8,6 +8,7 @@ import Countdown from "./Countdown.jsx";
 import Toast from "./Toast.jsx";
 import { requireAuth } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../lib/cartHelper.js";
 
 import "./BeautyHome.css";
 
@@ -134,50 +135,16 @@ const BeautyHome = () => {
             return;
         }
 
-        const cartProducts = getCartProducts();
-
-        const existingProduct = cartProducts.find(
-            (cartProduct) =>
-                Number(cartProduct.id) === Number(product.id)
-        );
-
-        if (existingProduct) {
-
-            existingProduct.quantity =
-                Number(existingProduct.quantity || 0) +
-                Number(quantity);
-
-            // Keep price as UNIT price
-            existingProduct.price =
-                Number(product.price);
-
-        } else {
-
-            cartProducts.push({
-                id: Number(product.id),
-                quantity: Number(quantity),
-                price: Number(product.price)
-            });
-        }
-
-        // Save cart
-        localStorage.setItem(
-            CART_STORAGE_KEY,
-            JSON.stringify(cartProducts)
-        );
+        const normalized = normalizeCartItem(product, quantity);
+        addProductToCart(product, quantity);
 
         // Update cart count
         updateCartCount();
 
-        // Tell other JavaScript files that cart changed
-        window.dispatchEvent(
-            new Event("cartUpdated")
-        );
-
         // Show popup
         setToast({
             message: "Product added to cart",
-            productName: product.name
+            productName: normalized?.name || product.name
         });
     };
 

@@ -76,6 +76,35 @@ function getIconForCategory(id) {
   );
 }
 
+/* ---------- Category Video Configuration ---------- */
+export const CATEGORY_VIDEOS = {
+  watches: {
+    src: "assets/videos/watches-banner.mp4",
+    poster: "assets/videos/watches-banner-poster.jpg",
+  },
+  shoes: {
+    src: "assets/videos/shoes-banner.mp4",
+    poster: "assets/videos/shoes-banner-poster.jpg",
+  },
+};
+
+export function getCategoryVideoConfig(catId) {
+  if (!catId) return null;
+  const entry = CATEGORY_VIDEOS[String(catId).toLowerCase()];
+  if (!entry) return null;
+  if (typeof entry === "string") {
+    return { src: entry, poster: "" };
+  }
+  return entry;
+}
+
+export function resolveVideoPath(path) {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  const clean = path.startsWith("./") ? path.slice(2) : (path.startsWith("/") ? path.slice(1) : path);
+  return `${import.meta.env.BASE_URL}${clean}`;
+}
+
 /* ---------- Redesigned Vertical Category Product Card ---------- */
 function CategoryProductCard({ product, category }) {
   const [imgError, setImgError] = useState(false);
@@ -223,6 +252,27 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
 
   const [activeCatId, setActiveCatId] = useState(initialCatId);
   const [bannerFailed, setBannerFailed] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const bannerVideoRef = useRef(null);
+  const bannerContainerRef = useRef(null);
+  const [bannerInView, setBannerInView] = useState(true);
+
+  // prefers-reduced-motion check
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    return typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e) => setPrefersReducedMotion(e.matches);
+    if (mq.addEventListener) mq.addEventListener("change", onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", onChange);
+    };
+  }, []);
+
+
 
   // Sync initialCatId on first render
   useEffect(() => {
@@ -236,6 +286,54 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
   const [fadeKey, setFadeKey] = useState(activeCatId);
   const [fading, setFading] = useState(false);
 
+  // Category video for current selection
+  const currentCategoryVideo = getCategoryVideoConfig(activeCatId);
+
+  // Pause video when out of view (IntersectionObserver)
+  useEffect(() => {
+    const el = bannerContainerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setBannerInView(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Handle video play/pause lifecycle on category change / visibility / preferences
+  useEffect(() => {
+    const vid = bannerVideoRef.current;
+    if (!vid) return;
+    try {
+      vid.defaultMuted = true;
+      vid.muted = true;
+    } catch (e) {}
+
+    if (
+      bannerInView &&
+      currentCategoryVideo &&
+      !prefersReducedMotion &&
+      !videoFailed
+    ) {
+      try {
+        vid.currentTime = 0;
+      } catch (e) {}
+      const playPromise = vid.play();
+      if (playPromise && playPromise.catch) {
+        playPromise.catch((err) => {
+          console.warn("Banner video autoplay delayed or prevented:", err);
+        });
+      }
+    } else {
+      vid.pause();
+    }
+  }, [bannerInView, currentCategoryVideo, prefersReducedMotion, videoFailed, fadeKey]);
+
   // Category selection only updates internal section state (NO window scroll, NO grid filter side-effects)
   const handleSelect = useCallback(
     (catId) => {
@@ -245,8 +343,9 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
         setActiveCatId(catId);
         setFadeKey(catId);
         setBannerFailed(false);
+        setVideoFailed(false);
         setFading(false);
-      }, 180); // matches CSS transition
+      }, 300); // 0.3s crossfade between categories
     },
     [activeCatId]
   );
@@ -437,15 +536,43 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
 
         {/* ── RIGHT: banner + thumbnails (tabpanel) ── */}
         <div
+          ref={bannerContainerRef}
           className="cs-detail-panel"
           id={panelId}
           role="tabpanel"
           aria-labelledby={tabId(activeCatId)}
         >
           {/* FEATURED BANNER */}
-          <div className={`cs-banner${fading ? " cs-fade-out" : " cs-fade-in"}${isEmpty ? " cs-banner-empty" : ""}`} key={fadeKey}>
-            {/* Background: product image or gradient */}
-            {activeCategory.bannerImage && !isEmpty && !bannerFailed ? (
+          <div
+            className={`cs-banner${fading ? " cs-fade-out" : " cs-fade-in"}${isEmpty ? " cs-banner-empty" : ""}`}
+            key={fadeKey}
+          >
+            {/* Background: Looping video for categories with video, or static image / placeholder */}
+            {currentCategoryVideo && !prefersReducedMotion && !videoFailed ? (
+              <div className="cs-banner-img-wrap cs-banner-video-panel">
+                <video
+                  ref={bannerVideoRef}
+                  key={currentCategoryVideo.src}
+                  src={resolveVideoPath(currentCategoryVideo.src)}
+                  className="cs-banner-video"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  disablePictureInPicture
+                  controlsList="nodownload nofullscreen noremoteplayback"
+                  poster={resolveVideoPath(currentCategoryVideo.poster) || activeCategory.bannerImage}
+                >
+                  <source
+                    src={resolveVideoPath(currentCategoryVideo.src)}
+                    type="video/mp4"
+                    onError={() => setVideoFailed(true)}
+                  />
+                </video>
+                <div className="cs-banner-video-overlay" aria-hidden="true" />
+              </div>
+            ) : activeCategory.bannerImage && !isEmpty && !bannerFailed ? (
               <div className="cs-banner-img-wrap">
                 <img
                   src={activeCategory.bannerImage}

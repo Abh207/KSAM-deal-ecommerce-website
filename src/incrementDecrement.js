@@ -45,14 +45,16 @@ export const incrementDecrement = (event,id,stock,price) => {
     localStoragePrice = Number(localStoragePrice.toFixed(2));
 
 
-    let updatedCart = {id , quantity,price: localStoragePrice  };
+    let updatedCart = existingProd
+        ? { ...existingProd, quantity, qty: quantity, price: localStoragePrice }
+        : { id, quantity, qty: quantity, price: localStoragePrice };
 
-        let updateCart=localCartProducts.map((curProd) => {
-            return curProd.id === id ? updatedCart : curProd;
+    let updateCart = localCartProducts.map((curProd) => {
+        return curProd.id === id ? updatedCart : curProd;
+    });
 
-        });
-        // console.log(updateCart);
-        localStorage.setItem("cartProductLS",JSON.stringify(updateCart));
+    localStorage.setItem("cartProductLS", JSON.stringify(updateCart));
+    window.dispatchEvent(new Event("cartUpdated"));
 
     
 // also we can need to reflects the changes on the main screen

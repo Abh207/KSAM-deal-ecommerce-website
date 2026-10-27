@@ -9,6 +9,7 @@ import { createRoot } from "react-dom/client";
 import ShoeCard from "./ShoeCard";
 
 import shoesData from "../api/shoes-products.json";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../../lib/cartHelper.js";
 
 import "./shoes.css";
 
@@ -588,76 +589,19 @@ function ShoesMain() {
         (product) => {
 
             try {
-
-                const existingCart =
-                    JSON.parse(
-                        localStorage.getItem(
-                            CART_KEY
-                        )
-                    ) || [];
-
-
-                const existingIndex =
-                    existingCart.findIndex(
-                        (item) =>
-                            item.id ===
-                            product.id
-                    );
-
-
-                if (
-                    existingIndex !== -1
-                ) {
-
-                    existingCart[
-                        existingIndex
-                    ].quantity =
-                        Number(
-                            existingCart[
-                                existingIndex
-                            ].quantity || 1
-                        ) + 1;
-
-                } else {
-
-                    existingCart.push({
-
-                        id:
-                            product.id,
-
-                        name:
-                            product.name,
-
-                        category:
-                            product.category,
-
-                        price:
-                            product.price,
-
-                        image:
-                            product.image,
-
-                        quantity: 1
-
-                    });
-
-                }
-
-
-                localStorage.setItem(
-                    CART_KEY,
-                    JSON.stringify(
-                        existingCart
-                    )
-                );
-
-
+                const normalized = normalizeCartItem(product, 1);
+                addProductToCart(product, 1);
                 updateCartCount();
 
-
                 showToast(
-                    `${product.name} added to cart 🛒`
+                    `${normalized?.name || product.name || "Product"} added to cart 🛒`
                 );
+            } catch (error) {
+                console.error(
+                    "Unable to add product:",
+                    error
+                );
+            }
 
             } catch (error) {
 

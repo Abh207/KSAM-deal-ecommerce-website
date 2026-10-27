@@ -80,19 +80,19 @@
     "Actualprice": 999.99,
     "stock": 30,
     "image": "charger.png",
-    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    "description": "High-speed universal fast charger with intelligent power delivery and surge protection."
     
   },
   {
     "id": 8,
     "name": "Hardware",
-    "category": "Audio",
+    "category": "Computers",
     "brand": "SoundBeats",
     "price": 1489.99,
     "Actualprice": 2999.99,
     "stock": 30,
     "image": "computer-hardware.png",
-    "description": "High-quality wireless headphones with over-ear design, 20 hours of battery life, and a sleek black color."
+    "description": "High-performance computer hardware components engineered for maximum processing speed."
     
   },
   {

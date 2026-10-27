@@ -113,9 +113,7 @@ export function ProductCard({ product, onOpenDetails }) {
             strokeWidth={1.8}
             fill={isSaved ? "#ffffff" : "none"}
             color="#ffffff"
-            className={`ksam-card-heart-icon ${
-              isSaved ? "scale-105" : "hover:scale-105"
-            }`}
+            className="ksam-card-heart-icon"
           />
         </button>
       </div>

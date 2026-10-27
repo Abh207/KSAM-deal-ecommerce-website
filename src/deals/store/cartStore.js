@@ -1,33 +1,19 @@
 import { useSyncExternalStore } from "react";
+import {
+  CART_STORAGE_KEY,
+  CURRENCY_SYMBOL,
+  FREE_DELIVERY_THRESHOLD,
+  parsePrice,
+  formatPrice,
+  normalizeCartItem,
+  getNormalizedCart
+} from "../../lib/cartHelper.js";
 
-export const CART_KEY = "cartProductLS";
-export const CURRENCY_SYMBOL = "₹";
-export const FREE_DELIVERY_THRESHOLD = 999;
-
-export function parsePrice(val) {
-  if (typeof val === "number") return val;
-  if (!val) return 0;
-  const cleaned = String(val).replace(/[^0-9.]/g, "");
-  const num = parseFloat(cleaned);
-  return isNaN(num) ? 0 : num;
-}
-
-export function formatPrice(num) {
-  const n = typeof num === "number" ? num : parsePrice(num);
-  return `${CURRENCY_SYMBOL}${Math.round(n).toLocaleString("en-IN")}`;
-}
+export const CART_KEY = CART_STORAGE_KEY;
+export { CURRENCY_SYMBOL, FREE_DELIVERY_THRESHOLD, parsePrice, formatPrice };
 
 function readStorage() {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(CART_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
-    console.error("Error reading cart from localStorage:", e);
-    return [];
-  }
+  return getNormalizedCart();
 }
 
 let isWritingInternal = false;
@@ -101,36 +87,29 @@ export const cartStore = {
   },
 
   add(product, qty = 1) {
-    if (!product || !product.id) return;
-    const priceNum = parsePrice(product.price);
-    const oldPriceNum = parsePrice(product.oldPrice);
-    const existingIndex = memoryCart.findIndex((item) => String(item.id) === String(product.id));
+    if (!product || product.id === undefined || product.id === null) return;
+    const normalized = normalizeCartItem(product, qty);
+    if (!normalized || !normalized.id) return;
+
+    const existingIndex = memoryCart.findIndex(
+      (item) => String(item.id) === String(normalized.id)
+    );
 
     if (existingIndex > -1) {
       const existing = memoryCart[existingIndex];
-      const newQty = (existing.quantity || existing.qty || 1) + qty;
+      const newQty = (existing.quantity || existing.qty || 1) + normalized.quantity;
       memoryCart = memoryCart.map((item, idx) =>
         idx === existingIndex
           ? {
-              ...item,
+              ...existing,
+              ...normalized,
               quantity: newQty,
               qty: newQty
             }
           : item
       );
     } else {
-      const newItem = {
-        id: product.id,
-        name: product.name || "Untitled Product",
-        category: product.category || "Deals",
-        price: priceNum,
-        oldPrice: oldPriceNum,
-        image: product.image || "",
-        quantity: qty,
-        qty: qty,
-        store: product.store || ""
-      };
-      memoryCart = [newItem, ...memoryCart];
+      memoryCart = [normalized, ...memoryCart];
     }
     emitChange();
   },

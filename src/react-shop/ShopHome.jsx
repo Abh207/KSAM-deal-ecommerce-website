@@ -5,6 +5,7 @@ import { requireAuth } from "../auth/auth.js";
 import ShopProductCard from "./ShopProductCard.jsx";
 import shopProducts from "./shopProducts.json";
 import Navbar from "../deals/components/Navbar.jsx";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../lib/cartHelper.js";
 
 
 /* =========================================================
@@ -196,94 +197,24 @@ function ShopHome() {
         if (!requireAuth({ type: "add_to_cart", product })) {
             return;
         }
+        try {
+            const normalized = normalizeCartItem(product, 1);
+            addProductToCart(product, 1);
 
-    try {
-
-        const cart =
-            JSON.parse(
-                localStorage.getItem("cartProductLS")
-            ) || [];
-
-
-        const productId = Number(product.id);
-
-
-        const existingProduct =
-            cart.find(
-                (item) =>
-                    Number(item.id) === productId
+            setCartMessage(
+                `${normalized?.name || product.name || "Product"} added to cart!`
             );
 
-
-        if (existingProduct) {
-
-            existingProduct.quantity =
-                Number(existingProduct.quantity || 1) + 1;
-
-        } else {
-
-            cart.push({
-
-                id: productId,
-
-                name: product.name,
-
-                category: product.category,
-
-                price: Number(product.price),
-
-                oldPrice: Number(
-                    product.oldPrice || product.price
-                ),
-
-                rating: Number(
-                    product.rating || 0
-                ),
-
-                discount: Number(
-                    product.discount || 0
-                ),
-
-                accent:
-                    product.accent || "#7c3aed",
-
-                image: product.image,
-
-                quantity: 1
-
-            });
-
+            setTimeout(() => {
+                setCartMessage("");
+            }, 2500);
+        } catch (error) {
+            console.error(
+                "Cart error:",
+                error
+            );
         }
-
-
-        localStorage.setItem(
-            "cartProductLS",
-            JSON.stringify(cart)
-        );
-
-
-        setCartMessage(
-            `${product.name} added to cart!`
-        );
-
-
-        setTimeout(() => {
-
-            setCartMessage("");
-
-        }, 2500);
-
-
-    } catch (error) {
-
-        console.error(
-            "Cart error:",
-            error
-        );
-
-    }
-
-};
+    };
 
 
     /* -----------------------------------------------------

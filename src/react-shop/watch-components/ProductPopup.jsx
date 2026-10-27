@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { requireAuth } from "../../auth/auth.js";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../../lib/cartHelper.js";
 import "./ProductPopup.css";
 
 const getImagePath = (image) => {
@@ -72,53 +73,14 @@ function ProductPopup({ product, onClose, onCartUpdate }) {
             return;
         }
 
-        const existingCart =
-            JSON.parse(
-                localStorage.getItem("cartProductLS")
-            ) || [];
-
-
-        const existingProductIndex =
-            existingCart.findIndex(
-                (item) => item.id === product.id
-            );
-
-
-        if (existingProductIndex !== -1) {
-
-            existingCart[existingProductIndex].quantity +=
-                quantity;
-
-        } else {
-
-            existingCart.push({
-
-                ...product,
-
-                quantity: quantity
-
-            });
-
-        }
-
-
-        localStorage.setItem(
-            "cartProductLS",
-            JSON.stringify(existingCart)
-        );
-
+        addProductToCart(product, quantity);
 
         /* UPDATE CART COUNT IMMEDIATELY */
-
         if (onCartUpdate) {
-
             onCartUpdate();
-
         }
 
-
         /* CLOSE POPUP */
-
         onClose();
 
 

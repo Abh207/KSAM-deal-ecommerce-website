@@ -1616,18 +1616,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  background: transparent !important;
-  border: none !important;
-  outline: none !important;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
   padding: 0;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ksam-card-heart-btn:hover {
+  transform: scale(1.08);
+  border-color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.45) !important;
 }
 
 .ksam-card-heart-icon {
-  width: 34px;
-  height: 34px;
+  width: 20px;
+  height: 20px;
   transition: transform 0.2s ease, fill 0.2s ease;
 }
 
@@ -1841,29 +1854,35 @@
 
   .ksam-card-heart-btn {
     position: absolute !important;
-    top: 12px !important;
-    right: 12px !important;
-    height: 28px !important;
-    width: 28px !important;
-    min-height: 28px !important;
-    min-width: 28px !important;
+    top: 10px !important;
+    right: 10px !important;
+    height: 36px !important;
+    width: 36px !important;
+    min-height: 36px !important;
+    min-width: 36px !important;
+    border-radius: 50% !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     z-index: 20 !important;
     padding: 0 !important;
     margin: 0 !important;
+    color: #ffffff !important;
   }
 
   .ksam-card-heart-btn::before {
     content: "";
     position: absolute;
-    inset: -8px; /* 44px tap target */
+    inset: -4px; /* 44px tap target */
   }
 
   .ksam-card-heart-icon {
-    width: 24px !important;
-    height: 24px !important;
+    width: 18px !important;
+    height: 18px !important;
   }
 
   /* 2. Image Area: Directly under the badge & heart row, filling the image area.

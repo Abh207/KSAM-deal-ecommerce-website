@@ -6922,6 +6922,11 @@ main {
     color: #087443;
 }
 
+.product-action.wishlist-btn:hover,
+.product-action.wishlist-btn.active {
+    color: #ffffff !important;
+}
+
 
 /* ==============================
    ADD TO CART

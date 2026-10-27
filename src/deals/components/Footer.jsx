@@ -156,19 +156,17 @@ function Divider() {
 function TrustBadge({ icon, title, description, index, shown }) {
   return (
     <div
-      className={`group relative ks-badge flex items-center overflow-hidden border border-white/10 bg-white/[0.025] transition-all duration-700 hover:-translate-y-2 hover:border-[#22FF88]/40 hover:bg-[#22FF88]/[0.04] hover:shadow-[0_20px_50px_-20px_rgba(34,255,136,.25)] ${shown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+      className={`ks-feature-card ${shown ? "is-visible" : ""}`}
       style={{
-        borderRadius: "20px",
-        transitionDelay: shown ? `${index * 110}ms` : "0ms"
+        transitionDelay: shown ? `${index * 100}ms` : "0ms"
       }}
     >
-      <span className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#22FF88]/0 blur-2xl transition-all duration-700 group-hover:bg-[#22FF88]/20" />
-      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#22FF88]/25 bg-gradient-to-br from-[#22FF88]/15 to-[#38BDF8]/15 text-[#22FF88] transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(34,255,136,.3)]">
-        <Icon name={icon} size={23} />
+      <div className="ks-feature-icon-box">
+        <Icon name={icon} size={24} strokeWidth={2.2} />
       </div>
-      <div className="relative">
-        <h4 className="text-base font-bold text-white">{title}</h4>
-        <p className="mt-1 text-sm text-[#cbd5e1]">{description}</p>
+      <div className="ks-feature-text">
+        <h4 className="ks-feature-title">{title}</h4>
+        <p className="ks-feature-desc">{description}</p>
       </div>
     </div>
   );
@@ -389,8 +387,8 @@ function Footer() {
       <Ticker />
 
       <div className="relative z-10 ks-wrap">
-        {/* TRUST BADGES */}
-        <div ref={badgesRef} className="ks-badges">
+        {/* TRUST BADGES / FEATURE BOXES */}
+        <div ref={badgesRef} className="ks-feature-boxes-row ks-badges">
           <TrustBadge index={0} shown={badgesShown} icon="truck" title="Free Shipping" description="On qualifying orders" />
           <TrustBadge index={1} shown={badgesShown} icon="return" title="Easy Returns" description="Simple & hassle-free" />
           <TrustBadge index={2} shown={badgesShown} icon="shield" title="Secure Payments" description="Protected checkout" />
@@ -786,8 +784,138 @@ function Footer() {
         .ksam-footer .ks-wrap { max-width: 80rem; margin: 0 auto; padding: 5rem 1.5rem; }
         .ksam-footer .ks-trow { padding: .875rem 0; gap: 3.5rem; }
         .ksam-footer .ks-tgap { gap: 3.5rem; }
-        .ksam-footer .ks-badges { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-        .ksam-footer .ks-badge { gap: 1.25rem; padding: 1.75rem 1.5rem; border-radius: 20px; }
+        /* Shared Feature Boxes (Free Shipping / Easy Returns / Secure Payments / 24/7 Support) */
+        .ksam-footer .ks-feature-boxes-row,
+        .ksam-footer .ks-badges {
+          max-width: 1200px;
+          width: 100%;
+          margin: 48px auto;
+          padding: 0 20px;
+          box-sizing: border-box;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+
+        .ks-feature-card {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          background: linear-gradient(145deg, rgba(20, 241, 178, 0.08), rgba(255, 255, 255, 0.02));
+          border: 1px solid rgba(20, 241, 178, 0.22);
+          border-radius: 20px;
+          padding: 18px 20px;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          box-sizing: border-box;
+          opacity: 0;
+          transform: translateY(24px);
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.3s ease,
+                      box-shadow 0.3s ease,
+                      opacity 0.6s ease;
+          overflow: hidden;
+        }
+
+        .ks-feature-card.is-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .ks-feature-card:hover {
+          transform: translateY(-5px);
+          border-color: #14f1b2;
+          box-shadow: 0 12px 30px rgba(20, 241, 178, 0.35), 0 0 20px rgba(20, 241, 178, 0.25);
+        }
+
+        .ks-feature-icon-box {
+          width: 54px;
+          height: 54px;
+          min-width: 54px;
+          min-height: 54px;
+          border-radius: 16px;
+          background: linear-gradient(135deg, #14f1b2, #0fb98a);
+          color: #050b12;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 6px 20px rgba(20, 241, 178, 0.35);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          flex-shrink: 0;
+        }
+
+        .ks-feature-card:hover .ks-feature-icon-box {
+          transform: scale(1.08) rotate(3deg);
+        }
+
+        .ks-feature-text {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+        }
+
+        .ks-feature-title {
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 1.25;
+          margin: 0;
+          white-space: normal;
+        }
+
+        .ks-feature-desc {
+          color: rgba(255, 255, 255, 0.65);
+          font-size: 13px;
+          line-height: 1.4;
+          margin: 4px 0 0 0;
+          white-space: normal;
+        }
+
+        /* Tablet (601-1024px) */
+        @media (max-width: 1024px) and (min-width: 601px) {
+          .ksam-footer .ks-feature-boxes-row,
+          .ksam-footer .ks-badges {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+          }
+        }
+
+        /* Phone (600px and below): 2x2 grid, vertical layout */
+        @media (max-width: 600px) {
+          .ksam-footer .ks-feature-boxes-row,
+          .ksam-footer .ks-badges {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+            padding: 0 12px !important;
+            margin: 36px auto !important;
+          }
+
+          .ks-feature-card {
+            flex-direction: column !important;
+            text-align: center !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 14px !important;
+            gap: 10px !important;
+          }
+
+          .ks-feature-text {
+            align-items: center !important;
+            text-align: center !important;
+          }
+
+          .ks-feature-title {
+            font-size: 14px !important;
+            text-align: center !important;
+          }
+
+          .ks-feature-desc {
+            font-size: 12px !important;
+            text-align: center !important;
+            margin-top: 2px !important;
+          }
+        }
         .ksam-footer .ks-news { margin-top: 6rem; padding: 1.5px; border-radius: 36px; }
         .ksam-footer .ks-news-in { border-radius: 35px; }
         .ksam-footer .ks-news-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; padding: 3.5rem 2rem; align-items: center; }
@@ -829,7 +957,6 @@ function Footer() {
 
         @media (min-width: 640px) {
           .ksam-footer .ks-wrap { padding: 6rem 2.5rem; }
-          .ksam-footer .ks-badges { grid-template-columns: repeat(2, 1fr); }
           .ksam-footer .ks-news { margin-top: 7rem; }
           .ksam-footer .ks-news-grid { padding: 5rem 3.5rem; }
           .ksam-footer .ks-time-gap { gap: 1rem; }
@@ -845,7 +972,6 @@ function Footer() {
         }
         @media (min-width: 1024px) {
           .ksam-footer .ks-wrap { padding: 6rem 3rem; }
-          .ksam-footer .ks-badges { grid-template-columns: repeat(4, 1fr); }
           .ksam-footer .ks-news-grid { grid-template-columns: 1fr 1fr; gap: 6rem; padding: 6rem 5rem; }
           .ksam-footer .ks-stats { grid-template-columns: repeat(4, 1fr); }
           .ksam-footer .ks-links { grid-template-columns: repeat(5, 1fr); gap: 3rem; }

@@ -19,7 +19,7 @@ export default defineConfig({
 
                 contact: resolve(__dirname, "contact.html"),
                 login: resolve(__dirname, "login.html"),
-                product: resolve(__dirname, "Product.html"),
+                product: resolve(__dirname, "product.html"),
                 signUp: resolve(__dirname, "signUp.html"),
                 audio: resolve(__dirname, "audio.html"),
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),

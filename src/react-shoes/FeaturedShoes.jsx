@@ -1,32 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import featuredData from "../api/featured-shoes.json";
+import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../lib/wishlist.js";
 import "./featured-shoes.css";
 
 
 function FeaturedShoes() {
 
-    const [wishlist, setWishlist] = useState([]);
+    const [, setWishlistVersion] = useState(0);
 
-
-    const toggleWishlist = (id) => {
-
-        setWishlist((current) => {
-
-            if (current.includes(id)) {
-
-                return current.filter(
-                    (item) => item !== id
-                );
-
-            }
-
-            return [
-                ...current,
-                id
-            ];
-
+    useEffect(() => {
+        const unsub = subscribeWishlist(() => {
+            setWishlistVersion((v) => v + 1);
         });
+        return unsub;
+    }, []);
 
+    const toggleWishlist = (product) => {
+        sharedToggleWishlist(product);
     };
 
 
@@ -161,13 +151,13 @@ function FeaturedShoes() {
                                     <button
                                         type="button"
                                         className={
-                                            wishlist.includes(product.id)
+                                            isInWishlist(product.id)
                                                 ? "featured-heart active"
                                                 : "featured-heart"
                                         }
                                         onClick={() =>
                                             toggleWishlist(
-                                                product.id
+                                                product
                                             )
                                         }
                                         aria-label="Wishlist"
@@ -175,7 +165,7 @@ function FeaturedShoes() {
 
                                         <i
                                             className={
-                                                wishlist.includes(
+                                                isInWishlist(
                                                     product.id
                                                 )
                                                     ? "fa-solid fa-heart"

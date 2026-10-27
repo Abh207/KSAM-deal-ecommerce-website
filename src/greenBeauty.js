@@ -1,4 +1,5 @@
 import "./auth/auth.js";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "./lib/cartHelper.js";
 
 const greenBeautyProducts = [
 
@@ -175,47 +176,13 @@ function gbUpdateCartCount() {
 
 
 function gbAddToCart(product) {
-
-    const cart = gbGetCart();
-
-    const existing =
-        cart.find(
-            item =>
-                Number(item.id) ===
-                Number(product.id)
-        );
-
-
-    if (existing) {
-
-        existing.quantity =
-            Number(existing.quantity) + 1;
-
-        existing.price =
-            Number(product.price);
-
-    } else {
-
-        cart.push({
-
-            id: Number(product.id),
-
-            quantity: 1,
-
-            price: Number(product.price)
-
-        });
-
-    }
-
-
-    gbSaveCart(cart);
-
+    const normalized = normalizeCartItem(product, 1);
+    addProductToCart(product, 1);
+    gbUpdateCartCount();
 
     gbShowToast(
-        `✓ ${product.name} added to cart`
+        `✓ ${normalized?.name || product.name} added to cart`
     );
-
 }
 
 

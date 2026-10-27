@@ -4,10 +4,10 @@ import { updateCartValue } from "./updateCartValue.js";
 
 
 export const removeProdFromCart = (id) => {
-    let cartProducts = getCartProductFromLS();
-    cartProducts = cartProducts.filter((curProd) => curProd.id !== Number(id));
+    cartProducts = cartProducts.filter((curProd) => String(curProd.id) !== String(id));
 
-    localStorage.setItem("cartProductLS",JSON.stringify(cartProducts));
+    localStorage.setItem("cartProductLS", JSON.stringify(cartProducts));
+    window.dispatchEvent(new Event("cartUpdated"));
 
 
     // to remove the div by clicked

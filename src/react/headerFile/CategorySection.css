@@ -404,17 +404,17 @@
 }
 
 
-/* ── Crossfade transitions ── */
+/* ── Crossfade transitions (0.3s crossfade) ── */
 .cs-fade-in {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .cs-fade-out {
   opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 
@@ -449,6 +449,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-top-right-radius: var(--cs-radius-panel);
+  border-bottom-right-radius: var(--cs-radius-panel);
 }
 
 .cs-banner-img {
@@ -461,8 +463,8 @@
   transition: opacity 0.5s ease;
 }
 
-/* Gradient overlay to make left text readable */
-.cs-banner-img-wrap::before {
+/* Gradient overlay for static image */
+.cs-banner-img-wrap:not(.cs-banner-video-panel)::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -470,11 +472,37 @@
   z-index: 1;
 }
 
+/* ── Banner Video element ── */
+.cs-banner-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+  transform: scale(1.12);
+  transform-origin: top left;
+}
+
+/* ── Banner Video overlay ── */
+.cs-banner-video-overlay {
+  position: absolute;
+  inset: 0;
+  /* Left-to-right gradient from banner green (#07251f) to transparent over the first 30%, light tint rgba(0,0,0,0.2), and corner backup gradient */
+  background:
+    radial-gradient(circle at 100% 100%, #07251f 0%, rgba(7, 37, 31, 0.9) 12%, transparent 26%),
+    linear-gradient(90deg, #07251f 0%, rgba(7, 37, 31, 0.7) 18%, transparent 30%),
+    rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  pointer-events: none;
+}
+
 @media (max-width: 767px) {
   .cs-banner-img-wrap {
     width: 50%;
   }
-  .cs-banner-img-wrap::before {
+  .cs-banner-img-wrap:not(.cs-banner-video-panel)::before {
     background: linear-gradient(90deg, #061a14 20%, rgba(6, 26, 20, 0.5) 60%, transparent 90%);
   }
 }
@@ -508,7 +536,7 @@
 /* ── Banner text overlay ── */
 .cs-banner-overlay {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   padding: 32px 28px;
   display: flex;
   flex-direction: column;

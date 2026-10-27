@@ -20,6 +20,16 @@
             "bannerImage": ""
         },
         {
+            "id": "chairs",
+            "name": "Chairs",
+            "description": "Comfortable & stylish chairs",
+            "productIds": [],
+            "icon": "🪑",
+            "color": "#f3edff",
+            "link": "./moreChairProd.html",
+            "bannerImage": ""
+        },
+        {
             "id": "electronics",
             "name": "Electronics",
             "description": "Smart gadgets & devices",
@@ -70,17 +80,6 @@
             "icon": "👕",
             "color": "#eefbea",
             "link": "./clothes.html",
-            "bannerImage": ""
-        },
-
-        {
-            "id": "chairs",
-            "name": "Chairs",
-            "description": "Comfortable & stylish chairs",
-            "productIds": [],
-            "icon": "🪑",
-            "color": "#f3edff",
-            "link": "./moreChairProd.html",
             "bannerImage": ""
         },
         {

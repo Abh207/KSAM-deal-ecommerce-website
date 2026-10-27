@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { isInWishlist, toggleWishlist, subscribeWishlist } from "../lib/wishlist.js";
 import "./ProductCard.css";
 
 const getImagePath = (image) => {
@@ -13,6 +14,14 @@ const getImagePath = (image) => {
 
 const ProductCard = ({ product, onAddToCart }) => {
     const [quantity, setQuantity] = useState(1);
+    const [, setWishlistVersion] = useState(0);
+
+    useEffect(() => {
+        const unsub = subscribeWishlist(() => {
+            setWishlistVersion((v) => v + 1);
+        });
+        return unsub;
+    }, []);
 
     const increaseQuantity = () => {
         if (quantity < product.stock) {
@@ -57,6 +66,48 @@ const ProductCard = ({ product, onAddToCart }) => {
                 <span className="beauty-discount-badge">
                     {discount}% OFF
                 </span>
+
+                <button
+                    type="button"
+                    className={`beauty-card-wishlist-btn ${isInWishlist(product.id) ? "is-active" : ""}`}
+                    aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(product);
+                    }}
+                    style={{
+                        position: "absolute",
+                        top: "12px",
+                        right: "12px",
+                        zIndex: 5,
+                        width: "38px",
+                        height: "38px",
+                        borderRadius: "50%",
+                        background: "rgba(0, 0, 0, 0.65)",
+                        border: "1px solid rgba(255, 255, 255, 0.35)",
+                        backdropFilter: "blur(8px)",
+                        WebkitBackdropFilter: "blur(8px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        color: "#ffffff",
+                        fontSize: "16px",
+                        lineHeight: 1,
+                        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.4)",
+                        transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#ffffff";
+                        e.currentTarget.style.boxShadow = "0 0 12px rgba(255, 255, 255, 0.45)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.35)";
+                        e.currentTarget.style.boxShadow = "0 4px 14px rgba(0, 0, 0, 0.4)";
+                    }}
+                >
+                    {isInWishlist(product.id) ? "♥" : "♡"}
+                </button>
             </div>
 
             <div className="beauty-product-content">

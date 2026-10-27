@@ -21,41 +21,15 @@
 
 
 import { updateCartValue } from "./updateCartValue.js";
+import { getNormalizedCart } from "./lib/cartHelper.js";
 
 
 export const getCartProductFromLS = () => {
 
     try {
-
-        const storedProducts =
-            localStorage.getItem("cartProductLS");
-
-
-        if (!storedProducts) {
-
-            updateCartValue([]);
-
-            return [];
-        }
-
-
-        const cartProducts =
-            JSON.parse(storedProducts);
-
-
-        if (!Array.isArray(cartProducts)) {
-
-            updateCartValue([]);
-
-            return [];
-        }
-
-
+        const cartProducts = getNormalizedCart();
         updateCartValue(cartProducts);
-
-
         return cartProducts;
-
     } catch (error) {
 
         console.error(

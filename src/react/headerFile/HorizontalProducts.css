@@ -38,13 +38,15 @@
 
     margin-bottom: 8px;
 
-    font-size: 10px;
+    font-size: 13px;
 
-    font-weight: 900;
+    font-weight: 800;
 
-    letter-spacing: 3px;
+    letter-spacing: 0.3em;
 
-    color: #6b7280;
+    text-transform: uppercase;
+
+    color: #14f1b2;
 
 }
 
@@ -53,15 +55,27 @@
 
     margin: 0;
 
-    font-size: 36px;
+    font-size: 48px;
 
     line-height: 1.1;
 
-    font-weight: 950;
+    font-weight: 800;
 
-    letter-spacing: -1.2px;
+    letter-spacing: -0.02em;
 
-    color: #111827;
+    background: linear-gradient(90deg, #ffffff, #14f1b2);
+
+    -webkit-background-clip: text;
+
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    color: transparent;
+
+    text-shadow: 0 4px 24px rgba(20, 241, 178, 0.25);
+
+    filter: drop-shadow(0 4px 24px rgba(20, 241, 178, 0.25));
 
 }
 
@@ -70,9 +84,11 @@
 
     margin: 9px 0 0;
 
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.75);
 
-    font-size: 14px;
+    font-size: 15px;
+
+    line-height: 1.5;
 
 }
 
@@ -92,25 +108,37 @@
 
 .horizontal-controls button {
 
-    width: 45px;
+    width: 44px;
 
-    height: 45px;
+    height: 44px;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 
     border-radius: 50%;
 
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
 
-    color: #111827;
+    backdrop-filter: blur(8px);
 
-    font-size: 20px;
+    -webkit-backdrop-filter: blur(8px);
+
+    color: #ffffff;
+
+    font-size: 18px;
 
     cursor: pointer;
 
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
     transition:
         background 0.25s ease,
+        border-color 0.25s ease,
         color 0.25s ease,
+        box-shadow 0.25s ease,
         transform 0.25s ease;
 
 }
@@ -118,9 +146,13 @@
 
 .horizontal-controls button:hover {
 
-    background: #111827;
+    background: rgba(20, 241, 178, 0.15);
 
-    color: #ffffff;
+    border-color: #14f1b2;
+
+    color: #14f1b2;
+
+    box-shadow: 0 4px 16px rgba(20, 241, 178, 0.3);
 
     transform:
         translateY(-2px);
@@ -186,9 +218,9 @@
 .horizontal-product-card {
 
     flex:
-        0 0 270px;
+        0 0 380px;
 
-    min-width: 270px;
+    min-width: 380px;
 
     background: #ffffff;
 
@@ -735,11 +767,11 @@
 
     .horizontal-product-card {
 
-        flex-basis:
-            225px;
+        flex:
+            0 0 85vw;
 
         min-width:
-            225px;
+            85vw;
 
     }
 

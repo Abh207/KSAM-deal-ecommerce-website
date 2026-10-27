@@ -2819,64 +2819,41 @@ input[type="range"] {
 
 
 /* WISHLIST */
-
 .clothes-wishlist {
-
-    position:
-        absolute;
-
-    z-index:
-        5;
-
-    top:
-        10px;
-
-    right:
-        10px;
-
-    width:
-        39px;
-
-    height:
-        39px;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    border:
-        0;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(255,255,255,.94);
-
-    color:
-        #050505;
-
-    transition:
-        transform .2s ease;
-
+    position: absolute;
+    z-index: 5;
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 
 .clothes-wishlist:hover {
-
-    transform:
-        scale(1.1);
-
+    transform: scale(1.08);
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+    color: #ffffff;
 }
 
-
 .clothes-wishlist.active {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+}
 
-    color:
-        #e22e49;
-
+.clothes-wishlist.active:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
 }
 
 

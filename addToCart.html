@@ -1782,43 +1782,21 @@
            ================================================= */
 
         function getShoppingImagePath(image) {
-
             if (!image) {
-
                 return "./ksam-deal logo.png";
-
             }
-
-
             let path = String(image).trim();
-
-
-            /* Remove ./ */
-
-            path = path.replace(
-                /^\.\/+/,
-                ""
-            );
-
-
-            /* Remove public */
-
-            path = path.replace(
-                /^\/?public\//,
-                ""
-            );
-
-
-            /* Remove leading slash */
-
-            path = path.replace(
-                /^\/+/,
-                ""
-            );
-
-
-            return "./" + path;
-
+            if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:") || path.startsWith("blob:")) {
+                return path;
+            }
+            const base = "/KSAM-deal-ecommerce-website/";
+            const normalizedBase = base.endsWith("/") ? base : base + "/";
+            const baseWithoutSlashes = normalizedBase.replace(/^\/+|\/+$/g, "");
+            let clean = path.replace(/^\.\//, "").replace(/^\/+/, "").replace(/^public\//, "");
+            if (clean.startsWith(baseWithoutSlashes + "/") || clean === baseWithoutSlashes) {
+                return "/" + clean;
+            }
+            return normalizedBase + clean;
         }
 
 
@@ -1998,9 +1976,15 @@
                         image
                     );
 
+                productImage.onerror = function () {
+                    this.onerror = null;
+                    this.src = "./ksam-deal logo.png";
+                };
+
 
                 productImage.alt =
                     firstProduct.name ||
+                    firstProduct.title ||
                     "Selected KSAM Deal product";
 
             }

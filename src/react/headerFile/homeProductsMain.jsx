@@ -12,6 +12,7 @@ import ScrollProgress from "../../deals/components/ScrollProgress.jsx";
 import "../../deals/tailwind-generated.css";
 import "../../deals/deals.css";
 import { requireAuth } from "../../auth/auth.js";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../../lib/cartHelper.js";
 
 import DiscountBanner from "./DiscountBanner";
 
@@ -28,6 +29,8 @@ import { createRoot } from "react-dom/client";
 import ProductsHeroVideo from "./ProductsHeroVideo.jsx";
 import ProductCard from "./ProductCard";
 import productsData from "../../api/headerproducts.json";
+import { isInWishlist, toggleWishlist as toggleSharedWishlist, subscribeWishlist } from "../../lib/wishlist.js";
+import { getRelatedProducts, findProduct, slugify } from "../../lib/productCatalog.js";
 import "./homeProducts.css";
 
 
@@ -42,7 +45,7 @@ const RECENT_KEY = "headerProductsRecentlyViewed";
 
 /* =========================================================
    IMAGE PATH
-   Works correctly with GitHub Pages
+   Works correctly with local paths and remote URLs
 ========================================================= */
 
 function getProductImage(image) {
@@ -51,7 +54,16 @@ function getProductImage(image) {
         return "";
     }
 
-    return `${import.meta.env.BASE_URL}${image}`;
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+        return image;
+    }
+
+    let clean = image;
+    if (clean.startsWith("./")) clean = clean.slice(2);
+    if (clean.startsWith("/")) clean = clean.slice(1);
+    if (clean.startsWith("public/")) clean = clean.slice(7);
+
+    return `${import.meta.env.BASE_URL}${clean}`;
 }
 
 
@@ -134,6 +146,66 @@ function HomeProducts() {
     const productsSectionRef =
         useRef(null);
 
+    const popupRef =
+        useRef(null);
+
+    const relatedRowRef =
+        useRef(null);
+
+    const [isModalFading, setIsModalFading] =
+        useState(false);
+
+    const relatedProducts = useMemo(() => {
+        if (!selectedProduct) return [];
+        return getRelatedProducts(selectedProduct, 6);
+    }, [selectedProduct]);
+
+    const handleSwitchProduct = (newProduct) => {
+        if (!newProduct) return;
+        setIsModalFading(true);
+        setTimeout(() => {
+            setSelectedProduct(newProduct);
+            setQuantity(1);
+            setCartMessage("");
+            if (popupRef.current) {
+                popupRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            }
+            setIsModalFading(false);
+        }, 250);
+    };
+
+    const scrollRelated = (direction) => {
+        if (!relatedRowRef.current) return;
+        relatedRowRef.current.scrollBy({
+            left: direction * 260,
+            behavior: "smooth"
+        });
+    };
+
+    /* Esc key closes modal */
+    useEffect(() => {
+        if (!selectedProduct) return;
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") {
+                closeProduct();
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [selectedProduct]);
+
+    /* Lock page scroll behind open modal */
+    useEffect(() => {
+        if (selectedProduct) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [selectedProduct]);
+
 
     /* =====================================================
        LOAD DATA
@@ -143,15 +215,19 @@ function HomeProducts() {
 
         setProducts(productsData);
 
-        setWishlist(
-            getStorage(WISHLIST_KEY)
-        );
-
         setRecentProducts(
             getStorage(RECENT_KEY)
         );
 
+        const unsubWishlist = subscribeWishlist(() => {
+            setWishlist(Array.from(document.querySelectorAll ? [] : []));
+        });
+
         setLoading(false);
+
+        return () => {
+            unsubWishlist();
+        };
 
     }, []);
 
@@ -452,62 +528,26 @@ function HomeProducts() {
        WISHLIST
     ===================================================== */
 
-    const toggleWishlist =
-        (productId) => {
+    const toggleWishlist = (prodOrId) => {
+        const prod = typeof prodOrId === "object" && prodOrId !== null
+            ? prodOrId
+            : products.find((p) => String(p.id) === String(prodOrId)) || { id: prodOrId };
 
-            if (!requireAuth({ type: "wishlist", productId })) {
-                return;
-            }
+        if (!requireAuth({ type: "wishlist", product: prod })) {
+            return;
+        }
 
-            let updatedWishlist;
-
-
-            if (
-                wishlist.includes(
-                    productId
-                )
-            ) {
-
-                updatedWishlist =
-                    wishlist.filter(
-                        (id) =>
-                            id !== productId
-                    );
-
-            } else {
-
-                updatedWishlist = [
-                    ...wishlist,
-                    productId
-                ];
-
-            }
-
-
-            setWishlist(
-                updatedWishlist
-            );
-
-            saveStorage(
-                WISHLIST_KEY,
-                updatedWishlist
-            );
-
-        };
+        toggleSharedWishlist(prod);
+    };
 
 
     /* =====================================================
        IS WISHLISTED
     ===================================================== */
 
-    const isWishlisted =
-        (productId) => {
-
-            return wishlist.includes(
-                productId
-            );
-
-        };
+    const isWishlisted = (productId) => {
+        return isInWishlist(productId);
+    };
 
 
     /* =====================================================
@@ -600,68 +640,16 @@ function HomeProducts() {
                 return;
             }
 
-            const cart =
-                getStorage(
-                    CART_KEY
-                );
-
-
-            const existingProduct =
-                cart.find(
-                    (item) =>
-                        String(item.id) ===
-                        String(product.id)
-                );
-
-
-            if (existingProduct) {
-
-                existingProduct.quantity =
-                    Number(
-                        existingProduct.quantity ||
-                        1
-                    ) +
-                    productQuantity;
-
-            } else {
-
-                cart.push({
-
-                    ...product,
-
-                    quantity:
-                        productQuantity,
-
-                    image:
-                        product.image
-
-                });
-
-            }
-
-
-            saveStorage(
-                CART_KEY,
-                cart
-            );
-
+            const normalized = normalizeCartItem(product, productQuantity);
+            addProductToCart(product, productQuantity);
 
             setCartMessage(
-                "✓ Added to cart"
+                `✓ ${normalized?.name || product.name || "Product"} added to cart`
             );
-
-
-            window.dispatchEvent(
-                new Event("cartUpdated")
-            );
-
 
             setTimeout(() => {
-
                 setCartMessage("");
-
             }, 2200);
-
         };
 
 
@@ -1127,314 +1115,152 @@ function HomeProducts() {
                                     product
                                 );
 
-
                             return (
-
                                 <article
-                                    key={
-                                        product.id
-                                    }
-
+                                    key={product.id}
                                     className="home-product-card"
-
                                     style={{
-                                        "--card-index":
-                                            index
+                                        "--card-index": index
                                     }}
-
-                                    onClick={() =>
-                                        openProduct(
-                                            product
-                                        )
-                                    }
+                                    onClick={() => openProduct(product)}
                                 >
-
-
                                     {/* =================================================
-                                       IMAGE
+                                       IMAGE AREA
                                     ================================================= */}
-
                                     <div className="home-product-image">
-
-
                                         {/* BADGE */}
-
                                         {product.badge && (
-
                                             <span
-                                                className={
-                                                    `home-product-badge badge-${String(
-                                                        product.badge
-                                                    )
-                                                        .toLowerCase()
-                                                        .replace(
-                                                            /\s+/g,
-                                                            "-"
-                                                        )}`
-                                                }
+                                                className={`home-product-badge badge-${String(
+                                                    product.badge
+                                                )
+                                                    .toLowerCase()
+                                                    .replace(/\s+/g, "-")}`}
                                             >
-
                                                 {product.badge}
-
                                             </span>
-
                                         )}
-
 
                                         {/* DISCOUNT */}
-
                                         {discount > 0 && (
-
                                             <span className="product-discount">
-
-                                                -
-                                                {discount}%
-
+                                                -{discount}%
                                             </span>
-
                                         )}
 
-
                                         {/* WISHLIST */}
-
                                         <button
                                             type="button"
-
-                                            className={
-                                                `home-product-wishlist ${
-                                                    isWishlisted(
-                                                        product.id
-                                                    )
-                                                        ? "wishlisted"
-                                                        : ""
-                                                }`
-                                            }
-
+                                            className={`home-product-wishlist ${
+                                                isWishlisted(product.id)
+                                                    ? "wishlisted"
+                                                    : ""
+                                            }`}
                                             aria-label={
-                                                isWishlisted(
-                                                    product.id
-                                                )
+                                                isWishlisted(product.id)
                                                     ? "Remove from wishlist"
                                                     : "Add to wishlist"
                                             }
-
                                             onClick={(event) => {
-
                                                 event.stopPropagation();
-
-                                                toggleWishlist(
-                                                    product.id
-                                                );
-
+                                                toggleWishlist(product.id);
                                             }}
                                         >
-
-                                            {
-                                                isWishlisted(
-                                                    product.id
-                                                )
-                                                    ? "♥"
-                                                    : "♡"
-                                            }
-
+                                            {isWishlisted(product.id)
+                                                ? "♥"
+                                                : "♡"}
                                         </button>
 
-
                                         {/* PRODUCT IMAGE */}
-
                                         <img
-                                            src={
-                                                getProductImage(
-                                                    product.image
-                                                )
-                                            }
-
-                                            alt={
-                                                product.name
-                                            }
-
-                                            loading={
-                                                index < 4
-                                                    ? "eager"
-                                                    : "lazy"
-                                            }
-
-                                            onError={(
-                                                event
-                                            ) => {
-
+                                            src={getProductImage(product.image)}
+                                            alt={product.name}
+                                            loading={index < 4 ? "eager" : "lazy"}
+                                            onError={(event) => {
                                                 event.currentTarget.style.display =
                                                     "none";
-
                                             }}
                                         />
 
-
                                         {/* QUICK VIEW */}
-
                                         <button
                                             type="button"
-
                                             className="quick-view-button"
-
                                             onClick={(event) => {
-
                                                 event.stopPropagation();
-
-                                                openProduct(
-                                                    product
-                                                );
-
+                                                openProduct(product);
                                             }}
                                         >
-
                                             👁 QUICK VIEW
-
                                         </button>
-
                                     </div>
-
-
 
                                     {/* =================================================
                                        PRODUCT INFO
                                     ================================================= */}
-
                                     <div className="home-product-info">
-
-
                                         <div className="product-category-row">
-
-                                            <span>
-                                                {
-                                                    product.category
-                                                }
-                                            </span>
-
+                                            <span>{product.category}</span>
                                         </div>
 
-
-                                        <h2>
-                                            {
-                                                product.name
-                                            }
-                                        </h2>
-
+                                        <h2>{product.name}</h2>
 
                                         {/* RATING */}
-
                                         <div className="home-product-rating">
-
                                             <span className="rating-stars">
-
                                                 {"★".repeat(
-                                                    Number(
-                                                        product.rating
+                                                    Math.min(
+                                                        5,
+                                                        Math.max(
+                                                            1,
+                                                            Math.round(
+                                                                Number(product.rating) || 5
+                                                            )
+                                                        )
                                                     )
                                                 )}
-
                                             </span>
-
-
                                             <span className="rating-number">
-
-                                                {
-                                                    product.rating
-                                                }
-
+                                                {product.rating}
                                             </span>
-
-
                                             <small>
-
-                                                (
-                                                {
-                                                    product.reviews
-                                                }
-                                                )
-
+                                                ({product.reviews})
                                             </small>
-
                                         </div>
-
 
                                         {/* PRICE */}
-
                                         <div className="home-product-price">
-
                                             <strong>
-
-                                                ₹
-                                                {Number(
-                                                    product.price
-                                                ).toLocaleString(
-                                                    "en-IN"
-                                                )}
-
+                                                ₹{Number(product.price).toLocaleString("en-IN")}
                                             </strong>
-
-
                                             {product.oldPrice && (
-
                                                 <del>
-
-                                                    ₹
-                                                    {Number(
-                                                        product.oldPrice
-                                                    ).toLocaleString(
-                                                        "en-IN"
-                                                    )}
-
+                                                    ₹{Number(product.oldPrice).toLocaleString("en-IN")}
                                                 </del>
-
                                             )}
-
                                         </div>
 
-
                                         {/* STOCK */}
-
                                         <div className="product-stock">
-
                                             <span className="stock-dot"></span>
-
                                             {product.stock > 0
                                                 ? `${product.stock} left in stock`
                                                 : "Out of stock"}
-
                                         </div>
 
-
                                         {/* VIEW BUTTON */}
-
                                         <button
                                             type="button"
-
                                             className="home-product-view"
-
                                             onClick={(event) => {
-
                                                 event.stopPropagation();
-
-                                                openProduct(
-                                                    product
-                                                );
-
+                                                openProduct(product);
                                             }}
                                         >
-
-                                            <span>
-                                                VIEW PRODUCT
-                                            </span>
-
-                                            <strong>
-                                                →
-                                            </strong>
-
+                                            <span>VIEW PRODUCT</span>
+                                            <strong>→</strong>
                                         </button>
-
                                     </div>
-
                                 </article>
 
                             );
@@ -1611,324 +1437,295 @@ function HomeProducts() {
 
                     <div
                         className="home-product-popup"
-
+                        ref={popupRef}
                         onClick={(event) =>
                             event.stopPropagation()
                         }
                     >
 
-
-                        {/* CLOSE */}
-
+                        {/* CLOSE BUTTON */}
                         <button
                             type="button"
-
                             className="home-product-popup-close"
-
                             aria-label="Close"
-
                             onClick={
                                 closeProduct
                             }
                         >
-
                             ×
-
                         </button>
 
+                        {/* MAIN TOP SECTION (2 COLUMNS: IMAGE & DETAILS) */}
+                        <div
+                            className="home-popup-main"
+                            style={{
+                                opacity: isModalFading ? 0 : 1,
+                                transition: "opacity 0.25s ease"
+                            }}
+                        >
+                            {/* POPUP IMAGE */}
+                            <div className="home-popup-image">
+                                {selectedProduct.badge && (
+                                    <span className="popup-badge">
+                                        {selectedProduct.badge}
+                                    </span>
+                                )}
 
-
-                        {/* POPUP IMAGE */}
-
-                        <div className="home-popup-image">
-
-                            {selectedProduct.badge && (
-
-                                <span className="popup-badge">
-
-                                    {
-                                        selectedProduct.badge
-                                    }
-
-                                </span>
-
-                            )}
-
-
-                            <img
-                                src={
-                                    getProductImage(
-                                        selectedProduct.image
-                                    )
-                                }
-
-                                alt={
-                                    selectedProduct.name
-                                }
-                            />
-
-                        </div>
-
-
-
-                        {/* POPUP DETAILS */}
-
-                        <div className="home-popup-details">
-
-
-                            <span className="popup-category">
-
-                                {
-                                    selectedProduct.category
-                                }
-
-                            </span>
-
-
-                            <h2>
-
-                                {
-                                    selectedProduct.name
-                                }
-
-                            </h2>
-
-
-                            {/* RATING */}
-
-                            <div className="home-popup-rating">
-
-                                <span>
-
-                                    {"★".repeat(
-                                        Number(
-                                            selectedProduct.rating
+                                <img
+                                    src={
+                                        getProductImage(
+                                            selectedProduct.image
                                         )
-                                    )}
+                                    }
+                                    alt={
+                                        selectedProduct.name
+                                    }
+                                />
+                            </div>
 
+                            {/* POPUP DETAILS */}
+                            <div className="home-popup-details">
+                                <span className="popup-category">
+                                    {selectedProduct.category}
                                 </span>
 
-                                <small>
+                                <h2>
+                                    {selectedProduct.name}
+                                </h2>
 
-                                    {
-                                        selectedProduct.rating
-                                    }
-                                    /5 ·
-                                    {" "}
-                                    {
-                                        selectedProduct.reviews
-                                    }
-                                    {" "}
-                                    reviews
-
-                                </small>
-
-                            </div>
-
-
-                            {/* PRICE */}
-
-                            <div className="home-popup-price">
-
-                                <strong>
-
-                                    ₹
-                                    {Number(
-                                        selectedProduct.price
-                                    ).toLocaleString(
-                                        "en-IN"
-                                    )}
-
-                                </strong>
-
-
-                                {selectedProduct.oldPrice && (
-
-                                    <del>
-
-                                        ₹
-                                        {Number(
-                                            selectedProduct.oldPrice
-                                        ).toLocaleString(
-                                            "en-IN"
+                                {/* RATING */}
+                                <div className="home-popup-rating">
+                                    <span>
+                                        {"★".repeat(
+                                            Math.min(5, Math.max(1, Math.round(Number(selectedProduct.rating) || 5)))
                                         )}
-
-                                    </del>
-
-                                )}
-
-
-                                {getDiscount(
-                                    selectedProduct
-                                ) > 0 && (
-
-                                    <span>
-
-                                        -
-                                        {
-                                            getDiscount(
-                                                selectedProduct
-                                            )
-                                        }%
-
                                     </span>
-
-                                )}
-
-                            </div>
-
-
-                            {/* DESCRIPTION */}
-
-                            <p className="popup-description">
-
-                                {
-                                    selectedProduct.description
-                                }
-
-                            </p>
-
-
-                            {/* STOCK */}
-
-                            <div className="home-popup-stock">
-
-                                <span className="stock-dot"></span>
-
-                                {
-                                    selectedProduct.stock >
-                                    0
-                                        ? `In Stock — ${selectedProduct.stock} available`
-                                        : "Out of Stock"
-                                }
-
-                            </div>
-
-
-                            {/* QUANTITY */}
-
-                            {selectedProduct.stock >
-                                0 && (
-
-                                <div className="popup-quantity">
-
-                                    <span>
-                                        Quantity
-                                    </span>
-
-
-                                    <div className="quantity-controls">
-
-                                        <button
-                                            type="button"
-
-                                            onClick={() =>
-                                                setQuantity(
-                                                    Math.max(
-                                                        1,
-                                                        quantity -
-                                                            1
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            −
-                                        </button>
-
-
-                                        <strong>
-                                            {
-                                                quantity
-                                            }
-                                        </strong>
-
-
-                                        <button
-                                            type="button"
-
-                                            onClick={() =>
-                                                setQuantity(
-                                                    Math.min(
-                                                        selectedProduct.stock,
-                                                        quantity +
-                                                            1
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            +
-                                        </button>
-
-                                    </div>
-
+                                    <small>
+                                        {selectedProduct.rating || 5}/5 ·{" "}
+                                        {selectedProduct.reviews || 64} reviews
+                                    </small>
                                 </div>
 
-                            )}
+                                {/* PRICE */}
+                                <div className="home-popup-price">
+                                    <strong>
+                                        ₹
+                                        {Number(
+                                            selectedProduct.price
+                                        ).toLocaleString("en-IN")}
+                                    </strong>
 
+                                    {selectedProduct.oldPrice && (
+                                        <del>
+                                            ₹
+                                            {Number(
+                                                selectedProduct.oldPrice
+                                            ).toLocaleString("en-IN")}
+                                        </del>
+                                    )}
 
-                            {/* ACTIONS */}
+                                    {getDiscount(selectedProduct) > 0 && (
+                                        <span>
+                                            -{getDiscount(selectedProduct)}%
+                                        </span>
+                                    )}
+                                </div>
 
-                            <div className="popup-actions">
+                                {/* DESCRIPTION */}
+                                <p className="popup-description">
+                                    {selectedProduct.description}
+                                </p>
 
-                                <button
-                                    type="button"
+                                {/* STOCK */}
+                                <div className="home-popup-stock">
+                                    <span className="stock-dot"></span>
+                                    {selectedProduct.stock > 0
+                                        ? `In Stock — ${selectedProduct.stock} available`
+                                        : "Out of Stock"}
+                                </div>
 
-                                    className={
-                                        `home-popup-cart ${
-                                            cartMessage
-                                                ? "added"
-                                                : ""
-                                        }`
-                                    }
+                                {/* QUANTITY */}
+                                {selectedProduct.stock > 0 && (
+                                    <div className="popup-quantity">
+                                        <span>Quantity</span>
 
-                                    disabled={
-                                        selectedProduct.stock <=
-                                        0
-                                    }
+                                        <div className="quantity-controls">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setQuantity(
+                                                        Math.max(1, quantity - 1)
+                                                    )
+                                                }
+                                            >
+                                                −
+                                            </button>
 
-                                    onClick={
-                                        handlePopupCart
-                                    }
-                                >
+                                            <strong>{quantity}</strong>
 
-                                    {cartMessage
-                                        ? cartMessage
-                                        : "ADD TO CART"}
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setQuantity(
+                                                        Math.min(
+                                                            selectedProduct.stock,
+                                                            quantity + 1
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
 
-                                </button>
+                                {/* ACTIONS */}
+                                <div className="popup-actions">
+                                    <button
+                                        type="button"
+                                        className={
+                                            `home-popup-cart ${
+                                                cartMessage ? "added" : ""
+                                            }`
+                                        }
+                                        disabled={selectedProduct.stock <= 0}
+                                        onClick={handlePopupCart}
+                                    >
+                                        {cartMessage
+                                            ? cartMessage
+                                            : "ADD TO CART"}
+                                    </button>
 
-
-                                <button
-                                    type="button"
-
-                                    className={
-                                        `popup-wishlist-button ${
-                                            isWishlisted(
-                                                selectedProduct.id
-                                            )
-                                                ? "active"
-                                                : ""
-                                        }`
-                                    }
-
-                                    onClick={() =>
-                                        toggleWishlist(
-                                            selectedProduct.id
-                                        )
-                                    }
-                                >
-
-                                    {isWishlisted(
-                                        selectedProduct.id
-                                    )
-                                        ? "♥"
-                                        : "♡"}
-
-                                </button>
-
+                                    <button
+                                        type="button"
+                                        className={
+                                            `popup-wishlist-button ${
+                                                isWishlisted(selectedProduct.id)
+                                                    ? "active"
+                                                    : ""
+                                            }`
+                                        }
+                                        onClick={() =>
+                                            toggleWishlist(selectedProduct)
+                                        }
+                                    >
+                                        {isWishlisted(selectedProduct.id)
+                                            ? "♥"
+                                            : "♡"}
+                                    </button>
+                                </div>
                             </div>
-
                         </div>
+
+                        {/* =================================================
+                           CHANGE 1: "YOU MAY ALSO LIKE" SECTION
+                        ================================================= */}
+                        {relatedProducts.length > 0 && (
+                            <div className="popup-related-section">
+                                <div className="popup-divider"></div>
+
+                                <div className="popup-related-header">
+                                    <div className="popup-related-header-text">
+                                        <h3 className="popup-related-title">
+                                            You may also like
+                                        </h3>
+                                        <span className="popup-related-subtitle">
+                                            More {selectedProduct.category} you might like
+                                        </span>
+                                    </div>
+
+                                    <div className="popup-related-controls">
+                                        <button
+                                            type="button"
+                                            className="popup-related-arrow prev"
+                                            aria-label="Previous related products"
+                                            onClick={() => scrollRelated(-1)}
+                                        >
+                                            ←
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="popup-related-arrow next"
+                                            aria-label="Next related products"
+                                            onClick={() => scrollRelated(1)}
+                                        >
+                                            →
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="popup-related-row" ref={relatedRowRef}>
+                                    {relatedProducts.map((relProduct) => {
+                                        const relDiscount = getDiscount(relProduct);
+                                        return (
+                                            <article
+                                                key={relProduct.uid || `${relProduct.categorySlug}-${relProduct.id}`}
+                                                className="popup-related-card"
+                                                onClick={() => handleSwitchProduct(relProduct)}
+                                            >
+                                                <div className="popup-related-card-image">
+                                                    {relDiscount > 0 && (
+                                                        <span className="popup-related-discount">
+                                                            -{relDiscount}%
+                                                        </span>
+                                                    )}
+                                                    <img
+                                                        src={getProductImage(relProduct.image)}
+                                                        alt={relProduct.name}
+                                                        onError={(e) => {
+                                                            e.currentTarget.style.display = "none";
+                                                        }}
+                                                    />
+                                                </div>
+
+                                                <div className="popup-related-card-info">
+                                                    <h4
+                                                        className="popup-related-card-name"
+                                                        title={relProduct.name}
+                                                    >
+                                                        {relProduct.name}
+                                                    </h4>
+
+                                                    <div className="popup-related-card-rating">
+                                                        <span className="popup-related-stars">
+                                                            {"★".repeat(
+                                                                Math.min(5, Math.max(1, Math.round(Number(relProduct.rating) || 5)))
+                                                            )}
+                                                        </span>
+                                                        <small>
+                                                            {Number(relProduct.rating || 5).toFixed(1)}
+                                                        </small>
+                                                    </div>
+
+                                                    <div className="popup-related-card-price">
+                                                        <strong>
+                                                            ₹{Number(relProduct.price).toLocaleString("en-IN")}
+                                                        </strong>
+                                                        {relProduct.oldPrice > relProduct.price && (
+                                                            <del>
+                                                                ₹{Number(relProduct.oldPrice).toLocaleString("en-IN")}
+                                                            </del>
+                                                        )}
+                                                    </div>
+
+                                                    <button
+                                                        type="button"
+                                                        className="popup-related-view-btn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleSwitchProduct(relProduct);
+                                                        }}
+                                                    >
+                                                        VIEW
+                                                    </button>
+                                                </div>
+                                            </article>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
                     </div>
 

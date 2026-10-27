@@ -1,4 +1,6 @@
 import "./auth/auth.js";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "./lib/cartHelper.js";
+import { isInWishlist, toggleWishlist, subscribeWishlist } from "./lib/wishlist.js";
 
 /* =====================================================
    MORE PRODUCTS
@@ -78,85 +80,7 @@ fetch("./src/api/moreChairProdjn.json")
 ===================================================== */
 
 function getImagePath(imagePath) {
-
-    if (!imagePath) {
-        return "";
-    }
-
-    /*
-       External image
-    */
-
-    if (
-        imagePath.startsWith("http://") ||
-        imagePath.startsWith("https://")
-    ) {
-        return imagePath;
-    }
-
-
-    /*
-       IMPORTANT
-
-       Your project is being served from:
-
-       /KSAM-deal-ecommerce-website/
-
-       Therefore keep:
-
-       ./public/image.png
-
-       Do NOT convert it to:
-
-       /image.png
-    */
-
-    if (imagePath.startsWith("./")) {
-        return imagePath;
-    }
-
-
-    /*
-       If JSON accidentally contains:
-
-       /moreprodimg1.png
-
-       convert it to:
-
-       ./public/moreprodimg1.png
-    */
-
-    if (imagePath.startsWith("/")) {
-
-        return "./public" + imagePath;
-
-    }
-
-
-    /*
-       If JSON contains:
-
-       moreprodimg1.png
-
-       convert it to:
-
-       ./public/moreprodimg1.png
-    */
-
-    if (!imagePath.startsWith("public/")) {
-
-        return "./public/" + imagePath;
-
-    }
-
-
-    /*
-       If JSON contains:
-
-       public/moreprodimg1.png
-    */
-
-    return "./" + imagePath;
+    return resolveImagePath(imagePath);
 }
 
 
@@ -411,6 +335,25 @@ function showProducts(category) {
         }
 
 
+        const addCartBtn = card.querySelector(".add-cart-btn");
+        if (addCartBtn) {
+            addCartBtn.dataset.id = product.id;
+        }
+
+        const wishlistBtn = card.querySelector(".wishlist-btn");
+        if (wishlistBtn) {
+            wishlistBtn.dataset.id = product.id;
+            const active = isInWishlist(product.id);
+            wishlistBtn.textContent = active ? "♥" : "♡";
+            if (active) {
+                wishlistBtn.classList.add("active");
+                wishlistBtn.style.color = "#ffffff";
+            } else {
+                wishlistBtn.classList.remove("active");
+                wishlistBtn.style.color = "";
+            }
+        }
+
         /* =================================================
            ADD CARD
         ================================================= */
@@ -515,11 +458,16 @@ if (moreProductContainer) {
                     "add-cart-btn"
                 )
             ) {
-
-                alert(
-                    "Product added to cart"
-                );
-
+                const prodId = button.dataset.id;
+                const prod = allProducts.find((p) => String(p.id) === String(prodId));
+                if (prod) {
+                    addProductToCart(prod, 1);
+                    alert(`${prod.name} added to cart`);
+                } else {
+                    alert(
+                        "Product added to cart"
+                    );
+                }
             }
 
 
@@ -530,9 +478,20 @@ if (moreProductContainer) {
                     "wishlist-btn"
                 )
             ) {
-
-                button.textContent = "♥";
-
+                const prodId = button.dataset.id;
+                const prod = allProducts.find((p) => String(p.id) === String(prodId));
+                if (prod) {
+                    toggleWishlist(prod).then((isSaved) => {
+                        button.textContent = isSaved ? "♥" : "♡";
+                        if (isSaved) {
+                            button.classList.add("active");
+                            button.style.color = "#14f1b2";
+                        } else {
+                            button.classList.remove("active");
+                            button.style.color = "";
+                        }
+                    });
+                }
             }
 
 
@@ -554,3 +513,22 @@ if (moreProductContainer) {
     );
 
 }
+
+subscribeWishlist(() => {
+    if (!moreProductContainer) return;
+    const btns = moreProductContainer.querySelectorAll(".wishlist-btn");
+    btns.forEach((btn) => {
+        const id = btn.dataset.id;
+        if (id) {
+            const active = isInWishlist(id);
+            btn.textContent = active ? "♥" : "♡";
+            if (active) {
+                btn.classList.add("active");
+                btn.style.color = "#ffffff";
+            } else {
+                btn.classList.remove("active");
+                btn.style.color = "";
+            }
+        }
+    });
+});

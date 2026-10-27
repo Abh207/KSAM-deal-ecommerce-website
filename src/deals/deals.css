@@ -330,3 +330,138 @@ body {
     }
 
 }
+
+/* =========================================================
+   SHARED FEATURE BOXES (Free Shipping / Easy Returns / etc.)
+========================================================= */
+.ks-feature-boxes-row,
+.ks-badges {
+    max-width: 1200px;
+    width: 100%;
+    margin: 48px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.ks-feature-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: linear-gradient(145deg, rgba(20, 241, 178, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(20, 241, 178, 0.22);
+    border-radius: 20px;
+    padding: 18px 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                opacity 0.6s ease;
+    overflow: hidden;
+}
+
+.ks-feature-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ks-feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #14f1b2;
+    box-shadow: 0 12px 30px rgba(20, 241, 178, 0.35), 0 0 20px rgba(20, 241, 178, 0.25);
+}
+
+.ks-feature-icon-box {
+    width: 54px;
+    height: 54px;
+    min-width: 54px;
+    min-height: 54px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #14f1b2, #0fb98a);
+    color: #050b12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(20, 241, 178, 0.35);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+}
+
+.ks-feature-card:hover .ks-feature-icon-box {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.ks-feature-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ks-feature-title {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0;
+    white-space: normal;
+}
+
+.ks-feature-desc {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 4px 0 0 0;
+    white-space: normal;
+}
+
+/* Tablet (601-1024px) */
+@media (max-width: 1024px) and (min-width: 601px) {
+    .ks-feature-boxes-row,
+    .ks-badges {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+}
+
+/* Phone (600px and below): 2x2 grid, vertical layout */
+@media (max-width: 600px) {
+    .ks-feature-boxes-row,
+    .ks-badges {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 12px !important;
+        margin: 36px auto !important;
+    }
+
+    .ks-feature-card {
+        flex-direction: column !important;
+        text-align: center !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 14px !important;
+        gap: 10px !important;
+    }
+
+    .ks-feature-text {
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    .ks-feature-title {
+        font-size: 14px !important;
+        text-align: center !important;
+    }
+
+    .ks-feature-desc {
+        font-size: 12px !important;
+        text-align: center !important;
+        margin-top: 2px !important;
+    }
+}

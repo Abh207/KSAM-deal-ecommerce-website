@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { Search, X, Clock, TrendingUp, ArrowUpRight, Star } from "lucide-react";
+import { Search, X, Clock, TrendingUp, ArrowUpRight, Star, Heart } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { useCart, formatPrice, FREE_DELIVERY_THRESHOLD } from "../store/cartStore";
+import { resolveImagePath } from "../../lib/cartHelper.js";
+import { getWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL } from "../../auth/auth.js";
 import "./Navbar.css";
 
@@ -13,9 +15,9 @@ const LINKS = [
   ["Home", "#home"],
   ["Shop", "shop.html"],
   ["Deals", "#deals"],
-  ["How It Works", "#how"],
+  ["How It Works", "terms.html"],
   ["Features", "#features"],
-  ["FAQ", "#faq"]
+  ["Wishlist", "watchwishlist.html"]
 ];
 
 const TRENDING = [
@@ -163,13 +165,27 @@ function ProductCard({ p, onClick, cta = "View deal" }) {
    MAIN NAVBAR COMPONENT
 ===================================================== */
 export default function Navbar({ onProductClick, onViewAll }) {
-  // Cross-page detection: check if on deals/home page vs category/shop page
+  // Cross-page detection: check if on deals/home page vs category/shop page vs terms page vs wishlist page
   const isShopPage = typeof window !== "undefined" && window.location.pathname.includes("shop.html");
+  const isTermsPage = (() => {
+    if (typeof window === "undefined") return false;
+    const path = window.location.pathname.toLowerCase();
+    return path.includes("terms.html") || path.endsWith("/terms");
+  })();
+
+  const isWishlistPage = (() => {
+    if (typeof window === "undefined") return false;
+    const path = window.location.pathname.toLowerCase();
+    return path.includes("watchwishlist.html") || path.endsWith("/watchwishlist") || path.includes("wishlist.html");
+  })();
 
   const isHomePage = (() => {
     if (typeof window === "undefined") return true;
     const path = window.location.pathname.replace(/\/+$/, "") || "/";
     const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
+    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("watchwishlist.html")) {
+      return false;
+    }
     if (path === "/" || path === "" || path === base || path === `${base}/index.html` || path.endsWith("/index.html")) {
       return true;
     }
@@ -177,9 +193,9 @@ export default function Navbar({ onProductClick, onViewAll }) {
   })();
 
   const getLinkHref = (href) => {
-    if (href === "shop.html") {
+    if (href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
       const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
-      return `${base}/shop.html`;
+      return `${base}/${href}`;
     }
     if (isHomePage) return href;
     const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
@@ -188,7 +204,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
   };
 
   const handleNavLinkClick = (e, href) => {
-    if (href === "shop.html") {
+    if (href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
       return;
     }
     if (isHomePage && href.startsWith("#")) {
@@ -207,12 +223,30 @@ export default function Navbar({ onProductClick, onViewAll }) {
 
   const isActiveLink = (href) => {
     if (href === "shop.html") return isShopPage;
+    if (href === "terms.html") return isTermsPage;
+    if (href === "watchwishlist.html") return isWishlistPage;
     if (!isHomePage) return false;
     return activeSection === href;
   };
 
   // Shared Cart
   const { items, count, subtotal, savings, setQty, remove } = useCart();
+
+  // Live Wishlist Count
+  const [wishlistCount, setWishlistCount] = useState(() => {
+    try {
+      return getWishlist().length;
+    } catch {
+      return 0;
+    }
+  });
+
+  useEffect(() => {
+    const unsub = subscribeWishlist((cnt) => {
+      setWishlistCount(cnt);
+    });
+    return unsub;
+  }, []);
 
   // Navigation State
   const [activeSection, setActiveSection] = useState(() => (isHomePage ? "#home" : ""));
@@ -318,7 +352,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
       setActiveSection("");
       return;
     }
-    const sectionIds = ["home", "deals", "how", "features", "faq"];
+    const sectionIds = ["home", "deals", "features"];
     const elements = sectionIds
       .map((id) => document.getElementById(id))
       .filter(Boolean);
@@ -1138,17 +1172,25 @@ export default function Navbar({ onProductClick, onViewAll }) {
           {/* 2. Centered Desktop Navigation Links with Active Underline */}
           <nav className="kh-nav-menu" aria-label="Primary Navigation">
             <ul className="kh-nav-links">
-              {LINKS.map(([label, href]) => (
-                <li key={label}>
-                  <a
-                    href={getLinkHref(href)}
-                    className={`kh-nav-link${isActiveLink(href) ? " kh-nav-active" : ""}`}
-                    onClick={(e) => handleNavLinkClick(e, href)}
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
+              {LINKS.map(([label, href]) => {
+                const isWishlist = label === "Wishlist";
+                return (
+                  <li key={label}>
+                    <a
+                      href={getLinkHref(href)}
+                      className={`kh-nav-link${isActiveLink(href) ? " kh-nav-active" : ""}${isWishlist ? " kh-nav-link-wishlist" : ""}`}
+                      onClick={(e) => handleNavLinkClick(e, href)}
+                    >
+                      <span>{label}</span>
+                      {isWishlist && wishlistCount > 0 && (
+                        <span className="kh-nav-wishlist-badge" aria-label={`${wishlistCount} items in wishlist`}>
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
@@ -1327,21 +1369,29 @@ export default function Navbar({ onProductClick, onViewAll }) {
 
         <nav className="kh-nav-mobile-menu">
           <ul className="kh-nav-mobile-list">
-            {LINKS.map(([label, href]) => (
-              <li key={label} className="kh-nav-mobile-item">
-                <a
-                  href={getLinkHref(href)}
-                  className={`kh-nav-mobile-link${isActiveLink(href) ? " kh-nav-active" : ""}`}
-                  onClick={(e) => {
-                    setIsMobileNavOpen(false);
-                    handleNavLinkClick(e, href);
-                  }}
-                >
-                  <span className="kh-nav-mobile-dot" />
-                  {label}
-                </a>
-              </li>
-            ))}
+            {LINKS.map(([label, href]) => {
+              const isWishlist = label === "Wishlist";
+              return (
+                <li key={label} className="kh-nav-mobile-item">
+                  <a
+                    href={getLinkHref(href)}
+                    className={`kh-nav-mobile-link${isActiveLink(href) ? " kh-nav-active" : ""}`}
+                    onClick={(e) => {
+                      setIsMobileNavOpen(false);
+                      handleNavLinkClick(e, href);
+                    }}
+                  >
+                    <span className="kh-nav-mobile-dot" />
+                    <span>{label}</span>
+                    {isWishlist && wishlistCount > 0 && (
+                      <span className="kh-nav-mobile-wishlist-badge">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </a>
+                </li>
+              );
+            })}
             <li className="kh-nav-mobile-item">
               <a
                 href={`${BASE_URL}profile.html`}
@@ -1470,6 +1520,9 @@ export default function Navbar({ onProductClick, onViewAll }) {
           <div className="kh-nav-cart-drawer-items" role="list">
             {items.map((item) => {
               const itemQty = Number(item.quantity || item.qty || 1);
+              const itemName = item.name || item.title || "Product";
+              const itemImage = resolveImagePath(item.image);
+              const fallbackImage = placeholderFor(itemName);
               return (
                 <div
                   key={item.id}
@@ -1477,16 +1530,17 @@ export default function Navbar({ onProductClick, onViewAll }) {
                   className="kh-nav-cart-item-row"
                 >
                   <img
-                    src={item.image || placeholderFor(item.name)}
-                    alt={item.name}
+                    src={itemImage}
+                    alt={itemName}
                     className="kh-nav-cart-item-thumb"
                     onError={(e) => {
-                      e.currentTarget.src = placeholderFor(item.name);
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = fallbackImage;
                     }}
                   />
                   <div className="kh-nav-cart-item-info">
-                    <div className="kh-nav-cart-item-name" title={item.name}>
-                      {item.name}
+                    <div className="kh-nav-cart-item-name" title={itemName}>
+                      {itemName}
                     </div>
                     <div className="kh-nav-cart-item-price">
                       <span>{formatPrice(item.price)}</span>

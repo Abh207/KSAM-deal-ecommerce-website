@@ -1,10 +1,17 @@
 import "../auth/auth.js";
+import {
+    getNormalizedCart,
+    resolveImagePath,
+    DEFAULT_PLACEHOLDER_IMAGE,
+    normalizeCartItem,
+    CART_STORAGE_KEY
+} from "../lib/cartHelper.js";
 
 /* =========================================================
    KSAM DEAL - REACT SHOP CART
 ========================================================= */
 
-const CART_KEY = "cartProductLS";
+const CART_KEY = CART_STORAGE_KEY;
 
 
 /* =========================================================
@@ -12,24 +19,7 @@ const CART_KEY = "cartProductLS";
 ========================================================= */
 
 function getShopCart() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem(CART_KEY)
-        ) || [];
-
-    } catch (error) {
-
-        console.error(
-            "Unable to read cart:",
-            error
-        );
-
-        return [];
-
-    }
-
+    return getNormalizedCart();
 }
 
 
@@ -38,12 +28,12 @@ function getShopCart() {
 ========================================================= */
 
 function saveShopCart(cart) {
-
+    const normalized = (cart || []).map((item) => normalizeCartItem(item)).filter(Boolean);
     localStorage.setItem(
         CART_KEY,
-        JSON.stringify(cart)
+        JSON.stringify(normalized)
     );
-
+    window.dispatchEvent(new Event("cartUpdated"));
 }
 
 
@@ -130,24 +120,17 @@ function renderShopCart() {
             product.id;
 
 
-function resolveCartImage(src) {
-    if (!src) return "";
-    if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:")) return src;
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
-    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-    const clean = src.replace(/^\/+/, "");
-    if (src.startsWith(normalizedBase)) return src;
-    return `${normalizedBase}${clean}`;
-}
+        const productName = product.name || product.title || "Product";
+        const productImage = resolveImagePath(product.image);
 
         card.innerHTML = `
 
             <div class="shop-cart-image">
 
                 <img
-                    src="${resolveCartImage(product.image)}"
-                    alt="${product.name || "Product"}"
-                    onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:11px;font-weight:700;text-align:center;padding:4px;border-radius:8px;\\'>${(product.name || 'Product').slice(0, 18)}</div>';"
+                    src="${productImage}"
+                    alt="${productName}"
+                    onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER_IMAGE}';"
                 >
 
             </div>
@@ -156,15 +139,15 @@ function resolveCartImage(src) {
             <div class="shop-cart-info">
 
                 <span class="shop-cart-category">
-                    ${product.category || "Electronics"}
+                    ${product.category || "Deals"}
                 </span>
 
                 <h3>
-                    ${product.name || "Product"}
+                    ${productName}
                 </h3>
 
                 <p class="shop-cart-price">
-                    $${price.toFixed(2)}
+                    ₹${price.toFixed(2)}
                 </p>
 
             </div>

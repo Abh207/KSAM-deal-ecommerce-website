@@ -23,10 +23,9 @@
   padding-right: 0 !important;
 }
 
-/* Maintain proper horizontal gutters on the product grid and filters below */
+/* Maintain proper horizontal gutters on header, filter and pagination below */
 .home-products-header,
 .home-products-filter,
-.home-products-grid,
 .products-pagination {
   padding-left: 5vw;
   padding-right: 5vw;
@@ -35,7 +34,6 @@
 @media (max-width: 900px) {
   .home-products-header,
   .home-products-filter,
-  .home-products-grid,
   .products-pagination {
     padding-left: 25px;
     padding-right: 25px;
@@ -45,7 +43,6 @@
 @media (max-width: 600px) {
   .home-products-header,
   .home-products-filter,
-  .home-products-grid,
   .products-pagination {
     padding-left: 13px;
     padding-right: 13px;

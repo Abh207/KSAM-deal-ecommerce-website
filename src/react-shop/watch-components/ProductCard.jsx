@@ -12,11 +12,13 @@ const getImagePath = (image) => {
     return `${normalizedBase}${clean}`;
 };
 
+import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
+
 function ProductCard({ product, onProductClick }) {
 
     const cardRef = useRef(null);
 
-    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isWishlisted, setIsWishlisted] = useState(() => isInWishlist(product.id));
 
 
     /* =========================================
@@ -24,18 +26,13 @@ function ProductCard({ product, onProductClick }) {
     ========================================= */
 
     useEffect(() => {
+        setIsWishlisted(isInWishlist(product.id));
 
-        const wishlist =
-            JSON.parse(
-                localStorage.getItem("watchWishlist")
-            ) || [];
+        const unsub = subscribeWishlist(() => {
+            setIsWishlisted(isInWishlist(product.id));
+        });
 
-        const exists = wishlist.some(
-            (item) => item.id === product.id
-        );
-
-        setIsWishlisted(exists);
-
+        return unsub;
     }, [product.id]);
 
 
@@ -47,43 +44,7 @@ function ProductCard({ product, onProductClick }) {
         if (!requireAuth({ type: "wishlist", product })) {
             return;
         }
-
-        const wishlist =
-            JSON.parse(
-                localStorage.getItem("watchWishlist")
-            ) || [];
-
-
-        const existingIndex =
-            wishlist.findIndex(
-                (item) => item.id === product.id
-            );
-
-
-        if (existingIndex !== -1) {
-
-            // Remove from wishlist
-
-            wishlist.splice(existingIndex, 1);
-
-            setIsWishlisted(false);
-
-        } else {
-
-            // Add to wishlist
-
-            wishlist.push(product);
-
-            setIsWishlisted(true);
-
-        }
-
-
-        localStorage.setItem(
-            "watchWishlist",
-            JSON.stringify(wishlist)
-        );
-
+        sharedToggleWishlist(product);
     };
 
 

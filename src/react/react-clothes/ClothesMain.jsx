@@ -14,6 +14,8 @@ import ClothesHero from "./ClothesHero";
 import clothesData from "../../api/clothesproducts.json";
 import { requireAuth } from "../../auth/auth.js";
 import Navbar from "../../deals/components/Navbar.jsx";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../../lib/cartHelper.js";
+import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 
 import "./clothes.css";
 
@@ -115,18 +117,14 @@ function ClothesMain() {
     );
 
 
-    /* =====================================================
-       WISHLIST
-    ====================================================== */
+    const [, setWishlistVersion] = useState(0);
 
-    const [wishlist, setWishlist] = useState(() => {
-
-        return readLocalStorage(
-            WISHLIST_KEY,
-            []
-        );
-
-    });
+    useEffect(() => {
+        const unsub = subscribeWishlist(() => {
+            setWishlistVersion((v) => v + 1);
+        });
+        return unsub;
+    }, []);
 
 
     /* =====================================================
@@ -259,18 +257,7 @@ function ClothesMain() {
     }, []);
 
 
-    /* =====================================================
-       WISHLIST STORAGE
-    ====================================================== */
 
-    useEffect(() => {
-
-        localStorage.setItem(
-            WISHLIST_KEY,
-            JSON.stringify(wishlist)
-        );
-
-    }, [wishlist]);
 
 
     /* =====================================================
@@ -365,43 +352,7 @@ function ClothesMain() {
         if (!requireAuth({ type: "wishlist", product })) {
             return;
         }
-
-        setWishlist((currentWishlist) => {
-
-            const exists =
-                currentWishlist.some(
-                    (item) =>
-                        item.id === product.id
-                );
-
-
-            if (exists) {
-
-                showToast(
-                    "Removed from wishlist"
-                );
-
-
-                return currentWishlist.filter(
-                    (item) =>
-                        item.id !== product.id
-                );
-
-            }
-
-
-            showToast(
-                "Added to wishlist ♥"
-            );
-
-
-            return [
-                ...currentWishlist,
-                product
-            ];
-
-        });
-
+        sharedToggleWishlist(product);
     };
 
 
@@ -414,87 +365,13 @@ function ClothesMain() {
             return;
         }
 
-        const currentCart =
-            readLocalStorage(
-                CART_KEY,
-                []
-            );
-
-
-        const existingProduct =
-            currentCart.find(
-                (item) =>
-                    item.id === product.id
-            );
-
-
-        let updatedCart;
-
-
-        if (existingProduct) {
-
-            updatedCart =
-                currentCart.map(
-                    (item) => {
-
-                        if (
-                            item.id === product.id
-                        ) {
-
-                            return {
-                                ...item,
-                                quantity:
-                                    Number(
-                                        item.quantity || 1
-                                    ) + 1
-                            };
-
-                        }
-
-                        return item;
-
-                    }
-                );
-
-        } else {
-
-            updatedCart = [
-                ...currentCart,
-
-                {
-                    id: product.id,
-
-                    name: product.name,
-
-                    category: product.category,
-
-                    price: product.price,
-
-                    oldPrice: product.oldPrice,
-
-                    image: product.image,
-
-                    quantity: 1
-                }
-
-            ];
-
-        }
-
-
-        localStorage.setItem(
-            CART_KEY,
-            JSON.stringify(updatedCart)
-        );
-
-
+        const normalized = normalizeCartItem(product, 1);
+        addProductToCart(product, 1);
         updateCartCount();
 
-
         showToast(
-            `${product.name} added to cart`
+            `${normalized?.name || product.name || "Product"} added to cart`
         );
-
     };
 
 
@@ -1487,10 +1364,8 @@ function ClothesMain() {
                                                 key={product.id}
                                                 product={product}
                                                 isWishlisted={
-                                                    wishlist.some(
-                                                        (item) =>
-                                                            item.id ===
-                                                            product.id
+                                                    isInWishlist(
+                                                        product.id
                                                     )
                                                 }
                                                 onWishlist={

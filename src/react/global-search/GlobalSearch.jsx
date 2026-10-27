@@ -12,6 +12,7 @@ import {
 } from "./productSearchIndex";
 
 import { requireAuth } from "../../auth/auth.js";
+import { addProductToCart, normalizeCartItem, resolveImagePath } from "../../lib/cartHelper.js";
 
 import "./global-search.css";
 
@@ -196,98 +197,22 @@ function GlobalSearch() {
         }
 
         try {
-
-            const existing =
-                JSON.parse(
-                    localStorage.getItem(
-                        CART_KEY
-                    ) || "[]"
-                );
-
-
-            /*
-               Adapt product to your
-               existing cart format.
-            */
-
-            const cartProduct = {
-
-                id: product.id,
-
-                name: product.name,
-
-                price: product.price,
-
-                oldPrice:
-                    product.oldPrice,
-
-                image: product.image,
-
-                quantity: 1,
-
-                brand: product.brand,
-
-                category:
-                    product.category
-
-            };
-
-
-            const index =
-                existing.findIndex(
-                    item =>
-                        item.id === product.id
-                );
-
-
-            if (index !== -1) {
-
-                existing[index].quantity =
-                    Number(
-                        existing[index]
-                            .quantity || 1
-                    ) + 1;
-
-            } else {
-
-                existing.push(
-                    cartProduct
-                );
-
-            }
-
-
-            localStorage.setItem(
-                CART_KEY,
-                JSON.stringify(existing)
-            );
-
-
-            window.dispatchEvent(
-                new Event("storage")
-            );
-
+            const normalized = normalizeCartItem(product, 1);
+            addProductToCart(product, 1);
 
             setMessage(
-                `${product.name} added to cart`
+                `${normalized?.name || product.name || "Product"} added to cart`
             );
 
-
             setTimeout(() => {
-
                 setMessage("");
-
             }, 2200);
-
         } catch (error) {
-
             console.error(
                 "Cart error:",
                 error
             );
-
         }
-
     };
 
 
