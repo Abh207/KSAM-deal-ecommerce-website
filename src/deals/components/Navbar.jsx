@@ -75,16 +75,55 @@ const toNumber = (v) => {
   return Number.isNaN(n) ? null : n;
 };
 
-const normalizeProduct = (p, i) => ({
-  id: p.id ?? p.product_id ?? `p-${i}`,
-  name: p.name ?? p.title ?? "Untitled product",
-  image: p.image ?? p.image_url ?? p.thumbnail ?? p.serpapi_thumbnail ?? "",
-  price: toNumber(p.extracted_price ?? p.price ?? p.sale_price) ?? 0,
-  oldPrice: toNumber(p.extracted_old_price ?? p.original_price ?? p.mrp ?? p.old_price) ?? 0,
-  rating: toNumber(p.rating),
-  store: p.source ?? p.store ?? p.brand ?? "KSAM Deal",
-  url: p.product_link ?? p.link ?? p.url ?? p.affiliate_url ?? "#"
-});
+const normalizeProduct = (p, i = 0) => {
+  const price = toNumber(p.extracted_price ?? p.price ?? p.sale_price) ?? 0;
+  const rawOldPrice = toNumber(
+    p.extracted_old_price ?? p.oldPrice ?? p.old_price ?? p.original_price ?? p.mrp
+  );
+  const oldPrice = rawOldPrice && rawOldPrice > price ? rawOldPrice : undefined;
+
+  let discount = toNumber(p.discount ?? p.discount_percent);
+  if (!discount && oldPrice && oldPrice > price && price > 0) {
+    discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+  }
+  discount = discount && discount > 0 ? discount : 0;
+
+  const image =
+    p.image ??
+    p.image_url ??
+    p.thumbnail ??
+    p.serpapi_thumbnail ??
+    "";
+
+  const directUrl =
+    p.product_url ??
+    p.product_link ??
+    p.url ??
+    p.link ??
+    p.affiliate_url ??
+    "";
+  const safeUrl = directUrl && directUrl !== "#" ? directUrl : "#";
+
+  return {
+    id: p.id ?? p.external_id ?? p.product_id ?? `prod-${i}`,
+    external_id: p.external_id ? String(p.external_id) : (p.id ? String(p.id) : `ext-${i}`),
+    name: p.name ?? p.title ?? "Untitled product",
+    description: p.description ?? p.name ?? "",
+    image,
+    image_url: image,
+    price,
+    oldPrice,
+    old_price: oldPrice,
+    discount,
+    rating: toNumber(p.rating) ?? 0,
+    reviews: toNumber(p.reviews) ?? 0,
+    store: p.store ?? p.source ?? p.brand ?? p.stores?.name ?? "KSAM Deal",
+    product_url: safeUrl !== "#" ? safeUrl : undefined,
+    url: safeUrl,
+    availability: p.availability ?? "In Stock"
+  };
+};
+
 
 const emojiFor = (name = "") => {
   const s = name.toLowerCase();
@@ -129,9 +168,11 @@ function ProductImage({ src, name }) {
 
 function ProductCard({ p, onClick, cta = "View deal" }) {
   const discount =
-    p.oldPrice && p.price && p.oldPrice > p.price
+    p.discount ||
+    (p.oldPrice && p.price && p.oldPrice > p.price
       ? Math.round((1 - p.price / p.oldPrice) * 100)
-      : 0;
+      : 0);
+
 
   return (
     <button type="button" className="ksam-card" onClick={() => onClick(p)}>
@@ -179,13 +220,20 @@ export default function Navbar({ onProductClick, onViewAll }) {
     return path.includes("watchwishlist.html") || path.endsWith("/watchwishlist") || path.includes("wishlist.html");
   })();
 
+  const isCartPage = (() => {
+    if (typeof window === "undefined") return false;
+    const path = window.location.pathname.toLowerCase();
+    return path.includes("addtocart");
+  })();
+
   const isHomePage = (() => {
     if (typeof window === "undefined") return true;
     const path = window.location.pathname.replace(/\/+$/, "") || "/";
     const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
-    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("watchwishlist.html")) {
+    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("watchwishlist.html") || path.includes("addtocart")) {
       return false;
     }
+
     if (path === "/" || path === "" || path === base || path === `${base}/index.html` || path.endsWith("/index.html")) {
       return true;
     }
@@ -270,7 +318,19 @@ export default function Navbar({ onProductClick, onViewAll }) {
   const [error, setError] = useState("");
   const [searched, setSearched] = useState(false);
   const [recent, setRecent] = useState([]);
+
   const [sort, setSort] = useState("relevance");
+  const [externalSearching, setExternalSearching] = useState(false);
+  const activeSearchAbortRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (activeSearchAbortRef.current) {
+        activeSearchAbortRef.current.abort();
+      }
+    };
+  }, []);
+
 
   // User Profile & Auth State
   const [userSession, setUserSession] = useState(null);
@@ -563,15 +623,28 @@ export default function Navbar({ onProductClick, onViewAll }) {
       setError("");
       setLoading(false);
       setSearched(false);
+      setExternalSearching(false);
       return;
     }
 
+    // Cancel any previous in-flight request
+    if (activeSearchAbortRef.current) {
+      activeSearchAbortRef.current.abort();
+    }
+    const abortController = new AbortController();
+    activeSearchAbortRef.current = abortController;
+
     setLoading(true);
+    setExternalSearching(false);
     setError("");
     setSearched(false);
 
     let ksamProducts = [];
+    let externalProducts = [];
+    let externalNotice = "";
+
     try {
+      // 1. Database-first search: search Supabase products table by name and description
       const searchTerm = `%${q}%`;
       const supabaseQuery = supabase
         .from("products")
@@ -583,6 +656,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
           price,
           old_price,
           discount,
+          discount_percent,
           rating,
           reviews,
           category_id,
@@ -599,41 +673,53 @@ export default function Navbar({ onProductClick, onViewAll }) {
         .limit(30);
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out after 8s")), 8000)
+        setTimeout(() => reject(new Error("Database query timed out")), 6000)
       );
 
       const { data: databaseProducts, error: databaseError } = await Promise.race([
         supabaseQuery,
         timeoutPromise
-      ]);
+      ]).catch((e) => ({ data: null, error: e }));
 
       if (databaseError) {
-        throw databaseError;
+        console.warn("[Navbar search] Database query warning:", databaseError);
       }
 
-      ksamProducts =
-        databaseProducts
-          ? databaseProducts.map((product, index) =>
-              normalizeProduct(
-                { ...product, store: product.stores?.name || "KSAM Deal" },
-                index
-              )
+      ksamProducts = Array.isArray(databaseProducts)
+        ? databaseProducts.map((product, index) =>
+            normalizeProduct(
+              { ...product, store: product.stores?.name || "KSAM Deal" },
+              index
             )
-          : [];
+          )
+        : [];
 
+      if (abortController.signal.aborted) return;
+
+      // 2. Are there enough relevant results?
+      // If we have >= 5 matching database products, show them without calling SerpApi
+      if (ksamProducts.length >= 5) {
+        setResults(ksamProducts.slice(0, 30));
+        setError("");
+        setSearched(true);
+        setLoading(false);
+        return;
+      }
+
+      // 3. Fallback: call search-products Supabase Edge Function to get external Google Shopping results
       const baseUrl = import.meta.env.VITE_SUPABASE_URL;
       const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
       if (!baseUrl || !anonKey) {
         setResults(ksamProducts);
         setSearched(true);
+        setLoading(false);
         return;
       }
 
-      let externalProducts = [];
+      setExternalSearching(true);
       try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 8000);
+        const edgeTimer = setTimeout(() => abortController.abort(), 10000);
         const response = await fetch(`${baseUrl}/functions/v1/search-products`, {
           method: "POST",
           headers: {
@@ -642,63 +728,88 @@ export default function Navbar({ onProductClick, onViewAll }) {
             Authorization: `Bearer ${anonKey}`
           },
           body: JSON.stringify({ query: q }),
-          signal: controller.signal
+          signal: abortController.signal
         });
-        clearTimeout(timer);
+        clearTimeout(edgeTimer);
 
         if (response.ok) {
           const externalData = await response.json();
           if (externalData.success && Array.isArray(externalData.products)) {
             externalProducts = externalData.products.map((product, index) =>
-              normalizeProduct(product, index)
+              normalizeProduct(product, ksamProducts.length + index)
             );
           }
+          if (externalData.external_error) {
+            externalNotice = externalData.external_error;
+          }
+        } else {
+          const errData = await response.json().catch(() => null);
+          externalNotice =
+            errData?.error || `External search service returned status ${response.status}`;
         }
-      } catch (e) {
-        // External edge search skipped or timed out
+      } catch (edgeErr) {
+        if (abortController.signal.aborted) return;
+        externalNotice =
+          edgeErr instanceof Error && edgeErr.name === "AbortError"
+            ? "External search timed out."
+            : "External search service temporarily unavailable.";
       }
 
+      if (abortController.signal.aborted) return;
+
+      // 4. Merge and deduplicate results
       const combined = [...ksamProducts, ...externalProducts];
       const unique = [];
       const seen = new Set();
       for (const p of combined) {
-        const key = p.url !== "#" ? p.url : `${p.name}-${p.store}`;
+        const key =
+          p.url && p.url !== "#"
+            ? p.url.toLowerCase()
+            : `${p.name}-${p.store}`.toLowerCase();
         if (!seen.has(key)) {
           seen.add(key);
           unique.push(p);
         }
       }
 
+      setResults(unique.slice(0, 30));
+
       if (unique.length > 0) {
-        setResults(unique.slice(0, 30));
-        if (ksamProducts.length > 0 && externalProducts.length === 0) {
-          setError("Showing KSAM Deal products. External products could not be loaded.");
+        if (ksamProducts.length > 0 && externalProducts.length === 0 && externalNotice) {
+          setError(`Showing KSAM Deal products. External shopping search unavailable (${externalNotice})`);
+        } else if (externalNotice) {
+          setError(`External search notice: ${externalNotice}`);
+        } else {
+          setError("");
         }
       } else {
-        const matched = DEMO_PRODUCTS.filter((p) =>
-          p.name.toLowerCase().includes(q.toLowerCase())
-        );
-        setResults((matched.length > 0 ? matched : DEMO_PRODUCTS).map(normalizeProduct));
-        setError("Showing KSAM Deal products.");
+        if (externalNotice) {
+          setError(`External search unavailable: ${externalNotice}`);
+        } else {
+          setError("");
+        }
       }
+
       setSearched(true);
     } catch (err) {
-      console.error("Failed to fetch deals:", err);
+      if (abortController.signal.aborted) return;
+      console.error("[Navbar search] Failed to fetch deals:", err);
       if (ksamProducts.length > 0) {
         setResults(ksamProducts);
-        setError("Showing KSAM Deal products. External products could not be loaded.");
+        setError("Showing KSAM Deal database products. External products could not be loaded.");
       } else {
-        const matched = DEMO_PRODUCTS.filter((p) =>
-          p.name.toLowerCase().includes(q.toLowerCase())
-        );
-        setResults((matched.length > 0 ? matched : DEMO_PRODUCTS).map(normalizeProduct));
-        setError("Showing KSAM Deal products.");
+        setResults([]);
+        setError("Search is temporarily unavailable. Please try again in a moment.");
       }
       setSearched(true);
     } finally {
-      setLoading(false);
+      if (!abortController.signal.aborted) {
+        setLoading(false);
+        setExternalSearching(false);
+      }
     }
   };
+
 
   const submitSearch = (e) => {
     e.preventDefault();
@@ -971,6 +1082,30 @@ export default function Navbar({ onProductClick, onViewAll }) {
                 </>
               )}
 
+              {query.trim() && loading && (
+                <div
+                  style={{
+                    padding: "10px 16px",
+                    margin: "0 0 14px",
+                    borderRadius: "8px",
+                    background: "rgba(34, 197, 94, 0.08)",
+                    border: "1px solid rgba(34, 197, 94, 0.2)",
+                    color: "#86efac",
+                    fontSize: "13px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px"
+                  }}
+                >
+                  <span className="ksam-spin" style={{ width: 14, height: 14 }} />
+                  <span>
+                    {externalSearching
+                      ? "External search in progress (fetching live Google Shopping deals)..."
+                      : "Searching products..."}
+                  </span>
+                </div>
+              )}
+
               {query.trim() && loading && results.length === 0 && (
                 <div className="ksam-grid">
                   {Array.from({ length: 8 }).map((_, i) => (
@@ -996,14 +1131,44 @@ export default function Navbar({ onProductClick, onViewAll }) {
                 </div>
               )}
 
-              {query.trim() && error && <div className="ksam-err">{error}</div>}
-
-              {query.trim() && !loading && !error && searched && results.length === 0 && (
-                <div className="ksam-msg">
-                  <strong>No products found for "{query.trim()}"</strong>
-                  <p>Check the spelling or try a broader term.</p>
+              {query.trim() && error && (
+                <div
+                  className="ksam-err"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "10px"
+                  }}
+                >
+                  <span>{error}</span>
+                  <button
+                    type="button"
+                    onClick={() => runSearch(query)}
+                    style={{
+                      background: "rgba(34, 197, 94, 0.2)",
+                      border: "1px solid rgba(34, 197, 94, 0.4)",
+                      color: "#4ade80",
+                      padding: "4px 10px",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
+                    Retry search
+                  </button>
                 </div>
               )}
+
+              {query.trim() && !loading && searched && results.length === 0 && !error && (
+                <div className="ksam-msg">
+                  <strong>No products found for "{query.trim()}"</strong>
+                  <p>Check the spelling or try searching for another term like "Toys", "Phones", "Watches", or "Shoes".</p>
+                </div>
+              )}
+
 
               {query.trim() && results.length > 0 && (
                 <div className="ksam-sec">
@@ -1634,30 +1799,17 @@ export default function Navbar({ onProductClick, onViewAll }) {
             <ArrowUpRight size={18} />
           </button>
 
-          <a
-            href={`${(BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "")}/addToCart.html`}
-            className="kh-nav-cart-view-cart-btn"
-            onClick={() => setIsCartOpen(false)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              width: "100%",
-              padding: "10px 16px",
-              marginTop: "8px",
-              borderRadius: "12px",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.12)",
-              color: "#94a3b8",
-              fontSize: "13px",
-              fontWeight: 500,
-              textDecoration: "none",
-              transition: "all 0.2s ease"
-            }}
-          >
-            <span>View Full Cart Page (addToCart.html)</span>
-          </a>
+          {!isCartPage && (
+            <a
+              href={`${(BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "")}/addToCart.html`}
+              className="kh-nav-cart-view-cart-btn"
+              onClick={() => setIsCartOpen(false)}
+            >
+              <span>View Full Cart</span>
+              <ArrowUpRight size={18} strokeWidth={2.5} />
+            </a>
+          )}
+
         </div>
       </aside>
 

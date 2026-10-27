@@ -1,6 +1,27 @@
 import { ProviderAdapter, FetchDealsOptions, AdapterResult } from "./types.ts";
 import { normalizeAndValidateProduct } from "./normalizer.ts";
 
+function extractMerchantUrl(rawUrl?: string): string {
+  if (!rawUrl) return "";
+  try {
+    const parsed = new URL(rawUrl);
+    // If it's a google redirect (e.g. google.com/url?url=https://merchant.com or ?q=https://...)
+    if (parsed.hostname.includes("google.")) {
+      const targetParam = parsed.searchParams.get("url") || parsed.searchParams.get("q");
+      if (targetParam && targetParam.startsWith("http")) {
+        try {
+          return decodeURIComponent(targetParam);
+        } catch {
+          return targetParam;
+        }
+      }
+    }
+    return rawUrl;
+  } catch {
+    return rawUrl;
+  }
+}
+
 export class SerpShoppingAdapter implements ProviderAdapter {
   slug = "serp-shopping";
   name = "Licensed Shopping Data (Google Shopping India)";
@@ -32,28 +53,63 @@ export class SerpShoppingAdapter implements ProviderAdapter {
     targetUrl.searchParams.set("api_key", apiKey);
     targetUrl.searchParams.set("num", String(options.limit || 20));
 
+
+
     let lastError: Error | null = null;
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
+        const timeout = setTimeout(() => controller.abort(), 6500);
 
         const response = await fetch(targetUrl.toString(), {
           signal: controller.signal
         });
         clearTimeout(timeout);
 
-        if (response.status === 429 || response.status >= 500) {
+        if (response.status === 429) {
+          const errData = await response.json().catch(() => ({}));
+          const errMsg = errData?.error || "External search quota exceeded or rate limited (HTTP 429)";
+          return {
+            store_slug: this.slug,
+            configured: true,
+            fetched: 0,
+            products: [],
+            error: errMsg
+          };
+        }
+
+        if (response.status === 401 || response.status === 403) {
+          const errData = await response.json().catch(() => ({}));
+          return {
+            store_slug: this.slug,
+            configured: false,
+            fetched: 0,
+            products: [],
+            error: errData?.error || "Invalid or unauthorized SERPAPI_KEY"
+          };
+        }
+
+        if (response.status >= 500) {
           if (attempt === 1) {
-            await new Promise((r) => setTimeout(r, 1000));
+            await new Promise((r) => setTimeout(r, 400));
             continue;
           }
-          throw new Error(`SerpApi returned status ${response.status}`);
+          throw new Error(`External search provider temporarily unavailable (HTTP ${response.status})`);
         }
 
         if (!response.ok) {
-          throw new Error(`SerpApi request failed with status ${response.status}`);
+          const errData = await response.json().catch(() => ({}));
+          const errMsg = errData?.error || `External search failed with HTTP ${response.status}`;
+          return {
+            store_slug: this.slug,
+            configured: true,
+            fetched: 0,
+            products: [],
+            error: errMsg
+          };
         }
+
+
 
         const data = await response.json();
         const shoppingResults = Array.isArray(data?.shopping_results) ? data.shopping_results : [];
@@ -69,6 +125,9 @@ export class SerpShoppingAdapter implements ProviderAdapter {
           else if (merchant.includes("ajio")) storeSlug = "ajio";
           else if (merchant.includes("jiomart")) storeSlug = "jiomart";
 
+          const rawUrl = item.link || item.product_link;
+          const directUrl = extractMerchantUrl(rawUrl);
+
           const product = normalizeAndValidateProduct(
             {
               store_slug: storeSlug,
@@ -81,9 +140,9 @@ export class SerpShoppingAdapter implements ProviderAdapter {
               currency: "INR",
               rating: item.rating,
               reviews: item.reviews,
-              product_url: item.link || item.product_link,
-              affiliate_url: item.link || item.product_link,
-              raw: { source: item.source }
+              product_url: directUrl || rawUrl,
+              affiliate_url: directUrl || rawUrl,
+              raw: { source: item.source || item.merchant || "Google Shopping" }
             },
             { isSearch: options.isSearch }
           );

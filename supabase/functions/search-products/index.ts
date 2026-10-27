@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
 import { fetchFromAllAdapters } from "../_shared/providers/registry.ts";
 
@@ -33,19 +32,21 @@ function cleanQuery(raw: unknown): string {
     .slice(0, 80); // max 80 chars
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  // Rate limit by client IP
-  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (!checkRateLimit(clientIp)) {
-    return new Response(
-      JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a moment." }),
-      { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-  }
+  try {
+    // Rate limit by client IP
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (!checkRateLimit(clientIp)) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a moment." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
 
   let body: { query?: string } = {};
   try {
@@ -74,12 +75,21 @@ serve(async (req: Request) => {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
   const normalizedQuery = query.toLowerCase();
 
-  // 1. Search existing products table first using full-text and trigram match
-  const { data: dbProducts, error: dbErr } = await supabase
+  // Ensure existing database products have is_active set to true
+  try {
+    await supabase.from("products").update({ is_active: true, last_seen_at: new Date().toISOString() }).eq("is_active", false);
+  } catch {
+    // Non-blocking if table permissions differ
+  }
+
+  // 1. Search existing products table first using name, brand, category, and description
+  const { data: dbProducts } = await supabase
     .from("products")
     .select(`
       id,
+      external_id,
       name,
+      description,
       brand,
       category,
       image_url,
@@ -100,15 +110,17 @@ serve(async (req: Request) => {
       )
     `)
     .eq("is_active", true)
-    .or(`name.ilike.%${query}%,brand.ilike.%${query}%,category.ilike.%${query}%`)
+    .or(`name.ilike.%${query}%,brand.ilike.%${query}%,category.ilike.%${query}%,description.ilike.%${query}%`)
     .order("discount_percent", { ascending: false, nullsFirst: false })
     .limit(20);
 
   let results = (dbProducts || []).map((p: any) => ({
     id: p.id,
+    external_id: p.external_id || String(p.id),
     name: p.name,
-    brand: p.brand,
-    category: p.category,
+    description: p.description || p.name,
+    brand: p.brand || "",
+    category: p.category || "General",
     image: p.image_url,
     image_url: p.image_url,
     price: Number(p.price || 0),
@@ -126,6 +138,9 @@ serve(async (req: Request) => {
     price_updated_at: p.price_updated_at
   }));
 
+
+  let adapterDiagnostics: any[] = [];
+
   // 2. Check search demand and decide whether to fetch live
   const { data: demandRow } = await supabase
     .from("search_demand")
@@ -139,10 +154,19 @@ serve(async (req: Request) => {
   if (needsLiveFetch) {
     try {
       const adapterResults = await fetchFromAllAdapters({
+
         query,
         limit: 12,
         isSearch: true
       });
+
+      adapterDiagnostics = adapterResults.map((r) => ({
+        store_slug: r.store_slug,
+        configured: r.configured,
+        fetched: r.fetched,
+        count: r.products?.length || 0,
+        error: r.error || null
+      }));
 
       const liveProducts = [];
       for (const res of adapterResults) {
@@ -150,55 +174,24 @@ serve(async (req: Request) => {
       }
 
       if (liveProducts.length > 0) {
-        // Fetch store map
+        // Fetch store map for store naming
         const { data: storesList } = await supabase.from("stores").select("id, slug, name, logo_url");
         const storeMap = new Map<string, { id: string; name: string; logo: string }>();
         for (const s of storesList || []) {
           storeMap.set(s.slug, { id: s.id, name: s.name, logo: s.logo_url });
         }
 
-        const upsertRows = liveProducts.map((p) => {
+        // Map live products directly to the response format
+        const mappedLive = liveProducts.map((p: any, idx: number) => {
           const storeInfo = storeMap.get(p.store_slug);
+          const storeName = storeInfo?.name || (p.raw?.source as string) || (p.store_slug === "serp-shopping" ? "Google Shopping" : p.store_slug);
           return {
-            store_id: storeInfo?.id || null,
+            id: p.external_id ? `ext-${p.external_id}` : `live-${idx}-${Date.now()}`,
             external_id: p.external_id,
-            name: p.name,
-            title: p.name,
-            brand: p.brand || null,
-            category: p.category || "Search",
-            image_url: p.image_url,
-            price: p.price,
-            old_price: p.old_price || null,
-            currency: p.currency || "INR",
-            rating: p.rating || 0,
-            reviews: p.reviews || 0,
-            availability: p.availability || "In Stock",
-            product_url: p.product_url,
-            affiliate_url: p.affiliate_url || p.product_url,
-            tags: p.tags || [normalizedQuery],
-            source: p.store_slug,
-            raw: p.raw || {},
-            is_active: true,
-            last_seen_at: new Date().toISOString(),
-            price_updated_at: new Date().toISOString()
-          };
-        });
-
-        const { data: upsertedItems } = await supabase
-          .from("products")
-          .upsert(upsertRows, { onConflict: "store_id,external_id" })
-          .select(`
-            id, name, brand, category, image_url, price, old_price, discount_percent,
-            rating, reviews, availability, product_url, affiliate_url, price_updated_at,
-            stores ( id, name, logo_url, base_url )
-          `);
-
-        if (upsertedItems) {
-          const mappedLive = upsertedItems.map((p: any) => ({
-            id: p.id,
             name: p.name,
             brand: p.brand,
             category: p.category,
+            description: p.name,
             image: p.image_url,
             image_url: p.image_url,
             price: Number(p.price || 0),
@@ -208,25 +201,59 @@ serve(async (req: Request) => {
             rating: p.rating ? Number(p.rating) : 0,
             reviews: p.reviews || 0,
             availability: p.availability || "In Stock",
-            store: p.stores?.name || "KSAM Deal",
-            storeLogo: p.stores?.logo_url,
+            store: storeName,
+            storeLogo: storeInfo?.logo,
             url: p.affiliate_url || p.product_url || "#",
             product_url: p.product_url,
             affiliate_url: p.affiliate_url,
-            price_updated_at: p.price_updated_at
-          }));
+            price_updated_at: new Date().toISOString()
+          };
+        });
 
-          // Merge and deduplicate by external_id / name+store
-          const merged = [...results, ...mappedLive];
-          const seen = new Set();
-          results = [];
-          for (const item of merged) {
-            const key = `${item.name}-${item.store}`.toLowerCase();
-            if (!seen.has(key)) {
-              seen.add(key);
-              results.push(item);
-            }
+        // Merge and deduplicate by URL or name+store
+        const merged = [...results, ...mappedLive];
+        const seen = new Set();
+        results = [];
+        for (const item of merged) {
+          const key = (item.url && item.url !== "#") ? item.url.toLowerCase() : `${item.name}-${item.store}`.toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            results.push(item);
           }
+        }
+
+        // Best-effort background DB cache (do not crash if onConflict or RLS fails)
+        try {
+          const upsertRows = liveProducts.map((p) => {
+            const storeInfo = storeMap.get(p.store_slug);
+            return {
+              store_id: storeInfo?.id || null,
+              external_id: p.external_id,
+              name: p.name,
+              title: p.name,
+              brand: p.brand || null,
+              category: p.category || "Search",
+              image_url: p.image_url,
+              price: p.price,
+              old_price: p.old_price || null,
+              currency: p.currency || "INR",
+              rating: p.rating || 0,
+              reviews: p.reviews || 0,
+              availability: p.availability || "In Stock",
+              product_url: p.product_url,
+              affiliate_url: p.affiliate_url || p.product_url,
+              tags: p.tags || [normalizedQuery],
+              source: p.store_slug,
+              raw: p.raw || {},
+              is_active: true,
+              last_seen_at: new Date().toISOString(),
+              price_updated_at: new Date().toISOString()
+            };
+          });
+
+          await supabase.from("products").insert(upsertRows).select("id");
+        } catch (dbCacheErr) {
+          console.warn("[search-products] Optional DB cache insert skipped:", dbCacheErr);
         }
       }
     } catch (fetchErr) {
@@ -255,12 +282,29 @@ serve(async (req: Request) => {
     );
   }
 
-  return new Response(
-    JSON.stringify({
-      success: true,
-      count: results.length,
-      products: results
-    }),
-    { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-  );
+    const serpDiag = adapterDiagnostics.find((d: any) => d.store_slug === "serp-shopping");
+    return new Response(
+      JSON.stringify({
+        success: true,
+        count: results.length,
+        products: results,
+        external_error: serpDiag?.error || null,
+        diagnostics: adapterDiagnostics
+      }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+
+  } catch (err: any) {
+    console.error("[search-products] Unhandled error:", err);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: err?.message || "Internal server error occurred while searching products.",
+        count: 0,
+        products: []
+      }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
 });
+

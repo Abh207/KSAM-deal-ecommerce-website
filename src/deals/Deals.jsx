@@ -168,12 +168,16 @@ function Deals() {
 
 
     function handleViewAll(searchQuery, products) {
-
-        setSearchPageQuery(searchQuery);
-
-        setAllSearchResults(products);
-
+        setSearchPageQuery(searchQuery || "");
+        setAllSearchResults(Array.isArray(products) ? products : []);
+        setTimeout(() => {
+            const el = document.querySelector(".search-results-section");
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }, 120);
     }
+
 
 
     return (

@@ -122,6 +122,9 @@ function renderShopCart() {
 
         const productName = product.name || product.title || "Product";
         const productImage = resolveImagePath(product.image);
+        const rawOldPrice = Number(product.oldPrice || product.originalPrice || product.old_price || product.mrp || 0);
+        const oldPrice = rawOldPrice > price ? rawOldPrice : 0;
+        const discount = oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : (Number(product.discount || product.discount_percent) || 0);
 
         card.innerHTML = `
 
@@ -139,16 +142,32 @@ function renderShopCart() {
             <div class="shop-cart-info">
 
                 <span class="shop-cart-category">
-                    ${product.category || "Deals"}
+                    ${product.category || "KSAM Deal"}
                 </span>
 
                 <h3>
                     ${productName}
                 </h3>
 
-                <p class="shop-cart-price">
-                    ₹${price.toFixed(2)}
-                </p>
+                <div class="shop-cart-pricing">
+
+                    <span class="shop-cart-price">
+                        ₹${Math.round(price).toLocaleString("en-IN")}
+                    </span>
+
+                    ${oldPrice > price ? `
+                        <span class="shop-cart-old-price">
+                            ₹${Math.round(oldPrice).toLocaleString("en-IN")}
+                        </span>
+                    ` : ""}
+
+                    ${discount > 0 ? `
+                        <span class="shop-cart-discount-pill">
+                            ${discount}% OFF
+                        </span>
+                    ` : ""}
+
+                </div>
 
             </div>
 
@@ -159,12 +178,13 @@ function renderShopCart() {
                     class="shop-cart-minus"
                     data-id="${product.id}"
                     type="button"
+                    aria-label="Decrease quantity"
                 >
                     −
                 </button>
 
 
-                <span>
+                <span class="shop-cart-qty-val">
                     ${quantity}
                 </span>
 
@@ -173,6 +193,7 @@ function renderShopCart() {
                     class="shop-cart-plus"
                     data-id="${product.id}"
                     type="button"
+                    aria-label="Increase quantity"
                 >
                     +
                 </button>
@@ -182,7 +203,7 @@ function renderShopCart() {
 
             <div class="shop-cart-total">
 
-                $${total.toFixed(2)}
+                ₹${Math.round(total).toLocaleString("en-IN")}
 
             </div>
 
@@ -191,11 +212,14 @@ function renderShopCart() {
                 class="shop-cart-remove"
                 data-id="${product.id}"
                 type="button"
+                aria-label="Remove ${productName} from cart"
             >
-                Remove
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Remove</span>
             </button>
 
         `;
+
 
 
         container.appendChild(card);
@@ -465,7 +489,8 @@ function addProceedToBuyButton() {
             type="button"
             class="shop-proceed-to-buy"
         >
-            🛒 Proceed to Checkout →
+            <span>Proceed to Checkout</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-left: 8px;"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
         </button>
     `;
 
@@ -501,23 +526,40 @@ function updateShopTotals() {
 
 
     let subtotal = 0;
+    let originalTotal = 0;
 
 
     cart.forEach((product) => {
 
-        subtotal +=
-            Number(product.price || 0) *
+        const qty =
             Number(product.quantity || 1);
+
+        const price =
+            Number(product.price || 0);
+
+        const rawOldPrice =
+            Number(product.oldPrice || product.originalPrice || product.old_price || product.mrp || 0);
+
+        const oldPrice =
+            rawOldPrice > price ? rawOldPrice : price;
+
+        subtotal +=
+            price * qty;
+
+        originalTotal +=
+            oldPrice * qty;
 
     });
 
 
-    const tax =
-        subtotal * 0.05;
+    const savings =
+        originalTotal > subtotal ? (originalTotal - subtotal) : 0;
 
+    const deliveryFee =
+        (subtotal >= 999 || subtotal === 0) ? 0 : 49;
 
     const finalTotal =
-        subtotal + tax;
+        subtotal > 0 ? (subtotal + deliveryFee) : 0;
 
 
     const subtotalElement =
@@ -539,27 +581,32 @@ function updateShopTotals() {
 
 
     if (subtotalElement) {
-
         subtotalElement.textContent =
-            `$${subtotal.toFixed(2)}`;
-
+            `₹${Math.round(subtotal).toLocaleString("en-IN")}`;
     }
 
 
     if (taxElement) {
-
         taxElement.textContent =
-            `$${tax.toFixed(2)}`;
-
+            deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`;
     }
 
 
     if (finalElement) {
-
         finalElement.textContent =
-            `$${finalTotal.toFixed(2)}`;
-
+            `₹${Math.round(finalTotal).toLocaleString("en-IN")}`;
     }
+
+
+    const sumSub = document.getElementById("summarySubtotal");
+    const sumSav = document.getElementById("summarySavings");
+    const sumDel = document.getElementById("summaryDelivery");
+    const sumTot = document.getElementById("summaryFinalTotal");
+
+    if (sumSub) sumSub.textContent = `₹${Math.round(subtotal).toLocaleString("en-IN")}`;
+    if (sumSav) sumSav.textContent = savings > 0 ? `-₹${Math.round(savings).toLocaleString("en-IN")}` : "₹0";
+    if (sumDel) sumDel.textContent = deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`;
+    if (sumTot) sumTot.textContent = `₹${Math.round(finalTotal).toLocaleString("en-IN")}`;
 
 }
 
