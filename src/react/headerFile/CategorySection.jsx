@@ -77,32 +77,67 @@ function getIconForCategory(id) {
 }
 
 /* ---------- Category Video Configuration ---------- */
+/* ---------- Category Video Configuration ---------- */
 export const CATEGORY_VIDEOS = {
   watches: {
-    src: "assets/videos/watches-banner.mp4",
+    video: [
+      { src: "assets/videos/watches-banner.webm", type: "video/webm" },
+      { src: "assets/videos/watches-banner.mp4", type: "video/mp4" }
+    ],
     poster: "assets/videos/watches-banner-poster.jpg",
+    objectPosition: "72% 50%",
+    fit: "cover",
+    scale: 1,
+    fadeLoop: false
+  },
+  chairs: {
+    video: [
+      { src: "assets/videos/chairs-bed-loop.webm", type: "video/webm" },
+      { src: "assets/videos/chairs-bed.mp4", type: "video/mp4" }
+    ],
+    poster: "assets/videos/chairs-bed-poster.jpg",
+    objectPosition: "70% 55%",
+    fit: "cover",
+    scale: 1,
+    fadeLoop: true
   },
   shoes: {
-    src: "assets/videos/shoes-banner.mp4",
+    video: [
+      { src: "assets/videos/shoes-banner.webm", type: "video/webm" },
+      { src: "assets/videos/shoes-banner.mp4", type: "video/mp4" }
+    ],
     poster: "assets/videos/shoes-banner-poster.jpg",
+    objectPosition: "72% 50%",
+    fit: "cover",
+    scale: 1,
+    fadeLoop: false
   },
+  beauty: {
+    video: [
+      { src: "assets/videos/Skincare_bottle_product_animation_20261027193838.mp4", type: "video/mp4" }
+    ],
+    poster: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80",
+    objectPosition: "72% 50%",
+    fit: "cover",
+    scale: 1,
+    fadeLoop: false
+  }
 };
 
 export function getCategoryVideoConfig(catId) {
   if (!catId) return null;
   const entry = CATEGORY_VIDEOS[String(catId).toLowerCase()];
   if (!entry) return null;
-  if (typeof entry === "string") {
-    return { src: entry, poster: "" };
-  }
   return entry;
 }
 
 export function resolveVideoPath(path) {
   if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:")) return path;
   const clean = path.startsWith("./") ? path.slice(2) : (path.startsWith("/") ? path.slice(1) : path);
-  return `${import.meta.env.BASE_URL}${clean}`;
+  const baseUrl = import.meta.env.BASE_URL || "/";
+  const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+  return `${normalizedBase}${clean}`;
 }
 
 /* ---------- Redesigned Vertical Category Product Card ---------- */
@@ -230,15 +265,28 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
       }
 
       const bannerImg = bannerRaw ? resolveProductImage(bannerRaw) : null;
-
-      // 3. Thumbnails: real product images up to 16
       const thumbProducts = allCatProducts.slice(0, 16);
+
+      const videoConfig = getCategoryVideoConfig(cat.id) || {};
+      const videoSources = Array.isArray(cat.video)
+        ? cat.video
+        : (videoConfig.video || (cat.video ? [{ src: cat.video, type: "video/mp4" }] : null));
+
+      const posterPath = cat.poster
+        ? resolveVideoPath(cat.poster)
+        : (videoConfig.poster ? resolveVideoPath(videoConfig.poster) : bannerImg);
 
       return {
         ...cat,
         productCount: allCatProducts.length,
         bannerImage: bannerImg,
         products: thumbProducts,
+        video: videoSources,
+        poster: posterPath,
+        objectPosition: cat.objectPosition || videoConfig.objectPosition || "72% 50%",
+        fit: cat.fit || videoConfig.fit || "cover",
+        scale: cat.scale !== undefined ? cat.scale : (videoConfig.scale !== undefined ? videoConfig.scale : 1),
+        fadeLoop: Boolean(cat.fadeLoop !== undefined ? cat.fadeLoop : videoConfig.fadeLoop)
       };
     });
   }, []);
@@ -262,6 +310,11 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
     return typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   });
 
+  // Data saver check
+  const [saveDataActive] = useState(() => {
+    return typeof navigator !== "undefined" && Boolean(navigator.connection?.saveData);
+  });
+
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -271,8 +324,6 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
       if (mq.removeEventListener) mq.removeEventListener("change", onChange);
     };
   }, []);
-
-
 
   // Sync initialCatId on first render
   useEffect(() => {
@@ -286,8 +337,21 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
   const [fadeKey, setFadeKey] = useState(activeCatId);
   const [fading, setFading] = useState(false);
 
-  // Category video for current selection
-  const currentCategoryVideo = getCategoryVideoConfig(activeCatId);
+  // Category video configuration for current selection
+  const currentCategoryVideo = useMemo(() => {
+    if (!activeCategory) return null;
+    if (activeCategory.video && activeCategory.video.length > 0) {
+      return {
+        video: activeCategory.video,
+        poster: activeCategory.poster,
+        objectPosition: activeCategory.objectPosition || "72% 50%",
+        fit: activeCategory.fit || "cover",
+        scale: activeCategory.scale !== undefined ? activeCategory.scale : 1,
+        fadeLoop: Boolean(activeCategory.fadeLoop)
+      };
+    }
+    return null;
+  }, [activeCategory]);
 
   // Pause video when out of view (IntersectionObserver)
   useEffect(() => {
@@ -305,6 +369,21 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
     return () => observer.disconnect();
   }, []);
 
+  // Pause video when browser tab is hidden, resume when visible
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      const vid = bannerVideoRef.current;
+      if (!vid) return;
+      if (document.visibilityState === "hidden") {
+        vid.pause();
+      } else if (bannerInView && !prefersReducedMotion && !saveDataActive) {
+        vid.play().catch(() => {});
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [bannerInView, prefersReducedMotion, saveDataActive]);
+
   // Handle video play/pause lifecycle on category change / visibility / preferences
   useEffect(() => {
     const vid = bannerVideoRef.current;
@@ -316,8 +395,10 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
 
     if (
       bannerInView &&
-      currentCategoryVideo &&
+      document.visibilityState !== "hidden" &&
+      currentCategoryVideo?.video &&
       !prefersReducedMotion &&
+      !saveDataActive &&
       !videoFailed
     ) {
       try {
@@ -332,12 +413,73 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
     } else {
       vid.pause();
     }
-  }, [bannerInView, currentCategoryVideo, prefersReducedMotion, videoFailed, fadeKey]);
+  }, [bannerInView, currentCategoryVideo, prefersReducedMotion, saveDataActive, videoFailed, fadeKey]);
+
+  // Smooth fade-at-loop fallback for Chairs / any video clip marked with fadeLoop
+  useEffect(() => {
+    const video = bannerVideoRef.current;
+    if (!video || !currentCategoryVideo?.fadeLoop || prefersReducedMotion || saveDataActive) return;
+
+    let callbackId = null;
+    const FADE_WINDOW = 0.5; // 500ms fade duration near loop boundary
+
+    const handleLoopFade = () => {
+      if (!video) return;
+
+      if (!video.paused && video.duration && video.duration > FADE_WINDOW) {
+        const timeLeft = video.duration - video.currentTime;
+
+        if (timeLeft <= FADE_WINDOW && timeLeft > 0) {
+          // Fade out over last 500ms
+          const opacity = Math.max(0, Math.min(1, timeLeft / FADE_WINDOW));
+          video.style.opacity = String(opacity);
+        } else if (video.currentTime < 0.3) {
+          // Fade back in over first 300ms
+          const opacity = Math.max(0, Math.min(1, video.currentTime / 0.3));
+          video.style.opacity = String(opacity);
+        } else {
+          video.style.opacity = "1";
+        }
+
+        // Restart smoothly near end to avoid frozen/jump frames
+        if (timeLeft <= 0.04) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        }
+      }
+
+      if ("requestVideoFrameCallback" in video) {
+        callbackId = video.requestVideoFrameCallback(handleLoopFade);
+      } else {
+        callbackId = requestAnimationFrame(handleLoopFade);
+      }
+    };
+
+    if ("requestVideoFrameCallback" in video) {
+      callbackId = video.requestVideoFrameCallback(handleLoopFade);
+    } else {
+      callbackId = requestAnimationFrame(handleLoopFade);
+    }
+
+    return () => {
+      if (callbackId !== null) {
+        if (video && "cancelVideoFrameCallback" in video) {
+          try { video.cancelVideoFrameCallback(callbackId); } catch (e) {}
+        } else {
+          cancelAnimationFrame(callbackId);
+        }
+      }
+      if (video) video.style.opacity = "1";
+    };
+  }, [currentCategoryVideo, fadeKey, prefersReducedMotion, saveDataActive]);
 
   // Category selection only updates internal section state (NO window scroll, NO grid filter side-effects)
   const handleSelect = useCallback(
     (catId) => {
       if (catId === activeCatId) return;
+      if (bannerVideoRef.current) {
+        try { bannerVideoRef.current.pause(); } catch (e) {}
+      }
       setFading(true);
       setTimeout(() => {
         setActiveCatId(catId);
@@ -345,7 +487,7 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
         setBannerFailed(false);
         setVideoFailed(false);
         setFading(false);
-      }, 300); // 0.3s crossfade between categories
+      }, 400); // 400ms crossfade between categories per motion design spec
     },
     [activeCatId]
   );
@@ -547,13 +689,12 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
             className={`cs-banner${fading ? " cs-fade-out" : " cs-fade-in"}${isEmpty ? " cs-banner-empty" : ""}`}
             key={fadeKey}
           >
-            {/* Background: Looping video for categories with video, or static image / placeholder */}
-            {currentCategoryVideo && !prefersReducedMotion && !videoFailed ? (
-              <div className="cs-banner-img-wrap cs-banner-video-panel">
+            {/* LAYER 0: Background Media (Video or Poster / Product Image) */}
+            <div className="cs-banner-bg-layer" aria-hidden="true">
+              {currentCategoryVideo?.video && !prefersReducedMotion && !saveDataActive && !videoFailed ? (
                 <video
                   ref={bannerVideoRef}
-                  key={currentCategoryVideo.src}
-                  src={resolveVideoPath(currentCategoryVideo.src)}
+                  key={fadeKey}
                   className="cs-banner-video"
                   autoPlay
                   muted
@@ -562,36 +703,53 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                   preload="auto"
                   disablePictureInPicture
                   controlsList="nodownload nofullscreen noremoteplayback"
-                  poster={resolveVideoPath(currentCategoryVideo.poster) || activeCategory.bannerImage}
+                  poster={currentCategoryVideo.poster || activeCategory.bannerImage}
+                  aria-hidden="true"
+                  style={{
+                    objectFit: currentCategoryVideo.fit || "cover",
+                    objectPosition: currentCategoryVideo.objectPosition || "72% 50%",
+                    transform: `scale(${currentCategoryVideo.scale !== undefined ? currentCategoryVideo.scale : 1})`
+                  }}
                 >
-                  <source
-                    src={resolveVideoPath(currentCategoryVideo.src)}
-                    type="video/mp4"
-                    onError={() => setVideoFailed(true)}
-                  />
+                  {currentCategoryVideo.video.map((srcObj, idx) => (
+                    <source
+                      key={idx}
+                      src={resolveVideoPath(srcObj.src)}
+                      type={srcObj.type || (srcObj.src.endsWith(".webm") ? "video/webm" : "video/mp4")}
+                      onError={() => {
+                        if (idx === currentCategoryVideo.video.length - 1) {
+                          setVideoFailed(true);
+                        }
+                      }}
+                    />
+                  ))}
                 </video>
-                <div className="cs-banner-video-overlay" aria-hidden="true" />
-              </div>
-            ) : activeCategory.bannerImage && !isEmpty && !bannerFailed ? (
-              <div className="cs-banner-img-wrap">
+              ) : activeCategory.poster || activeCategory.bannerImage ? (
                 <img
-                  src={activeCategory.bannerImage}
-                  alt={activeCategory.name}
-                  className="cs-banner-img"
+                  src={activeCategory.poster || activeCategory.bannerImage}
+                  alt=""
+                  className="cs-banner-bg-img"
                   loading="eager"
-                  width="400"
-                  height="300"
+                  aria-hidden="true"
+                  style={{
+                    objectFit: activeCategory.fit || "cover",
+                    objectPosition: activeCategory.objectPosition || "72% 50%",
+                    transform: `scale(${activeCategory.scale !== undefined ? activeCategory.scale : 1})`
+                  }}
                   onError={() => setBannerFailed(true)}
                 />
-              </div>
-            ) : (
-              <div className="cs-banner-icon-placeholder" aria-hidden="true">
-                <span className="cs-banner-big-icon">{activeCategory.icon}</span>
-              </div>
-            )}
+              ) : (
+                <div className="cs-banner-icon-placeholder" aria-hidden="true">
+                  <span className="cs-banner-big-icon">{activeCategory.icon}</span>
+                </div>
+              )}
+            </div>
 
-            {/* Text overlay */}
-            <div className="cs-banner-overlay">
+            {/* LAYER 1: Dual Readability Scrims */}
+            <div className="cs-banner-scrim-layer" aria-hidden="true" />
+
+            {/* LAYER 2: Text Content & Actions */}
+            <div className="cs-banner-content">
               <h3 className="cs-banner-title">{activeCategory.name}</h3>
               <p className="cs-banner-count">
                 <strong>{activeCategory.productCount}</strong>{" "}

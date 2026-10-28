@@ -1,0 +1,185 @@
+/* =========================================================
+   KSAM DEAL - SHARED FULL-PAGE BACKGROUND VIDEO
+   Used on Wishlist & Deals pages
+   ========================================================= */
+
+.bg-video-wrap {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, #0b1f1a 0%, #050b09 100%);
+}
+
+.bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.bg-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+
+/* Fallback gradient if video fails or when reduced-motion/data-saver applies */
+.bg-video-wrap.is-fallback .bg-video {
+  display: none !important;
+}
+
+.bg-video-wrap.is-fallback {
+  background: radial-gradient(circle at 50% 30%, #0b1f1a 0%, #050b09 100%) !important;
+}
+
+/* Make body and page wrapper backgrounds transparent so video shines through */
+html body.has-bg-video,
+body.has-bg-video,
+body.has-bg-video #watchwishlist-root,
+body.has-bg-video #deal-root,
+body.has-bg-video .ksam-wishlist-page,
+body.has-bg-video .ksam-wishlist-main,
+body.has-bg-video .kx-page,
+body.has-bg-video .min-h-screen {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+body.has-bg-video {
+  overflow-x: hidden !important;
+}
+
+/* =========================================================
+   PART 3: READABILITY & ACCENT STYLES
+   ========================================================= */
+
+/* Headings and direct text on background */
+body.has-bg-video h1:not(.ksam-wishlist-card-title),
+body.has-bg-video h2:not(.ksam-wishlist-card-title),
+body.has-bg-video h3:not(.ksam-wishlist-card-title),
+body.has-bg-video .ksam-wishlist-banner-title,
+body.has-bg-video .ksam-wishlist-empty h2 {
+  color: #ffffff !important;
+}
+
+body.has-bg-video .ksam-wishlist-banner-subtitle,
+body.has-bg-video .ksam-wishlist-empty p,
+body.has-bg-video .ksam-wishlist-empty-filter p {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Translucent frosted glass banner on Wishlist page for clean contrast */
+body.has-bg-video .ksam-wishlist-banner-card {
+  background: rgba(11, 31, 26, 0.65) !important;
+  border: 1px solid rgba(29, 233, 182, 0.22) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Filter bar container inside wishlist banner */
+body.has-bg-video .ksam-wishlist-filter-bar {
+  background: rgba(10, 20, 16, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Pills, filter chips and tabs sitting directly on the background */
+body.has-bg-video .ksam-wishlist-chip {
+  background: rgba(15, 28, 22, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body.has-bg-video .ksam-wishlist-chip:hover {
+  background: rgba(20, 35, 28, 0.85) !important;
+  border-color: rgba(29, 233, 182, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* Active tab/chip highlighted using site green accent (#1de9b6) */
+body.has-bg-video .ksam-wishlist-chip.is-active,
+body.has-bg-video .ksam-wishlist-chip[aria-selected="true"] {
+  background: rgba(29, 233, 182, 0.18) !important;
+  border: 1px solid #1de9b6 !important;
+  color: #1de9b6 !important;
+  box-shadow: 0 0 14px rgba(29, 233, 182, 0.25) !important;
+}
+
+body.has-bg-video .ksam-wishlist-chip .ksam-wishlist-chip-count {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+body.has-bg-video .ksam-wishlist-chip.is-active .ksam-wishlist-chip-count,
+body.has-bg-video .ksam-wishlist-chip[aria-selected="true"] .ksam-wishlist-chip-count {
+  background: #1de9b6 !important;
+  color: #050b09 !important;
+}
+
+/* Green highlight accent (#1de9b6) */
+body.has-bg-video .ksam-wishlist-title-highlight {
+  color: #1de9b6 !important;
+  background: none !important;
+  -webkit-text-fill-color: #1de9b6 !important;
+}
+
+/* Clear button on Wishlist */
+body.has-bg-video .ksam-wishlist-clear-btn {
+  background: rgba(15, 28, 22, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(8px);
+}
+
+body.has-bg-video .ksam-wishlist-clear-btn:hover {
+  border-color: #1de9b6 !important;
+  color: #1de9b6 !important;
+}
+
+/* Empty State CTAs */
+body.has-bg-video .ksam-wishlist-cta-btn,
+body.has-bg-video .ksam-wishlist-reset-btn {
+  background: #1de9b6 !important;
+  color: #050b09 !important;
+  font-weight: 700 !important;
+  border: none !important;
+  box-shadow: 0 8px 24px rgba(29, 233, 182, 0.35) !important;
+}
+
+/* Deals page adjustments */
+body.has-bg-video .kx-page {
+  background: transparent !important;
+}
+
+body.has-bg-video .kx-mesh-bg,
+body.has-bg-video .kx-noise-overlay {
+  opacity: 0.15 !important;
+}
+
+body.has-bg-video .kx-page a[href*="deal"]:hover,
+body.has-bg-video .kx-page a[href*="index"]:hover,
+body.has-bg-video .kx-page a:hover {
+  color: #1de9b6 !important;
+}
+
+/* Accessibility: reduce motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .bg-video {
+    display: none !important;
+  }
+  .bg-video-wrap {
+    background: radial-gradient(circle at 50% 30%, #0b1f1a 0%, #050b09 100%) !important;
+  }
+}

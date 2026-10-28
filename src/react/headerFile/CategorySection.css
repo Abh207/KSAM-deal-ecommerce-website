@@ -154,7 +154,7 @@
   padding: 28px;
   display: flex;
   gap: 24px;
-  min-height: 420px;
+  min-height: calc(420px - 1.5rem);
   overflow: hidden;
   position: relative;
 }
@@ -163,7 +163,7 @@
   .cs-frame {
     padding: 20px;
     gap: 18px;
-    min-height: 380px;
+    min-height: calc(380px - 1.5rem);
   }
 }
 
@@ -404,117 +404,81 @@
 }
 
 
-/* ── Crossfade transitions (0.3s crossfade) ── */
+/* ── Crossfade transitions (0.4s crossfade) ── */
 .cs-fade-in {
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 
 .cs-fade-out {
   opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 
 
 /* ═══════════════════════════════════════════════════════════
-   FEATURED BANNER
+   FEATURED BANNER (Full-Bleed Media Background)
    ═══════════════════════════════════════════════════════════ */
 .cs-banner {
   position: relative;
   border-radius: var(--cs-radius-panel);
   overflow: hidden;
-  min-height: 260px;
+  height: calc(clamp(340px, 30vw, 440px) - 1.5rem);
   display: flex;
   align-items: stretch;
-  /* Dark emerald base gradient */
-  background: linear-gradient(135deg, #061a14, #0a2e24, #082018);
+  background: #030c0a; /* Sampled dark corner color so uncovered areas are invisible */
+}
+
+@media (max-width: 1023px) {
+  .cs-banner {
+    height: calc(300px - 1.5rem);
+  }
 }
 
 @media (max-width: 767px) {
   .cs-banner {
-    min-height: 190px;
+    height: calc(260px - 1.5rem);
   }
 }
 
-/* ── Banner product image (right side) ── */
-.cs-banner-img-wrap {
+/* ── LAYER 0: Background Media (Video or Image) ── */
+.cs-banner-bg-layer {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 55%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-top-right-radius: var(--cs-radius-panel);
-  border-bottom-right-radius: var(--cs-radius-panel);
-}
-
-.cs-banner-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  opacity: 0.7;
-  filter: drop-shadow(0 0 40px rgba(20, 240, 192, 0.25));
-  transition: opacity 0.5s ease;
-}
-
-/* Gradient overlay for static image */
-.cs-banner-img-wrap:not(.cs-banner-video-panel)::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, #061a14 15%, rgba(6, 26, 20, 0.6) 50%, transparent 80%);
-  z-index: 1;
-}
-
-/* ── Banner Video element ── */
-.cs-banner-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: 1;
-  transform: scale(1.12);
-  transform-origin: top left;
-}
-
-/* ── Banner Video overlay ── */
-.cs-banner-video-overlay {
-  position: absolute;
-  inset: 0;
-  /* Left-to-right gradient from banner green (#07251f) to transparent over the first 30%, light tint rgba(0,0,0,0.2), and corner backup gradient */
-  background:
-    radial-gradient(circle at 100% 100%, #07251f 0%, rgba(7, 37, 31, 0.9) 12%, transparent 26%),
-    linear-gradient(90deg, #07251f 0%, rgba(7, 37, 31, 0.7) 18%, transparent 30%),
-    rgba(0, 0, 0, 0.2);
-  z-index: 2;
   pointer-events: none;
+  z-index: 0;
 }
 
-@media (max-width: 767px) {
-  .cs-banner-img-wrap {
-    width: 50%;
-  }
-  .cs-banner-img-wrap:not(.cs-banner-video-panel)::before {
-    background: linear-gradient(90deg, #061a14 20%, rgba(6, 26, 20, 0.5) 60%, transparent 90%);
-  }
+.cs-banner-video,
+.cs-banner-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
-/* ── Empty state icon placeholder ── */
+/* Soft 4-sided edge blend for contain fit */
+.cs-banner-video[style*="contain"],
+.cs-banner-bg-img[style*="contain"] {
+  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 60%, transparent 100%);
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 60%, transparent 100%);
+}
+
+/* Empty state icon placeholder */
 .cs-banner-empty {
-  background: linear-gradient(135deg, #061a14, #0d3828, #082018);
+  background: linear-gradient(135deg, #030c0a, #07251f, #030c0a);
 }
 
 .cs-banner-icon-placeholder {
   position: absolute;
-  right: 10%;
+  right: 15%;
   top: 50%;
   transform: translateY(-50%);
   opacity: 0.15;
@@ -532,43 +496,78 @@
   }
 }
 
-
-/* ── Banner text overlay ── */
-.cs-banner-overlay {
-  position: relative;
-  z-index: 5;
-  padding: 32px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  max-width: 55%;
+/* ── LAYER 1: Scrims for Readability (Dual Gradient) ── */
+.cs-banner-scrim-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  /* Left-to-right gradient + subtle bottom fade */
+  background:
+    linear-gradient(90deg, rgba(3, 12, 10, 0.92) 0%, rgba(3, 12, 10, 0.75) 35%, rgba(3, 12, 10, 0.20) 70%, transparent 100%),
+    linear-gradient(to top, rgba(3, 12, 10, 0.65) 0%, rgba(3, 12, 10, 0.15) 25%, transparent 45%);
 }
 
 @media (max-width: 767px) {
+  .cs-banner-scrim-layer {
+    background:
+      linear-gradient(90deg, rgba(3, 12, 10, 0.90) 0%, rgba(3, 12, 10, 0.82) 55%, rgba(3, 12, 10, 0.65) 100%),
+      linear-gradient(to top, rgba(3, 12, 10, 0.70) 0%, transparent 40%);
+  }
+}
+
+/* ── LAYER 2: Text Content & Actions ── */
+.cs-banner-content,
+.cs-banner-overlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 36px 44px;
+  max-width: 46%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1023px) {
+  .cs-banner-content,
   .cs-banner-overlay {
-    padding: 20px 16px;
-    max-width: 65%;
+    padding: 28px 32px;
+    max-width: 52%;
+  }
+}
+
+@media (max-width: 767px) {
+  .cs-banner-content,
+  .cs-banner-overlay {
+    padding: 20px 20px;
+    max-width: 100%;
+    width: 100%;
   }
 }
 
 .cs-banner-title {
-  margin: 0;
-  font-size: clamp(24px, 3.5vw, 48px);
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3.5vw, 44px);
   font-weight: 800;
-  color: var(--cs-text);
-  line-height: 1.1;
+  color: #ffffff;
+  line-height: 1.15;
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
 }
 
 .cs-banner-count {
-  margin: 0;
-  font-size: 16px;
-  color: var(--cs-text-muted);
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: var(--cs-accent-bright);
+  font-weight: 600;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .cs-banner-count strong {
-  color: var(--cs-text);
+  color: #ffffff;
   font-weight: 800;
 }
 
@@ -598,37 +597,43 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 56px;
+  height: 52px;
   padding: 0 28px;
-  margin-top: 8px;
-  border: none;
+  margin-top: 6px;
+  border: 1.5px solid var(--cs-accent);
   border-radius: 999px;
-  background: var(--cs-accent);
-  color: #030b0b;
-  font-size: 16px;
+  background: transparent !important;
+  color: var(--cs-accent);
+  font-size: 15px;
   font-weight: 800;
   cursor: pointer;
   transition: all var(--cs-transition);
-  box-shadow: 0 0 24px rgba(20, 240, 192, 0.35);
+  box-shadow: 0 0 16px rgba(20, 240, 192, 0.2);
   width: fit-content;
+  outline: none;
 }
 
 .cs-banner-btn span {
+  color: var(--cs-accent);
   transition: transform var(--cs-transition);
 }
 
 .cs-banner-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(20, 240, 192, 0.5);
+  background: transparent !important;
+  border-color: var(--cs-accent-bright);
+  color: var(--cs-accent-bright);
+  box-shadow: 0 0 26px rgba(20, 240, 192, 0.45), inset 0 0 10px rgba(20, 240, 192, 0.15);
 }
 
 .cs-banner-btn:hover span {
+  color: var(--cs-accent-bright);
   transform: translateX(4px);
 }
 
 .cs-banner-btn:focus-visible {
-  outline: 2px solid var(--cs-text);
-  outline-offset: 2px;
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 3px;
 }
 
 /* Disabled state */

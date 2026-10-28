@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://abh207.github.io/KSAM-deal-ecommerce-website/sitemap.xml

@@ -25,6 +25,7 @@ export default defineConfig({
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),
+                beautyProduct: resolve(__dirname, "beauty-product.html"),
 
                 checkout: resolve(__dirname, "checkout.html"),
                 orderSuccess: resolve(
@@ -39,9 +40,11 @@ export default defineConfig({
                     __dirname,
                     "watchwishlist.html"
                 ),
+                wishlist: resolve(__dirname, "wishlist.html"),
                 cloths: resolve(__dirname, "clothes.html"),
                 profile: resolve(__dirname, "profile.html"),
                 deal: resolve(__dirname, "deal.html"),
+                deals: resolve(__dirname, "deals.html"),
                 forgotPassword: resolve(__dirname, "forgot-password.html"),
                 resetPassword: resolve(__dirname, "reset-password.html"),
                 verifyEmail: resolve(__dirname, "verify-email.html"),

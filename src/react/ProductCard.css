@@ -1,3 +1,14 @@
+@keyframes beautyCardFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 .beauty-product-card {
     position: relative;
     display: flex;
@@ -9,6 +20,7 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: 100%;
+    animation: beautyCardFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .beauty-product-card:hover {
@@ -21,7 +33,7 @@
 .beauty-product-image-container {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: calc(280px - 6rem);
     overflow: hidden;
     background: #f8f8f8;
 }
@@ -59,7 +71,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 20px;
+    padding: 16px 18px 18px;
 }
 
 .beauty-product-category {
@@ -68,7 +80,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #9b6b73;
+    color: var(--accent-dark, #0f9d76);
 }
 
 .beauty-product-name {
@@ -90,6 +102,13 @@
     font-size: 14px;
     line-height: 1.6;
     color: #666666;
+}
+
+/* Wishlist button active state */
+.beauty-card-wishlist-btn.is-active {
+    color: var(--accent, #1de9b6) !important;
+    border-color: var(--accent, #1de9b6) !important;
+    box-shadow: 0 0 16px var(--accent-glow, rgba(29, 233, 182, 0.45)) !important;
 }
 
 /* Price */
@@ -131,76 +150,116 @@
     margin-top: auto;
 }
 
-/* Quantity */
+/* Product Links */
+.beauty-product-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
 
-.beauty-quantity-control {
+.beauty-product-name-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.beauty-product-name-link:hover {
+    color: #16a34a;
+}
+
+/* Actions Row: [Square Cart Button] [View Product Button] */
+.beauty-product-actions {
     display: flex;
     align-items: center;
-    height: 44px;
-    border: 1px solid #dddddd;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #ffffff;
+    gap: 10px;
+    margin-top: 14px;
 }
 
-.beauty-quantity-control button {
-    width: 38px;
-    height: 100%;
-    border: none;
-    background: #f5f5f5;
-    color: #222222;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.beauty-quantity-control button:hover:not(:disabled) {
-    background: #e8e8e8;
-}
-
-.beauty-quantity-control button:disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-}
-
-.beauty-quantity-control span {
-    min-width: 30px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-/* Add To Cart */
-
-.beauty-add-cart-button {
-    flex: 1;
-    min-height: 44px;
-    border: none;
-    border-radius: 10px;
-    padding: 0 14px;
+/* Small Square Icon-Only Cart Button (~48x48px, radius 10-12px) */
+.beauty-quick-cart-btn {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border: 1px solid #111111;
+    border-radius: 12px;
     background: #111111;
     color: #ffffff;
-    font-size: 14px;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    outline: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.beauty-add-cart-button:hover:not(:disabled) {
+.beauty-quick-cart-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    opacity: 0.9;
+    background: #16a34a;
+    border-color: #16a34a;
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.35);
 }
 
-.beauty-add-cart-button:disabled {
+.beauty-quick-cart-btn.is-added {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(22, 163, 74, 0.45);
+    transform: scale(1.04);
+}
+
+.beauty-quick-cart-btn:disabled {
     cursor: not-allowed;
-    opacity: 0.45;
+    opacity: 0.4;
+    background: #888888;
+    border-color: #888888;
+}
+
+/* "View Product →" Button (matches product.html "You may also like" style) */
+.beauty-view-product-btn {
+    flex: 1;
+    height: 46px;
+    padding: 0 16px;
+    border-radius: 12px;
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.beauty-view-product-btn:hover {
+    background: #22c55e;
+    color: #ffffff;
+    border-color: #22c55e;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    transform: translateY(-2px);
+}
+
+.beauty-view-product-btn:hover .beauty-view-btn-arrow {
+    transform: translateX(4px);
+}
+
+.beauty-view-btn-arrow {
+    transition: transform 0.2s ease;
+    display: inline-block;
 }
 
 /* Tablet */
-
 @media (max-width: 768px) {
     .beauty-product-image-container {
-        height: 240px;
+        height: calc(240px - 6rem);
     }
 
     .beauty-product-content {
@@ -217,23 +276,25 @@
 }
 
 /* Mobile */
-
 @media (max-width: 480px) {
     .beauty-product-image-container {
-        height: 220px;
+        height: calc(220px - 6rem);
     }
 
     .beauty-product-actions {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        gap: 8px;
     }
 
-    .beauty-quantity-control {
-        width: 100%;
-        justify-content: center;
+    .beauty-quick-cart-btn {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
     }
 
-    .beauty-add-cart-button {
-        width: 100%;
+    .beauty-view-product-btn {
+        height: 44px;
+        font-size: 13px;
+        padding: 0 12px;
     }
 }

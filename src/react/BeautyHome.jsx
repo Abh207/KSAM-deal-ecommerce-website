@@ -1,25 +1,28 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 
 import products from "../api/beautyProducts.json";
 
-import Header from "./Header.jsx";
 import ProductCard from "./ProductCard.jsx";
-import Countdown from "./Countdown.jsx";
 import Toast from "./Toast.jsx";
 import { requireAuth } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
 import { addProductToCart, normalizeCartItem, resolveImagePath } from "../lib/cartHelper.js";
 
 import "./BeautyHome.css";
+import "./beauty-sections/beautySections.css";
+
+import BeautyBackgroundVideo from "./beauty-sections/BeautyBackgroundVideo.jsx";
+import PromoCarousel from "./beauty-sections/PromoCarousel.jsx";
+import CategoryTiles from "./beauty-sections/CategoryTiles.jsx";
+import TrendingSection from "./beauty-sections/TrendingSection.jsx";
+import RoutineTimeline from "./beauty-sections/RoutineTimeline.jsx";
+import IngredientSpotlight from "./beauty-sections/IngredientSpotlight.jsx";
+import ReviewCarousel from "./beauty-sections/ReviewCarousel.jsx";
+import BackToTop from "./beauty-sections/BackToTop.jsx";
 
 const CART_STORAGE_KEY = "cartProductLS";
 
 const BeautyHome = () => {
-    // -----------------------------
-    // Search
-    // -----------------------------
-    const [searchTerm, setSearchTerm] = useState("");
-
     // -----------------------------
     // Category
     // -----------------------------
@@ -34,6 +37,73 @@ const BeautyHome = () => {
     // Toast
     // -----------------------------
     const [toast, setToast] = useState(null);
+
+    // -----------------------------
+    // Hero Video Ref & Lifecycle
+    // -----------------------------
+    const heroRef = useRef(null);
+    const videoRef = useRef(null);
+
+    const resolveVideoUrl = (path) => {
+        if (!path) return "";
+        if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:")) return path;
+        const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+        const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+        const clean = path.replace(/^\/+/, "");
+        if (path.startsWith(normalizedBase)) return path;
+        return `${normalizedBase}${clean}`;
+    };
+
+    const heroVideoSrc = resolveVideoUrl("assets/videos/gemini_generated_video_99e67b16.mp4");
+
+    useEffect(() => {
+        const heroEl = heroRef.current;
+        const videoEl = videoRef.current;
+        if (!heroEl || !videoEl) return;
+
+        try {
+            videoEl.muted = true;
+            videoEl.defaultMuted = true;
+        } catch (e) {}
+
+        if (typeof IntersectionObserver === "undefined") {
+            videoEl.play().catch(() => {});
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && document.visibilityState !== "hidden") {
+                    videoEl.play().catch(() => {});
+                } else {
+                    videoEl.pause();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        observer.observe(heroEl);
+
+        const handleVisibilityChange = () => {
+            if (!videoRef.current) return;
+            if (document.visibilityState === "hidden") {
+                videoRef.current.pause();
+            } else if (heroRef.current) {
+                const rect = heroRef.current.getBoundingClientRect();
+                const inView = rect.top < window.innerHeight && rect.bottom > 0;
+                if (inView) {
+                    videoRef.current.play().catch(() => {});
+                }
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            observer.disconnect();
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []);
 
     // -----------------------------
     // Get cart from localStorage
@@ -109,23 +179,13 @@ const BeautyHome = () => {
     // Filter products
     // -----------------------------
     const filteredProducts = useMemo(() => {
-        const search = searchTerm.trim().toLowerCase();
-
         return products.filter((product) => {
-
-            const matchesCategory =
+            return (
                 selectedCategory === "All" ||
-                product.category === selectedCategory;
-
-            const matchesSearch =
-                search === "" ||
-                product.name.toLowerCase().includes(search) ||
-                product.brand.toLowerCase().includes(search) ||
-                product.category.toLowerCase().includes(search);
-
-            return matchesCategory && matchesSearch;
+                product.category === selectedCategory
+            );
         });
-    }, [searchTerm, selectedCategory]);
+    }, [selectedCategory]);
 
     // -----------------------------
     // Add product to cart
@@ -158,66 +218,29 @@ const BeautyHome = () => {
     return (
         <div className="beauty-page">
 
+            {/* Part 1: Full-Page Fixed Background Video & Overlay */}
+            <BeautyBackgroundVideo />
+
             {/* Shared Deals-style Navbar */}
             <Navbar />
 
-            {/* Header (Search and Category Filter Pills) */}
-            <Header
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                categories={categories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-            />
-
-            {/* Hero Section */}
+            {/* Hero Section - Background Video Only (First thing under navbar) */}
             <section
                 id="home"
                 className="beauty-hero"
+                ref={heroRef}
             >
-                <div className="beauty-hero-content">
-
-                    <p className="beauty-hero-small-title">
-                        DISCOVER YOUR BEAUTY
-                    </p>
-
-                    <h1>
-                        Beauty That
-                        <br />
-                        <span>Feels Like You</span>
-                    </h1>
-
-                    <p className="beauty-hero-description">
-                        Discover skincare, makeup, hair care and
-                        fragrances carefully selected for your
-                        everyday beauty routine.
-                    </p>
-
-                    <a
-                        href="#products"
-                        className="beauty-hero-button"
-                    >
-                        Shop Now
-                    </a>
-
-                </div>
-
-                <div className="beauty-hero-decoration">
-                    <div className="beauty-hero-circle"></div>
-
-                    <div className="beauty-hero-card">
-                        <span>NEW</span>
-                        <strong>Beauty Collection</strong>
-                    </div>
-                </div>
-            </section>
-
-            {/* Sale Section */}
-            <section
-                id="offers"
-                className="beauty-sale-section"
-            >
-                <Countdown />
+                <video
+                    ref={videoRef}
+                    className="beauty-hero-video"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                >
+                    <source src={heroVideoSrc} type="video/mp4" />
+                </video>
             </section>
 
             {/* Products */}
@@ -239,9 +262,33 @@ const BeautyHome = () => {
                     </div>
 
                     <p className="beauty-result-count">
-                        {filteredProducts.length} products
+                        {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
                     </p>
 
+                </div>
+
+                {/* Filter Chips row above the product boxes */}
+                <div
+                    id="categories"
+                    className="beauty-category-container beauty-filter-strip"
+                    role="tablist"
+                    aria-label="Filter products by category"
+                >
+                    {categories.map((category) => {
+                        const isSelected = selectedCategory === category;
+                        return (
+                            <button
+                                key={category}
+                                type="button"
+                                role="tab"
+                                aria-selected={isSelected}
+                                className={`beauty-category-button${isSelected ? " active" : ""}`}
+                                onClick={() => setSelectedCategory(category)}
+                            >
+                                {category}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {filteredProducts.length > 0 ? (
@@ -270,13 +317,12 @@ const BeautyHome = () => {
                         </h3>
 
                         <p>
-                            Try another search or category.
+                            Try another category.
                         </p>
 
                         <button
                             type="button"
                             onClick={() => {
-                                setSearchTerm("");
                                 setSelectedCategory("All");
                             }}
                         >
@@ -288,32 +334,16 @@ const BeautyHome = () => {
 
             </section>
 
-            {/* Bottom Offer */}
-            <section className="beauty-bottom-offer">
+            {/* Sections below Products Grid */}
+            <PromoCarousel onSelectCategory={setSelectedCategory} />
+            <CategoryTiles onSelectCategory={setSelectedCategory} />
+            <TrendingSection products={products} onAddToCart={handleAddToCart} />
+            <RoutineTimeline />
+            <IngredientSpotlight />
+            <ReviewCarousel />
 
-                <div>
-                    <p>
-                        SPECIAL OFFER
-                    </p>
-
-                    <h2>
-                        Glow More. Spend Less.
-                    </h2>
-
-                    <span>
-                        Enjoy amazing deals on your favourite
-                        beauty products.
-                    </span>
-                </div>
-
-                <a
-                    href="#products"
-                    className="beauty-offer-button"
-                >
-                    Explore Products
-                </a>
-
-            </section>
+            {/* Floating Back to Top Button */}
+            <BackToTop />
 
             {/* Toast */}
             {toast && (

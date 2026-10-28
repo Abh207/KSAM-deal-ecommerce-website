@@ -17,27 +17,32 @@
             "icon": "⌚",
             "color": "#edf9f8",
             "link": "./watchshop.html",
-            "bannerImage": ""
+            "bannerImage": "",
+            "video": [
+                { "src": "assets/videos/watches-banner.webm", "type": "video/webm" },
+                { "src": "assets/videos/watches-banner.mp4", "type": "video/mp4" }
+            ],
+            "poster": "assets/videos/watches-banner-poster.jpg",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
         },
         {
-            "id": "chairs",
-            "name": "Chairs",
-            "description": "Comfortable & stylish chairs",
+            "id": "beauty",
+            "name": "Beauty",
+            "description": "Beauty & personal care",
             "productIds": [],
-            "icon": "🪑",
-            "color": "#f3edff",
-            "link": "./moreChairProd.html",
-            "bannerImage": ""
-        },
-        {
-            "id": "electronics",
-            "name": "Electronics",
-            "description": "Smart gadgets & devices",
-            "productIds": [],
-            "icon": "⚡",
-            "color": "#e8f1ff",
-            "link": "./fashionSpeaker.html",
-            "bannerImage": ""
+            "icon": "✨",
+            "color": "#fff5e8",
+            "link": "./beauty.html",
+            "bannerImage": "",
+            "video": [
+                { "src": "assets/videos/Skincare_bottle_product_animation_20261027193838.mp4", "type": "video/mp4" }
+            ],
+            "poster": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
         },
         {
             "id": "Shoes",
@@ -47,40 +52,34 @@
             "icon": "👟",
             "color": "#f0f8ff",
             "link": "./shoes.html",
-            "bannerImage": ""
+            "bannerImage": "",
+            "video": [
+                { "src": "assets/videos/shoes-banner.webm", "type": "video/webm" },
+                { "src": "assets/videos/shoes-banner.mp4", "type": "video/mp4" }
+            ],
+            "poster": "assets/videos/shoes-banner-poster.jpg",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
         },
-
         {
-            "id": "fashion",
-            "name": "Fashion",
-            "description": "Trending styles & clothing",
+            "id": "chairs",
+            "name": "Chairs",
+            "description": "Comfortable & stylish chairs",
             "productIds": [],
-            "icon": "👕",
-            "color": "#fff0f5",
-            "link": "./Product.html",
-            "bannerImage": ""
-        },
-
-        {
-            "id": "beauty",
-            "name": "Beauty",
-            "description": "Beauty & personal care",
-            "productIds": [],
-            "icon": "✨",
-            "color": "#fff5e8",
-            "link": "./beauty.html",
-            "bannerImage": ""
-        },
-
-        {
-            "id": "cloths",
-            "name": "Clothing",
-            "description": "Stylish clothing for every occasion",
-            "productIds": [],
-            "icon": "👕",
-            "color": "#eefbea",
-            "link": "./clothes.html",
-            "bannerImage": ""
+            "icon": "🪑",
+            "color": "#f3edff",
+            "link": "./moreChairProd.html",
+            "bannerImage": "",
+            "video": [
+                { "src": "assets/videos/chairs-bed-loop.webm", "type": "video/webm" },
+                { "src": "assets/videos/chairs-bed.mp4", "type": "video/mp4" }
+            ],
+            "poster": "assets/videos/chairs-bed-poster.jpg",
+            "objectPosition": "70% 55%",
+            "fit": "cover",
+            "scale": 1,
+            "fadeLoop": true
         },
         {
             "id": "Speakers",
@@ -90,7 +89,57 @@
             "icon": "🔊",
             "color": "#f0f8ff",
             "link": "./audio.html",
-            "bannerImage": ""
+            "bannerImage": "",
+            "video": null,
+            "poster": "",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
+        },
+        {
+            "id": "cloths",
+            "name": "Clothing",
+            "description": "Stylish clothing for every occasion",
+            "productIds": [],
+            "icon": "👕",
+            "color": "#eefbea",
+            "link": "./clothes.html",
+            "bannerImage": "",
+            "video": null,
+            "poster": "",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
+        },
+        {
+            "id": "electronics",
+            "name": "Electronics",
+            "description": "Smart gadgets & devices",
+            "productIds": [],
+            "icon": "⚡",
+            "color": "#e8f1ff",
+            "link": "./fashionSpeaker.html",
+            "bannerImage": "",
+            "video": null,
+            "poster": "",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
+        },
+        {
+            "id": "fashion",
+            "name": "Fashion",
+            "description": "Trending styles & clothing",
+            "productIds": [],
+            "icon": "👕",
+            "color": "#fff0f5",
+            "link": "./Product.html",
+            "bannerImage": "",
+            "video": null,
+            "poster": "",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
         }
     ]
 }

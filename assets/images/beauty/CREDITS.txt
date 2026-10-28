@@ -1,0 +1,94 @@
+# KSAM Deal - Beauty Section Image Credits
+
+All images are sourced from Unsplash under the Unsplash Free License.
+
+- **promo-1.jpg**
+  Description: Skincare flat lay
+  Photographer: Curology
+  Source URL: https://unsplash.com/photos/1556228720-195a672e8a03
+  License: Free to use under Unsplash License
+
+- **promo-2.jpg**
+  Description: Makeup cosmetics and brushes
+  Photographer: Freestocks
+  Source URL: https://unsplash.com/photos/1512496015851-a90fb38ba796
+  License: Free to use under Unsplash License
+
+- **promo-3.jpg**
+  Description: Luxury perfume bottle
+  Photographer: Laura Chouette
+  Source URL: https://unsplash.com/photos/1592945403244-b3fbafd7f539
+  License: Free to use under Unsplash License
+
+- **promo-4.jpg**
+  Description: Hair care and shampoo bottles
+  Photographer: Element5 Digital
+  Source URL: https://unsplash.com/photos/1535585209827-a15fcdbc4c2d
+  License: Free to use under Unsplash License
+
+- **promo-5.jpg**
+  Description: Body care lotion
+  Photographer: Content Pixie
+  Source URL: https://unsplash.com/photos/1571781926291-c477ebfd024b
+  License: Free to use under Unsplash License
+
+- **promo-6.jpg**
+  Description: Festive glow serum dropper
+  Photographer: Laura Chouette
+  Source URL: https://unsplash.com/photos/1616683693504-3ea7e9ad6fec
+  License: Free to use under Unsplash License
+
+- **tile-skincare.jpg**
+  Description: Skincare moisturizing cream
+  Photographer: Content Pixie
+  Source URL: https://unsplash.com/photos/1570172619644-dfd03ed5d881
+  License: Free to use under Unsplash License
+
+- **tile-makeup.jpg**
+  Description: Cosmetics makeup tools
+  Photographer: Ashley Piszek
+  Source URL: https://unsplash.com/photos/1522337360788-8b13dee7a37e
+  License: Free to use under Unsplash License
+
+- **tile-fragrance.jpg**
+  Description: Fragrance and perfume mist
+  Photographer: Valeriia Miller
+  Source URL: https://unsplash.com/photos/1547887537-6158d64c35b3
+  License: Free to use under Unsplash License
+
+- **tile-haircare.jpg**
+  Description: Hair salon care
+  Photographer: Shari Sirotnak
+  Source URL: https://unsplash.com/photos/1527799820374-dcf8d9d4a388
+  License: Free to use under Unsplash License
+
+- **tile-bodycare.jpg**
+  Description: Spa body scrub and bath wellness
+  Photographer: Engin Akyurt
+  Source URL: https://unsplash.com/photos/1540555700478-4be289fbecef
+  License: Free to use under Unsplash License
+
+- **ingredient-vitc.jpg**
+  Description: Vitamin C fresh orange slices
+  Photographer: Mae Mu
+  Source URL: https://unsplash.com/photos/1582979512210-99b6a53386f9
+  License: Free to use under Unsplash License
+
+- **ingredient-hyaluronic.jpg**
+  Description: Hyaluronic acid pure droplets
+  Photographer: Gabriella Clare Marino
+  Source URL: https://unsplash.com/photos/1601049541289-9b1b7bbbfe19
+  License: Free to use under Unsplash License
+
+- **ingredient-aloe.jpg**
+  Description: Fresh organic aloe vera
+  Photographer: Pisces Studio
+  Source URL: https://unsplash.com/photos/1596755389378-c31d21fd1273
+  License: Free to use under Unsplash License
+
+- **ingredient-rose.jpg**
+  Description: Organic rose petals extract
+  Photographer: Georgia de Lotz
+  Source URL: https://unsplash.com/photos/1518709268805-4e9042af9f23
+  License: Free to use under Unsplash License
+

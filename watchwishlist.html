@@ -2,38 +2,62 @@
 <html lang="en">
 
 <head>
-    <link rel="icon" type="image/x-icon" href="%BASE_URL%favicon.ico">
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>My Wishlist &amp; Saved Deals | KSAM Deal</title>
+    <meta name="description" content="View and manage your saved products and favorite deals in one place on KSAM Deal.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://abh207.github.io/KSAM-deal-ecommerce-website/watchwishlist.html">
+    <meta name="theme-color" content="#0b1f1a">
 
-    <title>My Wishlist | KSAM Deal</title>
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="48x48" href="%BASE_URL%assets/images/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="%BASE_URL%assets/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="%BASE_URL%assets/images/favicon-192x192.png">
+    <link rel="apple-touch-icon" href="%BASE_URL%assets/images/apple-touch-icon.png">
 
-    <meta
-        name="description"
-        content="View your saved favorites and verified deals across all categories at KSAM Deal."
-    >
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="KSAM Deal">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://abh207.github.io/KSAM-deal-ecommerce-website/watchwishlist.html">
+    <meta property="og:title" content="My Wishlist &amp; Saved Deals | KSAM Deal">
+    <meta property="og:description" content="View and manage your saved products and favorite deals in one place on KSAM Deal.">
+    <meta property="og:image" content="https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://abh207.github.io/KSAM-deal-ecommerce-website/watchwishlist.html">
+    <meta name="twitter:title" content="My Wishlist &amp; Saved Deals | KSAM Deal">
+    <meta name="twitter:description" content="View and manage your saved products and favorite deals in one place on KSAM Deal.">
+    <meta name="twitter:image" content="https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Background Video Styles -->
+    <link rel="stylesheet" href="./assets/css/bg-video.css">
 </head>
 
+<body style="margin: 0; background: transparent; color: #ffffff;">
 
-<body style="margin: 0; background: #000000; color: #ffffff;">
+    <!-- Shared Background Video Layer -->
+    <div class="bg-video-wrap" aria-hidden="true">
+        <video class="bg-video" autoplay muted loop playsinline preload="auto" poster="./assets/videos/gemini_generated_video_b2afb415_1-poster.jpg">
+            <source src="./assets/videos/gemini_generated_video_b2afb415_1.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
 
     <div id="watchwishlist-root"></div>
 
+    <!-- React entry file -->
+    <script type="module" src="./src/react-shop/watchwishlistMain.jsx"></script>
 
-    <script
-        type="module"
-        src="./src/react-shop/watchwishlistMain.jsx"
-    ></script>
-
+    <!-- Shared Background Video Controller -->
+    <script src="./assets/js/bg-video.js"></script>
 </body>
 
 </html>

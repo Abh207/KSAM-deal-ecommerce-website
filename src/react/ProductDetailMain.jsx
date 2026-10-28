@@ -189,6 +189,63 @@ function ProductDetailPage() {
     return unsub;
   }, [product]);
 
+  // Dynamic SEO title, meta description, and Product JSON-LD
+  useEffect(() => {
+    if (!product) return;
+
+    // 1. Dynamic Title
+    document.title = `${product.name} | Buy Online at KSAM Deal`;
+
+    // 2. Dynamic Description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        product.description || `Buy ${product.name} at discounted price on KSAM Deal.`
+      );
+    }
+
+    // 3. Dynamic Product JSON-LD
+    let script = document.getElementById("product-jsonld");
+    if (!script) {
+      script = document.createElement("script");
+      script.id = "product-jsonld";
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+
+    const priceNum = typeof product.price === "number"
+      ? product.price
+      : parseFloat(String(product.price).replace(/[^0-9.]/g, "")) || 0;
+
+    const fullImageUrl = product.image
+      ? (product.image.startsWith("http")
+          ? product.image
+          : `${window.location.origin}${resolveImagePath(product.image)}`)
+      : "https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png";
+
+    const jsonLdData = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": product.name,
+      "image": fullImageUrl,
+      "description": product.description || `Buy ${product.name} on KSAM Deal.`,
+      "brand": {
+        "@type": "Brand",
+        "name": product.brand || product.category || "KSAM Deal"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": window.location.href,
+        "priceCurrency": "INR",
+        "price": priceNum,
+        "availability": "https://schema.org/InStock"
+      }
+    };
+
+    script.textContent = JSON.stringify(jsonLdData);
+  }, [product]);
+
   const handleToggleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
