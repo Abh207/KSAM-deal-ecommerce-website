@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Shoes & Footwear Deals Online | KSAM Deal</title>
+    <title>Shoes &amp; Footwear Deals Online | KSAM Deal</title>
     <meta name="description" content="Explore discounted sneakers, running shoes and formal footwear. Compare deals across stores and buy on KSAM Deal.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://abh207.github.io/KSAM-deal-ecommerce-website/shoes.html">
@@ -21,14 +21,14 @@
     <meta property="og:site_name" content="KSAM Deal">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://abh207.github.io/KSAM-deal-ecommerce-website/shoes.html">
-    <meta property="og:title" content="Shoes & Footwear Deals Online | KSAM Deal">
+    <meta property="og:title" content="Shoes &amp; Footwear Deals Online | KSAM Deal">
     <meta property="og:description" content="Explore discounted sneakers, running shoes and formal footwear. Compare deals across stores and buy on KSAM Deal.">
     <meta property="og:image" content="https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://abh207.github.io/KSAM-deal-ecommerce-website/shoes.html">
-    <meta name="twitter:title" content="Shoes & Footwear Deals Online | KSAM Deal">
+    <meta name="twitter:title" content="Shoes &amp; Footwear Deals Online | KSAM Deal">
     <meta name="twitter:description" content="Explore discounted sneakers, running shoes and formal footwear. Compare deals across stores and buy on KSAM Deal.">
     <meta name="twitter:image" content="https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png">
 
@@ -39,13 +39,59 @@
     >
 </head>
 
-<body>
+<body style="background: transparent; margin: 0; overflow-x: hidden;">
+
+    <!-- Background Video for the whole page except the hero (Part 2) -->
+    <div class="bg-video-wrap" aria-hidden="true">
+        <video id="page-bg-video" class="bg-video" autoplay muted loop playsinline preload="auto">
+            <source src="./assets/videos/shoes-bg.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
 
     <div id="shoes-root"></div>
 
     <script>
     console.log("SHOES HTML IS RUNNING");
-</script>
+    // Background video lifecycle & performance
+    (function() {
+        var video = document.getElementById("page-bg-video");
+        var wrap = document.querySelector(".bg-video-wrap");
+        if (!video || !wrap) return;
+
+        var prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var saveData = navigator.connection && navigator.connection.saveData;
+
+        if (prefersReducedMotion || saveData) {
+            video.pause();
+            wrap.classList.add("bg-fallback");
+            return;
+        }
+
+        video.addEventListener("error", function() {
+            wrap.classList.add("bg-fallback");
+        });
+
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === "hidden") {
+                video.pause();
+            } else {
+                video.play().catch(function() {});
+            }
+        });
+
+        var playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(function() {
+                var startPlay = function() {
+                    video.play().catch(function() {});
+                };
+                window.addEventListener("pointerdown", startPlay, { once: true });
+                window.addEventListener("keydown", startPlay, { once: true });
+            });
+        }
+    })();
+    </script>
 
     <script
         type="module"

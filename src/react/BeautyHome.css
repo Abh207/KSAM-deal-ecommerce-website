@@ -314,8 +314,8 @@ html, body {
     }
 }
 
-/* Tablet */
-@media (max-width: 800px) {
+/* Tablet (641px to 800px) */
+@media (max-width: 800px) and (min-width: 641px) {
     .beauty-products-section {
         margin: 24px auto 36px;
         padding: 0 16px;
@@ -327,27 +327,39 @@ html, body {
     }
 }
 
-/* Mobile */
-@media (max-width: 550px) {
+/* Part 4: Mobile (640px down to 320px) - Exactly 2 columns per row */
+@media (max-width: 640px) {
     .beauty-products-section {
         margin: 20px auto 32px;
-        padding: 0 14px;
+        padding: 0 12px;
     }
 
     .beauty-section-heading {
         align-items: flex-start;
         flex-direction: column;
         gap: 8px;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
 
     .beauty-products-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        width: 100% !important;
     }
 
     .beauty-toast {
         right: 15px;
         bottom: 15px;
+    }
+}
+
+@media (max-width: 360px) {
+    .beauty-products-section {
+        padding: 0 8px;
+    }
+
+    .beauty-products-grid {
+        gap: 10px !important;
     }
 }

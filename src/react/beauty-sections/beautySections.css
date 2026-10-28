@@ -740,6 +740,61 @@
     gap: 6px;
 }
 
+/* Part 4: 2 cards per screen for Trending Now on mobile while keeping horizontal scroll */
+@media (max-width: 640px) {
+    .beauty-trending-track {
+        gap: 12px;
+        padding-bottom: 6px;
+    }
+
+    .beauty-trending-card {
+        flex: 0 0 calc(50% - 6px);
+        min-width: 145px;
+        max-width: 210px;
+        border-radius: 16px;
+    }
+
+    .beauty-trending-img-link {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .beauty-trending-info {
+        padding: 10px 10px 12px;
+    }
+
+    .beauty-trending-name {
+        font-size: 0.88rem;
+        margin-bottom: 8px;
+        line-height: 1.25;
+    }
+
+    .beauty-trending-price-row {
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .beauty-trending-curr-price {
+        font-size: 0.98rem;
+    }
+
+    .beauty-quick-cart-btn.compact {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        border-radius: 8px;
+    }
+
+    .beauty-view-product-btn.compact {
+        min-width: unset;
+        max-width: unset;
+        height: 34px;
+        padding: 0 8px;
+        font-size: 11.5px;
+        gap: 4px;
+    }
+}
+
 /* --------------------------------------------------------------------------
    7. BEAUTY ROUTINE STEPS (ANIMATED TIMELINE)
    -------------------------------------------------------------------------- */

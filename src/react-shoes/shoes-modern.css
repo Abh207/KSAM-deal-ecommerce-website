@@ -1,0 +1,1149 @@
+/* =========================================================
+   KSAM DEAL - SHOES MODERN REDESIGN STYLES
+   Borders removed, Full-Screen Hero Video, Beauty-style Cards,
+   Promo Carousel, and Customer Feedback Marquee
+   ========================================================= */
+
+@import "../react/ProductCard.css";
+@import "../react/beauty-sections/beautySections.css";
+
+/* ---------------------------------------------------------
+   PAGE & GLOBAL RESETS (Part 5: Remove borders & page frame)
+   --------------------------------------------------------- */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #0b1f1a;
+}
+
+.shoes-page {
+    min-height: 100vh;
+    padding-top: 72px;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+    background: transparent !important;
+    color: #ffffff;
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
+    border: none !important;
+    box-shadow: none !important;
+    overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------
+   PART 2: FIXED BACKGROUND VIDEO FOR THE WHOLE PAGE (EXCEPT HERO)
+   --------------------------------------------------------- */
+.bg-video-wrap {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bg-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0.55));
+}
+
+.bg-fallback {
+    background: linear-gradient(135deg, #0b1f1a 0%, #050b09 100%) !important;
+}
+
+/* ---------------------------------------------------------
+   PART 1: HERO SECTION & TOP-LEFT TEXT BLOCK
+   --------------------------------------------------------- */
+.ksam-shoe-hero {
+    position: relative;
+    z-index: 1; /* Hero covers fixed background video */
+    width: 100%;
+    height: calc(100vh - 72px);
+    height: calc(100svh - 72px);
+    height: calc(100dvh - 72px);
+    min-height: 520px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #000000;
+}
+
+.ksam-hero-video,
+.ksam-hero-video-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border: none !important;
+    z-index: 0;
+}
+
+/* Left-to-right dark gradient overlay inside hero (covers top-left, does not darken right side) */
+.ksam-hero-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.35) 35%, transparent 60%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Hero text block on the TOP-LEFT side with soft fade-in animation */
+@keyframes heroTextFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ksam-shoe-hero .ksam-hero-content {
+    position: absolute !important;
+    top: 12vh !important;
+    left: 6vw !important;
+    bottom: auto !important;
+    transform: none !important;
+    padding-left: 0 !important;
+    max-width: 440px !important;
+    width: auto !important;
+    z-index: 2 !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+    overflow: visible !important;
+    animation: heroTextFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.ksam-shoe-hero .ksam-hero-content h1,
+.ksam-shoe-hero .ksam-hero-title,
+.ksam-hero-title {
+    margin: 0 0 10px !important;
+    max-width: 440px !important;
+    font-size: clamp(1.4rem, 2.6vw, 2.4rem) !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5) !important;
+    overflow: visible !important;
+    white-space: normal !important;
+}
+
+.ksam-shoe-hero .ksam-hero-content h1 span.ksam-hero-accent,
+.ksam-shoe-hero .ksam-hero-accent,
+.ksam-hero-accent {
+    color: #1de9b6 !important;
+    background: linear-gradient(90deg, #1de9b6, #00e676) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    display: inline-block !important;
+    padding-bottom: 0.15em !important;
+    line-height: 1.2 !important;
+    overflow: visible !important;
+}
+
+.ksam-shoe-hero .ksam-hero-content > p,
+.ksam-shoe-hero .ksam-hero-desc,
+.ksam-hero-desc {
+    margin: 0 !important;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem) !important;
+    line-height: 1.5 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    max-width: 420px !important;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5) !important;
+    overflow: visible !important;
+}
+
+@media (max-width: 1023px) {
+    .ksam-shoe-hero .ksam-hero-content {
+        max-width: 60% !important;
+        top: 12vh !important;
+        left: 6vw !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .ksam-hero-overlay {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.50) 45%, transparent 75%);
+    }
+    .ksam-shoe-hero .ksam-hero-content {
+        top: 10vh !important;
+        left: 5vw !important;
+        max-width: 75% !important;
+        padding-left: 0 !important;
+    }
+    .ksam-shoe-hero .ksam-hero-content h1,
+    .ksam-shoe-hero .ksam-hero-title,
+    .ksam-hero-title {
+        font-size: clamp(1.2rem, 5.5vw, 1.6rem) !important;
+        line-height: 1.2 !important;
+        margin-bottom: 8px !important;
+        white-space: normal !important;
+    }
+    .ksam-shoe-hero .ksam-hero-content > p,
+    .ksam-shoe-hero .ksam-hero-desc,
+    .ksam-hero-desc {
+        font-size: 0.85rem !important;
+        max-width: 75% !important;
+        line-height: 1.45 !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ksam-hero-content {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ---------------------------------------------------------
+   PART 4: CENTERED HEADINGS BLOCK
+   --------------------------------------------------------- */
+.shoe-section-header-centered,
+.shoe-products-heading-block {
+    text-align: center;
+    margin: 52px auto 36px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+}
+
+.shoe-pill-badge,
+.shoe-heading-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(15, 157, 118, 0.22) !important;
+    border: 1px solid rgba(29, 233, 182, 0.45) !important;
+    color: #1de9b6 !important;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.shoe-section-title,
+.shoe-heading-title {
+    margin: 0 0 10px;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    color: #ffffff !important;
+    text-align: center;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.shoe-section-title span,
+.shoe-heading-title span,
+.shoe-gradient-text {
+    color: #16c965;
+    background: linear-gradient(135deg, #16c965, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.shoe-section-subtitle,
+.shoe-heading-subtitle {
+    margin: 0;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-weight: 500;
+    text-align: center;
+    max-width: 620px;
+    line-height: 1.5;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.shoe-clear-filter-pill {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    background: rgba(15, 157, 118, 0.22) !important;
+    border: 1px solid rgba(29, 233, 182, 0.45) !important;
+    color: #ffffff !important;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+}
+
+.shoe-clear-filter-pill:hover {
+    background: #16c965 !important;
+    border-color: #16c965 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(22, 201, 101, 0.3);
+}
+
+/* ---------------------------------------------------------
+   PART 1 & 2: FULL-WIDTH PRODUCTS GRID & BEAUTY CARDS
+   --------------------------------------------------------- */
+.shoe-products-section {
+    padding: 0 0 60px;
+    background: transparent !important;
+    width: 100%;
+}
+
+.shoe-product-area {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.shoe-grid,
+.beauty-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 1100px) and (min-width: 801px) {
+    .shoe-grid,
+    .beauty-products-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 800px) and (min-width: 641px) {
+    .shoe-grid,
+    .beauty-products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
+
+/* Beauty Card Customizations for Shoes (Desktop / Default) */
+.shoe-beauty-card {
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07) !important;
+    border: none !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.shoe-beauty-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
+}
+
+.shoe-beauty-card .beauty-product-image-container {
+    height: 230px !important;
+    position: relative !important;
+    background: #f8f8f8 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+
+.shoe-beauty-card .shoe-card-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    padding: 14px !important;
+    transition: transform 0.4s ease !important;
+}
+
+.shoe-beauty-card:hover .shoe-card-img {
+    transform: scale(1.06) !important;
+}
+
+.shoe-beauty-card .beauty-discount-badge {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    padding: 5px 12px !important;
+    border-radius: 20px !important;
+    background: #111111 !important;
+    color: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.3px !important;
+    z-index: 2 !important;
+}
+
+.shoe-beauty-card .beauty-card-wishlist-btn {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    z-index: 2 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease !important;
+}
+
+.shoe-beauty-card .beauty-card-wishlist-btn:hover {
+    border-color: #ffffff !important;
+    transform: scale(1.08) !important;
+}
+
+.shoe-beauty-card .beauty-card-wishlist-btn.is-active {
+    border-color: #16c965 !important;
+    color: #16c965 !important;
+    box-shadow: 0 0 16px rgba(22, 201, 101, 0.45) !important;
+}
+
+.shoe-beauty-card .beauty-product-content {
+    padding: 18px 20px 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+.shoe-beauty-card .beauty-product-category {
+    margin: 0 0 6px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.2px !important;
+    color: #16a34a !important;
+}
+
+.shoe-beauty-card .beauty-product-name {
+    margin: 0 0 6px !important;
+    font-size: 19px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    color: #111827 !important;
+}
+
+.shoe-beauty-card .beauty-product-name-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    transition: color 0.2s ease !important;
+}
+
+.shoe-beauty-card .beauty-product-name-link:hover {
+    color: #16a34a !important;
+}
+
+.shoe-beauty-card .beauty-product-brand {
+    margin: 0 0 10px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #6b7280 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.shoe-beauty-card .beauty-product-description {
+    margin: 0 0 14px !important;
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+    color: #6b7280 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    min-height: 40px !important;
+}
+
+.shoe-beauty-card .beauty-product-price {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 8px !important;
+    margin-bottom: 6px !important;
+}
+
+.shoe-beauty-card .beauty-current-price {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    color: #111827 !important;
+}
+
+.shoe-beauty-card .beauty-original-price {
+    font-size: 14px !important;
+    color: #9ca3af !important;
+    text-decoration: line-through !important;
+}
+
+.shoe-beauty-card .beauty-stock {
+    margin: 0 0 16px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: #4b6354 !important;
+}
+
+.shoe-beauty-card .beauty-product-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: auto !important;
+}
+
+.shoe-beauty-card .beauty-quick-cart-btn {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 12px !important;
+    background: #111111 !important;
+    color: #ffffff !important;
+    border: 1px solid #111111 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    outline: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.shoe-beauty-card .beauty-quick-cart-btn:hover:not(:disabled) {
+    background: #16c965 !important;
+    border-color: #16c965 !important;
+    box-shadow: 0 6px 18px rgba(22, 201, 101, 0.35) !important;
+    transform: translateY(-2px) !important;
+}
+
+.shoe-beauty-card .beauty-quick-cart-btn.is-added {
+    background: #16c965 !important;
+    border-color: #16c965 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(22, 201, 101, 0.45) !important;
+}
+
+.shoe-beauty-card .beauty-view-product-btn {
+    flex: 1 !important;
+    height: 48px !important;
+    padding: 0 16px !important;
+    border-radius: 12px !important;
+    background: #f0fdf4 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.shoe-beauty-card .beauty-view-product-btn:hover {
+    background: #16c965 !important;
+    color: #ffffff !important;
+    border-color: #16c965 !important;
+    box-shadow: 0 4px 14px rgba(22, 201, 101, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.shoe-beauty-card .beauty-view-product-btn:hover .beauty-view-btn-arrow {
+    transform: translateX(4px) !important;
+}
+
+/* Part 4: Mobile View (640px down to 320px) - Exactly 2 columns per row */
+@media (max-width: 640px) {
+    .shoe-product-area {
+        padding: 0 12px;
+    }
+
+    .shoe-grid,
+    .beauty-products-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .shoe-beauty-card {
+        border-radius: 16px !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .shoe-beauty-card .beauty-product-image-container {
+        height: auto !important;
+        aspect-ratio: 1 / 1 !important;
+    }
+
+    .shoe-beauty-card .shoe-card-img {
+        padding: 6px !important;
+        object-fit: contain !important;
+    }
+
+    .shoe-beauty-card .beauty-discount-badge {
+        top: 8px !important;
+        left: 8px !important;
+        padding: 3px 8px !important;
+        font-size: 0.65rem !important;
+        border-radius: 12px !important;
+        letter-spacing: 0.2px !important;
+    }
+
+    .shoe-beauty-card .beauty-card-wishlist-btn {
+        top: 8px !important;
+        right: 8px !important;
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        font-size: 13px !important;
+    }
+
+    .shoe-beauty-card .beauty-product-content {
+        padding: 10px 10px 12px !important;
+        min-width: 0 !important;
+    }
+
+    .shoe-beauty-card .beauty-product-category {
+        font-size: 0.65rem !important;
+        margin: 0 0 3px !important;
+        letter-spacing: 0.6px !important;
+    }
+
+    .shoe-beauty-card .beauty-product-name {
+        font-size: 0.95rem !important;
+        line-height: 1.25 !important;
+        margin: 0 0 3px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        word-break: break-word !important;
+    }
+
+    .shoe-beauty-card .beauty-product-brand {
+        font-size: 0.78rem !important;
+        margin: 0 0 6px !important;
+    }
+
+    .shoe-beauty-card .beauty-product-description {
+        font-size: 0.78rem !important;
+        line-height: 1.35 !important;
+        margin: 0 0 8px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        min-height: unset !important;
+    }
+
+    .shoe-beauty-card .beauty-product-price {
+        gap: 6px !important;
+        margin-bottom: 4px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .shoe-beauty-card .beauty-current-price {
+        font-size: 1.05rem !important;
+    }
+
+    .shoe-beauty-card .beauty-original-price {
+        font-size: 0.78rem !important;
+    }
+
+    .shoe-beauty-card .beauty-stock {
+        font-size: 0.75rem !important;
+        margin: 0 0 10px !important;
+    }
+
+    .shoe-beauty-card .beauty-product-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-top: auto !important;
+        width: 100% !important;
+    }
+
+    .shoe-beauty-card .beauty-quick-cart-btn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        border-radius: 10px !important;
+        padding: 0 !important;
+    }
+
+    .shoe-beauty-card .beauty-quick-cart-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .shoe-beauty-card .beauty-view-product-btn {
+        flex: 1 !important;
+        min-width: 0 !important;
+        height: 38px !important;
+        padding: 0 8px !important;
+        border-radius: 10px !important;
+        font-size: 12px !important;
+        gap: 4px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .shoe-beauty-card .beauty-view-btn-arrow {
+        width: 14px !important;
+        height: 14px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .shoe-product-area {
+        padding: 0 8px;
+    }
+
+    .shoe-grid,
+    .beauty-products-grid {
+        gap: 10px !important;
+    }
+
+    .shoe-beauty-card .beauty-product-description {
+        display: none !important;
+    }
+}
+
+/* Load More Button */
+.load-more-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 36px 0 20px;
+}
+
+.load-more-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 999px;
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.load-more-button:hover {
+    background: #16c965;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(22, 201, 101, 0.35);
+}
+
+.load-more-wrapper span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* No Results State */
+.shoe-no-results {
+    text-align: center;
+    padding: 60px 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+}
+
+.shoe-no-results h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: #111827;
+}
+
+.shoe-no-results p {
+    margin: 0 0 18px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.shoe-no-results button {
+    padding: 10px 24px;
+    border-radius: 999px;
+    background: #16c965;
+    color: #ffffff;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.shoe-no-results button:hover {
+    background: #109b4d;
+    transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------
+   PART 6: PROMO CARDS CAROUSEL
+   --------------------------------------------------------- */
+.shoe-promo-section {
+    max-width: 1360px;
+    margin: 70px auto 70px;
+    padding: 0 24px;
+    position: relative;
+    box-sizing: border-box;
+    outline: none;
+    background: transparent !important;
+}
+
+.shoe-promo-carousel-wrapper {
+    position: relative;
+    margin: 32px 0 24px;
+    overflow: hidden;
+    padding: 12px 0 24px;
+    user-select: none;
+}
+
+.shoe-promo-track {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 24px;
+    perspective: 1000px;
+}
+
+.shoe-promo-card {
+    flex: 0 0 calc(33.333% - 16px);
+    max-width: 420px;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, box-shadow 0.4s ease;
+    outline: none;
+    position: relative;
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+}
+
+.shoe-promo-card.is-prev,
+.shoe-promo-card.is-next {
+    opacity: 0.75;
+    transform: scale(0.96);
+}
+
+.shoe-promo-card.is-active {
+    opacity: 1;
+    transform: scale(1.04);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+}
+
+.shoe-promo-card:hover {
+    transform: scale(1.05) translateY(-4px);
+    box-shadow: 0 24px 50px rgba(22, 201, 101, 0.18);
+}
+
+.shoe-promo-card-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.shoe-promo-badges {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.shoe-promo-badge-tag {
+    background: #111111;
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.shoe-promo-discount-tag {
+    background: #16c965;
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(22, 201, 101, 0.4);
+}
+
+.shoe-promo-image-box {
+    position: relative;
+    height: 240px;
+    background: linear-gradient(135deg, #f3f6f4, #edf5f0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.shoe-promo-shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.6) 50%, transparent 80%);
+    transform: translateX(-100%);
+    transition: transform 0.8s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.shoe-promo-card:hover .shoe-promo-shine {
+    transform: translateX(100%);
+}
+
+.shoe-promo-image {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+}
+
+.shoe-promo-card:hover .shoe-promo-image {
+    transform: scale(1.08) rotate(-2deg);
+}
+
+.shoe-promo-text-wrap {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.shoe-promo-subhead {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #16a34a;
+    margin-bottom: 6px;
+}
+
+.shoe-promo-title {
+    margin: 0 0 10px;
+    font-size: 21px;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.25;
+}
+
+.shoe-promo-desc {
+    margin: 0 0 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #6b7280;
+    flex: 1;
+}
+
+.shoe-promo-action {
+    margin-top: auto;
+}
+
+.shoe-promo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #16a34a;
+    transition: gap 0.2s ease, color 0.2s ease;
+    pointer-events: none !important;
+}
+
+.shoe-promo-card:hover .shoe-promo-btn {
+    color: #109b4d;
+    gap: 12px;
+}
+
+.shoe-promo-btn-arrow {
+    transition: transform 0.2s ease;
+}
+
+.shoe-promo-card:hover .shoe-promo-btn-arrow {
+    transform: translateX(4px);
+}
+
+/* Nav buttons */
+.shoe-promo-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.shoe-promo-nav-btn.prev {
+    left: 8px;
+}
+
+.shoe-promo-nav-btn.next {
+    right: 8px;
+}
+
+.shoe-promo-nav-btn:hover {
+    background: #16c965;
+    color: #ffffff;
+    border-color: #16c965;
+    transform: translateY(-50%) scale(1.08);
+}
+
+/* Carousel Footer (Dots + Progress) */
+.shoe-promo-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 10px;
+}
+
+.shoe-promo-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.shoe-promo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.35);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+.shoe-promo-dot.active {
+    width: 24px;
+    background: #16c965;
+}
+
+.shoe-promo-progress-bar-bg {
+    width: 140px;
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+}
+
+.shoe-promo-progress-bar-fill {
+    height: 100%;
+    background: #16c965;
+    transition: width 0.05s linear;
+}
+
+@media (max-width: 900px) {
+    .shoe-promo-card {
+        flex: 0 0 calc(50% - 12px);
+    }
+    .shoe-promo-card.is-prev {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .shoe-promo-card {
+        flex: 0 0 100%;
+    }
+    .shoe-promo-card.is-prev,
+    .shoe-promo-card.is-next {
+        display: none;
+    }
+}
+
+/* ---------------------------------------------------------
+   PART 3: CUSTOMER FEEDBACK SECTION (MATCHED TO BEAUTY)
+   --------------------------------------------------------- */
+.shoe-feedback-section {
+    width: 100%;
+    margin: 80px 0 0 0;
+    padding: 72px 20px 84px;
+    background: transparent !important;
+    box-sizing: border-box;
+    position: relative;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none;
+}
+
+.shoe-feedback-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .shoe-feedback-section {
+        margin: 50px 0 0 0;
+        padding: 50px 14px 60px;
+    }
+}

@@ -189,7 +189,8 @@ const ProductCard = ({ product, onAddToCart }) => {
                         className="beauty-view-product-btn"
                         aria-label={`View details for ${product.name}`}
                     >
-                        <span>View Product</span>
+                        <span className="beauty-view-btn-full">View Product</span>
+                        <span className="beauty-view-btn-short">View</span>
                         <ArrowRight size={16} className="beauty-view-btn-arrow" />
                     </a>
 
