@@ -136,6 +136,8 @@ function ProductDetailPage() {
   const [added, setAdded] = useState(false);
   const [activeImage, setActiveImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [sizeError, setSizeError] = useState("");
 
   const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
@@ -246,6 +248,51 @@ function ProductDetailPage() {
     script.textContent = JSON.stringify(jsonLdData);
   }, [product]);
 
+  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const isFromWishlist =
+    params.get("from") === "wishlist" ||
+    (typeof document !== "undefined" &&
+      document.referrer &&
+      document.referrer.toLowerCase().includes("wishlist"));
+
+  const isFromClothing =
+    !isFromWishlist &&
+    (params.get("from") === "clothing" ||
+      (typeof document !== "undefined" &&
+        document.referrer &&
+        document.referrer.toLowerCase().includes("clothes.html")) ||
+      Boolean(
+        product &&
+          ["tops", "dresses", "bottoms", "jackets", "shirts", "clothes"].some(
+            (c) => String(product.category || "").toLowerCase().includes(c)
+          )
+      ));
+
+  const isFromElectronics =
+    !isFromWishlist &&
+    !isFromClothing &&
+    (params.get("from") === "electronics" ||
+      (typeof document !== "undefined" &&
+        document.referrer &&
+        (document.referrer.toLowerCase().includes("electronics.html") ||
+          document.referrer.toLowerCase().includes("fashionspeaker.html"))) ||
+      Boolean(
+        product &&
+          ["smartphones", "laptops", "audio", "cameras", "gaming", "smart home", "electronics", "gadgets"].some(
+            (c) => String(product.category || "").toLowerCase().includes(c)
+          )
+      ));
+
+  const isFromWatches =
+    !isFromWishlist &&
+    !isFromClothing &&
+    !isFromElectronics &&
+    (params.get("from") === "watches" ||
+      (typeof document !== "undefined" &&
+        document.referrer &&
+        document.referrer.toLowerCase().includes("watchshop")) ||
+      Boolean(product && String(product.category || "").toLowerCase().includes("watch")));
+
   const handleToggleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -258,7 +305,19 @@ function ProductDetailPage() {
     e.preventDefault();
     if (!product) return;
 
-    addProductToCart(product, quantity);
+    if (Array.isArray(product.sizes) && product.sizes.length > 0 && !selectedSize) {
+      setSizeError("Please select a size before adding to cart");
+      return;
+    }
+
+    setSizeError("");
+    const itemToAdd = {
+      ...product,
+      selectedSize: selectedSize || undefined,
+      selectedColor: product.color || undefined
+    };
+
+    addProductToCart(itemToAdd, quantity);
     setAdded(true);
     setTimeout(() => {
       setAdded(false);
@@ -270,7 +329,8 @@ function ProductDetailPage() {
     const id = relProd.id !== undefined && relProd.id !== null ? relProd.id : "";
     const category = relProd.category || "";
     const uid = relProd.uid || buildProductUid(category, id);
-    window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}&uid=${encodeURIComponent(uid)}`;
+    const fromParam = isFromClothing ? "&from=clothing" : isFromElectronics ? "&from=electronics" : isFromWatches ? "&from=watches" : "";
+    window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}&uid=${encodeURIComponent(uid)}${fromParam}`;
   };
 
   if (loading) {
@@ -299,9 +359,28 @@ function ProductDetailPage() {
             <p>
               The product you are looking for doesn't exist, has an invalid ID or category, or has been removed from the catalog.
             </p>
-            <a href={wishlistUrl} className="product-detail-notfound-btn">
+            <a
+              href={
+                isFromClothing
+                  ? `${normalizedBase}clothes.html`
+                  : isFromElectronics
+                  ? `${normalizedBase}electronics.html`
+                  : isFromWatches
+                  ? `${normalizedBase}watchshop.html`
+                  : wishlistUrl
+              }
+              className="product-detail-notfound-btn"
+            >
               <ArrowLeft size={16} />
-              <span>Back to Wishlist</span>
+              <span>
+                {isFromClothing
+                  ? "← Back to Clothing"
+                  : isFromElectronics
+                  ? "Back to Electronics"
+                  : isFromWatches
+                  ? "Back to Watches"
+                  : "Back to Wishlist"}
+              </span>
             </a>
           </div>
         </main>
@@ -362,7 +441,17 @@ function ProductDetailPage() {
         <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
           <a href={homeUrl}>Home</a>
           <span className="sep">/</span>
-          <a href={`${shopUrl}?category=${encodeURIComponent(product.category || "All")}`}>
+          <a
+            href={
+              isFromClothing
+                ? `${normalizedBase}clothes.html`
+                : isFromElectronics
+                ? `${normalizedBase}electronics.html`
+                : isFromWatches || (product.category && product.category.toLowerCase().includes("watch"))
+                ? `${normalizedBase}watchshop.html`
+                : `${shopUrl}?category=${encodeURIComponent(product.category || "All")}`
+            }
+          >
             {product.category || "Catalog"}
           </a>
           <span className="sep">/</span>
@@ -530,6 +619,50 @@ function ProductDetailPage() {
 
             {/* Quantity Selector & Add to Cart Section */}
             <div className="product-detail-buy-section">
+              {/* Clothing Options: Color & Size Selector */}
+              {(product.color || (Array.isArray(product.sizes) && product.sizes.length > 0)) && (
+                <div className="product-detail-clothing-options">
+                  {product.color && (
+                    <div className="product-detail-color-line">
+                      <span className="product-detail-option-label">Color:</span>
+                      <strong className="product-detail-color-value">{product.color}</strong>
+                    </div>
+                  )}
+
+                  {Array.isArray(product.sizes) && product.sizes.length > 0 && (
+                    <div className="product-detail-sizes-box">
+                      <div className="product-detail-sizes-header">
+                        <span className="product-detail-option-label">Select Size:</span>
+                        {selectedSize && (
+                          <span className="product-detail-selected-size-chip">{selectedSize}</span>
+                        )}
+                      </div>
+                      <div className="product-detail-sizes-pills" role="radiogroup" aria-label="Product size">
+                        {product.sizes.map((sz) => (
+                          <button
+                            key={sz}
+                            type="button"
+                            className={`product-detail-size-pill ${selectedSize === sz ? "is-selected" : ""}`}
+                            onClick={() => {
+                              setSelectedSize(sz);
+                              setSizeError("");
+                            }}
+                            aria-label={`Size ${sz}`}
+                          >
+                            {sz}
+                          </button>
+                        ))}
+                      </div>
+                      {sizeError && (
+                        <p className="product-detail-size-error-msg" role="alert">
+                          {sizeError}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="product-detail-qty-row">
                 <span className="product-detail-qty-label">Quantity:</span>
                 <div className="product-detail-qty-control">
@@ -546,7 +679,8 @@ function ProductDetailPage() {
                   <button
                     type="button"
                     className="product-detail-qty-btn"
-                    onClick={() => setQuantity((q) => Math.min(99, q + 1))}
+                    onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))}
+                    disabled={product.stock ? quantity >= product.stock : quantity >= 99}
                     aria-label="Increase quantity"
                   >
                     +
@@ -574,9 +708,28 @@ function ProductDetailPage() {
                   )}
                 </button>
 
-                <a href={wishlistUrl} className="product-detail-back-link">
+                <a
+                  href={
+                    isFromClothing
+                      ? `${normalizedBase}clothes.html`
+                      : isFromElectronics
+                      ? `${normalizedBase}electronics.html`
+                      : isFromWatches
+                      ? `${normalizedBase}watchshop.html`
+                      : wishlistUrl
+                  }
+                  className="product-detail-back-link"
+                >
                   <ArrowLeft size={16} />
-                  <span>Back to Wishlist</span>
+                  <span>
+                    {isFromClothing
+                      ? "← Back to Clothing"
+                      : isFromElectronics
+                      ? "Back to Electronics"
+                      : isFromWatches
+                      ? "Back to Watches"
+                      : "Back to Wishlist"}
+                  </span>
                 </a>
               </div>
             </div>
@@ -676,7 +829,7 @@ function ProductDetailPage() {
       {/* Sticky Bottom Add to Cart Bar for Mobile */}
       <div className="product-detail-mobile-sticky-bar">
         <div className="mobile-sticky-left">
-          <span className="mobile-sticky-price">{formatPrice(product.price)}</span>
+          <span className="mobile-sticky-price">{formatPrice(product.price * quantity)}</span>
           <span className="mobile-sticky-name">{product.name || product.title}</span>
         </div>
         <button

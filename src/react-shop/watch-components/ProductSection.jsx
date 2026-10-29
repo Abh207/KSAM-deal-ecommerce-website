@@ -2,7 +2,7 @@ import React from "react";
 import ProductCard from "./ProductCard";
 import "./ProductSection.css";
 
-function ProductSection({ products, onProductClick }) {
+function ProductSection({ products, onAddToCart }) {
     return (
         <section className="watch-product-section">
 
@@ -12,9 +12,9 @@ function ProductSection({ products, onProductClick }) {
                     <h1>BEST SELLERS</h1>
                 </div>
 
-                <button className="watch-view-all">
-                    VIEW ALL →
-                </button>
+                <div className="watch-result-count-pill">
+                    {products.length} {products.length === 1 ? "Product" : "Products"}
+                </div>
             </div>
 
             <div className="watch-product-grid">
@@ -22,7 +22,7 @@ function ProductSection({ products, onProductClick }) {
                     <ProductCard
                         key={product.id}
                         product={product}
-                        onProductClick={onProductClick}
+                        onAddToCart={onAddToCart}
                     />
                 ))}
             </div>

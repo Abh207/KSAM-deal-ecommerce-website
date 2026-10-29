@@ -1375,122 +1375,7 @@ img {
 }
 
 
-/* =========================================================
-   BENEFITS
-========================================================= */
-
-.clothes-benefits {
-
-    position: relative;
-
-    z-index: 20;
-
-    width:
-        min(
-            1220px,
-            calc(100% - 50px)
-        );
-
-    min-height: 85px;
-
-    margin:
-        -30px auto 0;
-
-    padding:
-        14px 20px;
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 10px;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius: 18px;
-
-    background:
-        var(--clothes-surface);
-
-    box-shadow:
-        var(--clothes-shadow);
-
-}
-
-
-.clothes-benefits > div {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap: 13px;
-
-    padding:
-        8px 15px;
-
-    border-right:
-        1px solid
-        var(--clothes-border);
-
-}
-
-
-.clothes-benefits > div:last-child {
-
-    border-right:
-        0;
-
-}
-
-
-.clothes-benefits i {
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        20px;
-
-}
-
-
-.clothes-benefits span {
-
-    display:
-        grid;
-
-    gap: 4px;
-
-}
-
-
-.clothes-benefits b {
-
-    font-size:
-        9px;
-
-    letter-spacing:
-        .08em;
-
-}
-
-
-.clothes-benefits small {
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        9px;
-
-}
+/* BENEFITS REMOVED PER REQUIREMENT */
 
 
 /* =========================================================
@@ -2009,1587 +1894,613 @@ img {
 
 
 /* =========================================================
-   PRODUCT SECTION
+   PART 3 - MODERN CENTERED HEADER & TOOLBAR
 ========================================================= */
 
 .clothes-products-section {
-
-    scroll-margin-top:
-        105px;
-
+    scroll-margin-top: 100px;
+    width: min(1380px, calc(100% - 40px));
+    margin: 80px auto 0;
+    position: relative;
 }
 
-
-.clothes-products-heading {
-
-    display:
-        flex;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        space-between;
-
-    gap:
-        20px;
-
-    margin-bottom:
-        30px;
-
+/* Centered & Stacked Header Block */
+.clothes-header-block {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
-
-.clothes-products-heading > strong {
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        11px;
-
-}
-
-
-/* =========================================================
-   TOOLBAR
-========================================================= */
-
-.clothes-toolbar {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        15px;
-
-    padding:
-        14px 0;
-
-    border-block:
-        1px solid
-        var(--clothes-border);
-
-}
-
-
-.clothes-filter-pills {
-
-    display:
-        flex;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        7px;
-
-}
-
-
-.clothes-filter-pills button,
-.clothes-mobile-filter-button {
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        999px;
-
-    padding:
-        10px 15px;
-
-    background:
-        var(--clothes-surface);
-
-    color:
-        var(--clothes-text);
-
-    font-size:
-        9px;
-
-    font-weight:
-        900;
-
-    transition:
-        .2s ease;
-
-}
-
-
-.clothes-filter-pills button:hover {
-
-    border-color:
-        var(--clothes-green);
-
-}
-
-
-.clothes-filter-pills button.active {
-
-    background:
-        var(--clothes-green);
-
-    color:
-        #050505;
-
-    border-color:
-        var(--clothes-green);
-
-}
-
-
-.clothes-toolbar-actions {
-
-    display:
-        flex;
-
-    gap:
-        8px;
-
-}
-
-
-.clothes-sort {
-
-    min-width:
-        160px;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        999px;
-
-    padding:
-        10px 14px;
-
-    outline:
-        0;
-
-    background:
-        var(--clothes-surface);
-
-    color:
-        var(--clothes-text);
-
-    font-size:
-        9px;
-
-    font-weight:
-        900;
-
-}
-
-
-.clothes-mobile-filter-button {
-
-    display:
-        none;
-
-}
-
-
-/* =========================================================
-   SHOP LAYOUT
-========================================================= */
-
-.clothes-shop-layout {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        235px
-        minmax(0, 1fr);
-
-    gap:
-        30px;
-
-    margin-top:
-        28px;
-
-}
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-.clothes-sidebar {
-
-    position:
-        sticky;
-
-    top:
-        110px;
-
-    align-self:
-        start;
-
-    padding:
-        20px;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        17px;
-
-    background:
-        var(--clothes-surface);
-
-}
-
-
-.clothes-sidebar-title {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    padding-bottom:
-        16px;
-
-    border-bottom:
-        1px solid
-        var(--clothes-border);
-
-}
-
-
-.clothes-sidebar-title h3 {
-
-    font-size:
-        12px;
-
-    letter-spacing:
-        .1em;
-
-    text-transform:
-        uppercase;
-
-}
-
-
-.clothes-sidebar-title button {
-
-    border:
-        0;
-
-    background:
-        transparent;
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        9px;
-
-    font-weight:
-        900;
-
-}
-
-
-/* FILTER BOX */
-
-.clothes-filter-box {
-
-    padding:
-        20px 0;
-
-    border-bottom:
-        1px solid
-        var(--clothes-border);
-
-}
-
-
-.clothes-filter-box h4 {
-
-    margin-bottom:
-        13px;
-
-    font-size:
-        10px;
-
-    letter-spacing:
-        .08em;
-
-    text-transform:
-        uppercase;
-
-}
-
-
-/* RADIO */
-
-.clothes-radio {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    padding:
-        7px 0;
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        10px;
-
-}
-
-
-.clothes-radio input {
-
-    accent-color:
-        var(--clothes-green);
-
-}
-
-
-/* PRICE */
-
-.clothes-price-value {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    margin-bottom:
-        10px;
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        9px;
-
-}
-
-
-.clothes-price-value b {
-
-    color:
-        var(--clothes-text);
-
-}
-
-
-.clothes-filter-box
-input[type="range"] {
-
-    width:
-        100%;
-
-    accent-color:
-        var(--clothes-green);
-
-}
-
-
-/* COLORS */
-
-.clothes-color-options {
-
-    display:
-        flex;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        10px;
-
-}
-
-
-.clothes-color-dot {
-
-    width:
-        27px;
-
-    height:
-        27px;
-
-    border:
-        2px solid
-        var(--clothes-surface);
-
-    outline:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        50%;
-
-    transition:
-        transform .2s ease;
-
-}
-
-
-.clothes-color-dot:hover {
-
-    transform:
-        scale(1.18);
-
-}
-
-
-.clothes-color-black {
-
-    background:
-        #050505;
-
-}
-
-
-.clothes-color-white {
-
-    background:
-        #ffffff;
-
-}
-
-
-.clothes-color-green {
-
-    background:
-        #75c400;
-
-}
-
-
-.clothes-color-blue {
-
-    background:
-        #2d5fb9;
-
-}
-
-
-.clothes-color-brown {
-
-    background:
-        #815332;
-
-}
-
-
-.clothes-color-beige {
-
-    background:
-        #d8c39d;
-
-}
-
-
-/* OFFER BOX */
-
-.clothes-filter-offer {
-
-    margin-top:
-        20px;
-
-    padding:
-        20px;
-
-    border-radius:
-        14px;
-
-    background:
-        var(--clothes-green);
-
-    color:
-        #050505;
-
-}
-
-
-.clothes-filter-offer span {
-
-    font-size:
-        8px;
-
-    font-weight:
-        950;
-
-    letter-spacing:
-        .15em;
-
-}
-
-
-.clothes-filter-offer strong {
-
-    display:
-        block;
-
-    margin:
-        11px 0;
-
-    font-size:
-        22px;
-
-    line-height:
-        .9;
-
-    letter-spacing:
-        -.05em;
-
-}
-
-
-.clothes-filter-offer small {
-
-    font-size:
-        8px;
-
-    font-weight:
-        800;
-
-}
-
-
-/* =========================================================
-   PRODUCT GRID
-========================================================= */
-
-.clothes-product-grid {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(
-            4,
-            minmax(0, 1fr)
-        );
-
-    gap:
-        16px;
-
-}
-
-
-/* =========================================================
-   PRODUCT CARD
-========================================================= */
-
-.clothes-product-card {
-
-    min-width:
-        0;
-
-    overflow:
-        hidden;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        17px;
-
-    background:
-        var(--clothes-surface);
-
-    transition:
-        transform .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-
-}
-
-
-.clothes-product-card:hover {
-
-    transform:
-        translateY(-7px);
-
-    border-color:
-        rgba(142,224,0,.40);
-
-    box-shadow:
-        var(--clothes-shadow);
-
-}
-
-
-/* =========================================================
-   PRODUCT IMAGE
-========================================================= */
-
-.clothes-product-image-wrap {
-
-    position:
-        relative;
-
-    height:
-        350px;
-
-    overflow:
-        hidden;
-
-    background:
-        var(--clothes-surface-2);
-
-}
-
-
-.clothes-product-image {
-
-    width:
-        100%;
-
-    height:
-        100%;
-
-    object-fit:
-        cover;
-
-    transition:
-        transform .6s
-        cubic-bezier(.2,.8,.2,1);
-
-}
-
-
-.clothes-product-card:hover
-.clothes-product-image {
-
-    transform:
-        scale(1.07);
-
-}
-
-
-/* FALLBACK */
-
-.clothes-card-image-fallback {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    display:
-        none;
-
-    place-content:
-        center;
-
-    text-align:
-        center;
-
-    background:
-
-        radial-gradient(
-            circle,
-            rgba(142,224,0,.15),
-            transparent 200px
-        ),
-
-        #080a08;
-
-    color:
-        #ffffff;
-
-}
-
-
-.clothes-product-image-wrap.image-missing
-.clothes-card-image-fallback {
-
-    display:
-        grid;
-
-}
-
-
-.clothes-card-image-fallback span {
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        9px;
-
-    font-weight:
-        950;
-
-    letter-spacing:
-        .2em;
-
-}
-
-
-.clothes-card-image-fallback strong {
-
-    font-size:
-        55px;
-
-    line-height:
-        .9;
-
-    letter-spacing:
-        -.08em;
-
-}
-
-
-.clothes-card-image-fallback small {
-
-    color:
-        var(--clothes-gold);
-
-    font-size:
-        8px;
-
-    letter-spacing:
-        .3em;
-
-}
-
-
-/* BADGE */
-
-.clothes-product-badge {
-
-    position:
-        absolute;
-
-    z-index:
-        3;
-
-    top:
-        12px;
-
-    left:
-        12px;
-
-    padding:
-        7px 9px;
-
-    border-radius:
-        5px;
-
-    background:
-        #050505;
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        7px;
-
-    font-weight:
-        950;
-
-    letter-spacing:
-        .08em;
-
-}
-
-
-/* WISHLIST */
-.clothes-wishlist {
-    position: absolute;
-    z-index: 5;
-    top: 10px;
-    right: 10px;
-    width: 38px;
-    height: 38px;
-    display: grid;
-    place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.65);
+/* Pill badge "SHOP THE DROP" with sparkle */
+.clothes-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(163, 230, 53, 0.12);
+    border: 1px solid rgba(163, 230, 53, 0.40);
+    color: #a3e635;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    color: #ffffff;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.clothes-wishlist:hover {
+.clothes-header-badge i {
+    font-size: 12px;
+    color: #a3e635;
+}
+
+/* Large bold heading "Find your style" */
+.clothes-header-heading {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    padding-bottom: 4px;
+}
+
+.clothes-header-accent {
+    background: linear-gradient(90deg, #a3e635 0%, #bef264 60%, #d9f99d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    padding-bottom: 4px;
+}
+
+/* Light subtitle */
+.clothes-header-subtitle {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: clamp(14px, 1.8vw, 16px);
+    line-height: 1.55;
+    max-width: 640px;
+    margin: 0 auto 12px;
+}
+
+/* Live count */
+.clothes-header-count {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+}
+
+.clothes-count-highlight {
+    color: #a3e635;
+    font-weight: 800;
+}
+
+/* Centered Toolbar below header */
+.clothes-toolbar-modern {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 34px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.clothes-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Inactive category pill */
+.clothes-category-pill {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Active category pill: solid lime with soft lime glow */
+.clothes-category-pill.is-active {
+    background: #a3e635;
+    color: #0d110e;
+    border-color: #a3e635;
+    font-weight: 800;
+    box-shadow: 0 0 16px rgba(163, 230, 53, 0.45);
+}
+
+/* Hover: slightly lighter background and 2px lift */
+@media (hover: hover) {
+    .clothes-category-pill:hover:not(.is-active) {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(163, 230, 53, 0.5);
+        color: #ffffff;
+        transform: translateY(-2px);
+    }
+
+    .clothes-category-pill.is-active:hover {
+        transform: translateY(-2px);
+    }
+}
+
+/* Keyboard focus visible ring */
+.clothes-category-pill:focus-visible {
+    outline: 2px solid #a3e635;
+    outline-offset: 2px;
+}
+
+/* Sort dropdown as matching pill */
+.clothes-sort-wrapper {
+    display: inline-flex;
+}
+
+.clothes-sort-select-pill {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    appearance: auto;
+}
+
+.clothes-sort-select-pill:focus-visible {
+    outline: 2px solid #a3e635;
+    outline-offset: 2px;
+}
+
+.clothes-sort-select-pill option {
+    background: #141714;
+    color: #ffffff;
+}
+
+/* Full Width Product Area */
+.clothes-product-area-fullwidth {
+    width: 100%;
+    position: relative;
+}
+
+/* =========================================================
+   PART 4 - CLOTHING PRODUCT CARDS (MATCHING BEAUTY CARD LAYOUT)
+========================================================= */
+
+@keyframes clothesCardFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.clothes-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.clothes-product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #141714;
+    border-radius: 20px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    animation: clothesCardFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.clothes-product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+}
+
+/* Top Image Container: Fixed aspect ratio ~4/5, object-fit contain */
+.clothes-product-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #191e19;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+
+.clothes-product-image-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.clothes-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.45s ease;
+}
+
+.clothes-product-card:hover .clothes-product-image {
+    transform: scale(1.05);
+}
+
+/* Fallback */
+.clothes-card-image-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    place-content: center;
+    text-align: center;
+    background: #141714;
+    color: #ffffff;
+}
+
+.clothes-product-image-container.image-missing .clothes-card-image-fallback {
+    display: grid;
+}
+
+.clothes-card-image-fallback span {
+    color: #a3e635;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+}
+
+.clothes-card-image-fallback strong {
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+.clothes-card-image-fallback small {
+    color: #d7aa42;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+}
+
+/* Discount Pill Badge (Top-Left) */
+.clothes-discount-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 4;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: #0a0d0a;
+    color: #a3e635;
+    border: 1px solid rgba(163, 230, 53, 0.4);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+/* Wishlist Heart Button (Top-Right) */
+.clothes-card-wishlist-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 15px;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.clothes-card-wishlist-btn:hover {
     transform: scale(1.08);
     border-color: #ffffff;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
-    color: #ffffff;
 }
 
-.clothes-wishlist.active {
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.35);
+.clothes-card-wishlist-btn.is-active {
+    color: #a3e635;
+    border-color: #a3e635;
+    box-shadow: 0 0 14px rgba(163, 230, 53, 0.45);
 }
 
-.clothes-wishlist.active:hover {
-    border-color: #ffffff;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
-}
-
-
-/* =========================================================
-   IMAGE HOVER OVERLAY
-========================================================= */
-
-.clothes-image-overlay {
-
-    position:
-        absolute;
-
-    z-index:
-        4;
-
-    left:
-        10px;
-
-    right:
-        10px;
-
-    bottom:
-        10px;
-
-    opacity:
-        0;
-
-    transform:
-        translateY(12px);
-
-    transition:
-        .3s ease;
-
-}
-
-
-.clothes-product-card:hover
-.clothes-image-overlay {
-
-    opacity:
-        1;
-
-    transform:
-        translateY(0);
-
-}
-
-
-.clothes-overlay-view {
-
-    width:
-        100%;
-
-    min-height:
-        44px;
-
-    border:
-        0;
-
-    border-radius:
-        10px;
-
-    background:
-        var(--clothes-green);
-
-    color:
-        #050505;
-
-    font-size:
-        10px;
-
-    font-weight:
-        950;
-
-}
-
-
-.clothes-overlay-view i {
-
-    margin-right:
-        7px;
-
-}
-
-
-/* IMAGE NUMBER */
-
-.clothes-image-number {
-
-    position:
-        absolute;
-
-    z-index:
-        3;
-
-    right:
-        13px;
-
-    bottom:
-        13px;
-
-    color:
-        rgba(255,255,255,.55);
-
-    font-size:
-        8px;
-
-    font-weight:
-        900;
-
-}
-
-
-/* =========================================================
-   PRODUCT CONTENT
-========================================================= */
-
+/* Card Body Content */
 .clothes-product-content {
-
-    padding:
-        16px;
-
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 16px 18px 18px;
 }
 
-
-/* TOPLINE */
-
-.clothes-product-topline {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        10px;
-
-}
-
-
+/* Category Label in small lime uppercase letter-spaced text */
 .clothes-product-category {
-
-    overflow:
-        hidden;
-
-    white-space:
-        nowrap;
-
-    text-overflow:
-        ellipsis;
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        8px;
-
-    font-weight:
-        950;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        .08em;
-
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #a3e635;
 }
 
-
-.clothes-stock {
-
-    color:
-        #6fae32;
-
-    font-size:
-        7px;
-
-    font-weight:
-        900;
-
-    white-space:
-        nowrap;
-
-}
-
-
-.clothes-stock.low {
-
-    color:
-        var(--clothes-danger);
-
-}
-
-
-/* PRODUCT NAME */
-
+/* Bold Product Name in White */
 .clothes-product-name {
-
-    margin:
-        8px 0;
-
-    min-height:
-        37px;
-
-    font-size:
-        15px;
-
-    line-height:
-        1.15;
-
-    letter-spacing:
-        -.02em;
-
+    margin: 0 0 4px;
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #ffffff;
 }
 
-
-/* RATING */
-
-.clothes-product-rating {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        5px;
-
-    font-size:
-        9px;
-
+.clothes-product-name-link {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-
-.clothes-stars {
-
-    color:
-        var(--clothes-gold);
-
-    letter-spacing:
-        1px;
-
+.clothes-product-name-link:hover {
+    color: #a3e635;
 }
 
-
-.clothes-product-rating strong {
-
-    color:
-        var(--clothes-text);
-
+/* Bold Grey Brand Name */
+.clothes-product-brand {
+    margin: 0 0 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #8c948c;
 }
 
-
-.clothes-product-rating > span:last-child {
-
-    color:
-        var(--clothes-muted);
-
+/* Short 2-line Description in light grey */
+.clothes-product-description {
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #a6b0a6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-
-/* PRICE */
-
-.clothes-price-row {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        7px;
-
-    margin-top:
-        12px;
-
+/* Large Bold ₹ Price + Struck-through Old Price */
+.clothes-product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
 }
-
 
 .clothes-current-price {
-
-    font-size:
-        18px;
-
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
 }
 
-
-.clothes-old-price {
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        10px;
-
+.clothes-original-price {
+    font-size: 14px;
+    color: #768076;
+    text-decoration: line-through;
 }
 
-
-.clothes-discount {
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        8px;
-
-    font-weight:
-        950;
-
+/* Stock text "N items available" in lime/green */
+.clothes-stock {
+    margin: 0 0 16px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #a3e635;
 }
 
-
-/* COLOR */
-
-.clothes-product-color {
-
-    display:
-        flex;
-
-    gap:
-        5px;
-
-    margin-top:
-        11px;
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        9px;
-
+/* Bottom Actions Row */
+.clothes-product-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
 }
 
-
-.clothes-product-color strong {
-
-    color:
-        var(--clothes-text);
-
+/* Rounded Square Cart Icon Button (~48px) */
+.clothes-quick-cart-btn {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 12px;
+    background: #0c0f0c;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 17px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    outline: none;
 }
 
-
-/* SIZES */
-
-.clothes-size-row {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    margin-top:
-        12px;
-
+@media (hover: hover) {
+    .clothes-quick-cart-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: #161c16;
+        border-color: #a3e635;
+        color: #a3e635;
+        box-shadow: 0 6px 16px rgba(163, 230, 53, 0.25);
+    }
 }
 
-
-.clothes-size-label {
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        8px;
-
+.clothes-quick-cart-btn.is-added {
+    background: #a3e635;
+    border-color: #a3e635;
+    color: #0d110e;
+    box-shadow: 0 0 16px rgba(163, 230, 53, 0.45);
+    transform: scale(1.04);
 }
 
-
-.clothes-size-list {
-
-    display:
-        flex;
-
-    gap:
-        5px;
-
-    flex-wrap:
-        wrap;
-
+.clothes-quick-cart-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
 }
-
-
-.clothes-size {
-
-    min-width:
-        27px;
-
-    padding:
-        5px 6px;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        5px;
-
-    text-align:
-        center;
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        7px;
-
-    font-weight:
-        900;
-
-}
-
-
-.clothes-more-size {
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        8px;
-
-    font-weight:
-        900;
-
-}
-
 
 /* =========================================================
-   CARD ACTIONS
+   PART 5 - "VIEW PRODUCT" BUTTON HOVER COLOUR CHANGE
 ========================================================= */
 
-.clothes-card-actions {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1fr
-        52px;
-
-    gap:
-        7px;
-
-    margin-top:
-        15px;
-
+.clothes-view-product-btn {
+    flex: 1;
+    height: 48px;
+    padding: 0 16px;
+    border-radius: 12px;
+    background: rgba(163, 230, 53, 0.10);
+    border: 1px solid rgba(163, 230, 53, 0.35);
+    color: #a3e635;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    outline: none;
 }
 
-
-.clothes-view-product {
-
-    min-height:
-        43px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        7px;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        9px;
-
-    background:
-        transparent;
-
-    color:
-        var(--clothes-text);
-
-    font-size:
-        9px;
-
-    font-weight:
-        950;
-
-    transition:
-        .2s ease;
-
+.clothes-view-btn-arrow {
+    font-size: 13px;
+    transition: transform 0.25s ease;
 }
 
+/* Hover state: ONLY when the pointer is on the BUTTON ITSELF (not card) */
+@media (hover: hover) {
+    .clothes-view-product-btn:hover {
+        background: #a3e635;
+        color: #0d110e;
+        border-color: #a3e635;
+        box-shadow: 0 6px 18px rgba(163, 230, 53, 0.35);
+    }
 
-.clothes-view-product:hover {
-
-    border-color:
-        var(--clothes-green);
-
-    color:
-        var(--clothes-green);
-
+    .clothes-view-product-btn:hover .clothes-view-btn-arrow {
+        transform: translateX(4px);
+    }
 }
 
-
-.clothes-view-product i {
-
-    color:
-        var(--clothes-green);
-
+/* Keyboard focus (:focus-visible) */
+.clothes-view-product-btn:focus-visible {
+    background: #a3e635;
+    color: #0d110e;
+    border-color: #a3e635;
+    outline: 2px solid #a3e635;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(163, 230, 53, 0.25);
 }
 
-
-.clothes-add-cart {
-
-    min-height:
-        43px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        5px;
-
-    border:
-        0;
-
-    border-radius:
-        9px;
-
-    background:
-        var(--clothes-green);
-
-    color:
-        #050505;
-
-    font-size:
-        9px;
-
-    font-weight:
-        950;
-
-    transition:
-        transform .2s ease;
-
+.clothes-view-product-btn:focus-visible .clothes-view-btn-arrow {
+    transform: translateX(4px);
 }
 
-
-.clothes-add-cart:hover {
-
-    transform:
-        scale(1.04);
-
+/* Touch screens: fill only on :active */
+.clothes-view-product-btn:active {
+    background: #a3e635;
+    color: #0d110e;
+    border-color: #a3e635;
 }
 
-
-.clothes-add-cart span {
-
-    display:
-        none;
-
+.clothes-view-btn-full {
+    display: inline;
 }
 
-
-/* LOAD MORE */
-
-.clothes-load-more {
-
-    width:
-        min(
-            300px,
-            100%
-        );
-
-    min-height:
-        52px;
-
-    margin:
-        30px auto 0;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        10px;
-
-    border:
-        1px solid
-        var(--clothes-border);
-
-    border-radius:
-        999px;
-
-    background:
-        var(--clothes-surface);
-
-    color:
-        var(--clothes-text);
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-
+.clothes-view-btn-short {
+    display: none;
 }
 
-
-.clothes-load-more:hover {
-
-    border-color:
-        var(--clothes-green);
-
-}
-
-
-.clothes-load-more i {
-
-    color:
-        var(--clothes-green);
-
-}
-
-
-/* EMPTY */
-
+/* Empty State */
 .clothes-empty-state {
-
-    min-height:
-        350px;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    align-content:
-        center;
-
-    padding:
-        30px;
-
-    text-align:
-        center;
-
-    border:
-        1px dashed
-        var(--clothes-border);
-
-    border-radius:
-        17px;
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    gap: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.02);
 }
-
 
 .clothes-empty-state i {
-
-    color:
-        var(--clothes-green);
-
-    font-size:
-        40px;
-
+    font-size: 38px;
+    color: #a3e635;
 }
-
 
 .clothes-empty-state h3 {
-
-    margin:
-        15px 0 5px;
-
-    font-size:
-        26px;
-
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
 }
-
 
 .clothes-empty-state p {
-
-    margin-bottom:
-        20px;
-
-    color:
-        var(--clothes-muted);
-
-    font-size:
-        12px;
-
+    font-size: 14px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.65);
 }
 
+.clothes-clear-filters-btn {
+    margin-top: 6px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: #a3e635;
+    color: #0d110e;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(163, 230, 53, 0.3);
+}
 
-.clothes-empty-state button {
-
-    padding:
-        12px 20px;
-
-    border:
-        0;
-
-    border-radius:
-        9px;
-
-    background:
-        var(--clothes-green);
-
-    color:
-        #050505;
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-
+.clothes-clear-filters-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(163, 230, 53, 0.45);
 }
 
 
@@ -4662,80 +3573,9 @@ input[type="range"] {
     }
 
 
-    /* BENEFITS */
-
-    .clothes-benefits {
-
-        grid-template-columns:
-            repeat(
-                2,
-                1fr
-            );
-
-    }
-
-
-    .clothes-benefits
-    > div:nth-child(2) {
-
-        border-right:
-            0;
-
-    }
-
-
-    /* SIDEBAR */
-
-    .clothes-shop-layout {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .clothes-sidebar {
-
-        display:
-            none;
-
-        position:
-            static;
-
-    }
-
-
-    .clothes-shop-layout.filters-open
-    .clothes-sidebar {
-
-        display:
-            block;
-
-    }
-
-
-    .clothes-mobile-filter-button {
-
-        display:
-            inline-flex;
-
-        align-items:
-            center;
-
-        gap:
-            6px;
-
-    }
-
-
     .clothes-product-grid {
-
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0,1fr)
-            );
-
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
     }
 
 }
@@ -4933,42 +3773,6 @@ input[type="range"] {
     }
 
 
-    /* BENEFITS */
-
-    .clothes-benefits {
-
-        width:
-            calc(100% - 28px);
-
-        margin-top:
-            -20px;
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .clothes-benefits > div {
-
-        border-right:
-            0;
-
-        border-bottom:
-            1px solid
-            var(--clothes-border);
-
-    }
-
-
-    .clothes-benefits > div:last-child {
-
-        border-bottom:
-            0;
-
-    }
-
-
     /* SECTIONS */
 
     .clothes-category-section,
@@ -4992,84 +3796,171 @@ input[type="range"] {
 
     }
 
-
-    /* TOOLBAR */
-
-    .clothes-toolbar {
-
-        flex-direction:
-            column;
-
-        align-items:
-            stretch;
-
+    /* PART 7 - MOBILE: 2 PRODUCT CARDS PER ROW (<= 640px down to 320px) */
+    .clothes-products-section {
+        width: 100%;
+        padding: 0 12px;
+        margin-top: 50px;
     }
 
-
-    .clothes-filter-pills {
-
-        flex-wrap:
-            nowrap;
-
-        overflow-x:
-            auto;
-
-        padding-bottom:
-            5px;
-
+    .clothes-header-block {
+        margin-bottom: 22px;
     }
 
-
-    .clothes-filter-pills button {
-
-        flex:
-            0 0 auto;
-
-        white-space:
-            nowrap;
-
+    .clothes-header-heading {
+        font-size: clamp(1.85rem, 7vw, 2.4rem);
     }
 
-
-    .clothes-toolbar-actions {
-
-        width:
-            100%;
-
+    .clothes-header-subtitle {
+        font-size: 13.5px;
+        padding: 0 10px;
     }
 
-
-    .clothes-sort {
-
-        width:
-            100%;
-
+    .clothes-toolbar-modern {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 24px;
     }
 
+    .clothes-pills-row {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+    }
 
-    /* PRODUCTS */
+    .clothes-pills-row::-webkit-scrollbar {
+        display: none;
+    }
 
+    .clothes-category-pill {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        white-space: nowrap;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .clothes-sort-wrapper {
+        width: 100%;
+    }
+
+    .clothes-sort-select-pill {
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 12.5px;
+    }
+
+    /* Grid strictly 2 columns at <= 640px down to 320px */
     .clothes-product-grid {
-
-        grid-template-columns:
-            1fr;
-
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        width: 100% !important;
     }
 
-
-    .clothes-product-image-wrap {
-
-        height:
-            460px;
-
+    /* Scaled Card */
+    .clothes-product-card {
+        border-radius: 16px;
     }
 
+    .clothes-product-image-container {
+        padding: 10px;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        aspect-ratio: 4 / 5;
+    }
 
-    .clothes-add-cart span {
+    .clothes-discount-badge {
+        font-size: 9px;
+        padding: 4px 7px;
+        top: 8px;
+        left: 8px;
+    }
 
-        display:
-            inline;
+    .clothes-card-wishlist-btn {
+        width: 32px;
+        height: 32px;
+        top: 8px;
+        right: 8px;
+        font-size: 13px;
+    }
 
+    .clothes-product-content {
+        padding: 12px;
+    }
+
+    .clothes-product-category {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 3px;
+    }
+
+    .clothes-product-name {
+        font-size: 0.95rem;
+        line-height: 1.25;
+        margin-bottom: 4px;
+        min-height: unset;
+    }
+
+    .clothes-product-name-link {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .clothes-product-brand {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+    }
+
+    .clothes-product-description {
+        font-size: 0.78rem;
+        line-height: 1.35;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .clothes-current-price {
+        font-size: 1.05rem;
+    }
+
+    .clothes-original-price {
+        font-size: 0.75rem;
+    }
+
+    .clothes-stock {
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+
+    .clothes-product-actions {
+        gap: 6px;
+    }
+
+    .clothes-quick-cart-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .clothes-view-product-btn {
+        height: 40px;
+        padding: 0 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        gap: 4px;
     }
 
 
@@ -5160,6 +4051,13 @@ input[type="range"] {
 
 @media (max-width: 400px) {
 
+    .clothes-view-btn-full {
+        display: none !important;
+    }
+
+    .clothes-view-btn-short {
+        display: inline !important;
+    }
 
     .clothes-hero-title {
 
@@ -5186,14 +4084,6 @@ input[type="range"] {
     }
 
 
-    .clothes-product-image-wrap {
-
-        height:
-            390px;
-
-    }
-
-
     .clothes-section-heading h2,
     .clothes-products-heading h2 {
 
@@ -5202,6 +4092,16 @@ input[type="range"] {
 
     }
 
+}
+
+@media (max-width: 360px) {
+    .clothes-product-grid {
+        gap: 10px !important;
+    }
+
+    .clothes-product-description {
+        display: none !important;
+    }
 }
 
 
@@ -5368,19 +4268,5 @@ input[type="range"] {
     z-index: 20;
 }
 
-/* =========================================================
-   BENEFITS SECTION
-   ========================================================= */
-
-.clothes-benefits {
-    position: relative;
-    z-index: 50;
-    margin-top: 0;
-    transform: none;
-}
-
-/* Prevent hero floating elements from pushing into benefits */
-.clothes-hero + .clothes-benefits {
-    margin-top: 0;
-}
+/* End of clothes stylesheet */
 

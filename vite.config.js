@@ -23,6 +23,7 @@ export default defineConfig({
                 signUp: resolve(__dirname, "signUp.html"),
                 audio: resolve(__dirname, "audio.html"),
                 moreChairProd: resolve(__dirname, "moreChairProd.html"),
+                heardeprod: resolve(__dirname, "heardeprod.html"),
                 addToCart: resolve(__dirname, "addToCart.html"),
                 beauty: resolve(__dirname, "beauty.html"),
                 beautyProduct: resolve(__dirname, "beauty-product.html"),
@@ -32,6 +33,7 @@ export default defineConfig({
                     __dirname,
                     "orderSuccess.html"
                 ),
+                electronics: resolve(__dirname, "electronics.html"),
                 Gadgets: resolve(__dirname, "fashionSpeaker.html"),
                 shoes: resolve(__dirname, "shoes.html"),
 

@@ -1,494 +1,200 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { buildProductUid } from "../../lib/cartHelper.js";
 
 function ClothesCard({
     product,
     isWishlisted,
     onWishlist,
-    onViewProduct,
     onAddToCart
 }) {
-
+    const [addedQuick, setAddedQuick] = useState(false);
 
     /* =====================================================
        IMAGE PATH
     ====================================================== */
-
     const getImagePath = (image) => {
+        if (!image) return "";
+        if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
+        const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+        const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+        const clean = image.replace(/^\/+/, "");
+        if (image.startsWith(normalizedBase)) return image;
+        return `${normalizedBase}${clean}`;
+    };
 
-        if (!image) {
-            return "";
+    /* =====================================================
+       PRODUCT URL (product.html)
+    ====================================================== */
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const uid = product.uid || buildProductUid(product.category, product.id);
+    const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category)}&uid=${encodeURIComponent(uid)}&from=clothing`;
+
+    /* =====================================================
+       DISCOUNT CALCULATION
+    ====================================================== */
+    const oldPriceNum = Number(product.oldPrice || product.actualPrice || 0);
+    const priceNum = Number(product.price || 0);
+    const discount = product.discount || (oldPriceNum > priceNum ? Math.round(((oldPriceNum - priceNum) / oldPriceNum) * 100) : 0);
+
+    /* =====================================================
+       QUICK CART
+    ====================================================== */
+    const handleQuickAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const itemWithDefaults = {
+            ...product,
+            selectedSize: product.sizes?.[0] || "M",
+            selectedColor: product.color || "Default"
+        };
+        if (onAddToCart) {
+            onAddToCart(itemWithDefaults);
         }
-
-        return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
-
+        setAddedQuick(true);
+        setTimeout(() => setAddedQuick(false), 1200);
     };
 
-
-    /* =====================================================
-       PRICE FORMAT
-    ====================================================== */
-
-    const formatPrice = (price) => {
-
-        return Number(
-            price || 0
-        ).toLocaleString("en-IN");
-
-    };
-
-
-    /* =====================================================
-       STAR RATING
-    ====================================================== */
-
-    const renderStars = (rating) => {
-
-        const roundedRating =
-            Math.round(
-                Number(rating || 0)
-            );
-
-        return "★".repeat(
-            Math.min(
-                roundedRating,
-                5
-            )
-        );
-
-    };
-
-
-    /* =====================================================
-       IMAGE
-    ====================================================== */
-
-    const imagePath =
-        getImagePath(
-            product.image
-        );
-
+    const imagePath = getImagePath(product.image);
 
     /* =====================================================
        RENDER
     ====================================================== */
-
     return (
-
         <article
             className="clothes-product-card"
+            data-category={product.category}
+            data-id={product.id}
         >
-
-
             {/* =================================================
-                PRODUCT IMAGE
+                IMAGE CONTAINER (4/5 Aspect Ratio, object-fit contain)
             ================================================== */}
+            <div className="clothes-product-image-container">
+                <a
+                    href={productUrl}
+                    className="clothes-product-image-link"
+                    aria-label={`View details for ${product.name}`}
+                >
+                    {imagePath && (
+                        <img
+                            src={imagePath}
+                            alt={product.name || "KSAM Deal fashion"}
+                            className="clothes-product-image"
+                            loading="lazy"
+                            onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                                e.currentTarget.parentElement?.classList.add("image-missing");
+                            }}
+                        />
+                    )}
+                </a>
 
-            <div className="clothes-product-image-wrap">
-
-
-                {imagePath ? (
-
-                    <img
-                        src={imagePath}
-                        alt={
-                            product.name ||
-                            "KSAM Deal fashion product"
-                        }
-                        className="clothes-product-image"
-                        loading="lazy"
-                        onError={(event) => {
-
-                            event.currentTarget.style.display =
-                                "none";
-
-                            event.currentTarget.parentElement.classList.add(
-                                "image-missing"
-                            );
-
-                        }}
-                    />
-
-                ) : null}
-
-
-                {/* =================================================
-                    IMAGE FALLBACK
-                ================================================== */}
-
+                {/* IMAGE FALLBACK */}
                 <div className="clothes-card-image-fallback">
-
-                    <span>
-                        {product.category ||
-                            "FASHION"}
-                    </span>
-
-                    <strong>
-                        KSAM
-                    </strong>
-
-                    <small>
-                        DEAL
-                    </small>
-
+                    <span>{product.category || "CLOTHES"}</span>
+                    <strong>KSAM</strong>
+                    <small>DEAL</small>
                 </div>
 
-
-                {/* =================================================
-                    PRODUCT BADGE
-                ================================================== */}
-
-                {product.badge && (
-
-                    <span className="clothes-product-badge">
-
-                        {product.badge}
-
+                {/* DISCOUNT BADGE */}
+                {discount > 0 && (
+                    <span className="clothes-discount-badge">
+                        {discount}% OFF
                     </span>
-
                 )}
 
-
-                {/* =================================================
-                    WISHLIST
-                ================================================== */}
-
+                {/* WISHLIST BUTTON */}
                 <button
                     type="button"
-                    className={
-                        `clothes-wishlist ${
-                            isWishlisted
-                                ? "active"
-                                : ""
-                        }`
-                    }
-                    onClick={() =>
-                        onWishlist(product)
-                    }
-                    aria-label={
-                        isWishlisted
-                            ? "Remove from wishlist"
-                            : "Add to wishlist"
-                    }
+                    className={`clothes-card-wishlist-btn ${isWishlisted ? "is-active" : ""}`}
+                    aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (onWishlist) {
+                            onWishlist(product);
+                        }
+                    }}
                 >
-
-                    <i
-                        className={
-                            isWishlisted
-                                ? "fa-solid fa-heart"
-                                : "fa-regular fa-heart"
-                        }
-                    ></i>
-
+                    <i className={isWishlisted ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
                 </button>
-
-
-                {/* =================================================
-                    HOVER OVERLAY
-                ================================================== */}
-
-                <div className="clothes-image-overlay">
-
-
-                    <button
-                        type="button"
-                        className="clothes-overlay-view"
-                        onClick={() =>
-                            onViewProduct(product)
-                        }
-                    >
-
-                        <i className="fa-solid fa-eye"></i>
-
-                        Quick View
-
-                    </button>
-
-
-                </div>
-
-
-                {/* =================================================
-                    IMAGE NUMBER
-                ================================================== */}
-
-                <span className="clothes-image-number">
-
-                    /
-                    {String(
-                        product.id ||
-                        "01"
-                    ).replace(
-                        /\D/g,
-                        ""
-                    ).slice(-2) || "01"}
-
-                </span>
-
-
             </div>
-
 
             {/* =================================================
-                PRODUCT INFORMATION
+                CARD CONTENT
             ================================================== */}
-
             <div className="clothes-product-content">
-
-
-                {/* BRAND / CATEGORY */}
-
-                <div className="clothes-product-topline">
-
-                    <span className="clothes-product-category">
-
-                        {product.brand ||
-                            product.category ||
-                            "KSAM DEAL"}
-
-                    </span>
-
-
-                    {product.stock !== undefined && (
-
-                        <span
-                            className={
-                                Number(product.stock) <= 5
-                                    ? "clothes-stock low"
-                                    : "clothes-stock"
-                            }
-                        >
-
-                            {Number(product.stock) <= 5
-                                ? `Only ${product.stock} left`
-                                : "In stock"}
-
-                        </span>
-
-                    )}
-
-                </div>
-
-
-                {/* PRODUCT NAME */}
+                <p className="clothes-product-category">
+                    {product.category || "CLOTHING"}
+                </p>
 
                 <h3 className="clothes-product-name">
-
-                    {product.name}
-
+                    <a
+                        href={productUrl}
+                        className="clothes-product-name-link"
+                    >
+                        {product.name}
+                    </a>
                 </h3>
 
+                <p className="clothes-product-brand">
+                    {product.brand || "KSAM Basics"}
+                </p>
 
-                {/* RATING */}
+                <p className="clothes-product-description">
+                    {product.description || "Premium fabric tailored for contemporary everyday comfort and street style."}
+                </p>
 
-                <div className="clothes-product-rating">
-
-
-                    <span className="clothes-stars">
-
-                        {renderStars(
-                            product.rating
-                        )}
-
+                <div className="clothes-product-price">
+                    <span className="clothes-current-price">
+                        ₹{priceNum.toLocaleString("en-IN")}
                     </span>
 
-
-                    <strong>
-
-                        {Number(
-                            product.rating || 0
-                        ).toFixed(1)}
-
-                    </strong>
-
-
-                    <span>
-
-                        (
-                        {product.reviews || 0}
-                        )
-
-                    </span>
-
-                </div>
-
-
-                {/* PRICE */}
-
-                <div className="clothes-price-row">
-
-
-                    <strong className="clothes-current-price">
-
-                        ₹
-                        {formatPrice(
-                            product.price
-                        )}
-
-                    </strong>
-
-
-                    {product.oldPrice && (
-
-                        <del className="clothes-old-price">
-
-                            ₹
-                            {formatPrice(
-                                product.oldPrice
-                            )}
-
+                    {oldPriceNum > 0 && (
+                        <del className="clothes-original-price">
+                            ₹{oldPriceNum.toLocaleString("en-IN")}
                         </del>
-
                     )}
-
-
-                    {product.discount && (
-
-                        <span className="clothes-discount">
-
-                            {product.discount}%
-                            OFF
-
-                        </span>
-
-                    )}
-
                 </div>
 
-
-                {/* COLOR */}
-
-                {product.color && (
-
-                    <div className="clothes-product-color">
-
-                        <span>
-                            Color
-                        </span>
-
-                        <strong>
-                            {product.color}
-                        </strong>
-
-                    </div>
-
-                )}
-
-
-                {/* SIZES */}
-
-                {product.sizes?.length > 0 && (
-
-                    <div className="clothes-size-row">
-
-
-                        <span className="clothes-size-label">
-
-                            Sizes
-
-                        </span>
-
-
-                        <div className="clothes-size-list">
-
-                            {product.sizes
-                                .slice(
-                                    0,
-                                    4
-                                )
-                                .map(
-                                    (size) => (
-
-                                        <span
-                                            className="clothes-size"
-                                            key={size}
-                                        >
-
-                                            {size}
-
-                                        </span>
-
-                                    )
-                                )}
-
-
-                            {product.sizes.length > 4 && (
-
-                                <span className="clothes-more-size">
-
-                                    +
-                                    {
-                                        product
-                                            .sizes
-                                            .length - 4
-                                    }
-
-                                </span>
-
-                            )}
-
-                        </div>
-
-                    </div>
-
-                )}
-
+                <p className="clothes-stock">
+                    {Number(product.stock) > 0
+                        ? `${product.stock} items available`
+                        : "Out of stock"}
+                </p>
 
                 {/* =================================================
-                    ACTION BUTTONS
+                    BOTTOM ACTION ROW: [Square Cart Button] [View Product →]
                 ================================================== */}
-
-                <div className="clothes-card-actions">
-
-
-                    {/* VIEW PRODUCT */}
-
+                <div className="clothes-product-actions">
                     <button
                         type="button"
-                        className="clothes-view-product"
-                        onClick={() =>
-                            onViewProduct(product)
-                        }
-                    >
-
-                        <span>
-                            View Product
-                        </span>
-
-                        <i className="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-
-                    {/* ADD TO CART */}
-
-                    <button
-                        type="button"
-                        className="clothes-add-cart"
-                        onClick={() =>
-                            onAddToCart(product)
-                        }
+                        className={`clothes-quick-cart-btn ${addedQuick ? "is-added" : ""}`}
+                        onClick={handleQuickAddToCart}
                         aria-label={`Add ${product.name} to cart`}
+                        title="Add to Cart"
+                        disabled={Number(product.stock) <= 0}
                     >
-
-                        <i className="fa-solid fa-bag-shopping"></i>
-
-                        <span>
-                            Add
-                        </span>
-
+                        {addedQuick ? (
+                            <i className="fa-solid fa-check"></i>
+                        ) : (
+                            <i className="fa-solid fa-bag-shopping"></i>
+                        )}
                     </button>
 
+                    <a
+                        href={productUrl}
+                        className="clothes-view-product-btn"
+                        aria-label={`View details for ${product.name}`}
+                    >
+                        <span className="clothes-view-btn-full">View Product</span>
+                        <span className="clothes-view-btn-short">View</span>
+                        <i className="fa-solid fa-arrow-right clothes-view-btn-arrow"></i>
+                    </a>
                 </div>
-
-
             </div>
-
         </article>
-
     );
-
 }
-
 
 export default ClothesCard;

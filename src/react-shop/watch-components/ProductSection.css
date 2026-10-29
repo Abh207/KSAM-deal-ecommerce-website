@@ -1,103 +1,95 @@
+/* =========================================
+   WATCH PRODUCT SECTION
+   ========================================= */
+
 .watch-product-section {
     width: 100%;
     max-width: 1400px;
-
     margin: 0 auto;
-
-    padding: 80px 5%;
+    padding: 60px 5% 80px;
+    background: transparent;
 }
 
-
-/* Heading */
-
+/* Heading Block directly over background video */
 .watch-product-heading {
     display: flex;
     justify-content: space-between;
-    align-items: end;
-
+    align-items: flex-end;
     margin-bottom: 35px;
+    gap: 16px;
 }
 
 .watch-product-heading span {
-    color: #c89b3c;
-
+    display: block;
+    color: #d6ad5a;
     font-size: 12px;
-    font-weight: 600;
-
-    letter-spacing: 2px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
 }
 
 .watch-product-heading h1 {
-    margin-top: 8px;
-
-    color: #111111;
-
-    font-size: 34px;
+    margin-top: 6px;
+    color: #ffffff;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-
-/* View all */
-
-.watch-view-all {
-    border: none;
-    background: transparent;
-
-    color: #111111;
-
+/* Translucent dark pill badge with light border */
+.watch-result-count-pill {
+    padding: 7px 16px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 13px;
     font-weight: 600;
-
-    cursor: pointer;
+    white-space: nowrap;
 }
 
-
-/* Product grid */
-
+/* Product grid - no outer border or frame */
 .watch-product-grid {
     display: grid;
-
     grid-template-columns: repeat(4, 1fr);
-
-    gap: 20px;
+    gap: 24px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
 }
 
-
-/* Tablet */
-
-@media (max-width: 1000px) {
-
+/* Tablet (1000px down to 768px) */
+@media (max-width: 1050px) and (min-width: 769px) {
     .watch-product-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
     }
-
 }
 
-
-/* Small tablet */
-
-@media (max-width: 750px) {
-
+/* Small Tablet (768px down to 641px) */
+@media (max-width: 768px) and (min-width: 641px) {
     .watch-product-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
 
     .watch-product-section {
-        padding: 60px 20px;
+        padding: 50px 20px 60px;
     }
-
 }
 
-
-/* Mobile */
-
-@media (max-width: 500px) {
-
+/* PART 7: Mobile (max-width 640px down to 320px) -> Exactly 2 cards per row */
+@media (max-width: 640px) {
     .watch-product-section {
-        padding: 45px 10px;
+        padding: 40px 12px 50px;
     }
 
     .watch-product-heading {
         align-items: center;
+        margin-bottom: 22px;
     }
 
     .watch-product-heading h1 {
@@ -105,16 +97,28 @@
     }
 
     .watch-product-heading span {
-        font-size: 9px;
+        font-size: 10px;
+        letter-spacing: 1.5px;
     }
 
-    .watch-view-all {
-        font-size: 10px;
+    .watch-result-count-pill {
+        font-size: 11px;
+        padding: 5px 12px;
     }
 
     .watch-product-grid {
+        display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .watch-product-section {
+        padding: 30px 8px 40px;
     }
 
+    .watch-product-grid {
+        gap: 10px;
+    }
 }

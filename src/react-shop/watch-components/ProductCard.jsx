@@ -1,4 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ShoppingBag, Check, ArrowRight } from "lucide-react";
+import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
+import { buildProductUid } from "../../lib/cartHelper.js";
 import { requireAuth } from "../../auth/auth.js";
 import "./ProductCard.css";
 
@@ -12,212 +15,173 @@ const getImagePath = (image) => {
     return `${normalizedBase}${clean}`;
 };
 
-import { isInWishlist, toggleWishlist as sharedToggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
-
-function ProductCard({ product, onProductClick }) {
-
-    const cardRef = useRef(null);
-
-    const [isWishlisted, setIsWishlisted] = useState(() => isInWishlist(product.id));
-
-
-    /* =========================================
-       CHECK WISHLIST
-    ========================================= */
+function ProductCard({ product, onAddToCart }) {
+    const [, setWishlistVersion] = useState(0);
+    const [addedQuick, setAddedQuick] = useState(false);
 
     useEffect(() => {
-        setIsWishlisted(isInWishlist(product.id));
-
         const unsub = subscribeWishlist(() => {
-            setIsWishlisted(isInWishlist(product.id));
+            setWishlistVersion((v) => v + 1);
         });
-
         return unsub;
-    }, [product.id]);
+    }, []);
 
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const uid = product.uid || buildProductUid(product.category, product.id);
+    const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category)}&uid=${encodeURIComponent(uid)}&from=watches`;
 
-    /* =========================================
-       WISHLIST BUTTON
-    ========================================= */
-
-    const toggleWishlist = () => {
+    const handleWishlistClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (!requireAuth({ type: "wishlist", product })) {
             return;
         }
         sharedToggleWishlist(product);
     };
 
-
-    /* =========================================
-       REPEAT IMAGE ANIMATION
-    ========================================= */
-
-    useEffect(() => {
-
-        const observer =
-            new IntersectionObserver(
-                ([entry]) => {
-
-                    if (entry.isIntersecting) {
-
-                        cardRef.current?.classList.add(
-                            "image-visible"
-                        );
-
-                    } else {
-
-                        cardRef.current?.classList.remove(
-                            "image-visible"
-                        );
-
-                    }
-
-                },
-                {
-                    threshold: 0.2
-                }
-            );
-
-
-        if (cardRef.current) {
-            observer.observe(cardRef.current);
+    const handleQuickAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onAddToCart) {
+            onAddToCart(product, 1);
         }
+        setAddedQuick(true);
+        setTimeout(() => setAddedQuick(false), 1200);
+    };
 
+    const rawOldPrice = Number(product.actualPrice || product.oldPrice || product.originalPrice || 0);
+    const hasDiscount = Boolean(rawOldPrice && rawOldPrice > product.price);
+    const discount = hasDiscount
+        ? Math.round(((rawOldPrice - product.price) / rawOldPrice) * 100)
+        : 50;
 
-        return () => {
-            observer.disconnect();
-        };
-
-    }, []);
-
+    const brandName = product.brand || "KSAM Signature";
+    const isWish = isInWishlist(product.id);
 
     return (
-
         <article
-            ref={cardRef}
-            className="watch-product-card"
+            className="beauty-product-card watch-product-card-themed"
+            data-category={product.category}
+            data-id={product.id}
         >
-
-
-            {/* ================= IMAGE ================= */}
-
-            <div className="watch-product-image-box">
-
-
-                {/* PRODUCT BADGE */}
-
-                {product.badge && (
-
-                    <span className="watch-product-badge">
-                        {product.badge}
-                    </span>
-
-                )}
-
-
-                {/* WISHLIST */}
-
-                <button
-                    className={`watch-product-wishlist ${
-                        isWishlisted
-                            ? "wishlisted"
-                            : ""
-                    }`}
-                    onClick={toggleWishlist}
-                    aria-label={
-                        isWishlisted
-                            ? "Remove from wishlist"
-                            : "Add to wishlist"
-                    }
+            {/* Image Area on Top */}
+            <div className="beauty-product-image-container watch-image-container">
+                <a
+                    href={productUrl}
+                    className="beauty-product-image-link"
+                    aria-label={`View details for ${product.name}`}
                 >
-                    {isWishlisted ? "♥" : "♡"}
+                    <img
+                        src={getImagePath(product.image)}
+                        alt={product.name}
+                        className="beauty-product-image watch-product-img-contain"
+                        onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                            const fb = document.createElement("div");
+                            fb.style.cssText = "width:100%;height:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;text-align:center;padding:10px;border-radius:12px;";
+                            fb.textContent = product.name || "Watch";
+                            if (e.currentTarget.parentElement) {
+                                e.currentTarget.parentElement.appendChild(fb);
+                            }
+                        }}
+                    />
+                </a>
+
+                {/* Top-Left Black Pill Discount Badge */}
+                <span className="beauty-discount-badge watch-discount-badge">
+                    {discount}% OFF
+                </span>
+
+                {/* Top-Right Round Dark Translucent Wishlist Heart */}
+                <button
+                    type="button"
+                    className={`beauty-card-wishlist-btn watch-wishlist-btn ${isWish ? "is-active" : ""}`}
+                    aria-label={isWish ? "Remove from wishlist" : "Add to wishlist"}
+                    onClick={handleWishlistClick}
+                >
+                    {isWish ? "♥" : "♡"}
                 </button>
-
-
-                {/* PRODUCT IMAGE */}
-
-                <img
-                    src={getImagePath(product.image)}
-                    alt={product.name}
-                    className="watch-product-image"
-                    onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                        const fb = document.createElement("div");
-                        fb.style.cssText = "width:100%;height:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;text-align:center;padding:10px;border-radius:12px;";
-                        fb.textContent = product.name || "Watch";
-                        if (e.currentTarget.parentElement) {
-                            e.currentTarget.parentElement.appendChild(fb);
-                        }
-                    }}
-                />
-
             </div>
 
-
-
-            {/* ================= PRODUCT INFO ================= */}
-
-            <div className="watch-product-info">
-
-
-                {/* CATEGORY */}
-
-                <p className="watch-product-category">
+            {/* Product Content Block */}
+            <div className="beauty-product-content watch-product-content">
+                {/* Category label in small uppercase letter-spaced text */}
+                <p className="beauty-product-category watch-cat-label">
                     {product.category}
                 </p>
 
-
-                {/* NAME */}
-
-                <h3 className="watch-product-name">
-                    {product.name}
+                {/* Product Name in Bold */}
+                <h3 className="beauty-product-name watch-name">
+                    <a
+                        href={productUrl}
+                        className="beauty-product-name-link"
+                    >
+                        {product.name}
+                    </a>
                 </h3>
 
-
-                {/* RATING */}
-
-                <div className="watch-product-rating">
-
-                    <span className="watch-stars">
-
-                        {"★".repeat(product.rating)}
-
-                        {"☆".repeat(
-                            5 - product.rating
-                        )}
-
-                    </span>
-
-
-                    <span className="watch-reviews">
-                        ({product.reviews})
-                    </span>
-
-                </div>
-
-
-                {/* PRICE */}
-
-                <p className="watch-product-price">
-                    ${product.price.toFixed(2)}
+                {/* Bold Grey Brand Name */}
+                <p className="beauty-product-brand watch-brand">
+                    {brandName}
                 </p>
 
+                {/* Short 2-line description in grey */}
+                <p className="beauty-product-description watch-desc">
+                    {product.description}
+                </p>
 
-                {/* VIEW PRODUCT */}
+                {/* Price in large bold ₹ with old price struck through in grey */}
+                <div className="beauty-product-price watch-price-row">
+                    <span className="beauty-current-price watch-cur-price">
+                        ₹{product.price}
+                    </span>
 
-                <button
-                    className="watch-product-button"
-                    onClick={() =>
-                        onProductClick(product)
-                    }
-                >
-                    VIEW PRODUCT
-                </button>
+                    {rawOldPrice > 0 && (
+                        <span className="beauty-original-price watch-old-price">
+                            ₹{rawOldPrice}
+                        </span>
+                    )}
+                </div>
 
+                {/* Stock Text */}
+                <p className="beauty-stock watch-stock-text">
+                    {product.stock > 0
+                        ? `${product.stock} items available`
+                        : "Out of stock"}
+                </p>
+
+                {/* Bottom Row Actions */}
+                <div className="beauty-product-actions watch-actions-row">
+                    {/* Black rounded-square cart icon button */}
+                    <button
+                        type="button"
+                        className={`beauty-quick-cart-btn watch-quick-cart-btn ${addedQuick ? "is-added" : ""}`}
+                        onClick={handleQuickAddToCart}
+                        aria-label="Add to Cart"
+                        title="Add to Cart"
+                        disabled={product.stock <= 0}
+                    >
+                        {addedQuick ? (
+                            <Check size={20} strokeWidth={2.5} />
+                        ) : (
+                            <ShoppingBag size={20} strokeWidth={2} />
+                        )}
+                    </button>
+
+                    {/* Full-width light-green View Product button */}
+                    <a
+                        href={productUrl}
+                        className="beauty-view-product-btn watch-view-btn"
+                        aria-label={`View details for ${product.name}`}
+                    >
+                        <span className="beauty-view-btn-full">View Product</span>
+                        <span className="beauty-view-btn-short">View</span>
+                        <ArrowRight size={16} className="beauty-view-btn-arrow" />
+                    </a>
+                </div>
             </div>
-
         </article>
-
     );
 }
 

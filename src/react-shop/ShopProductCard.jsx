@@ -1,23 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ShoppingBag, Check, ArrowRight } from "lucide-react";
 import { isInWishlist, toggleWishlist, subscribeWishlist } from "../lib/wishlist.js";
+import { buildProductUid, resolveImagePath } from "../lib/cartHelper.js";
+import "./ShopProductCard.css";
 
-
-const getImagePath = (image) => {
-    if (!image) return "";
-    if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
-    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-    const clean = image.replace(/^\/+/, "");
-    if (image.startsWith(normalizedBase)) return image;
-    return `${normalizedBase}${clean}`;
-};
-
-function ShopProductCard({
-    product,
-    onProductClick,
-    onAddToCart
-}) {
+const ShopProductCard = ({ product, onAddToCart }) => {
     const [, setWishlistVersion] = useState(0);
+    const [addedQuick, setAddedQuick] = useState(false);
 
     useEffect(() => {
         const unsub = subscribeWishlist(() => {
@@ -26,195 +15,156 @@ function ShopProductCard({
         return unsub;
     }, []);
 
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const uid = product.uid || buildProductUid(product.category, product.id);
+    const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category)}&uid=${encodeURIComponent(uid)}&from=electronics`;
+
+    const handleQuickAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onAddToCart) {
+            onAddToCart(product, 1);
+        }
+        setAddedQuick(true);
+        setTimeout(() => setAddedQuick(false), 1200);
+    };
+
+    const actual = product.actualPrice || product.oldPrice || product.price;
+    const discount = actual > product.price
+        ? Math.round(((actual - product.price) / actual) * 100)
+        : 0;
+
     return (
-
         <article
-            className="shop-product-card"
-            style={{
-                "--product-accent":
-                    product.accent || "#7c3aed"
-            }}
+            className="beauty-product-card electronics-card"
+            data-category={product.category}
+            data-id={product.id}
         >
+            {/* Top Image Area */}
+            <div className="beauty-product-image-container electronics-image-container">
+                <a
+                    href={productUrl}
+                    className="beauty-product-image-link"
+                    aria-label={`View details for ${product.name}`}
+                >
+                    <img
+                        src={resolveImagePath(product.image)}
+                        alt={product.name}
+                        loading="lazy"
+                        className="beauty-product-image electronics-product-image"
+                        onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                            const fb = document.createElement("div");
+                            fb.style.cssText = "width:100%;height:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;text-align:center;padding:10px;border-radius:12px;";
+                            fb.textContent = product.name || "Product";
+                            if (e.currentTarget.parentElement) {
+                                e.currentTarget.parentElement.appendChild(fb);
+                            }
+                        }}
+                    />
+                </a>
 
-            {/* PRODUCT IMAGE */}
-
-            <div
-                className="shop-product-image"
-                onClick={() =>
-                    onProductClick(product)
-                }
-            >
-
-                <div className="shop-image-glow"></div>
-
-
-                <img
-                    src={getImagePath(product.image)}
-                    alt={product.name}
-                    loading="lazy"
-                    onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                        const fb = document.createElement("div");
-                        fb.style.cssText = "width:100%;height:100%;min-height:160px;display:flex;align-items:center;justify-content:center;background:#18181b;color:#a1a1aa;font-size:12px;font-weight:700;text-align:center;padding:10px;border-radius:12px;";
-                        fb.textContent = product.name || "Product";
-                        if (e.currentTarget.parentElement) {
-                            e.currentTarget.parentElement.appendChild(fb);
-                        }
-                    }}
-                />
-
-
-                {/* DISCOUNT */}
-
-                {product.discount && (
-
-                    <span className="shop-discount-badge">
-                        -{product.discount}%
+                {/* Top-left: Black pill discount badge */}
+                {discount > 0 && (
+                    <span className="beauty-discount-badge">
+                        {discount}% OFF
                     </span>
-
                 )}
 
-
-                {/* WISHLIST HEART BUTTON */}
+                {/* Top-right: Round dark translucent wishlist heart */}
                 <button
                     type="button"
-                    className={`shop-card-wishlist-btn ${isInWishlist(product.id) ? "is-active" : ""}`}
+                    className={`beauty-card-wishlist-btn ${isInWishlist(product.id) ? "is-active" : ""}`}
                     aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                     onClick={(e) => {
                         e.stopPropagation();
                         toggleWishlist(product);
                     }}
-                    style={{
-                        position: "absolute",
-                        top: "12px",
-                        right: "12px",
-                        zIndex: 5,
-                        width: "38px",
-                        height: "38px",
-                        borderRadius: "50%",
-                        background: "rgba(0, 0, 0, 0.65)",
-                        border: "1px solid rgba(255, 255, 255, 0.35)",
-                        backdropFilter: "blur(8px)",
-                        WebkitBackdropFilter: "blur(8px)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                        color: "#ffffff",
-                        fontSize: "16px",
-                        lineHeight: 1,
-                        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.4)",
-                        transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease"
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "#ffffff";
-                        e.currentTarget.style.boxShadow = "0 0 12px rgba(255, 255, 255, 0.45)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.35)";
-                        e.currentTarget.style.boxShadow = "0 4px 14px rgba(0, 0, 0, 0.4)";
-                    }}
                 >
                     {isInWishlist(product.id) ? "♥" : "♡"}
                 </button>
-
-
-                {/* QUICK VIEW */}
-
-                <button
-                    className="shop-quick-view"
-                    onClick={(event) => {
-
-                        event.stopPropagation();
-
-                        onProductClick(product);
-
-                    }}
-                    aria-label="View product"
-                >
-                    👁
-                </button>
-
             </div>
 
-
-            {/* PRODUCT INFORMATION */}
-
-            <div className="shop-product-info">
-
-                <span className="shop-product-category">
+            {/* Product Content */}
+            <div className="beauty-product-content">
+                {/* Small green uppercase letter-spaced category */}
+                <p className="beauty-product-category">
                     {product.category}
-                </span>
+                </p>
 
-
-                <h3>
-                    {product.name}
+                {/* Bold clickable product name */}
+                <h3 className="beauty-product-name">
+                    <a
+                        href={productUrl}
+                        className="beauty-product-name-link"
+                    >
+                        {product.name}
+                    </a>
                 </h3>
 
+                {/* Bold grey brand name */}
+                <p className="beauty-product-brand">
+                    {product.brand || "KSAM Certified"}
+                </p>
 
-                <div className="shop-rating">
+                {/* Short grey description (2 lines max) */}
+                <p className="beauty-product-description">
+                    {product.description}
+                </p>
 
-                    <span className="shop-stars">
-                        ★★★★★
+                {/* Price in INR with struck-through old price */}
+                <div className="beauty-product-price">
+                    <span className="beauty-current-price">
+                        ₹{product.price}
                     </span>
 
-                    <span>
-                        {product.rating}
-                    </span>
-
-                </div>
-
-
-                <div className="shop-price">
-
-                    <strong>
-                        ${product.price}
-                    </strong>
-
-
-                    {product.oldPrice && (
-
-                        <del>
-                            ${product.oldPrice}
-                        </del>
-
+                    {actual > product.price && (
+                        <span className="beauty-original-price">
+                            ₹{actual}
+                        </span>
                     )}
-
                 </div>
 
+                {/* Stock text */}
+                <p className="beauty-stock">
+                    {product.stock > 0
+                        ? `${product.stock} items available`
+                        : "Out of stock"}
+                </p>
 
-                {/* BUTTONS */}
-
-                <div className="shop-product-actions">
-
+                {/* Bottom Row Actions */}
+                <div className="beauty-product-actions">
+                    {/* Black rounded-square cart button */}
                     <button
-                        className="shop-view-button"
-                        onClick={() =>
-                            onProductClick(product)
-                        }
+                        type="button"
+                        className={`beauty-quick-cart-btn ${addedQuick ? "is-added" : ""}`}
+                        onClick={handleQuickAddToCart}
+                        aria-label={`Add ${product.name} to Cart`}
+                        title="Add to Cart"
+                        disabled={product.stock <= 0}
                     >
-                        View Details
+                        {addedQuick ? (
+                            <Check size={20} strokeWidth={2.5} />
+                        ) : (
+                            <ShoppingBag size={20} strokeWidth={2} />
+                        )}
                     </button>
 
-
-                    <button
-                        className="shop-add-button"
-                        onClick={() =>
-                            onAddToCart(product)
-                        }
+                    {/* Full-width light-green View Product button */}
+                    <a
+                        href={productUrl}
+                        className="beauty-view-product-btn"
+                        aria-label={`View details for ${product.name}`}
                     >
-                        🛒 Add
-                    </button>
-
+                        <span className="beauty-view-btn-full">View Product</span>
+                        <span className="beauty-view-btn-short">View</span>
+                        <ArrowRight size={16} className="beauty-view-btn-arrow" />
+                    </a>
                 </div>
-
             </div>
-
         </article>
-
     );
-
-}
-
+};
 
 export default ShopProductCard;

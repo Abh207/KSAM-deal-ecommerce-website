@@ -434,172 +434,88 @@ function ClothesMain() {
 
 
     /* =====================================================
-       FILTER + SORT PRODUCTS
+       CATEGORY PILLS
     ====================================================== */
 
-    const filteredProducts = useMemo(() => {
-
-        let result = [...products];
-
-
-        /* SEARCH */
-
-        const keyword =
-            search
-                .trim()
-                .toLowerCase();
-
-
-        if (keyword) {
-
-            result = result.filter(
-                (product) => {
-
-                    const searchableText = [
-
-                        product.name,
-
-                        product.brand,
-
-                        product.category,
-
-                        product.gender,
-
-                        product.color,
-
-                        ...(product.tags || [])
-
-                    ]
-                        .filter(Boolean)
-                        .join(" ")
-                        .toLowerCase();
-
-
-                    return searchableText.includes(
-                        keyword
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* CATEGORY */
-
-        if (activeCategory !== "All") {
-
-            result = result.filter(
-                (product) =>
-                    product.category ===
-                    activeCategory
-            );
-
-        }
-
-
-        /* GENDER */
-
-        if (selectedGender !== "All") {
-
-            result = result.filter(
-                (product) =>
-                    product.gender ===
-                    selectedGender
-            );
-
-        }
-
-
-        /* PRICE */
-
-        result = result.filter(
-            (product) =>
-                Number(product.price || 0) <=
-                Number(maxPrice)
-        );
-
-
-        /* SORT */
-
-        switch (sortBy) {
-
-            case "newest":
-
-                result.sort(
-                    (a, b) =>
-                        Number(b.newArrival) -
-                        Number(a.newArrival)
-                );
-
-                break;
-
-
-            case "rating":
-
-                result.sort(
-                    (a, b) =>
-                        Number(b.rating || 0) -
-                        Number(a.rating || 0)
-                );
-
-                break;
-
-
-            case "price-low":
-
-                result.sort(
-                    (a, b) =>
-                        Number(a.price || 0) -
-                        Number(b.price || 0)
-                );
-
-                break;
-
-
-            case "price-high":
-
-                result.sort(
-                    (a, b) =>
-                        Number(b.price || 0) -
-                        Number(a.price || 0)
-                );
-
-                break;
-
-
-            default:
-
-                result.sort(
-                    (a, b) =>
-                        Number(b.featured) -
-                        Number(a.featured)
-                );
-
-        }
-
-
-        return result;
-
-    }, [
-        products,
-        search,
-        activeCategory,
-        selectedGender,
-        maxPrice,
-        sortBy
-    ]);
+    const CATEGORY_PILLS = [
+        "All",
+        "Women",
+        "Men",
+        "Dresses",
+        "Tops",
+        "Bottoms",
+        "Jackets"
+    ];
 
 
     /* =====================================================
-       VISIBLE PRODUCTS
+       FILTER + SORT PRODUCTS
     ====================================================== */
 
-    const displayedProducts =
-        filteredProducts.slice(
-            0,
-            visibleProducts
-        );
+    const filteredAndSortedProducts = useMemo(() => {
+
+        let result = [...products];
+
+        /* SEARCH */
+        const keyword = search.trim().toLowerCase();
+        if (keyword) {
+            result = result.filter((product) => {
+                const searchableText = [
+                    product.name,
+                    product.brand,
+                    product.category,
+                    product.gender,
+                    product.color,
+                    product.description,
+                    ...(product.tags || [])
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+                return searchableText.includes(keyword);
+            });
+        }
+
+        /* CATEGORY / GENDER PILL FILTER */
+        if (activeCategory !== "All") {
+            const cat = activeCategory.toLowerCase();
+            result = result.filter((product) => {
+                const pCat = String(product.category || "").toLowerCase();
+                const pGender = String(product.gender || "").toLowerCase();
+                if (cat === "women") {
+                    return pGender === "women" || pCat === "women";
+                }
+                if (cat === "men") {
+                    return pGender === "men" || pCat === "men";
+                }
+                return pCat === cat;
+            });
+        }
+
+        /* SORT */
+        switch (sortBy) {
+            case "price-low":
+                result.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+                break;
+            case "price-high":
+                result.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+                break;
+            case "newest":
+                result.sort((a, b) => Number(b.newArrival || 0) - Number(a.newArrival || 0));
+                break;
+            case "featured":
+            default:
+                result.sort((a, b) => Number(b.featured || 0) - Number(a.featured || 0));
+                break;
+        }
+
+        return result;
+
+    }, [products, search, activeCategory, sortBy]);
+
+    const filteredProducts = filteredAndSortedProducts;
+    const displayedProducts = filteredAndSortedProducts;
 
 
     /* =====================================================
@@ -681,90 +597,7 @@ function ClothesMain() {
             />
 
 
-            {/* =================================================
-                BENEFITS
-            ================================================== */}
 
-            <section className="clothes-benefits">
-
-
-                <div>
-
-                    <i className="fa-solid fa-truck-fast"></i>
-
-                    <span>
-
-                        <b>
-                            FREE SHIPPING
-                        </b>
-
-                        <small>
-                            On orders above ₹999
-                        </small>
-
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <i className="fa-solid fa-arrow-rotate-left"></i>
-
-                    <span>
-
-                        <b>
-                            EASY RETURNS
-                        </b>
-
-                        <small>
-                            Simple return experience
-                        </small>
-
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <i className="fa-regular fa-credit-card"></i>
-
-                    <span>
-
-                        <b>
-                            SECURE PAYMENT
-                        </b>
-
-                        <small>
-                            Safe checkout
-                        </small>
-
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <i className="fa-solid fa-location-dot"></i>
-
-                    <span>
-
-                        <b>
-                            KSAM DEAL
-                        </b>
-
-                        <small>
-                            Style delivered to you
-                        </small>
-
-                    </span>
-
-                </div>
-
-
-            </section>
 
 
             {/* =================================================
@@ -1002,663 +835,88 @@ function ClothesMain() {
                 className="clothes-products-section"
                 id="trending"
             >
-
-
-                <div className="clothes-products-heading">
-
-
-                    <div>
-
-                        <span>
-                            SHOP THE DROP
-                        </span>
-
-                        <h2>
-                            Find your style
-                        </h2>
-
+                {/* MODERN CENTERED STACKED HEADER */}
+                <div className="clothes-header-block">
+                    <div className="clothes-header-badge">
+                        <i className="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>SHOP THE DROP</span>
                     </div>
 
+                    <h2 className="clothes-header-heading">
+                        Find your <span className="clothes-header-accent">style</span>
+                    </h2>
 
-                    <strong>
-                        {filteredProducts.length} products
-                    </strong>
+                    <p className="clothes-header-subtitle">
+                        Fresh fits for every mood. Discover the latest in women's, men's and everyday wear.
+                    </p>
 
+                    <p className="clothes-header-count">
+                        Showing <strong className="clothes-count-highlight">{filteredAndSortedProducts.length}</strong> products
+                    </p>
                 </div>
 
-
-                {/* TOOLBAR */}
-
-                <div className="clothes-toolbar">
-
-
-                    <div className="clothes-filter-pills">
-
-
-                        <button
-                            type="button"
-                            className={
-                                activeCategory === "All"
-                                    ? "active"
-                                    : ""
-                            }
-                            onClick={() =>
-                                selectCategory("All")
-                            }
-                        >
-                            All
-                        </button>
-
-
-                        {categories
-                            .slice(0, 6)
-                            .map((category) => {
-
-                                const name =
-                                    category.name ||
-                                    category;
-
-
-                                return (
-
-                                    <button
-                                        type="button"
-                                        key={name}
-                                        className={
-                                            activeCategory === name
-                                                ? "active"
-                                                : ""
-                                        }
-                                        onClick={() =>
-                                            selectCategory(name)
-                                        }
-                                    >
-
-                                        {name}
-
-                                    </button>
-
-                                );
-
-                            })}
-
+                {/* MODERN CENTERED TOOLBAR */}
+                <div className="clothes-toolbar-modern">
+                    <div className="clothes-pills-row" role="tablist" aria-label="Category filter">
+                        {CATEGORY_PILLS.map((pill) => (
+                            <button
+                                key={pill}
+                                type="button"
+                                role="tab"
+                                aria-selected={activeCategory === pill}
+                                className={`clothes-category-pill ${activeCategory === pill ? "is-active" : ""}`}
+                                onClick={() => selectCategory(pill)}
+                            >
+                                {pill}
+                            </button>
+                        ))}
                     </div>
 
-
-                    <div className="clothes-toolbar-actions">
-
-
-                        <button
-                            type="button"
-                            className="clothes-mobile-filter-button"
-                            onClick={() =>
-                                setMobileFilters(
-                                    (value) => !value
-                                )
-                            }
-                        >
-
-                            <i className="fa-solid fa-sliders"></i>
-
-                            Filters
-
-                        </button>
-
-
+                    <div className="clothes-sort-wrapper">
                         <select
                             value={sortBy}
-                            onChange={(event) => {
-
-                                setSortBy(
-                                    event.target.value
-                                );
-
-                                setVisibleProducts(8);
-
-                            }}
-                            className="clothes-sort"
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="clothes-sort-select-pill"
+                            aria-label="Sort products"
                         >
-
-                            <option value="featured">
-                                Featured
-                            </option>
-
-                            <option value="newest">
-                                New Arrivals
-                            </option>
-
-                            <option value="rating">
-                                Top Rated
-                            </option>
-
-                            <option value="price-low">
-                                Price: Low to High
-                            </option>
-
-                            <option value="price-high">
-                                Price: High to Low
-                            </option>
-
+                            <option value="featured">Featured</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="newest">Newest</option>
                         </select>
-
                     </div>
-
                 </div>
 
-
-                {/* SHOP LAYOUT */}
-
-                <div
-                    className={
-                        `clothes-shop-layout ${
-                            mobileFilters
-                                ? "filters-open"
-                                : ""
-                        }`
-                    }
-                >
-
-
-                    {/* SIDEBAR */}
-
-                    <aside className="clothes-sidebar">
-
-
-                        <div className="clothes-sidebar-title">
-
-                            <h3>
-                                Filters
-                            </h3>
-
+                {/* FULL WIDTH PRODUCTS GRID */}
+                <div className="clothes-product-area-fullwidth">
+                    {filteredAndSortedProducts.length > 0 ? (
+                        <div className="clothes-product-grid">
+                            {filteredAndSortedProducts.map((product) => (
+                                <ClothesCard
+                                    key={product.id}
+                                    product={product}
+                                    isWishlisted={isInWishlist(product.id)}
+                                    onWishlist={toggleWishlist}
+                                    onAddToCart={addToCart}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="clothes-empty-state">
+                            <i className="fa-solid fa-shirt"></i>
+                            <h3>No products found</h3>
+                            <p>No products match your selected filter.</p>
                             <button
                                 type="button"
+                                className="clothes-clear-filters-btn"
                                 onClick={resetFilters}
                             >
-                                Reset
+                                Clear filters
                             </button>
-
                         </div>
-
-
-                        {/* GENDER */}
-
-                        <div className="clothes-filter-box">
-
-                            <h4>
-                                Gender
-                            </h4>
-
-
-                            {[
-                                "All",
-                                "Women",
-                                "Men",
-                                "Unisex"
-                            ].map((gender) => (
-
-                                <label
-                                    className="clothes-radio"
-                                    key={gender}
-                                >
-
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        checked={
-                                            selectedGender ===
-                                            gender
-                                        }
-                                        onChange={() =>
-                                            setSelectedGender(
-                                                gender
-                                            )
-                                        }
-                                    />
-
-                                    <span>
-                                        {gender}
-                                    </span>
-
-                                </label>
-
-                            ))}
-
-                        </div>
-
-
-                        {/* PRICE */}
-
-                        <div className="clothes-filter-box">
-
-                            <h4>
-                                Maximum price
-                            </h4>
-
-
-                            <div className="clothes-price-value">
-
-                                <span>
-                                    ₹0
-                                </span>
-
-                                <b>
-                                    ₹
-                                    {Number(
-                                        maxPrice
-                                    ).toLocaleString(
-                                        "en-IN"
-                                    )}
-                                </b>
-
-                            </div>
-
-
-                            <input
-                                type="range"
-                                min="500"
-                                max={
-                                    Number(
-                                        store.maxPrice ||
-                                        5000
-                                    )
-                                }
-                                step="100"
-                                value={maxPrice}
-                                onChange={(event) =>
-                                    setMaxPrice(
-                                        event.target.value
-                                    )
-                                }
-                            />
-
-                        </div>
-
-
-                        {/* COLORS */}
-
-                        <div className="clothes-filter-box">
-
-                            <h4>
-                                Quick colors
-                            </h4>
-
-
-                            <div className="clothes-color-options">
-
-                                {[
-                                    "Black",
-                                    "White",
-                                    "Green",
-                                    "Blue",
-                                    "Brown",
-                                    "Beige"
-                                ].map((color) => (
-
-                                    <button
-                                        type="button"
-                                        key={color}
-                                        className={
-                                            `clothes-color-dot clothes-color-${color.toLowerCase()}`
-                                        }
-                                        title={color}
-                                        onClick={() => {
-
-                                            setSearch(
-                                                color
-                                            );
-
-                                            setVisibleProducts(
-                                                8
-                                            );
-
-                                        }}
-                                    />
-
-                                ))}
-
-                            </div>
-
-                        </div>
-
-
-                        {/* OFFER */}
-
-                        <div className="clothes-filter-offer">
-
-                            <span>
-                                KSAM DEAL
-                            </span>
-
-                            <strong>
-                                STYLE
-                                <br />
-                                WITHOUT
-                                <br />
-                                LIMITS.
-                            </strong>
-
-                            <small>
-                                Fresh drops. Better prices.
-                            </small>
-
-                        </div>
-
-                    </aside>
-
-
-                    {/* PRODUCT AREA */}
-
-                    <section className="clothes-product-area">
-
-
-                        {displayedProducts.length ? (
-
-                            <>
-
-                                <div className="clothes-product-grid">
-
-                                    {displayedProducts.map(
-                                        (product) => (
-
-                                            <ClothesCard
-                                                key={product.id}
-                                                product={product}
-                                                isWishlisted={
-                                                    isInWishlist(
-                                                        product.id
-                                                    )
-                                                }
-                                                onWishlist={
-                                                    toggleWishlist
-                                                }
-                                                onViewProduct={
-                                                    setSelectedProduct
-                                                }
-                                                onAddToCart={
-                                                    addToCart
-                                                }
-                                            />
-
-                                        )
-                                    )}
-
-                                </div>
-
-
-                                {displayedProducts.length <
-                                    filteredProducts.length && (
-
-                                    <button
-                                        type="button"
-                                        className="clothes-load-more"
-                                        onClick={() =>
-                                            setVisibleProducts(
-                                                (value) =>
-                                                    value + 8
-                                            )
-                                        }
-                                    >
-
-                                        Load more
-
-                                        <i className="fa-solid fa-arrow-down"></i>
-
-                                    </button>
-
-                                )}
-
-                            </>
-
-                        ) : (
-
-                            <div className="clothes-empty-state">
-
-                                <i className="fa-solid fa-shirt"></i>
-
-                                <h3>
-                                    No styles found
-                                </h3>
-
-                                <p>
-                                    Try another search or reset
-                                    your filters.
-                                </p>
-
-                                <button
-                                    type="button"
-                                    onClick={
-                                        resetFilters
-                                    }
-                                >
-                                    Reset filters
-                                </button>
-
-                            </div>
-
-                        )}
-
-                    </section>
-
+                    )}
                 </div>
-
             </main>
-
-
-            {/* =================================================
-                QUICK VIEW MODAL
-            ================================================== */}
-
-            {selectedProduct && (
-
-                <div
-                    className="clothes-modal-backdrop"
-                    onClick={() =>
-                        setSelectedProduct(null)
-                    }
-                >
-
-                    <div
-                        className="clothes-product-modal"
-                        onClick={(event) =>
-                            event.stopPropagation()
-                        }
-                    >
-
-
-                        <button
-                            type="button"
-                            className="clothes-modal-close"
-                            onClick={() =>
-                                setSelectedProduct(null)
-                            }
-                            aria-label="Close product details"
-                        >
-
-                            <i className="fa-solid fa-xmark"></i>
-
-                        </button>
-
-
-                        <div className="clothes-modal-image">
-
-                            {selectedProduct.image && (
-
-                                <img
-                                    src={getImagePath(
-                                        selectedProduct.image
-                                    )}
-                                    alt={
-                                        selectedProduct.name
-                                    }
-                                    onError={(event) => {
-
-                                        event.currentTarget.style.display =
-                                            "none";
-
-                                        event.currentTarget.parentElement.classList.add(
-                                            "image-missing"
-                                        );
-
-                                    }}
-                                />
-
-                            )}
-
-                            <div className="clothes-product-fallback">
-
-                                <span>
-                                    {
-                                        selectedProduct.category
-                                    }
-                                </span>
-
-                                <strong>
-                                    KSAM
-                                </strong>
-
-                                <small>
-                                    DEAL
-                                </small>
-
-                            </div>
-
-                        </div>
-
-
-                        <div className="clothes-modal-content">
-
-                            <span>
-                                {
-                                    selectedProduct.category
-                                }
-                            </span>
-
-
-                            <h2>
-                                {
-                                    selectedProduct.name
-                                }
-                            </h2>
-
-
-                            <div className="clothes-modal-rating">
-
-                                ★{" "}
-                                {Number(
-                                    selectedProduct.rating ||
-                                    0
-                                ).toFixed(1)}
-
-                                <small>
-                                    (
-                                    {
-                                        selectedProduct.reviews ||
-                                        0
-                                    }{" "}
-                                    reviews)
-                                </small>
-
-                            </div>
-
-
-                            <div className="clothes-modal-price">
-
-                                ₹
-                                {Number(
-                                    selectedProduct.price ||
-                                    0
-                                ).toLocaleString(
-                                    "en-IN"
-                                )}
-
-
-                                {selectedProduct.oldPrice && (
-
-                                    <del>
-
-                                        ₹
-                                        {Number(
-                                            selectedProduct.oldPrice
-                                        ).toLocaleString(
-                                            "en-IN"
-                                        )}
-
-                                    </del>
-
-                                )}
-
-                            </div>
-
-
-                            <p>
-
-                                {
-                                    selectedProduct.description ||
-                                    "A versatile KSAM Deal fashion piece designed for everyday styling."
-                                }
-
-                            </p>
-
-
-                            {selectedProduct.sizes?.length > 0 && (
-
-                                <div className="clothes-modal-sizes">
-
-                                    <b>
-                                        Available sizes
-                                    </b>
-
-
-                                    <div>
-
-                                        {selectedProduct.sizes.map(
-                                            (size) => (
-
-                                                <span
-                                                    key={size}
-                                                >
-                                                    {size}
-                                                </span>
-
-                                            )
-                                        )}
-
-                                    </div>
-
-                                </div>
-
-                            )}
-
-
-                            <button
-                                type="button"
-                                className="clothes-modal-cart"
-                                onClick={() => {
-
-                                    addToCart(
-                                        selectedProduct
-                                    );
-
-                                    setSelectedProduct(
-                                        null
-                                    );
-
-                                }}
-                            >
-
-                                <i className="fa-solid fa-bag-shopping"></i>
-
-                                Add to cart
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            )}
 
 
             {/* =================================================

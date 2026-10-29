@@ -97,6 +97,21 @@
             "scale": 1
         },
         {
+            "id": "gadgets",
+            "name": "Gadgets",
+            "description": "Smart gadgets & tech accessories",
+            "productIds": [],
+            "icon": "📱",
+            "color": "#e0f7f6",
+            "link": "./heardeprod.html",
+            "bannerImage": "electronics-items.png",
+            "video": null,
+            "poster": "",
+            "objectPosition": "center",
+            "fit": "contain",
+            "scale": 1
+        },
+        {
             "id": "cloths",
             "name": "Clothing",
             "description": "Stylish clothing for every occasion",
@@ -120,9 +135,12 @@
             "color": "#e8f1ff",
             "link": "./fashionSpeaker.html",
             "bannerImage": "",
-            "video": null,
-            "poster": "",
-            "objectPosition": "72% 50%",
+            "video": [
+                { "src": "assets/videos/Gaming_mouse_exploded_view_eb900f91.mp4", "type": "video/mp4" },
+                { "src": "videos/electronics-category-bg.mp4", "type": "video/mp4" }
+            ],
+            "poster": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600",
+            "objectPosition": "center",
             "fit": "cover",
             "scale": 1
         },

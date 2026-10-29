@@ -7,6 +7,7 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 80px 5%;
+    background: transparent;
 }
 
 
@@ -21,7 +22,7 @@
 
 .watch-category-heading span {
     display: block;
-    color: #c89b3c;
+    color: #d6ad5a;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 3px;
@@ -29,10 +30,11 @@
 
 .watch-category-heading h2 {
     margin-top: 10px;
-    color: #111111;
-    font-size: 34px;
-    font-weight: 700;
+    color: #ffffff;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 800;
     letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -50,19 +52,17 @@
 }
 
 .watch-category-filters button {
-    padding: 11px 18px;
-
-    border: 1px solid #dddddd;
-    background: #ffffff;
-
-    color: #111111;
-
-    font-size: 11px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 22px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.8px;
-
     cursor: pointer;
-
     transition:
         background 0.3s ease,
         color 0.3s ease,
@@ -74,9 +74,9 @@
 /* Hover */
 
 .watch-category-filters button:hover {
-    background: #111111;
-    color: #ffffff;
-    border-color: #111111;
+    background: #c89b3c;
+    color: #111111;
+    border-color: #c89b3c;
     transform: translateY(-2px);
 }
 
@@ -84,9 +84,10 @@
 /* Active category */
 
 .watch-category-filters button.active {
-    background: #111111;
-    color: #ffffff;
-    border-color: #111111;
+    background: #c89b3c;
+    color: #111111;
+    border-color: #c89b3c;
+    box-shadow: 0 4px 15px rgba(200, 155, 60, 0.35);
 }
 
 
@@ -109,7 +110,11 @@
 
 .watch-category-card {
     position: relative;
-
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    outline: none;
     overflow: hidden;
 
     background: #f5f5f5;
@@ -117,10 +122,20 @@
     cursor: pointer;
 
     border: 1px solid #eeeeee;
+    border-radius: 12px;
 
     transition:
         transform 0.3s ease,
-        box-shadow 0.3s ease;
+        box-shadow 0.3s ease,
+        outline 0.2s ease;
+}
+
+
+/* Keyboard focus ring */
+
+.watch-category-card:focus-visible {
+    outline: 2px solid #c89b3c;
+    outline-offset: 4px;
 }
 
 
@@ -131,6 +146,13 @@
 
     box-shadow:
         0 12px 30px rgba(0, 0, 0, 0.10);
+}
+
+
+/* Prevent child elements from intercepting clicks on the tile link */
+
+.watch-category-card > * {
+    pointer-events: none;
 }
 
 
@@ -202,12 +224,13 @@
 }
 
 
-/* Shop button */
+/* Shop link & SVG arrow */
 
-.watch-category-content button {
-    border: none;
-
-    background: transparent;
+.watch-category-shop-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 
     color: #c89b3c;
 
@@ -215,20 +238,34 @@
     font-weight: 700;
 
     letter-spacing: 1px;
-
-    cursor: pointer;
+    white-space: nowrap;
+    text-transform: uppercase;
 
     transition:
-        color 0.3s ease,
+        color 0.3s ease;
+}
+
+.watch-category-arrow-svg {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    stroke: currentColor;
+
+    transition:
         transform 0.3s ease;
 }
 
 
-/* Shop button hover */
+/* Shop link hover & card hover */
 
-.watch-category-content button:hover {
+.watch-category-card:hover .watch-category-shop-link,
+.watch-category-card:focus-visible .watch-category-shop-link {
     color: #111111;
+}
 
+.watch-category-card:hover .watch-category-arrow-svg,
+.watch-category-card:focus-visible .watch-category-arrow-svg {
     transform: translateX(4px);
 }
 
@@ -346,10 +383,15 @@
     }
 
 
-    .watch-category-content button {
+    .watch-category-shop-link {
         font-size: 9px;
-
         letter-spacing: 0.5px;
+        gap: 5px;
+    }
+
+    .watch-category-arrow-svg {
+        width: 12px;
+        height: 12px;
     }
 
 }
@@ -398,8 +440,15 @@
     }
 
 
-    .watch-category-content button {
+    .watch-category-shop-link {
         font-size: 8px;
+        letter-spacing: 0.4px;
+        gap: 4px;
+    }
+
+    .watch-category-arrow-svg {
+        width: 11px;
+        height: 11px;
     }
 
 }

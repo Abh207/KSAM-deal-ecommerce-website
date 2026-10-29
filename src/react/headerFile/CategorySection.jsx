@@ -65,6 +65,11 @@ const CATEGORY_ICONS = {
       <rect x="4" y="2" width="16" height="20" rx="2" /><circle cx="12" cy="14" r="4" /><circle cx="12" cy="14" r="1" /><line x1="12" y1="6" x2="12.01" y2="6" />
     </svg>
   ),
+  gadgets: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+      <rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" />
+    </svg>
+  ),
 };
 
 function getIconForCategory(id) {
@@ -121,6 +126,17 @@ export const CATEGORY_VIDEOS = {
     fit: "cover",
     scale: 1,
     fadeLoop: false
+  },
+  electronics: {
+    video: [
+      { src: "assets/videos/Gaming_mouse_exploded_view_eb900f91.mp4", type: "video/mp4" },
+      { src: "videos/electronics-category-bg.mp4", type: "video/mp4" }
+    ],
+    poster: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600",
+    objectPosition: "center",
+    fit: "cover",
+    scale: 1,
+    fadeLoop: false
   }
 };
 
@@ -155,7 +171,7 @@ function CategoryProductCard({ product, category }) {
         ? product.price
         : parseFloat(String(product.price).replace(/[^0-9.]/g, ""));
       if (!isNaN(num)) {
-        const isRupee = ["shoes", "cloths", "beauty", "speakers"].includes(String(category.id).toLowerCase());
+        const isRupee = ["shoes", "cloths", "beauty", "speakers", "gadgets"].includes(String(category.id).toLowerCase());
         return `${isRupee ? "₹" : "$"}${num.toLocaleString("en-IN")}`;
       }
       return String(product.price);
@@ -235,7 +251,7 @@ function CategoryProductCard({ product, category }) {
 }
 
 
-function CategorySection({ onViewAllClick, onCategorySelect }) {
+function CategorySection({ onViewAllClick, onCategorySelect, initialCategory }) {
   /* ======================================================
      BUILD CATEGORIES using each category page's own dataset
   ====================================================== */
@@ -295,8 +311,24 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
   /* ======================================================
      ACTIVE CATEGORY STATE
   ====================================================== */
-  // Default to first category in categorySection.json ("watches")
-  const initialCatId = categories[0]?.id || "watches";
+  // Default to URL param, heardeprod page check, initialCategory or first category ("watches")
+  const initialCatId = useMemo(() => {
+    if (initialCategory) return initialCategory;
+    if (typeof window !== "undefined") {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlCat = params.get("category");
+        if (urlCat) {
+          const found = categories.find((c) => c.id.toLowerCase() === urlCat.toLowerCase());
+          if (found) return found.id;
+        }
+        if (window.location.pathname.includes("heardeprod.html")) {
+          return "gadgets";
+        }
+      } catch (e) {}
+    }
+    return categories[0]?.id || "watches";
+  }, [categories, initialCategory]);
 
   const [activeCatId, setActiveCatId] = useState(initialCatId);
   const [bannerFailed, setBannerFailed] = useState(false);
@@ -492,6 +524,18 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
     [activeCatId]
   );
 
+  const handleCategoryClick = useCallback(
+    (cat) => {
+      if (cat.id === "gadgets" && !window.location.pathname.includes("heardeprod.html")) {
+        const target = cat.link || "./heardeprod.html";
+        window.location.href = target;
+        return;
+      }
+      handleSelect(cat.id);
+    },
+    [handleSelect]
+  );
+
 
   /* ======================================================
      THUMBNAIL CAROUSEL SCROLL
@@ -559,20 +603,20 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
       if (e.key === "ArrowDown") {
         e.preventDefault();
         const next = (idx + 1) % categories.length;
-        const nextId = categories[next].id;
-        handleSelect(nextId);
-        const nextBtn = document.getElementById(tabId(nextId));
+        const nextCat = categories[next];
+        handleCategoryClick(nextCat);
+        const nextBtn = document.getElementById(tabId(nextCat.id));
         nextBtn?.focus({ preventScroll: true });
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         const prev = (idx - 1 + categories.length) % categories.length;
-        const prevId = categories[prev].id;
-        handleSelect(prevId);
-        const prevBtn = document.getElementById(tabId(prevId));
+        const prevCat = categories[prev];
+        handleCategoryClick(prevCat);
+        const prevBtn = document.getElementById(tabId(prevCat.id));
         prevBtn?.focus({ preventScroll: true });
       }
     },
-    [categories, activeCatId, handleSelect]
+    [categories, activeCatId, handleCategoryClick]
   );
 
 
@@ -636,7 +680,7 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                 className={`cs-list-item${isActive ? " active" : ""}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSelect(cat.id);
+                  handleCategoryClick(cat);
                 }}
               >
                 <span className="cs-list-icon" aria-hidden="true">
@@ -664,7 +708,7 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                 className={`cs-chip${isActive ? " active" : ""}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSelect(cat.id);
+                  handleCategoryClick(cat);
                 }}
               >
                 <span className="cs-chip-icon" aria-hidden="true">
@@ -686,7 +730,8 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
         >
           {/* FEATURED BANNER */}
           <div
-            className={`cs-banner${fading ? " cs-fade-out" : " cs-fade-in"}${isEmpty ? " cs-banner-empty" : ""}`}
+            className={`cs-banner cs-banner-${String(activeCatId).toLowerCase()}${fading ? " cs-fade-out" : " cs-fade-in"}${isEmpty ? " cs-banner-empty" : ""}`}
+            data-category={String(activeCatId).toLowerCase()}
             key={fadeKey}
           >
             {/* LAYER 0: Background Media (Video or Poster / Product Image) */}

@@ -34,7 +34,14 @@
 
 </head>
 
-<body>
+<body style="background: transparent; margin: 0; overflow-x: hidden;">
+
+    <div class="bg-video-wrap" aria-hidden="true">
+        <video class="bg-video" autoplay muted loop playsinline preload="auto">
+            <source src="%BASE_URL%assets/videos/watches-bg.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
 
     <!-- React will load the complete shop inside this div -->
     <div id="watchshop-root"></div>

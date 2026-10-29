@@ -931,3 +931,98 @@ body.product-details-body {
     font-size: 13px;
   }
 }
+
+/* ------------------------------------------------------------
+   CLOTHING OPTIONS: COLOR & SIZE SELECTOR
+   ------------------------------------------------------------ */
+.product-detail-clothing-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 8px;
+}
+
+.product-detail-color-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14.5px;
+}
+
+.product-detail-option-label {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.product-detail-color-value {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.product-detail-sizes-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-detail-sizes-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-detail-selected-size-chip {
+  display: inline-block;
+  background: #f0fdf4;
+  color: #15803d;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #bbf7d0;
+}
+
+.product-detail-sizes-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.product-detail-size-pill {
+  min-width: 44px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-detail-size-pill:hover {
+  border-color: #16a34a;
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+.product-detail-size-pill.is-selected {
+  border-color: #16a34a;
+  background: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.product-detail-size-error-msg {
+  margin: 4px 0 0;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+}
+

@@ -1,65 +1,38 @@
 import React, { useEffect, useState, useRef } from "react";
-import ShopPromo from "./ShopPromo.jsx";
-import { requireAuth } from "../auth/auth.js";
-
-import ShopProductCard from "./ShopProductCard.jsx";
+import { Cpu } from "lucide-react";
 import shopProducts from "./shopProducts.json";
 import Navbar from "../deals/components/Navbar.jsx";
-import { addProductToCart, normalizeCartItem, resolveImagePath } from "../lib/cartHelper.js";
+import ShopProductCard from "./ShopProductCard.jsx";
+import ElectronicsPromoCarousel from "./ElectronicsPromoCarousel.jsx";
+import ElectronicsFeedback from "./ElectronicsFeedback.jsx";
+import BackToTop from "../react/beauty-sections/BackToTop.jsx";
+import Toast from "../react/Toast.jsx";
 
+import { addProductToCart, normalizeCartItem } from "../lib/cartHelper.js";
+
+import "./ShopHome.css";
+import "./ShopProductCard.css";
+import "./ShopPromo.css";
 
 /* =========================================================
-   CATEGORIES
+   CATEGORIES LIST
 ========================================================= */
-
-const categories = [
-    {
-        name: "Smartphones",
-        icon: "📱"
-    },
-    {
-        name: "Laptops",
-        icon: "💻"
-    },
-    {
-        name: "Audio",
-        icon: "🎧"
-    },
-    {
-        name: "Cameras",
-        icon: "📷"
-    },
-    {
-        name: "Gaming",
-        icon: "🎮"
-    },
-    {
-        name: "Smart Home",
-        icon: "🏠"
-    }
+const CATEGORIES = [
+    { name: "All", icon: "⚡" },
+    { name: "Smartphones", icon: "📱" },
+    { name: "Laptops", icon: "💻" },
+    { name: "Audio", icon: "🎧" },
+    { name: "Cameras", icon: "📷" },
+    { name: "Gaming", icon: "🎮" },
+    { name: "Smart Home", icon: "🏠" }
 ];
 
-
-/* =========================================================
-   SHOP HOME
-========================================================= */
-
 function ShopHome() {
-
     /* -----------------------------------------------------
        STATES
     ----------------------------------------------------- */
-
-    const [search, setSearch] = useState("");
-
-    const [selectedCategory, setSelectedCategory] =
-        useState("All");
-
-    const [selectedProduct, setSelectedProduct] =
-        useState(null);
-
-    const [cartMessage, setCartMessage] =
-        useState("");
+    const [activeCategory, setActiveCategory] = useState("All");
+    const [toast, setToast] = useState(null);
 
     const heroVideoRef = useRef(null);
     const heroSectionRef = useRef(null);
@@ -70,7 +43,7 @@ function ShopHome() {
     const [parallax, setParallax] = useState({ x: 0, y: 0 });
 
     /* -----------------------------------------------------
-       ROTATING WORDS (EVERY 3 SECONDS)
+       ROTATING WORDS (EVERY 3 SECONDS) - HERO
     ----------------------------------------------------- */
     useEffect(() => {
         const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -88,7 +61,7 @@ function ShopHome() {
     }, []);
 
     /* -----------------------------------------------------
-       HERO MOUSE PARALLAX (DESKTOP ONLY: 10-15PX OPPOSITE)
+       HERO MOUSE PARALLAX (DESKTOP ONLY)
     ----------------------------------------------------- */
     const handleHeroMouseMove = (e) => {
         if (typeof window === "undefined" || window.innerWidth <= 768) return;
@@ -119,14 +92,12 @@ function ShopHome() {
         const section = heroSectionRef.current;
         if (!video || !section) return;
 
-        // Respect prefers-reduced-motion: pause video so poster is shown
         const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (prefersReducedMotion) {
             video.pause();
             return;
         }
 
-        // Pause video when out of view, play when in view
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -150,197 +121,55 @@ function ShopHome() {
         };
     }, []);
 
-
     /* -----------------------------------------------------
-       FILTER PRODUCTS
+       CATEGORY FILTERING & PRODUCT FILTER
     ----------------------------------------------------- */
+    const filteredProducts = activeCategory === "All"
+        ? shopProducts
+        : shopProducts.filter((product) => product.category === activeCategory);
 
-    const filteredProducts =
-        shopProducts.filter((product) => {
-
-            const productName =
-                product.name?.toLowerCase() || "";
-
-            const searchText =
-                search.toLowerCase();
-
-            const matchesSearch =
-                productName.includes(searchText);
-
-            const matchesCategory =
-                selectedCategory === "All" ||
-                product.category === selectedCategory;
-
-            return (
-                matchesSearch &&
-                matchesCategory
-            );
-
-        });
-
-    /* -----------------------------------------------------
-       SCROLL TO PRODUCTS
-    ----------------------------------------------------- */
-    const scrollToProducts = () => {
-        document
-            .getElementById("shop-products")
-            ?.scrollIntoView({
-                behavior: "smooth"
-            });
+    const handleCategoryClick = (categoryName) => {
+        setActiveCategory(categoryName);
+        const grid = document.getElementById("shop-products");
+        if (grid) {
+            const rect = grid.getBoundingClientRect();
+            if (rect.top < 0 || rect.top > window.innerHeight) {
+                grid.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
     };
 
     /* -----------------------------------------------------
-       ADD PRODUCT TO CART
+       ADD TO CART (Part 3 requirement)
     ----------------------------------------------------- */
-
-    const addToCart = (product) => {
-        if (!requireAuth({ type: "add_to_cart", product })) {
-            return;
-        }
+    const handleAddToCart = (product, qty = 1) => {
         try {
-            const normalized = normalizeCartItem(product, 1);
-            addProductToCart(product, 1);
+            const normalized = normalizeCartItem(product, qty);
+            addProductToCart(product, qty);
 
-            setCartMessage(
-                `${normalized?.name || product.name || "Product"} added to cart!`
-            );
-
-            setTimeout(() => {
-                setCartMessage("");
-            }, 2500);
+            setToast({
+                message: "Added to cart",
+                productName: normalized?.name || product.name || "Product"
+            });
         } catch (error) {
-            console.error(
-                "Cart error:",
-                error
-            );
+            console.error("Cart error:", error);
         }
     };
-
-
-    /* -----------------------------------------------------
-       PRODUCT SCROLL ANIMATION
-    ----------------------------------------------------- */
-
-    useEffect(() => {
-
-        const cards =
-            document.querySelectorAll(
-                ".shop-product-reveal"
-            );
-
-
-        if (!cards.length) {
-            return;
-        }
-
-
-        const observer =
-            new IntersectionObserver(
-                (entries) => {
-
-                    entries.forEach((entry) => {
-
-                        if (
-                            entry.isIntersecting
-                        ) {
-
-                            entry.target.classList.add(
-                                "shop-product-visible"
-                            );
-
-                            observer.unobserve(
-                                entry.target
-                            );
-
-                        }
-
-                    });
-
-                },
-                {
-                    threshold: 0.12
-                }
-            );
-
-
-        cards.forEach((card) => {
-
-            observer.observe(card);
-
-        });
-
-
-        return () => {
-
-            observer.disconnect();
-
-        };
-
-    }, [filteredProducts.length]);
-
-
-    /* -----------------------------------------------------
-       CLOSE POPUP WITH ESCAPE
-    ----------------------------------------------------- */
-
-    useEffect(() => {
-
-        const handleEscape =
-            (event) => {
-
-                if (
-                    event.key === "Escape"
-                ) {
-
-                    setSelectedProduct(null);
-
-                }
-
-            };
-
-
-        document.addEventListener(
-            "keydown",
-            handleEscape
-        );
-
-
-        return () => {
-
-            document.removeEventListener(
-                "keydown",
-                handleEscape
-            );
-
-        };
-
-    }, []);
-
-
-    /* =====================================================
-       JSX
-    ===================================================== */
 
     return (
-
         <div className="shop-page">
-
-
-            {/* Shared Deals-style Navbar */}
+            {/* Shared Navbar */}
             <Navbar />
 
-
             {/* =================================================
-                HERO
+                HERO SECTION (Content and design kept unchanged)
             ================================================= */}
-
             <section
                 className="shop-hero"
                 ref={heroSectionRef}
                 onMouseMove={handleHeroMouseMove}
                 onMouseLeave={handleHeroMouseLeave}
             >
-
                 {/* Looping Cinematic Video Background */}
                 <video
                     ref={heroVideoRef}
@@ -374,7 +203,6 @@ function ShopHome() {
                         transform: `translate3d(${parallax.x}px, ${parallax.y}px, 0)`
                     }}
                 >
-
                     <h1 className="shop-hero-title">
                         <div className="shop-hero-line-mask">
                             <span className="shop-hero-line shop-hero-line-1">
@@ -401,866 +229,147 @@ function ShopHome() {
                     <p className="shop-hero-description">
                         Discover the latest <span className="shop-hero-highlight">electronics</span>, <span className="shop-hero-highlight">smart devices</span> and <span className="shop-hero-highlight">accessories</span> at amazing prices.
                     </p>
-
                 </div>
-
             </section>
 
-            <ShopPromo />
-
-
             {/* =================================================
-                FEATURES
+                PART 1 - SHOP BY CATEGORY SECTION
             ================================================= */}
-
-            <section className="shop-features">
-
-                <div className="shop-feature">
-
-                    <span>
-                        🚚
-                    </span>
-
-                    <div>
-
-                        <h3>
-                            Free Shipping
-                        </h3>
-
-                        <p>
-                            On orders over $50
-                        </p>
-
+            <section id="shop-categories" className="shop-categories" aria-label="Product Categories">
+                <div className="beauty-section-header-centered">
+                    <div className="beauty-section-badge">
+                        <Cpu size={14} className="beauty-badge-icon" aria-hidden="true" />
+                        <span>EXPLORE CATEGORIES</span>
                     </div>
 
-                </div>
-
-
-                <div className="shop-feature">
-
-                    <span>
-                        🔒
-                    </span>
-
-                    <div>
-
-                        <h3>
-                            Secure Payment
-                        </h3>
-
-                        <p>
-                            100% secure checkout
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div className="shop-feature">
-
-                    <span>
-                        ↩️
-                    </span>
-
-                    <div>
-
-                        <h3>
-                            Easy Returns
-                        </h3>
-
-                        <p>
-                            30 day return policy
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div className="shop-feature">
-
-                    <span>
-                        🎧
-                    </span>
-
-                    <div>
-
-                        <h3>
-                            24/7 Support
-                        </h3>
-
-                        <p>
-                            We're here to help
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {/* =================================================
-                CATEGORIES
-            ================================================= */}
-
-            <section
-                id="shop-categories"
-                className="shop-categories"
-            >
-
-                <div className="shop-section-heading">
-
-                    <span>
-                        EXPLORE
-                    </span>
-
-                    <h2>
-                        Shop By Category
+                    <h2 className="beauty-section-title">
+                        Shop By <span className="shop-categories-gradient-text">Category</span>
                     </h2>
 
-                    <p>
-                        Find exactly what you're looking for
+                    <p className="beauty-section-subtitle">
+                        Find high-performance gadgets tailored to your digital workflow and lifestyle.
                     </p>
-
                 </div>
 
-
-                <div className="shop-category-grid">
-
-                    {categories.map(
-                        (category) => (
-
-                            <button
-                                key={category.name}
-                                className={
-                                    `shop-category-card ${
-                                        selectedCategory ===
-                                        category.name
-                                            ? "shop-category-active"
-                                            : ""
-                                    }`
-                                }
-                                onClick={() => {
-
-                                    setSelectedCategory(
-                                        category.name
-                                    );
-
-                                    scrollToProducts();
-
-                                }}
-                            >
-
-                                <div className="shop-category-icon">
-                                    {category.icon}
-                                </div>
-
-
-                                <h3>
-                                    {category.name}
-                                </h3>
-
-
-                                <span>
-                                    Explore →
-                                </span>
-
-                            </button>
-
-                        )
-                    )}
-
+                <div className="shop-category-scroll-container">
+                    <div className="shop-category-grid" role="tablist" aria-label="Electronics category filters">
+                        {CATEGORIES.map((category) => {
+                            const isActive = activeCategory === category.name;
+                            return (
+                                <button
+                                    key={category.name}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={isActive}
+                                    className={`shop-category-chip${isActive ? " active" : ""}`}
+                                    onClick={() => handleCategoryClick(category.name)}
+                                >
+                                    <span className="category-chip-icon" aria-hidden="true">{category.icon}</span>
+                                    <span>{category.name}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
-
             </section>
 
-
             {/* =================================================
-                PRODUCTS
+                PRODUCTS GRID
             ================================================= */}
-
-            <section
-                id="shop-products"
-                className="shop-products"
-            >
-
-                <div className="shop-products-header">
-
-                    <div className="shop-section-heading">
-
-                        <span>
-                            OUR PRODUCTS
-                        </span>
-
-                        <h2>
-                            Best Sellers
-                        </h2>
-
-                        <p>
-                            Discover our latest technology
-                        </p>
-
+            <section id="shop-products" className="shop-products" aria-label="Electronics Products">
+                {filteredProducts.length > 0 ? (
+                    <div className="shop-product-grid">
+                        {filteredProducts.map((product) => (
+                            <ShopProductCard
+                                key={`${activeCategory}-${product.id}`}
+                                product={product}
+                                onAddToCart={handleAddToCart}
+                            />
+                        ))}
                     </div>
-
-
-                    <div className="shop-product-controls">
-
-                        <input
-                            id="shop-search"
-                            type="search"
-                            placeholder="Search products..."
-                            value={search}
-                            onChange={(event) =>
-                                setSearch(
-                                    event.target.value
-                                )
-                            }
-                        />
-
-
-                        <select
-                            value={selectedCategory}
-                            onChange={(event) =>
-                                setSelectedCategory(
-                                    event.target.value
-                                )
-                            }
-                        >
-
-                            <option value="All">
-                                All Products
-                            </option>
-
-
-                            {categories.map(
-                                (category) => (
-
-                                    <option
-                                        key={
-                                            category.name
-                                        }
-                                        value={
-                                            category.name
-                                        }
-                                    >
-                                        {category.name}
-                                    </option>
-
-                                )
-                            )}
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                {/* PRODUCT GRID */}
-
-                <div className="shop-product-grid">
-
-                    {filteredProducts.map(
-                        (product, index) => (
-
-                            <div
-                                key={product.id}
-                                className="shop-product-reveal"
-                                style={{
-                                    "--animation-delay":
-                                        `${index * 80}ms`
-                                }}
-                            >
-
-                                <ShopProductCard
-                                    product={product}
-                                    onProductClick={
-                                        setSelectedProduct
-                                    }
-                                    onAddToCart={
-                                        addToCart
-                                    }
-                                />
-
-                            </div>
-
-                        )
-                    )}
-
-                </div>
-
-
-                {/* NO PRODUCTS */}
-
-                {filteredProducts.length === 0 && (
-
-                    <div className="shop-no-products">
-
-                        <div className="shop-no-products-icon">
-                            🔎
-                        </div>
-
-                        <h3>
-                            No products found
-                        </h3>
-
-                        <p>
-                            Try another search or category.
-                        </p>
-
-
+                ) : (
+                    <div className="beauty-no-products">
+                        <div style={{ fontSize: "42px", marginBottom: "12px" }}>🔎</div>
+                        <h3>No products found</h3>
+                        <p>No electronics found in this category.</p>
                         <button
-                            onClick={() => {
-
-                                setSearch("");
-                                setSelectedCategory("All");
-
-                            }}
+                            type="button"
+                            onClick={() => setActiveCategory("All")}
                         >
-                            Show All Products
+                            View All Products
                         </button>
+                    </div>
+                )}
+            </section>
 
+            {/* =================================================
+                PART 4 - CLICKABLE PROMO CAROUSEL (Below products)
+            ================================================= */}
+            <ElectronicsPromoCarousel />
+
+            {/* =================================================
+                PART 5A - CUSTOMER FEEDBACK SECTION (Below promo)
+            ================================================= */}
+            <ElectronicsFeedback />
+
+            {/* =================================================
+                VALUE & SERVICES PROPOSITION (Transparent cards)
+            ================================================= */}
+            <section className="shop-services-section" aria-label="Why KSAM Deal">
+                <div className="beauty-section-header-centered">
+                    <div className="beauty-section-badge">
+                        <span>WHY KSAM DEAL</span>
                     </div>
 
-                )}
-
-            </section>
-
-
-            {/* =================================================
-                DEAL BANNER
-            ================================================= */}
-
-            <section
-                id="shop-deals"
-                className="shop-deals"
-            >
-
-                <div>
-
-                    <span>
-                        LIMITED TIME OFFER
-                    </span>
-
-                    <h2>
-                        Upgrade Your
-                        <br />
-                        Tech Today.
+                    <h2 className="beauty-section-title">
+                        Engineered For <span className="beauty-reviews-gradient-text">Trust</span>
                     </h2>
 
-                    <p>
-                        Save up to 40% on selected electronics.
+                    <p className="beauty-section-subtitle">
+                        Every device is verified for authenticity, backed by certified brand coverage.
                     </p>
-
-                    <button
-                        onClick={scrollToProducts}
-                    >
-                        Shop Deals →
-                    </button>
-
                 </div>
-
-
-                <div className="shop-deal-number">
-                    40%
-                </div>
-
-            </section>
-
-
-            {/* =================================================
-                SERVICES
-            ================================================= */}
-
-            <section
-                id="shop-services"
-                className="shop-services"
-            >
-
-                <div className="shop-section-heading">
-
-                    <span>
-                        WHY KSAM DEAL
-                    </span>
-
-                    <h2>
-                        We Make Shopping Easy
-                    </h2>
-
-                </div>
-
 
                 <div className="shop-service-grid">
-
-                    <div>
-
-                        <span>
-                            ⚡
-                        </span>
-
-                        <h3>
-                            Fast Delivery
-                        </h3>
-
-                        <p>
-                            Quick and reliable delivery
-                            to your doorstep.
-                        </p>
-
+                    <div className="shop-service-card">
+                        <span className="shop-service-icon">⚡</span>
+                        <h3>Express Dispatch</h3>
+                        <p>Orders processed within 24 hours with real-time live package tracking.</p>
                     </div>
 
-
-                    <div>
-
-                        <span>
-                            💰
-                        </span>
-
-                        <h3>
-                            Best Prices
-                        </h3>
-
-                        <p>
-                            Great products at competitive prices.
-                        </p>
-
+                    <div className="shop-service-card">
+                        <span className="shop-service-icon">💰</span>
+                        <h3>Price Match Guarantee</h3>
+                        <p>We compare tech deals nationwide to ensure you never overpay.</p>
                     </div>
 
-
-                    <div>
-
-                        <span>
-                            🛡️
-                        </span>
-
-                        <h3>
-                            Trusted Quality
-                        </h3>
-
-                        <p>
-                            Carefully selected products
-                            you can trust.
-                        </p>
-
+                    <div className="shop-service-card">
+                        <span className="shop-service-icon">🛡️</span>
+                        <h3>Verified Quality</h3>
+                        <p>100% brand-sealed original packaging with valid warranty support.</p>
                     </div>
 
-
-                    <div>
-
-                        <span>
-                            💬
-                        </span>
-
-                        <h3>
-                            Customer Support
-                        </h3>
-
-                        <p>
-                            Friendly support whenever
-                            you need us.
-                        </p>
-
+                    <div className="shop-service-card">
+                        <span className="shop-service-icon">💬</span>
+                        <h3>Specialist Support</h3>
+                        <p>Get instant guidance on specs, setups, and compatibility anytime.</p>
                     </div>
-
                 </div>
-
             </section>
 
-
-            {/* =================================================
-                COMMUNITY / NEWSLETTER
-            ================================================= */}
-
-            <section className="shop-community">
-
-
-                {/* TESTIMONIAL */}
-
-                <div className="shop-testimonial">
-
-                    <span className="shop-quote">
-                        “
-                    </span>
-
-                    <span className="shop-community-label">
-                        What Our Customers Say
-                    </span>
-
-                    <p>
-                        KSAM Deal has the best collection
-                        of gadgets. Fast delivery, great
-                        prices and amazing products!
-                    </p>
-
-
-                    <div className="shop-customer">
-
-                        <div className="shop-customer-avatar">
-                            A
-                        </div>
-
-                        <div>
-
-                            <strong>
-                                Abhay Chauhan
-                            </strong>
-
-                            <small>
-                                Verified Customer
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {/* NEWSLETTER */}
-
-                <div className="shop-newsletter-card">
-
-                    <div className="shop-newsletter-content">
-
-                        <span>
-                            JOIN KSAM DEAL CLUB
-                        </span>
-
-                        <h2>
-                            Get Exclusive Offers
-                        </h2>
-
-                        <p>
-                            Get exclusive offers, new arrivals
-                            and special discounts straight to
-                            your inbox.
-                        </p>
-
-
-                        <form
-                            onSubmit={(event) => {
-
-                                event.preventDefault();
-
-                                alert(
-                                    "Thank you for joining KSAM Deal Club!"
-                                );
-
-                                event.currentTarget.reset();
-
-                            }}
-                        >
-
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                required
-                            />
-
-                            <button type="submit">
-                                Subscribe
-                            </button>
-
-                        </form>
-
-                    </div>
-
-
-                    <div className="shop-envelope">
-
-                        <div className="shop-envelope-icon">
-                            ✉
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {/* STATISTICS */}
-
-                <div className="shop-community-stats">
-
-                    <div className="shop-stat">
-
-                        <span>
-                            ♙
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                10K+
-                            </strong>
-
-                            <small>
-                                Happy Customers
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div className="shop-stat">
-
-                        <span>
-                            ♡
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                500+
-                            </strong>
-
-                            <small>
-                                Top Products
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div className="shop-stat">
-
-                        <span>
-                            ✓
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                99%
-                            </strong>
-
-                            <small>
-                                Satisfaction Rate
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {/* =================================================
-                FOOTER
-            ================================================= */}
-
-            <footer className="shop-footer">
-
-                <div>
-
-                    <h2>
-                        KSAM Deal
-                    </h2>
-
-                    <p>
-                        Your destination for modern
-                        electronics and smart technology.
-                    </p>
-
-                </div>
-
-
-                <div>
-
-                    <h3>
-                        Quick Links
-                    </h3>
-
-                    <a href="./shop.html">
-                        Home
-                    </a>
-
-                    <a href="#shop-products">
-                        Products
-                    </a>
-
-                    <a href="#shop-deals">
-                        Deals
-                    </a>
-
-                </div>
-
-
-                <div>
-
-                    <h3>
-                        Support
-                    </h3>
-
-                    <a href="./contact.html">
-                        Contact Us
-                    </a>
-
-                    <a href="./addToCart.html">
-                        My Cart
-                    </a>
-
-                </div>
-
-            </footer>
-
-
-            {/* =================================================
-                PRODUCT POPUP
-            ================================================= */}
-
-            {selectedProduct && (
-
-                <div
-                    className="shop-product-modal"
-                    onClick={() =>
-                        setSelectedProduct(null)
-                    }
-                >
-
-                    <div
-                        className="shop-product-modal-content"
-                        onClick={(event) =>
-                            event.stopPropagation()
-                        }
-                    >
-
-                        <button
-                            className="shop-modal-close"
-                            onClick={() =>
-                                setSelectedProduct(null)
-                            }
-                            aria-label="Close product"
-                        >
-                            ×
-                        </button>
-
-
-                        <div className="shop-modal-image">
-
-                            <img
-                                src={
-                                    selectedProduct.image
-                                }
-                                alt={
-                                    selectedProduct.name
-                                }
-                            />
-
-                        </div>
-
-
-                        <div className="shop-modal-info">
-
-                            <span>
-                                {
-                                    selectedProduct.category
-                                }
-                            </span>
-
-
-                            <h2>
-                                {
-                                    selectedProduct.name
-                                }
-                            </h2>
-
-
-                            <div className="shop-modal-rating">
-
-                                <span className="shop-stars">
-                                    ★★★★★
-                                </span>
-
-                                {" "}
-
-                                {
-                                    selectedProduct.rating
-                                }
-
-                            </div>
-
-
-                            <div className="shop-modal-price">
-
-                                $
-                                {
-                                    selectedProduct.price
-                                }
-
-
-                                {
-                                    selectedProduct.oldPrice && (
-
-                                        <del>
-                                            $
-                                            {
-                                                selectedProduct.oldPrice
-                                            }
-                                        </del>
-
-                                    )
-                                }
-
-                            </div>
-
-
-                            <p>
-                                Discover premium quality
-                                and modern technology with
-                                this carefully selected
-                                KSAM Deal product.
-                            </p>
-
-
-                            <button
-                                className="shop-modal-cart"
-                                onClick={() =>
-                                    addToCart(
-                                        selectedProduct
-                                    )
-                                }
-                            >
-                                🛒 Add To Cart
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+            {/* Floating Back to Top Button */}
+            <BackToTop />
+
+            {/* Toast notification */}
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    productName={toast.productName}
+                    onClose={() => setToast(null)}
+                />
             )}
-
-
-            {/* =================================================
-                CART TOAST
-            ================================================= */}
-
-            {cartMessage && (
-
-                <div className="shop-cart-toast">
-
-                    <span>
-                        ✓
-                    </span>
-
-                    {cartMessage}
-
-                </div>
-
-            )}
-
         </div>
-
     );
-
 }
-
 
 export default ShopHome;
