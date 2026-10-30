@@ -74,11 +74,57 @@ a {
    PAGE
    ========================================================= */
 
+/* =========================================================
+   BACKGROUND VIDEO
+   ========================================================= */
+
+.audio-bg-video-wrap {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: #050505;
+}
+
+.audio-bg-video,
+.audio-bg-video-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.audio-bg-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.65) 0%,
+        rgba(0, 0, 0, 0.55) 50%,
+        rgba(0, 0, 0, 0.70) 100%
+    );
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .audio-bg-video {
+        display: none !important;
+    }
+    .audio-bg-video-poster {
+        display: block !important;
+    }
+}
+
 .audio-page {
     min-height: 100vh;
     padding-top: 72px;
-
-    background: var(--black);
+    position: relative;
+    background: transparent;
 }
 
 
@@ -97,7 +143,9 @@ a {
 
     padding: 8px 20px;
 
-    background: var(--black);
+    background: rgba(5, 5, 5, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
     border-bottom: 1px solid #1f1f1f;
 
@@ -136,15 +184,9 @@ a {
 
     overflow: hidden;
 
-    background:
-        radial-gradient(
-            circle at 75% 50%,
-            rgba(140,255,0,0.07),
-            transparent 28%
-        ),
-        #050505;
+    background: transparent;
 
-    border-bottom: 1px solid #202020;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .audio-hero-grid {
@@ -570,9 +612,11 @@ a {
 
     padding: 18px 0;
 
-    background: #0c0d0d;
+    background: rgba(5, 5, 5, 0.60);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
-    border-bottom: 1px solid #202020;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .audio-moving-track {
@@ -666,11 +710,11 @@ a {
    ========================================================= */
 
 .audio-categories {
-    padding: 110px 5%;
+    padding: 90px 5%;
 
-    background: #ffffff;
+    background: transparent;
 
-    color: #111;
+    color: #ffffff;
 }
 
 .audio-section-heading {
@@ -706,13 +750,13 @@ a {
 
     letter-spacing: -3px;
 
-    color: #111;
+    color: #ffffff;
 }
 
 .audio-section-heading p {
     margin-top: 18px;
 
-    color: #737373;
+    color: rgba(255, 255, 255, 0.75);
 
     font-size: 15px;
 }
@@ -742,19 +786,29 @@ a {
 
     gap: 9px;
 
-    border: 1px solid #dedede;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 
     border-radius: 18px;
 
-    background: white;
+    background: rgba(15, 20, 18, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-    color: #111;
+    color: #ffffff;
 
     font-size: 12px;
 
     font-weight: 900;
 
     transition: 0.3s ease;
+}
+
+.audio-category-list button i {
+    color: var(--lime);
+}
+
+.audio-category-list button small {
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .audio-category-list button i {
@@ -796,7 +850,7 @@ a {
 .audio-offer {
     padding: 90px 5%;
 
-    background: #0a0a0a;
+    background: transparent;
 
     color: white;
 }
@@ -975,9 +1029,9 @@ a {
    ========================================================= */
 
 .audio-spotlight {
-    padding: 110px 5%;
+    padding: 90px 5%;
 
-    background: #050505;
+    background: transparent;
 
     color: white;
 }
@@ -1186,11 +1240,14 @@ a {
    ========================================================= */
 
 .audio-features {
-    padding: 110px 5%;
+    padding: 90px 5%;
 
-    background: #f3f4f4;
+    background: transparent;
 
-    color: #111;
+    color: #ffffff;
+
+    position: relative;
+    z-index: 1;
 }
 
 .audio-feature-grid {
@@ -1201,23 +1258,27 @@ a {
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(4, minmax(0, 1fr));
 
-    gap: 15px;
+    gap: 16px;
 }
 
 .audio-feature {
-    min-height: 280px;
+    min-height: 260px;
 
-    padding: 28px;
+    padding: 26px;
 
-    border: 1px solid #dedede;
+    border: 1px solid rgba(255, 255, 255, 0.22);
 
     border-radius: 20px;
 
-    background: white;
+    background: #ffffff;
 
-    transition: 0.3s ease;
+    color: #111111;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .audio-feature:hover {
@@ -1277,11 +1338,13 @@ a {
    ========================================================= */
 
 .audio-products {
-    padding: 110px 5%;
+    padding: 90px 5%;
 
-    background: white;
+    background: transparent;
 
-    color: #111;
+    color: #ffffff;
+    position: relative;
+    z-index: 1;
 }
 
 .audio-products-heading {
@@ -1299,7 +1362,7 @@ a {
 }
 
 .audio-products-heading span {
-    color: #777;
+    color: var(--lime);
 
     font-size: 11px;
 
@@ -1320,12 +1383,13 @@ a {
     line-height: 0.9;
 
     letter-spacing: -3px;
+    color: #ffffff;
 }
 
 .audio-products-heading p {
     margin-top: 12px;
 
-    color: #888;
+    color: rgba(255, 255, 255, 0.75);
 
     font-size: 13px;
 }
@@ -1335,13 +1399,15 @@ a {
 
     padding: 0 15px;
 
-    border: 1px solid #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.22);
 
     border-radius: 10px;
 
-    background: white;
+    background: rgba(15, 20, 18, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-    color: #111;
+    color: #ffffff;
 
     outline: none;
 }
@@ -1407,7 +1473,7 @@ a {
 
     gap: 6px;
 
-    color: #777;
+    color: rgba(255, 255, 255, 0.85);
 
     font-size: 10px;
 
@@ -1421,17 +1487,19 @@ a {
 
     padding: 0 12px;
 
-    border: 1px solid #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.22);
 
     border-radius: 12px;
 
-    background: white;
+    background: rgba(15, 20, 18, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-    color: #111;
+    color: #ffffff;
 }
 
 .audio-price-filter strong {
-    color: #111;
+    color: var(--lime);
 
     font-size: 11px;
 }
@@ -1479,9 +1547,287 @@ a {
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(4, minmax(0, 1fr));
 
-    gap: 20px;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .audio-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+}
+
+@media (max-width: 640px) {
+    .audio-product-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* =========================================================
+   WATCHES BEST SELLERS THEMED CARDS FOR AUDIO
+   ========================================================= */
+
+.watch-product-card-themed {
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    border: none !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    height: 100% !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    box-sizing: border-box !important;
+}
+
+.watch-product-card-themed:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22) !important;
+}
+
+.watch-image-container {
+    position: relative !important;
+    width: 100% !important;
+    height: 250px !important;
+    background: #f8f9fa !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.watch-product-img-contain {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    padding: 16px !important;
+    display: block !important;
+    transition: transform 0.4s ease !important;
+}
+
+.watch-product-card-themed:hover .watch-product-img-contain {
+    transform: scale(1.08) !important;
+}
+
+.watch-discount-badge {
+    position: absolute !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 5 !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    background: #111111 !important;
+    color: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    display: inline-block !important;
+}
+
+.watch-wishlist-btn {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+    z-index: 5 !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease !important;
+}
+
+.watch-wishlist-btn:hover {
+    transform: scale(1.08) !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.watch-wishlist-btn.is-active,
+.watch-wishlist-btn.active {
+    color: #10b981 !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.45) !important;
+}
+
+.watch-product-content {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    padding: 18px 20px 20px !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+}
+
+.watch-cat-label {
+    margin: 0 0 6px !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    color: #15803d !important;
+}
+
+.watch-name {
+    margin: 0 0 6px !important;
+    font-size: 19px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    color: #111111 !important;
+}
+
+.watch-name a {
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.watch-name a:hover {
+    color: #15803d !important;
+}
+
+.watch-brand {
+    margin: 0 0 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+}
+
+.watch-desc {
+    margin: 0 0 14px !important;
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+    color: #64748b !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.watch-price-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 6px !important;
+}
+
+.watch-cur-price {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    color: #111111 !important;
+}
+
+.watch-old-price {
+    font-size: 14px !important;
+    color: #94a3b8 !important;
+    text-decoration: line-through !important;
+}
+
+.watch-stock-text {
+    margin: 0 0 16px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #15803d !important;
+}
+
+.watch-actions-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: auto !important;
+    width: 100% !important;
+}
+
+.watch-quick-cart-btn {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    border: 1px solid #111111 !important;
+    border-radius: 12px !important;
+    background: #111111 !important;
+    color: #ffffff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    outline: none !important;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.watch-quick-cart-btn:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    background: #15803d !important;
+    border-color: #15803d !important;
+    box-shadow: 0 4px 14px rgba(21, 128, 61, 0.35) !important;
+}
+
+.watch-quick-cart-btn.is-added {
+    background: #15803d !important;
+    border-color: #15803d !important;
+    color: #ffffff !important;
+}
+
+.watch-quick-cart-btn:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.watch-view-btn {
+    flex: 1 !important;
+    height: 46px !important;
+    padding: 0 16px !important;
+    border-radius: 12px !important;
+    background: #f0fdf4 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.watch-view-btn:hover {
+    background: #dcfce7 !important;
+    border-color: #86efac !important;
+    color: #166534 !important;
+    transform: translateY(-2px) !important;
+}
+
+.watch-view-btn .beauty-view-btn-short {
+    display: none !important;
+}
+
+.beauty-product-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 
@@ -2318,15 +2664,93 @@ a {
         height: 180px;
     }
 
-    .audio-feature-grid {
-        grid-template-columns: 1fr;
+    /* Task 5: 2x2 grid on mobile up to 768px */
+    .audio-features {
+        padding: 50px 16px !important;
     }
 
-    .audio-product-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .audio-feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
 
-        gap: 12px;
+    .audio-feature {
+        min-height: unset !important;
+        padding: 16px 12px !important;
+        border-radius: 16px !important;
+        box-sizing: border-box !important;
+    }
+
+    .audio-feature > small {
+        font-size: 10px !important;
+    }
+
+    .audio-feature-icon {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        margin: 10px 0 8px !important;
+        border-radius: 12px !important;
+        font-size: 17px !important;
+    }
+
+    .audio-feature h3 {
+        font-size: 15px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 5px !important;
+        word-break: break-word !important;
+    }
+
+    .audio-feature p {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        color: #4b5563 !important;
+    }
+
+    /* Task 2: 1 column on mobile, cards must not overflow 375px width */
+    .audio-product-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .watch-product-card-themed {
+        border-radius: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .watch-image-container {
+        height: 220px !important;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    }
+
+    .watch-product-content {
+        padding: 16px !important;
+    }
+
+    .watch-name {
+        font-size: 17px !important;
+    }
+
+    .watch-cur-price {
+        font-size: 20px !important;
+    }
+
+    .watch-quick-cart-btn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+    }
+
+    .watch-view-btn {
+        height: 44px !important;
+        font-size: 13px !important;
     }
 
     .audio-product-image {
@@ -2390,3 +2814,37 @@ a {
 
 
 
+
+/* Floating Scroll to Top Button */
+.audio-top-button {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    z-index: 999;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #8cff00;
+    color: #050505;
+    font-size: 22px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(140, 255, 0, 0.45);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.audio-top-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(140, 255, 0, 0.65);
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .audio-feature-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+}

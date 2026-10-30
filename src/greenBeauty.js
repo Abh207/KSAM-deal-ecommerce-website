@@ -11,7 +11,7 @@ const greenBeautyProducts = [
         price: 399,
         actualPrice: 599,
         stock: 20,
-        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1556228720-195a672e8a03.webp"
     },
 
     {
@@ -22,7 +22,7 @@ const greenBeautyProducts = [
         price: 499,
         actualPrice: 799,
         stock: 15,
-        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1620916566398-39f1143ab7be.webp"
     },
 
     {
@@ -33,7 +33,7 @@ const greenBeautyProducts = [
         price: 449,
         actualPrice: 699,
         stock: 25,
-        image: "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1611930022073-b7a4ba5fcccd.webp"
     },
 
     {
@@ -44,7 +44,7 @@ const greenBeautyProducts = [
         price: 549,
         actualPrice: 799,
         stock: 18,
-        image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1556228578-8c89e6adf883.webp"
     },
 
     {
@@ -55,7 +55,7 @@ const greenBeautyProducts = [
         price: 299,
         actualPrice: 449,
         stock: 30,
-        image: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1620916566398-39f1143ab7be.webp"
     },
 
     {
@@ -66,7 +66,7 @@ const greenBeautyProducts = [
         price: 249,
         actualPrice: 399,
         stock: 35,
-        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1586495777744-4413f21062fa.webp"
     },
 
     {
@@ -77,7 +77,7 @@ const greenBeautyProducts = [
         price: 349,
         actualPrice: 499,
         stock: 22,
-        image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1535585209827-a15fcdbc4c2d.webp"
     },
 
     {
@@ -88,7 +88,7 @@ const greenBeautyProducts = [
         price: 699,
         actualPrice: 999,
         stock: 12,
-        image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80"
+        image: "images/remote/unsplash_1541643600914-78b084683601.webp"
     }
 
 ];

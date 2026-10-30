@@ -5,7 +5,7 @@ import { supabase } from "../../lib/supabase";
 import { useCart, formatPrice, FREE_DELIVERY_THRESHOLD } from "../store/cartStore";
 import { resolveImagePath } from "../../lib/cartHelper.js";
 import { getWishlist, subscribeWishlist } from "../../lib/wishlist.js";
-import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL } from "../../auth/auth.js";
+import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL, getStoredSessionSync } from "../../auth/auth.js";
 import "./Navbar.css";
 
 /* =====================================================
@@ -205,7 +205,7 @@ function ProductCard({ p, onClick, cta = "View deal" }) {
 /* =====================================================
    MAIN NAVBAR COMPONENT
 ===================================================== */
-export default function Navbar({ onProductClick, onViewAll }) {
+export default function Navbar({ onProductClick, onViewAll, searchPlaceholder }) {
   // Cross-page detection: check if on deals/home page vs category/shop page vs terms page vs wishlist page
   const isShopPage = typeof window !== "undefined" && window.location.pathname.includes("shop.html");
   const isTermsPage = (() => {
@@ -332,10 +332,10 @@ export default function Navbar({ onProductClick, onViewAll }) {
   }, []);
 
 
-  // User Profile & Auth State
-  const [userSession, setUserSession] = useState(null);
+  // User Profile & Auth State (instant sync check from localStorage, non-blocking)
+  const [userSession, setUserSession] = useState(() => getStoredSessionSync());
   const [userProfile, setUserProfile] = useState(null);
-  const userSessionRef = useRef(null);
+  const userSessionRef = useRef(userSession);
 
   const fetchProfileData = useCallback(async (currentSession, force = false) => {
     try {
@@ -955,7 +955,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search for products, brands and more..."
+                placeholder={searchPlaceholder || "Search for products, brands and more..."}
                 autoComplete="off"
               />
 
@@ -1378,7 +1378,7 @@ export default function Navbar({ onProductClick, onViewAll }) {
             >
               <Search size={16} className="kh-nav-search-icon" />
               <span className="kh-nav-search-placeholder">
-                {SEARCH_PLACEHOLDERS[placeholderIdx]}
+                {searchPlaceholder || SEARCH_PLACEHOLDERS[placeholderIdx]}
               </span>
               <kbd className="kh-nav-search-kbd" aria-hidden="true">/</kbd>
               {speechSupported && (

@@ -249,6 +249,31 @@ export function normalizeDeal(product) {
 // Alias for backward compatibility
 export const normalizeDatabaseProduct = normalizeDeal;
 
+const DEALS_CACHE_KEY = "ksam_deals_cache_v1";
+const DEALS_CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
+function getCachedDealsList() {
+  try {
+    const raw = sessionStorage.getItem(DEALS_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && Array.isArray(parsed.data) && parsed.data.length > 0) {
+      const isFresh = Date.now() - (parsed.timestamp || 0) < DEALS_CACHE_TTL_MS;
+      return { data: parsed.data, isFresh };
+    }
+  } catch {}
+  return null;
+}
+
+function setCachedDealsList(data) {
+  try {
+    sessionStorage.setItem(
+      DEALS_CACHE_KEY,
+      JSON.stringify({ timestamp: Date.now(), data })
+    );
+  } catch {}
+}
+
 export async function getDeals(options = {}) {
   const {
     category = "All",
@@ -260,44 +285,52 @@ export async function getDeals(options = {}) {
   } = options;
 
   let rawList = [];
-  let queryError = null;
+  const cached = getCachedDealsList();
 
-  try {
-    // Query Supabase without restricting is_active to true (database products currently have is_active: false)
-    const fetchPromise = supabase
-      .from("products")
-      .select(`
-        *,
-        stores (
-          id,
-          name,
-          slug,
-          logo_url,
-          base_url,
-          website
-        ),
-        categories (
-          id,
-          name
-        )
-      `)
-      .order("created_at", { ascending: false });
-
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Supabase request timed out after 7s")), 7000)
-    );
-
-    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
-
-    if (error) {
-      queryError = error;
-      console.warn("[getDeals] Supabase returned error:", error);
-    } else if (Array.isArray(data) && data.length > 0) {
-      rawList = data;
+  // If we have a fresh cache, use it immediately
+  if (cached && cached.isFresh) {
+    rawList = cached.data;
+  } else {
+    // If we have stale cache, use it as immediate baseline and revalidate in background
+    if (cached?.data) {
+      rawList = cached.data;
     }
-  } catch (err) {
-    queryError = err;
-    console.warn("[getDeals] Supabase fetch failed or timed out:", err);
+
+    try {
+      const fetchPromise = supabase
+        .from("products")
+        .select(`
+          *,
+          stores (
+            id,
+            name,
+            slug,
+            logo_url,
+            base_url,
+            website
+          ),
+          categories (
+            id,
+            name
+          )
+        `)
+        .order("created_at", { ascending: false });
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Supabase request timed out after 5s")), 5000)
+      );
+
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+
+      if (!error && Array.isArray(data) && data.length > 0) {
+        rawList = data;
+        setCachedDealsList(data);
+      }
+    } catch (err) {
+      if (!rawList || rawList.length === 0) {
+        console.warn("[getDeals] Supabase fetch failed or timed out:", err);
+      }
+    }
   }
 
   // Defensive fallback: if Supabase query returned 0 items or errored, load from local dealsData

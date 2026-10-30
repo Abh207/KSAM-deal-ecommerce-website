@@ -12,21 +12,21 @@ import productsBox2 from "../api/productsBox2.json" with { type: "json" };
 import horizScrollProd from "../api/horizScrollProd.json" with { type: "json" };
 
 const greenBeautyProducts = [
-  { id: 201, name: "Green Glow Cleanser", category: "Skin Care", price: 399, oldPrice: 599, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80" },
-  { id: 202, name: "Vitamin C Serum", category: "Skin Care", price: 499, oldPrice: 799, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80" },
-  { id: 203, name: "Hydrating Moisturizer", category: "Skin Care", price: 449, oldPrice: 699, image: "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=600&q=80" },
-  { id: 204, name: "Daily Sunscreen SPF 50", category: "Skin Care", price: 549, oldPrice: 799, image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=600&q=80" },
-  { id: 205, name: "Natural Face Mask", category: "Skin Care", price: 299, oldPrice: 449, image: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?auto=format&fit=crop&w=600&q=80" },
-  { id: 206, name: "Natural Lip Tint", category: "Makeup", price: 249, oldPrice: 399, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80" },
-  { id: 207, name: "Herbal Hair Shampoo", category: "Hair Care", price: 349, oldPrice: 499, image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80" },
-  { id: 208, name: "Green Bloom Perfume", category: "Fragrance", price: 699, oldPrice: 999, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80" }
+  { id: 201, name: "Green Glow Cleanser", category: "Skin Care", price: 399, oldPrice: 599, image: "images/remote/unsplash_1556228720-195a672e8a03.webp" },
+  { id: 202, name: "Vitamin C Serum", category: "Skin Care", price: 499, oldPrice: 799, image: "images/remote/unsplash_1620916566398-39f1143ab7be.webp" },
+  { id: 203, name: "Hydrating Moisturizer", category: "Skin Care", price: 449, oldPrice: 699, image: "images/remote/unsplash_1611930022073-b7a4ba5fcccd.webp" },
+  { id: 204, name: "Daily Sunscreen SPF 50", category: "Skin Care", price: 549, oldPrice: 799, image: "images/remote/unsplash_1556228578-8c89e6adf883.webp" },
+  { id: 205, name: "Natural Face Mask", category: "Skin Care", price: 299, oldPrice: 449, image: "images/remote/unsplash_1620916566398-39f1143ab7be.webp" },
+  { id: 206, name: "Natural Lip Tint", category: "Makeup", price: 249, oldPrice: 399, image: "images/remote/unsplash_1586495777744-4413f21062fa.webp" },
+  { id: 207, name: "Herbal Hair Shampoo", category: "Hair Care", price: 349, oldPrice: 499, image: "images/remote/unsplash_1535585209827-a15fcdbc4c2d.webp" },
+  { id: 208, name: "Green Bloom Perfume", category: "Fragrance", price: 699, oldPrice: 999, image: "images/remote/unsplash_1541643600914-78b084683601.webp" }
 ];
 
 const promoProducts = [
   { id: 301, title: "MacBook Air M2", category: "Laptops", price: 999, oldPrice: 1099, image: "/macbook.jpg" },
-  { id: 302, title: "Wireless Headphones", category: "Audio", price: 149, oldPrice: 249, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=90" },
-  { id: 303, title: "Premium Audio", category: "Audio", price: 199, oldPrice: 299, image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=900&q=90" },
-  { id: 304, title: "Professional Camera", category: "Cameras", price: 799, oldPrice: 999, image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=90" }
+  { id: 302, title: "Wireless Headphones", category: "Audio", price: 149, oldPrice: 249, image: "images/remote/unsplash_1505740420928-5e560c06d30e.webp" },
+  { id: 303, title: "Premium Audio", category: "Audio", price: 199, oldPrice: 299, image: "images/remote/unsplash_1546435770-a3e426bf472b.webp" },
+  { id: 304, title: "Professional Camera", category: "Cameras", price: 799, oldPrice: 999, image: "images/remote/unsplash_1516035069371-29a1b244cc32.webp" }
 ];
 
 /**

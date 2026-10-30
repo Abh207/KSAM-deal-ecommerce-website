@@ -11,7 +11,7 @@ const PROMO_CARDS = [
         discount: "40% OFF",
         title: "Flat 40% OFF Headphones",
         description: "Deep bass acoustic drivers, memory foam cushioning and 30-hour wireless playtime.",
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600",
+        image: "images/remote/unsplash_1505740420928-5e560c06d30e.webp",
         accent: "#1de9b6"
     },
     {
@@ -23,7 +23,7 @@ const PROMO_CARDS = [
         discount: "FROM ₹799",
         title: "Modern Laptops from ₹799",
         description: "Sleek aluminum chassis, blazing fast SSD storage, and crisp anti-glare display.",
-        image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600",
+        image: "images/remote/unsplash_1496181133206-80ce9b88a853.webp",
         accent: "#2dd4bf"
     },
     {
@@ -35,7 +35,7 @@ const PROMO_CARDS = [
         discount: "10% OFF",
         title: "Smartphone Deals & Flagships",
         description: "Pro camera system, vibrant 120Hz Super Retina display and next-generation A17 Pro chip.",
-        image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600",
+        image: "images/remote/unsplash_1511707171634-5f897ff02aa9.webp",
         accent: "#14b8a6"
     },
     {
@@ -47,7 +47,7 @@ const PROMO_CARDS = [
         discount: "23% OFF",
         title: "Smart Home & Voice Gadgets",
         description: "Hands-free voice assistant with 360° room-filling acoustic audio and smart ecosystem hub.",
-        image: "https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=600",
+        image: "images/remote/unsplash_1589492477829-5e65395b66cc.webp",
         accent: "#10b981"
     },
     {
@@ -59,7 +59,7 @@ const PROMO_CARDS = [
         discount: "HOT DEAL",
         title: "Next-Gen Gaming Consoles",
         description: "Ultra-high frame rates, hardware-accelerated ray tracing and lightning-fast custom SSD.",
-        image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600",
+        image: "images/remote/unsplash_1606813907291-d86efa9b94db.webp",
         accent: "#1de9b6"
     },
     {
@@ -71,7 +71,7 @@ const PROMO_CARDS = [
         discount: "14% OFF",
         title: "Pro 4K Digital Cameras",
         description: "Versatile optical zoom lens, high-definition video capture and rapid intelligent tracking.",
-        image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600",
+        image: "images/remote/unsplash_1516035069371-29a1b244cc32.webp",
         accent: "#0f9d76"
     },
     {
@@ -83,7 +83,7 @@ const PROMO_CARDS = [
         discount: "FREE SHIPPING",
         title: "Free Delivery Above ₹999",
         description: "Enjoy zero delivery fees on orders above ₹999 with insured tamper-proof packaging.",
-        image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600",
+        image: "images/remote/unsplash_1590658268037-6bf12165a8df.webp",
         accent: "#2dd4bf"
     },
     {
@@ -95,7 +95,7 @@ const PROMO_CARDS = [
         discount: "NEW ARRIVAL",
         title: "New Flagship Arrivals",
         description: "Discover the Samsung Galaxy S24 series with AI productivity and all-day endurance.",
-        image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600",
+        image: "images/remote/unsplash_1580910051074-3eb694886505.webp",
         accent: "#10b981"
     }
 ];

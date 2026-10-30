@@ -335,7 +335,7 @@ function Hero() {
 
                         <img
                             src={phrases.length
-                                ? "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80"
+                                ? "images/remote/unsplash_1505740420928-5e560c06d30e.webp"
                                 : ""}
                             alt="Featured headphones"
                             className="h-72 w-full object-cover"
@@ -377,7 +377,7 @@ function Hero() {
                     >
 
                         <img
-                            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"
+                            src="images/remote/unsplash_1523275335684-37898b6baf30.webp"
                             alt="Smart watch"
                             className="
                                 h-56

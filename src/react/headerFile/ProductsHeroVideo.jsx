@@ -113,6 +113,8 @@ function ProductsHeroVideo() {
 
   const baseUrl = import.meta.env.BASE_URL.replace(/\/+$/, "");
   const videoSrc = `${baseUrl}/videos/products/products_hero.mp4`;
+  const mobileVideoSrc = `${baseUrl}/videos/products/products_hero_mobile.mp4`;
+  const posterSrc = `${baseUrl}/videos/products/products_hero-poster.webp`;
 
   return (
     <section
@@ -126,15 +128,16 @@ function ProductsHeroVideo() {
       <div className="products-hero-video-wrap">
         <video
           ref={videoRef}
-          autoPlay
           muted
           loop
           playsInline
           preload="metadata"
+          poster={posterSrc}
           aria-hidden="true"
           role="presentation"
           className={`products-hero-video ${isDipping ? "loop-dipping" : ""}`}
         >
+          <source media="(max-width: 768px)" src={mobileVideoSrc} type="video/mp4" />
           <source src={videoSrc} type="video/mp4" />
         </video>
       </div>

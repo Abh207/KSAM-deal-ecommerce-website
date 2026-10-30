@@ -1014,7 +1014,7 @@ function HomeProducts() {
                 <div className="products-sort">
 
                     <label>
-                        Sort by:
+                        Sort:
                     </label>
 
 

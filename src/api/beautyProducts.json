@@ -8,7 +8,7 @@
     "price": 499,
     "actualPrice": 799,
     "stock": 25,
-    "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1620916566398-39f1143ab7be.webp"
   },
   {
     "id": 102,
@@ -19,7 +19,7 @@
     "price": 399,
     "actualPrice": 599,
     "stock": 30,
-    "image": "https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1556229010-6c3f2c9ca5f8.webp"
   },
   {
     "id": 103,
@@ -30,7 +30,7 @@
     "price": 299,
     "actualPrice": 449,
     "stock": 40,
-    "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1586495777744-4413f21062fa.webp"
   },
   {
     "id": 104,
@@ -41,7 +41,7 @@
     "price": 699,
     "actualPrice": 999,
     "stock": 18,
-    "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1541643600914-78b084683601.webp"
   },
   {
     "id": 105,
@@ -52,7 +52,7 @@
     "price": 249,
     "actualPrice": 349,
     "stock": 35,
-    "image": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1556228720-195a672e8a03.webp"
   },
   {
     "id": 106,
@@ -63,7 +63,7 @@
     "price": 349,
     "actualPrice": 499,
     "stock": 28,
-    "image": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1535585209827-a15fcdbc4c2d.webp"
   },
   {
     "id": 107,
@@ -74,7 +74,7 @@
     "price": 549,
     "actualPrice": 799,
     "stock": 22,
-    "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1596462502278-27bfdc403348.webp"
   },
   {
     "id": 108,
@@ -85,6 +85,6 @@
     "price": 299,
     "actualPrice": 449,
     "stock": 32,
-    "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80"
+    "image": "images/remote/unsplash_1608248543803-ba4f8c70ae0b.webp"
   }
 ]

@@ -19,10 +19,11 @@
             "link": "./watchshop.html",
             "bannerImage": "",
             "video": [
+                { "src": "assets/videos/watches-banner_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
                 { "src": "assets/videos/watches-banner.webm", "type": "video/webm" },
                 { "src": "assets/videos/watches-banner.mp4", "type": "video/mp4" }
             ],
-            "poster": "assets/videos/watches-banner-poster.jpg",
+            "poster": "assets/videos/watches-banner-poster.webp",
             "objectPosition": "72% 50%",
             "fit": "cover",
             "scale": 1
@@ -37,9 +38,10 @@
             "link": "./beauty.html",
             "bannerImage": "",
             "video": [
+                { "src": "assets/videos/Skincare_bottle_product_animation_20261027193838_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
                 { "src": "assets/videos/Skincare_bottle_product_animation_20261027193838.mp4", "type": "video/mp4" }
             ],
-            "poster": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80",
+            "poster": "images/remote/unsplash_1620916566398-39f1143ab7be.webp",
             "objectPosition": "72% 50%",
             "fit": "cover",
             "scale": 1
@@ -54,10 +56,11 @@
             "link": "./shoes.html",
             "bannerImage": "",
             "video": [
+                { "src": "assets/videos/shoes-banner_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
                 { "src": "assets/videos/shoes-banner.webm", "type": "video/webm" },
                 { "src": "assets/videos/shoes-banner.mp4", "type": "video/mp4" }
             ],
-            "poster": "assets/videos/shoes-banner-poster.jpg",
+            "poster": "assets/videos/shoes-banner-poster.webp",
             "objectPosition": "72% 50%",
             "fit": "cover",
             "scale": 1
@@ -72,10 +75,10 @@
             "link": "./moreChairProd.html",
             "bannerImage": "",
             "video": [
-                { "src": "assets/videos/chairs-bed-loop.webm", "type": "video/webm" },
+                { "src": "assets/videos/chairs-bed_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
                 { "src": "assets/videos/chairs-bed.mp4", "type": "video/mp4" }
             ],
-            "poster": "assets/videos/chairs-bed-poster.jpg",
+            "poster": "assets/videos/chairs-bed-poster.webp",
             "objectPosition": "70% 55%",
             "fit": "cover",
             "scale": 1,
@@ -94,21 +97,6 @@
             "poster": "",
             "objectPosition": "72% 50%",
             "fit": "cover",
-            "scale": 1
-        },
-        {
-            "id": "gadgets",
-            "name": "Gadgets",
-            "description": "Smart gadgets & tech accessories",
-            "productIds": [],
-            "icon": "📱",
-            "color": "#e0f7f6",
-            "link": "./heardeprod.html",
-            "bannerImage": "electronics-items.png",
-            "video": null,
-            "poster": "",
-            "objectPosition": "center",
-            "fit": "contain",
             "scale": 1
         },
         {
@@ -139,7 +127,7 @@
                 { "src": "assets/videos/Gaming_mouse_exploded_view_eb900f91.mp4", "type": "video/mp4" },
                 { "src": "videos/electronics-category-bg.mp4", "type": "video/mp4" }
             ],
-            "poster": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600",
+            "poster": "images/remote/unsplash_1511707171634-5f897ff02aa9.webp",
             "objectPosition": "center",
             "fit": "cover",
             "scale": 1

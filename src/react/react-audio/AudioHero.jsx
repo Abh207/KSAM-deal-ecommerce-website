@@ -4,10 +4,13 @@ import React, {
 } from "react";
 
 const getImagePath = (image) => {
-
     if (!image) return "";
-
-    return `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`;
+    if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
+    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    let clean = image.replace(/^\/+/, "");
+    clean = clean.replace(/\.(png|jpe?g)$/i, ".webp");
+    return `${normalizedBase}${clean}`;
 };
 
 
@@ -232,6 +235,10 @@ function AudioHero({
                             slide.title ||
                             "Audio product"
                         }
+                        fetchPriority={active === 0 ? "high" : "auto"}
+                        decoding={active === 0 ? "sync" : "async"}
+                        width="480"
+                        height="480"
                     />
 
 

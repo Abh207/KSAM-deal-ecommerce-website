@@ -53,10 +53,6 @@ export const CATEGORY_DATA_MAP = {
     products: Array.isArray(audioData.products) ? audioData.products : audioData,
     bannerImage: null,
   },
-  gadgets: {
-    products: generalProducts,
-    bannerImage: "electronics-items.png",
-  },
 };
 
 /**
@@ -73,8 +69,8 @@ export function resolveProductImage(imagePath) {
     return trimmed;
   }
 
-  // Local assets: strip leading dot/slash and optional public/ prefix, then prepend Vite BASE_URL
-  const cleanPath = trimmed.replace(/^\.?\/?(public\/)?/, "");
+  // Local assets: strip leading slash and prepend Vite BASE_URL
+  const cleanPath = trimmed.replace(/^\/+/, "");
   const baseUrl = import.meta.env.BASE_URL || "/";
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   return `${normalizedBase}${cleanPath}`;

@@ -10,7 +10,7 @@ export const deals = [
         discount: 63,
         rating: 4.8,
         image:
-            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1505740420928-5e560c06d30e.webp",
         url: "https://www.amazon.in/"
     },
 
@@ -24,7 +24,7 @@ export const deals = [
         discount: 44,
         rating: 4.6,
         image:
-            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1523275335684-37898b6baf30.webp",
         url: "https://www.flipkart.com/"
     },
 
@@ -38,7 +38,7 @@ export const deals = [
         discount: 35,
         rating: 4.7,
         image:
-            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1586023492125-27b2c045efd7.webp",
         url: "https://www.myntra.com/"
     },
 
@@ -52,7 +52,7 @@ export const deals = [
         discount: 35,
         rating: 4.8,
         image:
-            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1555041469-a586c61ea9bc.webp",
         url: "https://www.amazon.in/"
     },
 
@@ -66,7 +66,7 @@ export const deals = [
         discount: 45,
         rating: 4.9,
         image:
-            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1542291026-7eec264c27ff.webp",
         url: "https://www.nike.com/in/"
     },
 
@@ -80,7 +80,7 @@ export const deals = [
         discount: 44,
         rating: 4.7,
         image:
-            "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1587829741301-dc798b83add3.webp",
         url: "https://www.amazon.in/"
     },
 
@@ -94,7 +94,7 @@ export const deals = [
         discount: 48,
         rating: 4.5,
         image:
-            "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1527814050087-3793815479db.webp",
         url: "https://www.flipkart.com/"
     },
 
@@ -108,7 +108,7 @@ export const deals = [
         discount: 28,
         rating: 4.8,
         image:
-            "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1511707171634-5f897ff02aa9.webp",
         url: "https://www.croma.com/"
     },
 
@@ -122,7 +122,7 @@ export const deals = [
         discount: 40,
         rating: 4.5,
         image:
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1553062407-98eeb64c6a62.webp",
         url: "https://www.myntra.com/"
     },
 
@@ -136,7 +136,7 @@ export const deals = [
         discount: 43,
         rating: 4.7,
         image:
-            "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1514432324607-a09d9b4aefdd.webp",
         url: "https://www.amazon.in/"
     },
 
@@ -150,7 +150,7 @@ export const deals = [
         discount: 44,
         rating: 4.6,
         image:
-            "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1507473885765-e6ed057f782c.webp",
         url: "https://www.ikea.com/in/en/"
     },
 
@@ -164,7 +164,7 @@ export const deals = [
         discount: 40,
         rating: 4.6,
         image:
-            "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=700&q=80",
+            "images/remote/unsplash_1589003077984-894e133dabab.webp",
         url: "https://www.croma.com/"
     }
 

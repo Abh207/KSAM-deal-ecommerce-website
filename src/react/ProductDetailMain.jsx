@@ -66,10 +66,40 @@ function getProductDescription(product) {
 
 // Category-specific bullet features
 function getKeyFeatures(product) {
+  const cat = (product.category || "").toLowerCase();
+  if (
+    cat.includes("audio") ||
+    cat.includes("headphone") ||
+    cat.includes("speaker") ||
+    cat.includes("earbud") ||
+    cat.includes("neckband")
+  ) {
+    const batteryText = product.battery
+      ? `Up to ${product.battery} of wireless playback with rapid fast-charging`
+      : "Ultra-long continuous wireless playback with USB-C fast charging";
+    const connText = product.connectivity
+      ? `Ultra-low latency ${product.connectivity} connection with instant pairing`
+      : "Ultra-low latency Bluetooth 5.3 connection with instant auto-pairing";
+    const hasAnc =
+      Array.isArray(product.features) &&
+      product.features.some((f) => /noise|anc/i.test(f));
+    const ancText = hasAnc
+      ? "Hybrid Active Noise Cancellation (ANC) with ambient pass-through mode"
+      : "Passive noise-isolating acoustic seal with ergonomic comfort fit";
+
+    return [
+      ancText,
+      batteryText,
+      connText,
+      "Precision-tuned neodymium acoustic dynamic drivers with deep bass stereo",
+      "Dual beamforming ENC microphones for crystal-clear hands-free calls"
+    ];
+  }
+
   if (Array.isArray(product.features) && product.features.length > 0) {
     return product.features;
   }
-  const cat = (product.category || "").toLowerCase();
+
   if (cat.includes("watch")) {
     return [
       "High-precision Japanese quartz / automatic movement",
@@ -85,14 +115,6 @@ function getKeyFeatures(product) {
       "Breathable engineered multi-layer mesh upper",
       "Reinforced ergonomic heel cradle for locked-in support",
       "Lightweight design engineered for all-day endurance"
-    ];
-  } else if (cat.includes("audio") || cat.includes("headphone") || cat.includes("speaker")) {
-    return [
-      "Custom-tuned 40mm neodymium dynamic sound drivers",
-      "Hybrid Active Noise Cancellation (ANC) with Ambient mode",
-      "Up to 35 hours of continuous wireless playtime",
-      "Ultra-low latency Bluetooth 5.3 connection",
-      "Dual beamforming microphones for crystal-clear calls"
     ];
   } else if (cat.includes("cloth") || cat.includes("apparel") || cat.includes("fashion")) {
     return [
@@ -255,8 +277,22 @@ function ProductDetailPage() {
       document.referrer &&
       document.referrer.toLowerCase().includes("wishlist"));
 
+  const isFromAudio =
+    !isFromWishlist &&
+    (params.get("from") === "audio" ||
+      (typeof document !== "undefined" &&
+        document.referrer &&
+        document.referrer.toLowerCase().includes("audio.html")) ||
+      Boolean(
+        product &&
+          ["audio", "earbuds", "headphones", "speakers", "neckbands"].some(
+            (c) => String(product.category || "").toLowerCase().includes(c)
+          )
+      ));
+
   const isFromClothing =
     !isFromWishlist &&
+    !isFromAudio &&
     (params.get("from") === "clothing" ||
       (typeof document !== "undefined" &&
         document.referrer &&
@@ -270,6 +306,7 @@ function ProductDetailPage() {
 
   const isFromElectronics =
     !isFromWishlist &&
+    !isFromAudio &&
     !isFromClothing &&
     (params.get("from") === "electronics" ||
       (typeof document !== "undefined" &&
@@ -278,13 +315,14 @@ function ProductDetailPage() {
           document.referrer.toLowerCase().includes("fashionspeaker.html"))) ||
       Boolean(
         product &&
-          ["smartphones", "laptops", "audio", "cameras", "gaming", "smart home", "electronics", "gadgets"].some(
+          ["smartphones", "laptops", "cameras", "gaming", "smart home", "electronics", "gadgets"].some(
             (c) => String(product.category || "").toLowerCase().includes(c)
           )
       ));
 
   const isFromWatches =
     !isFromWishlist &&
+    !isFromAudio &&
     !isFromClothing &&
     !isFromElectronics &&
     (params.get("from") === "watches" ||
@@ -329,7 +367,15 @@ function ProductDetailPage() {
     const id = relProd.id !== undefined && relProd.id !== null ? relProd.id : "";
     const category = relProd.category || "";
     const uid = relProd.uid || buildProductUid(category, id);
-    const fromParam = isFromClothing ? "&from=clothing" : isFromElectronics ? "&from=electronics" : isFromWatches ? "&from=watches" : "";
+    const fromParam = isFromAudio
+      ? "&from=audio"
+      : isFromClothing
+      ? "&from=clothing"
+      : isFromElectronics
+      ? "&from=electronics"
+      : isFromWatches
+      ? "&from=watches"
+      : "";
     window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}&uid=${encodeURIComponent(uid)}${fromParam}`;
   };
 
@@ -361,7 +407,9 @@ function ProductDetailPage() {
             </p>
             <a
               href={
-                isFromClothing
+                isFromAudio
+                  ? `${normalizedBase}audio.html`
+                  : isFromClothing
                   ? `${normalizedBase}clothes.html`
                   : isFromElectronics
                   ? `${normalizedBase}electronics.html`
@@ -373,7 +421,9 @@ function ProductDetailPage() {
             >
               <ArrowLeft size={16} />
               <span>
-                {isFromClothing
+                {isFromAudio
+                  ? "Back to Audio"
+                  : isFromClothing
                   ? "← Back to Clothing"
                   : isFromElectronics
                   ? "Back to Electronics"
@@ -404,23 +454,35 @@ function ProductDetailPage() {
   const description = getProductDescription(product);
   const keyFeatures = getKeyFeatures(product);
 
+  const isAudio = Boolean(
+    isFromAudio ||
+    (product &&
+      ["audio", "earbuds", "headphones", "speakers", "neckbands"].some(
+        (c) => String(product.category || "").toLowerCase().includes(c)
+      ))
+  );
+
   // Specifications
   const specs = [
-    { label: "Brand", value: product.brand || product.store || "KSAM Signature" },
-    { label: "Category", value: product.category || "General" },
-    { label: "Model / SKU", value: `KSAM-${product.id}` },
-    {
-      label: "Material",
-      value:
-        product.material ||
-        (String(product.category || "").toLowerCase().includes("watch")
-          ? "Stainless Steel / Sapphire Crystal"
-          : String(product.category || "").toLowerCase().includes("shoe")
-          ? "Engineered Mesh / High-Grade EVA"
-          : String(product.category || "").toLowerCase().includes("chair")
-          ? "Reinforced Steel / High-Density Foam"
-          : "Certified High-Grade Composite")
-    },
+    { label: "Brand", value: product.brand || product.store || (isAudio ? "KSAM Audio" : "KSAM Signature") },
+    { label: "Category", value: product.category || (isAudio ? "Audio" : "General") },
+    { label: "Model / SKU", value: product.sku || `KSAM-${product.id}` },
+    isAudio
+      ? { label: "Connectivity", value: product.connectivity || "Bluetooth 5.3 / Wireless" }
+      : {
+          label: "Material",
+          value:
+            product.material ||
+            (String(product.category || "").toLowerCase().includes("watch")
+              ? "Stainless Steel / Sapphire Crystal"
+              : String(product.category || "").toLowerCase().includes("shoe")
+              ? "Engineered Mesh / High-Grade EVA"
+              : String(product.category || "").toLowerCase().includes("chair")
+              ? "Reinforced Steel / High-Density Foam"
+              : "Certified High-Grade Composite")
+        },
+    ...(isAudio && product.battery ? [{ label: "Battery / Playback", value: product.battery }] : []),
+    ...(isAudio && product.waterResistance ? [{ label: "Water Resistance", value: product.waterResistance }] : []),
     { label: "Warranty", value: "1-Year Official Manufacturer Warranty" },
     { label: "Availability", value: "In Stock (Ships in 24 Hours)" }
   ];
@@ -434,7 +496,7 @@ function ProductDetailPage() {
   return (
     <div className="product-detail-page">
       {/* 1. Shared KSAM Navbar */}
-      <Navbar />
+      <Navbar searchPlaceholder={isAudio ? `Search ${product.category?.toLowerCase() || "audio"}...` : undefined} />
 
       <main className="product-detail-main">
         {/* Breadcrumb Navigation: Home / Category / Product Name */}
@@ -443,7 +505,9 @@ function ProductDetailPage() {
           <span className="sep">/</span>
           <a
             href={
-              isFromClothing
+              isFromAudio
+                ? `${normalizedBase}audio.html`
+                : isFromClothing
                 ? `${normalizedBase}clothes.html`
                 : isFromElectronics
                 ? `${normalizedBase}electronics.html`
@@ -710,7 +774,9 @@ function ProductDetailPage() {
 
                 <a
                   href={
-                    isFromClothing
+                    isFromAudio
+                      ? `${normalizedBase}audio.html`
+                      : isFromClothing
                       ? `${normalizedBase}clothes.html`
                       : isFromElectronics
                       ? `${normalizedBase}electronics.html`
@@ -722,7 +788,9 @@ function ProductDetailPage() {
                 >
                   <ArrowLeft size={16} />
                   <span>
-                    {isFromClothing
+                    {isFromAudio
+                      ? "Back to Audio"
+                      : isFromClothing
                       ? "← Back to Clothing"
                       : isFromElectronics
                       ? "Back to Electronics"

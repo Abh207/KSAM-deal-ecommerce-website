@@ -104,12 +104,7 @@ export async function testSupabaseConnection() {
   }
 }
 
-// Auto-run connection test once on localhost in development
-if (
-  typeof window !== "undefined" &&
-  (window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1" ||
-    Boolean(import.meta.env?.DEV))
-) {
+// Auto-run connection test once strictly in Vite dev mode
+if (typeof window !== "undefined" && Boolean(import.meta.env?.DEV)) {
   testSupabaseConnection();
 }

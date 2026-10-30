@@ -556,45 +556,6 @@
   }
 }
 
-/* ── Gadgets Category Banner Specific Image Fit & Readability ── */
-.cs-banner[data-category="gadgets"],
-.cs-banner-gadgets {
-  isolation: isolate;
-  overflow: hidden;
-  background: radial-gradient(circle at 75% 50%, rgba(16, 185, 129, 0.12), transparent 60%), #030c0a;
-}
-
-.cs-banner[data-category="gadgets"] .cs-banner-scrim-layer,
-.cs-banner-gadgets .cs-banner-scrim-layer {
-  background: linear-gradient(
-    90deg,
-    rgba(3, 12, 10, 0.94) 0%,
-    rgba(3, 12, 10, 0.78) 40%,
-    rgba(3, 12, 10, 0.25) 75%,
-    transparent 100%
-  );
-}
-
-.cs-banner[data-category="gadgets"] .cs-banner-bg-img,
-.cs-banner-gadgets .cs-banner-bg-img {
-  object-fit: contain;
-  object-position: 85% 50%;
-  max-width: 58%;
-  left: auto;
-  right: 2%;
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.7));
-}
-
-@media (max-width: 767px) {
-  .cs-banner[data-category="gadgets"] .cs-banner-bg-img,
-  .cs-banner-gadgets .cs-banner-bg-img {
-    max-width: 75%;
-    right: 0;
-    opacity: 0.55;
-    object-position: center right;
-  }
-}
-
 /* ── LAYER 2: Text Content & Actions ── */
 .cs-banner-content,
 .cs-banner-overlay {
