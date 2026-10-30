@@ -8,10 +8,16 @@ export default function AudioBackgroundVideo() {
     useEffect(() => {
         const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
         const isReduced = mq.matches;
-        
-        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        const isSlowOrSaveData = conn?.saveData || (conn?.effectiveType && ["slow-2g", "2g", "3g"].includes(conn.effectiveType));
-        
+
+        const conn =
+            navigator.connection ||
+            navigator.mozConnection ||
+            navigator.webkitConnection;
+        const isSlowOrSaveData =
+            conn?.saveData ||
+            (conn?.effectiveType &&
+                ["slow-2g", "2g", "3g"].includes(conn.effectiveType));
+
         if (isReduced || isSlowOrSaveData) {
             setReducedMotion(true);
             return;
@@ -35,15 +41,28 @@ export default function AudioBackgroundVideo() {
             setTimeout(startPlay, 300);
         }
 
+        // Pause when tab is hidden, resume when visible
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                videoRef.current?.pause();
+            } else if (!reducedMotion && !fallback) {
+                videoRef.current?.play().catch(() => {});
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
         return () => {
             mq.removeEventListener?.("change", handleMotion);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [reducedMotion, fallback]);
 
     const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     const videoSrc = `${normalizedBase}assets/videos/audio-bg.mp4`;
     const mobileVideoSrc = `${normalizedBase}assets/videos/audio-bg_mobile.mp4`;
+    const webmSrc = `${normalizedBase}assets/videos/audio-bg.webm`;
+    const mobileWebmSrc = `${normalizedBase}assets/videos/audio-bg_mobile.webm`;
     const posterSrc = `${normalizedBase}assets/videos/audio-bg-poster.webp`;
 
     return (
@@ -52,6 +71,7 @@ export default function AudioBackgroundVideo() {
                 <video
                     ref={videoRef}
                     className="audio-bg-video"
+                    autoPlay
                     muted
                     loop
                     playsInline
@@ -59,7 +79,17 @@ export default function AudioBackgroundVideo() {
                     poster={posterSrc}
                     onError={() => setFallback(true)}
                 >
-                    <source media="(max-width: 768px)" src={mobileVideoSrc} type="video/mp4" />
+                    <source
+                        media="(max-width: 768px)"
+                        src={mobileWebmSrc}
+                        type="video/webm"
+                    />
+                    <source
+                        media="(max-width: 768px)"
+                        src={mobileVideoSrc}
+                        type="video/mp4"
+                    />
+                    <source src={webmSrc} type="video/webm" />
                     <source src={videoSrc} type="video/mp4" />
                 </video>
             ) : (

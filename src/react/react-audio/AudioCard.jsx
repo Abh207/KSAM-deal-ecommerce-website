@@ -72,6 +72,7 @@ function AudioCard({
                         alt={product.name}
                         className="watch-product-img-contain"
                         loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                             e.currentTarget.style.display = "none";
                             const fb = document.createElement("div");

@@ -33,6 +33,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -41,6 +42,8 @@ body {
     background: var(--black);
 
     color: white;
+
+    overflow-x: hidden;
 
     font-family:
         Inter,
@@ -112,11 +115,33 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
     .audio-bg-video {
         display: none !important;
     }
     .audio-bg-video-poster {
         display: block !important;
+    }
+    .audio-offer-shimmer,
+    .audio-offer-border-glow,
+    .audio-ticker-track,
+    .audio-discount-starburst,
+    .float-pos-1,
+    .float-pos-2,
+    .float-pos-3,
+    .audio-live-dot {
+        animation: none !important;
+    }
+    .audio-cat-card,
+    .audio-offer-glass-card {
+        transform: none !important;
     }
 }
 
@@ -125,6 +150,7 @@ a {
     padding-top: 72px;
     position: relative;
     background: transparent;
+    overflow-x: hidden;
 }
 
 
@@ -706,321 +732,715 @@ a {
 
 
 /* =========================================================
-   CATEGORIES
+   TASK 3: EXPLORE AUDIO CATEGORIES (REDESIGNED)
    ========================================================= */
 
-.audio-categories {
-    padding: 90px 5%;
-
+.audio-categories-section {
+    padding: 85px 5% 45px;
     background: transparent;
-
     color: #ffffff;
+    position: relative;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.audio-section-heading {
-    max-width: 750px;
+.audio-categories-section.is-in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-    margin: 0 auto 55px;
-
+.audio-categories-heading {
+    max-width: 800px;
+    margin: 0 auto 45px;
     text-align: center;
 }
 
-.audio-section-heading > span {
-    display: block;
-
-    margin-bottom: 12px;
-
-    color: #6b7280;
-
+.audio-cat-eyebrow {
+    display: inline-block;
+    color: var(--lime);
     font-size: 11px;
-
     font-weight: 1000;
-
-    letter-spacing: 3px;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
 }
 
-.audio-section-heading h2 {
-    font-size: clamp(
-        2.8rem,
-        5vw,
-        5rem
-    );
-
+.audio-cat-title {
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+    font-weight: 950;
     line-height: 0.95;
-
-    letter-spacing: -3px;
-
-    color: #ffffff;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #ffffff 40%, #c4ff66 80%, #8cff00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 40px rgba(140, 255, 0, 0.15);
+    margin: 0 0 16px;
 }
 
-.audio-section-heading p {
-    margin-top: 18px;
-
-    color: rgba(255, 255, 255, 0.75);
-
+.audio-cat-subtitle {
+    color: rgba(255, 255, 255, 0.72);
     font-size: 15px;
+    line-height: 1.5;
+    max-width: 540px;
+    margin: 0 auto;
 }
 
-.audio-category-list {
-    max-width: 1300px;
+.audio-cat-scroll-wrap {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    position: relative;
+}
 
-    margin: auto;
-
+.audio-cat-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(7, 1fr);
-
-    gap: 12px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 14px;
+    width: 100%;
 }
 
-.audio-category-list button {
-    min-height: 125px;
-
+.audio-cat-card {
+    position: relative;
+    min-height: 130px;
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
-
-    gap: 9px;
-
-    border: 1px solid rgba(255, 255, 255, 0.15);
-
-    border-radius: 18px;
-
-    background: rgba(15, 20, 18, 0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
+    gap: 10px;
+    padding: 18px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    background: rgba(14, 20, 16, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     color: #ffffff;
+    font-size: 13px;
+    font-weight: 850;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    will-change: transform;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
 
+.audio-cat-card:focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+}
+
+.audio-cat-spotlight {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle 90px at var(--cat-mx, -100px) var(--cat-my, -100px), rgba(140, 255, 0, 0.22), transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.audio-cat-card:hover .audio-cat-spotlight {
+    opacity: 1;
+}
+
+.audio-cat-card:hover {
+    border-color: rgba(140, 255, 0, 0.6);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(140, 255, 0, 0.28);
+}
+
+.audio-cat-icon-wrap {
+    font-size: 26px;
+    color: var(--lime);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.audio-cat-card:hover .audio-cat-icon-wrap {
+    transform: scale(1.18) translateY(-3px);
+}
+
+.audio-cat-name {
     font-size: 12px;
-
-    font-weight: 900;
-
-    transition: 0.3s ease;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
 }
 
-.audio-category-list button i {
-    color: var(--lime);
+.audio-cat-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 10px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.72);
+    min-width: 24px;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-.audio-category-list button small {
-    color: rgba(255, 255, 255, 0.65);
+/* Exactly ONE active tile */
+.audio-cat-card.is-active {
+    border-color: var(--lime);
+    background: linear-gradient(135deg, rgba(140, 255, 0, 0.16) 0%, rgba(14, 24, 16, 0.88) 100%);
+    box-shadow: 0 0 24px rgba(140, 255, 0, 0.32), inset 0 0 16px rgba(140, 255, 0, 0.12);
 }
 
-.audio-category-list button i {
-    font-size: 24px;
-
-    color: #555;
+.audio-cat-card.is-active .audio-cat-pill {
+    background: var(--lime);
+    color: #050e04;
 }
 
-.audio-category-list button small {
-    color: #999;
-
-    font-size: 9px;
-}
-
-.audio-category-list button:hover,
-.audio-category-list button.active {
-    border-color: #111;
-
-    background: #111;
-
-    color: white;
-
-    transform: translateY(-6px);
-
-    box-shadow:
-        0 15px 30px rgba(0,0,0,0.12);
-}
-
-.audio-category-list button:hover i,
-.audio-category-list button.active i {
-    color: var(--lime);
+.audio-cat-active-indicator {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 3px;
+    border-radius: 9999px;
+    background: var(--lime);
+    box-shadow: 0 0 8px var(--lime);
 }
 
 
 /* =========================================================
-   OFFER
+   TASK 2: FLASH AUDIO SALE BANNER (REDESIGNED)
    ========================================================= */
 
-.audio-offer {
-    padding: 90px 5%;
-
+.audio-offer-section {
+    position: relative;
+    padding: 60px 5% 75px;
     background: transparent;
-
-    color: white;
-}
-
-.audio-offer-inner {
-    max-width: 1350px;
-
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        0.8fr 1.2fr;
-
-    gap: 50px;
-
-    align-items: center;
-}
-
-.audio-offer-copy {
-    padding: 25px;
-}
-
-.audio-offer-copy h2 {
-    margin-top: 15px;
-
-    font-size: clamp(
-        2.8rem,
-        5vw,
-        5rem
-    );
-
-    line-height: 0.9;
-
-    letter-spacing: -3px;
-}
-
-.audio-offer-copy p {
-    margin: 20px 0;
-
-    color: #999;
-
-    font-size: 16px;
-}
-
-.audio-offer-discount {
-    display: inline-block;
-
-    padding: 8px 14px;
-
-    border-radius: 7px;
-
-    background: var(--lime);
-
-    color: #071000;
-
-    font-size: 13px;
-}
-
-.audio-countdown {
+    overflow: hidden;
     display: flex;
-
-    gap: 8px;
-
-    margin: 25px 0;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.audio-countdown div {
-    min-width: 65px;
+.audio-offer-section.is-in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-    padding: 10px;
+.audio-offer-ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(1000px, 92vw);
+    height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(140, 255, 0, 0.15) 0%, rgba(140, 255, 0, 0.04) 45%, transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+}
 
-    border: 1px solid #292929;
+.audio-offer-glass-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1320px;
+    border-radius: 28px;
+    background: rgba(10, 15, 12, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(140, 255, 0, 0.28);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(140, 255, 0, 0.12);
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease;
+    will-change: transform;
+}
 
-    border-radius: 10px;
+.audio-offer-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.06) 50%, rgba(140, 255, 0, 0.08) 60%, transparent 100%);
+    transform: skewX(-25deg);
+    animation: shimmerSweep 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+}
 
-    background: #111;
+@keyframes shimmerSweep {
+    0%, 60% { left: -100%; }
+    100% { left: 220%; }
+}
 
+.audio-offer-border-glow {
+    position: absolute;
+    inset: -2px;
+    border-radius: 30px;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(140, 255, 0, 0.45) 60deg, transparent 120deg, rgba(140, 255, 0, 0.35) 220deg, transparent 300deg);
+    animation: rotateBorder 14s linear infinite;
+    z-index: -1;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+@keyframes rotateBorder {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Circular / Starburst 60% OFF badge (non-overlapping) */
+.audio-discount-starburst {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    width: 82px;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    animation: pulseRotateBadge 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pulseRotateBadge {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        filter: drop-shadow(0 0 10px rgba(140, 255, 0, 0.45));
+    }
+    50% {
+        transform: rotate(10deg) scale(1.08);
+        filter: drop-shadow(0 0 20px rgba(140, 255, 0, 0.75));
+    }
+}
+
+.audio-starburst-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.audio-starburst-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    color: #050e04;
+    font-weight: 1000;
     text-align: center;
 }
 
-.audio-countdown strong {
-    display: block;
-
-    color: white;
-
-    font-size: 20px;
+.audio-starburst-content strong {
+    font-size: 17px;
+    letter-spacing: -0.5px;
 }
 
-.audio-countdown span {
-    color: #777;
-
-    font-size: 8px;
-
+.audio-starburst-content span {
+    font-size: 9px;
     letter-spacing: 1px;
 }
 
-.audio-offer-products {
+/* Two-column layout */
+.audio-offer-grid-layout {
     display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 15px;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 40px;
+    padding: 48px 45px 36px;
+    align-items: center;
 }
 
-.audio-offer-product {
-    padding: 18px;
-
-    border: 1px solid #292929;
-
-    border-radius: 20px;
-
-    background: #111;
-
-    transition: 0.3s ease;
+.audio-offer-content-col {
+    position: relative;
+    z-index: 2;
 }
 
-.audio-offer-product:hover {
-    transform: translateY(-7px);
-
-    border-color: var(--lime);
-}
-
-.audio-offer-product-image {
-    height: 230px;
-
+.audio-offer-pill-row {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
 
+.audio-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(140, 255, 0, 0.12);
+    border: 1px solid rgba(140, 255, 0, 0.35);
+    color: var(--lime);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.audio-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 0 10px var(--lime);
+    animation: liveDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes liveDotPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.45; }
+}
+
+.audio-live-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.audio-flame-icon {
+    display: inline-block;
+}
+
+.audio-offer-main-title {
+    font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+    font-weight: 950;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    color: #ffffff;
+    margin: 0 0 12px;
+}
+
+.audio-offer-subtitle {
+    font-size: clamp(14px, 1.6vw, 17px);
+    color: rgba(255, 255, 255, 0.72);
+    margin: 0 0 24px;
+    max-width: 480px;
+    line-height: 1.45;
+}
+
+/* Countdown */
+.audio-countdown-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.audio-glass-tile {
+    min-width: 68px;
+    padding: 12px 10px;
+    background: rgba(18, 25, 20, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.audio-glass-tile.is-seconds-glow {
+    border-color: rgba(140, 255, 0, 0.7);
+    background: rgba(20, 32, 20, 0.85);
+    box-shadow: 0 0 20px rgba(140, 255, 0, 0.3), inset 0 0 12px rgba(140, 255, 0, 0.12);
+}
+
+.audio-digit-flipper {
+    height: 32px;
+    display: flex;
     align-items: center;
     justify-content: center;
-
-    border-radius: 14px;
-
-    background: #f4f4f4;
+    overflow: hidden;
 }
 
-.audio-offer-product-image img {
-    width: 90%;
-    height: 90%;
-
-    object-fit: contain;
+.audio-digit-value {
+    display: inline-block;
+    font-size: 26px;
+    font-weight: 900;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    animation: digitSlideIn 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
-.audio-offer-product > strong {
-    display: block;
-
-    margin-top: 15px;
-
-    color: white;
-
-    font-size: 12px;
-}
-
-.audio-offer-product div:last-child {
-    margin-top: 8px;
-}
-
-.audio-offer-product b {
+.audio-digit-value.is-neon-sec {
     color: var(--lime);
-
-    font-size: 14px;
+    text-shadow: 0 0 14px rgba(140, 255, 0, 0.65);
 }
 
-.audio-offer-product del {
-    margin-left: 7px;
+@keyframes digitSlideIn {
+    0% { transform: translateY(-70%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
 
-    color: #666;
+.audio-tile-label {
+    display: block;
+    margin-top: 4px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #9ca3af;
+}
 
-    font-size: 10px;
+.audio-timer-colon {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--lime);
+    margin: 0 2px;
+}
+
+.audio-countdown-cycle-bar {
+    width: 100%;
+    max-width: 320px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+
+.audio-cycle-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, #8cff00);
+    box-shadow: 0 0 8px #8cff00;
+    transition: width 1s linear;
+}
+
+/* Sold: 78% claimed */
+.audio-claimed-container {
+    width: 100%;
+    max-width: 440px;
+    margin-bottom: 26px;
+}
+
+.audio-claimed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.audio-claimed-header strong {
+    color: var(--lime);
+}
+
+.audio-claimed-hurry {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.audio-claimed-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.audio-claimed-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #10b981 0%, #8cff00 100%);
+    box-shadow: 0 0 12px rgba(140, 255, 0, 0.5);
+    animation: fillGrow 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fillGrow {
+    from { width: 0% !important; }
+}
+
+.audio-offer-cta-wrap {
+    margin-top: 6px;
+}
+
+.audio-flash-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 36px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--lime);
+    color: #050e04;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(140, 255, 0, 0.4);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.audio-flash-cta-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 36px rgba(140, 255, 0, 0.65);
+}
+
+.audio-flash-cta-btn .audio-cta-arrow {
+    transition: transform 0.25s ease;
+}
+
+.audio-flash-cta-btn:hover .audio-cta-arrow {
+    transform: translateX(5px);
+}
+
+/* Floating product visuals */
+.audio-offer-visuals-col {
+    position: relative;
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-floating-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 440px;
+}
+
+.audio-floating-card {
+    position: absolute;
+    background: rgba(20, 26, 22, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(140, 255, 0, 0.1);
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.audio-floating-card:hover {
+    border-color: var(--lime);
+    box-shadow: 0 25px 55px rgba(0, 0, 0, 0.6), 0 0 30px rgba(140, 255, 0, 0.3);
+}
+
+.float-pos-1 {
+    top: 8%;
+    left: 18%;
+    width: 220px;
+    z-index: 2;
+    animation: floatSpeed1 5s ease-in-out infinite;
+    transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px));
+}
+
+.float-pos-2 {
+    bottom: 10%;
+    left: 2%;
+    width: 180px;
+    z-index: 3;
+    animation: floatSpeed2 4.2s ease-in-out infinite 0.6s;
+    transform: translate(calc(var(--parallax-x, 0px) * -0.8), calc(var(--parallax-y, 0px) * -0.8));
+}
+
+.float-pos-3 {
+    bottom: 16%;
+    right: 4%;
+    width: 195px;
+    z-index: 1;
+    animation: floatSpeed3 5.8s ease-in-out infinite 1.2s;
+    transform: translate(calc(var(--parallax-x, 0px) * 0.6), calc(var(--parallax-y, 0px) * 1.2));
+}
+
+@keyframes floatSpeed1 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-14px); }
+}
+
+@keyframes floatSpeed2 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-18px); }
+}
+
+@keyframes floatSpeed3 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+
+.audio-float-img-box {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.audio-float-img-box img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.audio-floating-card:hover .audio-float-img-box img {
+    transform: scale(1.08);
+}
+
+.audio-float-badge-chip {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.audio-chip-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.audio-chip-price {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--lime);
+}
+
+/* Scrolling ticker bar */
+.audio-offer-ticker-bar {
+    width: 100%;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.45);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 0;
+    white-space: nowrap;
+}
+
+.audio-ticker-track {
+    display: inline-flex;
+    animation: tickerSlide 25s linear infinite;
+}
+
+.audio-ticker-track span {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.72);
+    padding-right: 20px;
+}
+
+@keyframes tickerSlide {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
 }
 
 
@@ -1338,218 +1758,100 @@ a {
    ========================================================= */
 
 .audio-products {
-    padding: 90px 5%;
-
+    padding: 30px 5% 90px;
     background: transparent;
-
     color: #ffffff;
     position: relative;
     z-index: 1;
 }
 
-.audio-products-heading {
-    max-width: 1350px;
-
-    margin: auto;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: end;
-
-    gap: 30px;
-}
-
-.audio-products-heading span {
-    color: var(--lime);
-
-    font-size: 11px;
-
-    font-weight: 1000;
-
-    letter-spacing: 3px;
-}
-
-.audio-products-heading h2 {
-    margin-top: 10px;
-
-    font-size: clamp(
-        2.8rem,
-        5vw,
-        5rem
-    );
-
-    line-height: 0.9;
-
-    letter-spacing: -3px;
-    color: #ffffff;
-}
-
-.audio-products-heading p {
-    margin-top: 12px;
-
-    color: rgba(255, 255, 255, 0.75);
-
-    font-size: 13px;
-}
-
-.audio-sort select {
-    height: 48px;
-
-    padding: 0 15px;
-
-    border: 1px solid rgba(255, 255, 255, 0.22);
-
-    border-radius: 10px;
-
-    background: rgba(15, 20, 18, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    color: #ffffff;
-
-    outline: none;
-}
-
-
-/* FILTER */
-
-.audio-filter-row {
-    max-width: 1350px;
-
-    margin: 45px auto;
-
-    display: flex;
-
-    align-items: end;
-
-    gap: 12px;
-
-    flex-wrap: wrap;
-}
-
-.audio-main-search {
-    flex: 1;
-
-    min-width: 250px;
-
-    height: 50px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 0 15px;
-
-    border: 1px solid #ddd;
-
-    border-radius: 12px;
-
-    background: #fafafa;
-}
-
-.audio-main-search i {
-    color: #888;
-}
-
-.audio-main-search input {
-    width: 100%;
-
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
     border: 0;
-    outline: 0;
-
-    background: transparent;
-
-    color: #111;
 }
 
-.audio-filter-row label {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 6px;
-
-    color: rgba(255, 255, 255, 0.85);
-
-    font-size: 10px;
-
-    font-weight: 800;
+.audio-empty-state {
+    max-width: 480px;
+    margin: 60px auto;
+    text-align: center;
+    padding: 44px 28px;
+    border-radius: 24px;
+    background: rgba(14, 20, 16, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(140, 255, 0, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
-.audio-filter-row label select {
-    height: 50px;
+.audio-empty-state i {
+    font-size: 46px;
+    color: var(--lime);
+    margin-bottom: 18px;
+    display: inline-block;
+}
 
-    min-width: 150px;
-
-    padding: 0 12px;
-
-    border: 1px solid rgba(255, 255, 255, 0.22);
-
-    border-radius: 12px;
-
-    background: rgba(15, 20, 18, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
+.audio-empty-state h3 {
+    font-size: 22px;
+    font-weight: 850;
+    margin: 0 0 10px;
     color: #ffffff;
 }
 
-.audio-price-filter strong {
-    color: var(--lime);
-
-    font-size: 11px;
+.audio-empty-state p {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 24px;
 }
 
-.audio-price-filter input {
-    width: 180px;
-
-    accent-color: #111;
-}
-
-.audio-reset {
-    height: 50px;
-
-    padding: 0 20px;
-
-    border: 1px solid #111;
-
-    border-radius: 12px;
-
-    background: #111;
-
-    color: white;
-
-    font-weight: 800;
-}
-
-.audio-reset:hover {
+.audio-empty-state .audio-lime-button {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    border: none;
     background: var(--lime);
-
-    color: #111;
-
-    border-color: var(--lime);
+    color: #050e04;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(140, 255, 0, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.audio-empty-state .audio-lime-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(140, 255, 0, 0.55);
+}
 
 /* =========================================================
-   PRODUCT GRID
+   PRODUCT GRID (ALL PRODUCTS AT ONCE)
    ========================================================= */
 
 .audio-product-grid {
     max-width: 1350px;
-
     margin: auto;
-
     display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    animation: gridFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 24px;
+@keyframes gridFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 1024px) {
@@ -2211,41 +2513,7 @@ a {
 }
 
 
-/* LOAD MORE */
 
-.audio-load-more {
-    display: flex;
-
-    justify-content: center;
-
-    margin-top: 50px;
-}
-
-.audio-load-more button {
-    height: 50px;
-
-    padding: 0 25px;
-
-    border: 1px solid #111;
-
-    border-radius: 12px;
-
-    background: #111;
-
-    color: white;
-
-    font-size: 11px;
-
-    font-weight: 900;
-}
-
-.audio-load-more button:hover {
-    background: var(--lime);
-
-    color: #111;
-
-    border-color: var(--lime);
-}
 
 
 /* =========================================================
@@ -2533,11 +2801,6 @@ a {
         width: 220px;
     }
 
-    .audio-category-list {
-        grid-template-columns:
-            repeat(4, 1fr);
-    }
-
     .audio-product-grid {
         grid-template-columns:
             repeat(3, 1fr);
@@ -2602,8 +2865,102 @@ a {
         min-height: 500px;
     }
 
-    .audio-offer-inner {
+    /* Task 3: Mobile Category Carousel */
+    .audio-cat-scroll-wrap {
+        overflow: hidden;
+        margin: 0 -16px;
+        padding: 0 16px;
+    }
+
+    .audio-cat-scroll-wrap::before,
+    .audio-cat-scroll-wrap::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 24px;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    .audio-cat-scroll-wrap::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(5, 5, 5, 0.95), transparent);
+    }
+
+    .audio-cat-scroll-wrap::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(5, 5, 5, 0.95), transparent);
+    }
+
+    .audio-cat-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 10px;
+        padding: 6px 4px 16px;
+    }
+
+    .audio-cat-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .audio-cat-card {
+        flex: 0 0 calc((100% - 20px) / 3);
+        min-width: 98px;
+        min-height: 104px;
+        scroll-snap-align: start;
+        padding: 12px 6px;
+    }
+
+    /* Task 2: Flash Audio Sale Banner Mobile Layout */
+    .audio-offer-grid-layout {
         grid-template-columns: 1fr;
+        padding: 36px 24px 28px;
+        gap: 28px;
+    }
+
+    .audio-offer-visuals-col {
+        min-height: 300px;
+    }
+
+    .audio-floating-stage {
+        min-height: 300px;
+    }
+
+    .float-pos-1 {
+        width: 155px;
+        top: 2%;
+        left: 8%;
+    }
+
+    .float-pos-2 {
+        width: 135px;
+        bottom: 4%;
+        left: 6%;
+    }
+
+    .float-pos-3 {
+        width: 145px;
+        bottom: 8%;
+        right: 4%;
+    }
+
+    .audio-discount-starburst {
+        top: 16px;
+        right: 18px;
+        width: 66px;
+        height: 66px;
+    }
+
+    .audio-starburst-content strong {
+        font-size: 14px;
+    }
+
+    .audio-starburst-content span {
+        font-size: 8px;
     }
 
     .audio-spotlight-box {
@@ -2651,17 +3008,24 @@ a {
         min-height: 370px;
     }
 
-    .audio-category-list {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .audio-cat-card {
+        flex: 0 0 calc((100% - 16px) / 3);
+        min-width: 95px;
+        min-height: 98px;
     }
 
-    .audio-offer-products {
-        grid-template-columns: 1fr;
+    .audio-glass-tile {
+        min-width: 58px;
+        padding: 10px 6px;
     }
 
-    .audio-offer-product-image {
-        height: 180px;
+    .audio-digit-value {
+        font-size: 22px;
+    }
+
+    .audio-flash-cta-btn {
+        width: 100%;
+        justify-content: center;
     }
 
     /* Task 5: 2x2 grid on mobile up to 768px */
