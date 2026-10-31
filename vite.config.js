@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = resolve(__filename, "..");
 
 export default defineConfig({
-    base: "/KSAM-deal-ecommerce-website/",
+    base: '/',
 
     plugins: [
         react(),
