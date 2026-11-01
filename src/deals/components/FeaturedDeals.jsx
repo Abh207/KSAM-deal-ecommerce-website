@@ -1,33 +1,34 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Search, SlidersHorizontal, RefreshCw, ChevronDown, X, Info } from "lucide-react";
+import { Search, SlidersHorizontal, RefreshCw, ChevronDown, X, Info, WifiOff } from "lucide-react";
 import ProductCard from "./ProductCard.jsx";
-import ProductDetails from "./ProductDetails.jsx";
-import { getDeals, getDealById } from "../services/productService.js";
+import { getDeals, subscribeDealsRealtime } from "../services/productService.js";
 import "./featuredDeals.css";
 
 const CATEGORIES = [
   "All",
-  "Electronics",
+  "Audio",
   "Mobiles",
   "Laptops",
-  "Audio",
   "Shoes",
-  "Gaming",
   "Fashion",
   "Home",
+  "Gaming",
+  "Watches",
+  "Electronics",
   "Beauty"
 ];
 
 const CATEGORY_ICONS = {
   All: "⚡",
-  Electronics: "🔌",
+  Audio: "🎧",
   Mobiles: "📱",
   Laptops: "💻",
-  Audio: "🎧",
   Shoes: "👟",
-  Gaming: "🎮",
   Fashion: "👗",
   Home: "🏠",
+  Gaming: "🎮",
+  Watches: "⌚",
+  Electronics: "🔌",
   Beauty: "💄"
 };
 
@@ -45,8 +46,7 @@ const STORES = [
   { id: "croma", label: "Croma" },
   { id: "myntra", label: "Myntra" },
   { id: "ajio", label: "AJIO" },
-  { id: "jiomart", label: "JioMart" },
-  { id: "lenskart", label: "Lenskart" }
+  { id: "meesho", label: "Meesho" }
 ];
 
 function FeaturedDeals() {
@@ -60,68 +60,7 @@ function FeaturedDeals() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  // Synchronize modal state with URL hash (#product-<id>)
-  useEffect(() => {
-    const handleHashSync = async () => {
-      const hash = window.location.hash;
-      if (hash && hash.startsWith("#product-")) {
-        const id = hash.replace("#product-", "");
-        if (id) {
-          const found = products.find((p) => String(p.id) === String(id));
-          if (found) {
-            setSelectedProduct(found);
-          } else {
-            try {
-              const fetched = await getDealById(id);
-              if (fetched) setSelectedProduct(fetched);
-            } catch (err) {
-              console.error("Failed to fetch product for hash:", err);
-            }
-          }
-        }
-      } else if (!hash || !hash.startsWith("#product-")) {
-        setSelectedProduct(null);
-      }
-    };
-
-    const handleCustomOpen = (e) => {
-      if (e?.detail) {
-        setSelectedProduct(e.detail);
-        if (e.detail.id) {
-          window.location.hash = `product-${e.detail.id}`;
-        }
-      }
-    };
-
-    handleHashSync();
-    window.addEventListener("hashchange", handleHashSync);
-    window.addEventListener("popstate", handleHashSync);
-    window.addEventListener("open-product-details", handleCustomOpen);
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashSync);
-      window.removeEventListener("popstate", handleHashSync);
-      window.removeEventListener("open-product-details", handleCustomOpen);
-    };
-  }, [products]);
-
-  const handleOpenDetails = (product) => {
-    setSelectedProduct(product);
-    window.location.hash = `product-${product.id}`;
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedProduct(null);
-    if (window.location.hash && window.location.hash.startsWith("#product-")) {
-      window.history.pushState(
-        "",
-        document.title,
-        window.location.pathname + window.location.search
-      );
-    }
-  };
+  const [isOffline, setIsOffline] = useState(false);
 
   const loadDeals = useCallback(
     async (isPageReset = true) => {
@@ -150,7 +89,8 @@ function FeaturedDeals() {
           setPage(currentPage);
         }
 
-        setHasMore(res.hasMore);
+        setHasMore(Boolean(res.hasMore));
+        setIsOffline(Boolean(res.isOffline));
       } catch (err) {
         console.error("Failed to fetch deals:", err);
         setError("Unable to load deals right now. Please try again.");
@@ -166,13 +106,21 @@ function FeaturedDeals() {
     loadDeals(true);
   }, [category, store, sort]);
 
+  // Realtime subscription to price drops
+  useEffect(() => {
+    const unsub = subscribeDealsRealtime(() => {
+      loadDeals(true);
+    });
+    return unsub;
+  }, [loadDeals]);
+
   // Client-side search filtering on current loaded products or full term
   const filteredProducts = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return products;
     return products.filter((p) => {
       const matchName = p.name?.toLowerCase().includes(q);
-      const matchStore = p.store?.toLowerCase().includes(q);
+      const matchStore = (p.platform || p.store)?.toLowerCase().includes(q);
       const matchCat = p.category?.toLowerCase().includes(q);
       const matchBrand = p.brand?.toLowerCase().includes(q);
       return matchName || matchStore || matchCat || matchBrand;
@@ -182,7 +130,7 @@ function FeaturedDeals() {
   const searchInputRef = useRef(null);
   const chipsScrollRef = useRef(null);
 
-  // Keyboard shortcut: Pressing "/" focuses the search bar (unless already in an input)
+  // Keyboard shortcut: Pressing "/" focuses the search bar
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (
@@ -226,9 +174,20 @@ function FeaturedDeals() {
         {/* ROW 1: Heading, Subtitle & Search Box */}
         <div className="fd-title-row">
           <div className="fd-title-group">
-            <div className="fd-live-badge">
-              <span className="fd-live-dot" aria-hidden="true" />
-              <span>LIVE DEALS DISCOVERY</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="fd-live-badge">
+                <span className="fd-live-dot" aria-hidden="true" />
+                <span>LIVE DEALS DISCOVERY</span>
+              </div>
+              {isOffline && (
+                <div
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30"
+                  title="Showing cached deals (offline)"
+                >
+                  <WifiOff size={12} />
+                  <span>Cached Data</span>
+                </div>
+              )}
             </div>
             <h2 className="fd-heading">
               Deals worth <span className="fd-heading-highlight">checking.</span>
@@ -238,7 +197,7 @@ function FeaturedDeals() {
             </p>
           </div>
 
-          {/* Search Box: 420px on desktop, 52px tall, rounded 14px, glass, X clear, / shortcut */}
+          {/* Search Box */}
           <div className="fd-search-box">
             <Search size={18} className="fd-search-icon" />
             <input
@@ -249,63 +208,64 @@ function FeaturedDeals() {
               onKeyDown={(e) => {
                 if (e.key === "Escape") {
                   setSearch("");
-                  searchInputRef.current?.blur();
+                  e.currentTarget.blur();
                 }
               }}
-              placeholder="Search deals, brands, stores..."
+              placeholder='Search deals by name, brand, platform (press "/" to focus)...'
+              aria-label="Search deals"
               className="fd-search-input"
-              aria-label="Search deals, brands, stores"
             />
             {search && (
               <button
                 type="button"
-                onClick={() => {
-                  setSearch("");
-                  searchInputRef.current?.focus();
-                }}
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
                 className="fd-search-clear"
-                aria-label="Clear search text"
               >
-                <X size={13} strokeWidth={2.4} />
+                <X size={16} />
               </button>
             )}
-            <kbd className="fd-shortcut-hint" title="Press / to search">/</kbd>
+            <kbd className="fd-search-kbd" aria-hidden="true">
+              /
+            </kbd>
           </div>
         </div>
 
-        {/* ROW 2: One Tidy Filter Bar (Rounded Glass Panel with 16px padding) */}
-        <div className="fd-filter-panel">
-          {/* Left: Category Chips */}
-          <div className="fd-chips-wrapper">
-            <div className="fd-chips-scroll" ref={chipsScrollRef}>
-              {CATEGORIES.map((item) => {
-                const isSelected = category === item;
-                const icon = CATEGORY_ICONS[item] || "🏷️";
-                return (
-                  <button
-                    key={item}
-                    type="button"
-                    data-category={item}
-                    onClick={() => handleSelectCategory(item)}
-                    className={`fd-chip ${isSelected ? "fd-chip-active" : ""}`}
-                    aria-pressed={isSelected}
-                  >
-                    <span className="fd-chip-icon">{icon}</span>
-                    <span className="fd-chip-label">{item}</span>
-                  </button>
-                );
-              })}
-            </div>
+        {/* ROW 2: Category Chips Row */}
+        <div className="fd-category-scroll-wrap" ref={chipsScrollRef}>
+          <div className="fd-category-chips">
+            {CATEGORIES.map((cat) => {
+              const isActive = category === cat;
+              return (
+                <button
+                  key={cat}
+                  data-category={cat}
+                  type="button"
+                  onClick={() => handleSelectCategory(cat)}
+                  className={`fd-chip ${isActive ? "is-active" : ""}`}
+                >
+                  <span className="fd-chip-icon" aria-hidden="true">
+                    {CATEGORY_ICONS[cat] || "🏷️"}
+                  </span>
+                  <span>{cat}</span>
+                </button>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Right: Selects (All Stores and Sort) */}
-          <div className="fd-selects-group">
-            {/* Store Select */}
-            <div className="fd-select-wrapper">
+        {/* ROW 3: Secondary Filters & Meta Bar */}
+        <div className="fd-filter-meta-bar">
+          <div className="fd-filter-controls">
+            {/* Store Dropdown */}
+            <div className="fd-select-wrap">
+              <label htmlFor="store-select" className="sr-only">
+                Filter by Store
+              </label>
               <select
+                id="store-select"
                 value={store}
                 onChange={(e) => setStore(e.target.value)}
-                aria-label="Filter by store"
                 className="fd-select"
               >
                 {STORES.map((s) => (
@@ -314,93 +274,40 @@ function FeaturedDeals() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={15} strokeWidth={2.4} className="fd-select-chevron" />
+              <ChevronDown size={14} className="fd-select-arrow" />
             </div>
 
-            {/* Sort Select */}
-            <div className="fd-select-wrapper">
+            {/* Sort Dropdown */}
+            <div className="fd-select-wrap">
+              <label htmlFor="sort-select" className="sr-only">
+                Sort Deals
+              </label>
               <select
+                id="sort-select"
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                aria-label="Sort deals"
                 className="fd-select"
               >
                 {SORTS.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.id === "biggest_discount" ? "Sort: Biggest discount" : `Sort: ${s.label}`}
+                    {s.label}
                   </option>
                 ))}
               </select>
-              <ChevronDown size={15} strokeWidth={2.4} className="fd-select-chevron" />
-            </div>
-          </div>
-        </div>
-
-        {/* ROW 3: Result Bar (No divider line, tidy spacing) */}
-        <div className="fd-result-bar">
-          <div className="fd-result-left">
-            <div className="fd-count-wrap">
-              <span className="fd-count-num">
-                {loading ? "..." : filteredProducts.length}
-              </span>
-              <span className="fd-count-label">deals shown</span>
+              <ChevronDown size={14} className="fd-select-arrow" />
             </div>
 
-            {/* Active Removable Chips */}
+            {/* Active Filters Clear Button */}
             {hasActiveFilters && (
-              <div className="fd-active-chips">
-                {category !== "All" && (
-                  <button
-                    type="button"
-                    onClick={() => setCategory("All")}
-                    className="fd-active-chip"
-                    title={`Remove ${category} filter`}
-                  >
-                    <span>{category}</span>
-                    <X size={12} strokeWidth={2.2} />
-                  </button>
-                )}
-                {store !== "All" && (
-                  <button
-                    type="button"
-                    onClick={() => setStore("All")}
-                    className="fd-active-chip"
-                    title={`Remove ${activeStoreLabel} filter`}
-                  >
-                    <span>{activeStoreLabel}</span>
-                    <X size={12} strokeWidth={2.2} />
-                  </button>
-                )}
-                {search.trim() && (
-                  <button
-                    type="button"
-                    onClick={() => setSearch("")}
-                    className="fd-active-chip"
-                    title="Remove search query"
-                  >
-                    <span>"{search.trim()}"</span>
-                    <X size={12} strokeWidth={2.2} />
-                  </button>
-                )}
-                {sort !== "biggest_discount" && (
-                  <button
-                    type="button"
-                    onClick={() => setSort("biggest_discount")}
-                    className="fd-active-chip"
-                    title="Reset to biggest discount"
-                  >
-                    <span>Sort: {activeSortLabel}</span>
-                    <X size={12} strokeWidth={2.2} />
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="fd-clear-all-btn"
-                >
-                  Clear all
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="fd-clear-btn"
+                aria-label="Clear active filters"
+              >
+                <X size={14} />
+                <span>Reset</span>
+              </button>
             )}
           </div>
 
@@ -421,13 +328,13 @@ function FeaturedDeals() {
           </button>
         </div>
 
-        {/* Note / Disclaimer: Small info line (13px) with tiny ⓘ icon */}
+        {/* Note / Disclaimer */}
         <div className="fd-note-row">
           <Info size={14} strokeWidth={2.2} className="fd-note-icon shrink-0" />
-          <span>Prices and availability can change on the store. Click a deal to view details.</span>
+          <span>Prices and availability can change on official stores. Click any product to view details.</span>
         </div>
 
-        {/* Error State */}
+        {/* Error State with Retry Button */}
         {error && (
           <div className="mt-10 rounded-2xl border border-white/10 bg-[#0a0a0a] p-8 text-center">
             <p className="text-lg font-bold text-white">Unable to load deals</p>
@@ -441,41 +348,35 @@ function FeaturedDeals() {
           </div>
         )}
 
-        {/* Loading Skeletons matching Image 1 */}
+        {/* Loading Skeletons matching Image 2 Style */}
         {loading && (
           <div className="deals-grid mt-8 grid">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div
                 key={i}
-                className="flex flex-col rounded-[24px] border border-white/[0.08] bg-[#0b0b0d] p-3 sm:p-4 animate-pulse"
+                className="flex flex-col rounded-[22px] border border-gray-100 bg-white p-3 sm:p-4 shadow-sm animate-pulse"
               >
-                <div className="w-full aspect-[4/5] md:aspect-square rounded-2xl bg-white/[0.04]" />
+                <div className="w-full h-[180px] sm:h-[220px] rounded-xl bg-gray-100" />
                 <div className="mt-3 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="h-5 w-4/5 rounded bg-white/[0.06]" />
-                    <div className="h-4 w-2/3 rounded bg-white/[0.04] mt-2" />
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="h-7 w-28 rounded bg-white/[0.08]" />
-                      <div className="h-5 w-12 rounded bg-white/[0.06]" />
-                    </div>
+                    <div className="h-3 w-1/3 rounded bg-gray-200" />
+                    <div className="h-5 w-4/5 rounded bg-gray-200 mt-2" />
+                    <div className="h-3 w-1/2 rounded bg-gray-100 mt-2" />
+                    <div className="h-6 w-28 rounded bg-gray-200 mt-3" />
                   </div>
-                  <div className="h-[46px] sm:h-[52px] w-full rounded-full bg-white/[0.08] mt-4" />
+                  <div className="h-[46px] sm:h-[48px] w-full rounded-xl bg-gray-100 mt-4" />
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* Products Grid */}
+        {/* Products Grid: 4 cols desktop, 3 tablet, 2 mobile */}
         {!loading && !error && filteredProducts.length > 0 && (
           <>
             <div className="deals-grid mt-8 grid">
               {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onOpenDetails={handleOpenDetails}
-                />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
@@ -526,7 +427,7 @@ function FeaturedDeals() {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0a0a0a] text-xl">
               🔎
             </div>
-            <h3 className="mt-5 text-xl font-black text-white">No deals found</h3>
+            <h3 className="mt-5 text-xl font-black text-white">No deals right now</h3>
             <p className="mt-2 text-xs text-gray-500">
               Try adjusting your filters, store selection, or search query.
             </p>
@@ -539,18 +440,6 @@ function FeaturedDeals() {
           </div>
         )}
       </div>
-
-      {/* Product Details Modal / Bottom Sheet */}
-      {selectedProduct && (
-        <ProductDetails
-          product={selectedProduct}
-          onClose={handleCloseDetails}
-          onSelectProduct={(newProduct) => {
-            setSelectedProduct(newProduct);
-            window.location.hash = `product-${newProduct.id}`;
-          }}
-        />
-      )}
     </section>
   );
 }

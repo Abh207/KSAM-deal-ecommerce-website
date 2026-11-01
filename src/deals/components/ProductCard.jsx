@@ -1,201 +1,187 @@
-import { useState, useEffect } from "react";
-import { Star, Heart, ArrowUpRight } from "lucide-react";
-import { wishlistService } from "../services/wishlistService.js";
+import React, { useState, useEffect } from "react";
+import { ShoppingBag, Check, ArrowRight } from "lucide-react";
+import { isInWishlist, toggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
+import { addProductToCart, buildProductUid, resolveImagePath } from "../../lib/cartHelper.js";
 import { getCategoryFallbackImage } from "../services/productService.js";
+import "./dealCardV2.css";
 
 /**
- * ProductCard matches Image 2 exactly:
- * - Card: background var(--card-bg), border-radius 24px, 1px border rgba(255,255,255,0.12).
- * - Inner padding: 22px on laptop, 14px on phone.
- * - Soft white glow layer (var(--card-glow)) behind product image.
- * - Top-left: Solid blue pill (#0a6cff) badge "New" or discount like "-43%".
- *   Height 35px, padding 0 18px, bold white 17px text (laptop).
- * - Top-right: Plain white OUTLINE heart icon (~34px laptop, 26px phone), 44px tap target.
- * - Image: Large, centered, object-fit contain (~55% card height), directly on dark gradient.
- * - Name: White, bold (700), left aligned, 20px laptop (clamp 15px phone), 1 line ellipsis laptop, max 2 phone.
- * - Price row on 1 line: Large bold white price (31px laptop, clamp 20px phone) in ₹,
- *   yellow (#ffc107) filled star + white bold rating. Original price directly UNDER price (~13px muted).
- * - Button: Full-width WHITE pill (#ffffff), border-radius 999px, height 54px laptop / 46px phone,
- *   centered bold BLACK text "View Product" (22px laptop, 16px phone) with black icon to the left.
+ * ProductCard renders in Image 2 ("Best Sellers" / Watches card) style:
+ * - White card, rounded 20-24px, soft shadow
+ * - Light grey image area (#f8f8f8) with centered contain image
+ * - Black "N% OFF" pill top-left
+ * - Round wishlist heart top-right (green filled #22c55e when active)
+ * - Small platform chip (e.g. "on Amazon")
+ * - Small uppercase green category label
+ * - Bold product name (max 2 lines with ellipsis)
+ * - Grey brand/store name
+ * - 2-line short description
+ * - Large bold ₹ price with struck-through old price
+ * - Green "N items available" line (hidden if stock is unknown)
+ * - Footer: square black cart button + wide light-green outlined "View Product ->" button
+ * - Opens product.html?id=<id>&category=<category>&uid=<uid>&from=deals in SAME tab
  */
 export function ProductCard({ product, onOpenDetails }) {
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [, setWishlistVersion] = useState(0);
+  const [addedQuick, setAddedQuick] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    let active = true;
-    wishlistService.isSaved(product.id).then((saved) => {
-      if (active) setIsSaved(saved);
+    const unsub = subscribeWishlist(() => {
+      setWishlistVersion((v) => v + 1);
     });
+    return unsub;
+  }, []);
 
-    const unsub = wishlistService.subscribe(() => {
-      wishlistService.isSaved(product.id).then((saved) => {
-        if (active) setIsSaved(saved);
-      });
-    });
+  if (!product) return null;
 
-    return () => {
-      active = false;
-      unsub();
-    };
-  }, [product.id]);
+  const base = import.meta.env.BASE_URL || "/";
+  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+  const uid = product.uid || buildProductUid(product.category, product.id);
+  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "General")}&uid=${encodeURIComponent(uid)}&from=deals`;
 
-  const handleToggleSave = async (e) => {
+  const isSaved = isInWishlist(product.uid || product.id);
+
+  const handleToggleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (saving) return;
-    setSaving(true);
-    try {
-      const nextState = await wishlistService.toggle(product);
-      setIsSaved(nextState);
-    } catch (err) {
-      console.error("Failed to toggle wishlist:", err);
-    } finally {
-      setSaving(false);
-    }
+    toggleWishlist(product);
   };
 
-  const handleCardClick = (e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if (onOpenDetails) {
-      onOpenDetails(product);
-      return;
-    }
-    window.location.hash = `product-${product.id}`;
+  const handleQuickAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addProductToCart(product, 1);
+    setAddedQuick(true);
+    setTimeout(() => setAddedQuick(false), 1200);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleCardClick(e);
-    }
-  };
+  const platformName = product.platform || product.bestOffer?.platform || product.store || "Amazon";
+  const rawImage = !imgFailed && (product.image || product.image_url)
+    ? resolveImagePath(product.image || product.image_url)
+    : getCategoryFallbackImage(product.category, product.name);
 
-  const displayImage =
-    !imgFailed && product.image
-      ? product.image
-      : getCategoryFallbackImage(product.category, product.name);
-
-  const ratingValue = product.rating ? Number(product.rating).toFixed(1) : "4.5";
-  const badgeText = product.discount && product.discount > 0 ? `-${product.discount}%` : "New";
+  const hasDiscount = Boolean(product.discount && product.discount > 0);
+  const showStock = product.stock !== null && product.stock !== undefined;
 
   return (
     <article
-      onClick={handleCardClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-      aria-label={`View details for ${product.name}`}
-      className="ksam-product-card group"
+      className="deal-card-v2"
+      data-id={product.id}
+      data-category={product.category}
     >
-      {/* Soft white glow layer behind image */}
-      <div className="ksam-card-glow-bg" aria-hidden="true" />
+      {/* 1. TOP IMAGE AREA */}
+      <div className="deal-card-img-wrap">
+        <a
+          href={productUrl}
+          className="deal-card-img-link"
+          aria-label={`View details for ${product.name}`}
+        >
+          <img
+            src={rawImage}
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+            className="deal-card-img"
+            onError={() => setImgFailed(true)}
+          />
+        </a>
 
-      {/* Top row: Badge on left, heart on right, vertically centered on the same line */}
-      <div className="ksam-card-top-row">
-        <div className="ksam-card-badge-wrap">
-          <span className="ksam-card-badge">{badgeText}</span>
-        </div>
+        {/* Black "N% OFF" pill top-left */}
+        {hasDiscount && (
+          <span className="deal-card-discount-pill">
+            {product.discount}% OFF
+          </span>
+        )}
 
+        {/* Round wishlist heart top-right */}
         <button
-          onClick={handleToggleSave}
           type="button"
+          className={`deal-card-heart-btn ${isSaved ? "is-active" : ""}`}
           aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
           title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-          className="ksam-card-heart-btn"
+          onClick={handleToggleWishlist}
         >
-          <Heart
-            strokeWidth={1.8}
-            fill={isSaved ? "#ffffff" : "none"}
-            color="#ffffff"
-            className="ksam-card-heart-icon"
-          />
+          <span className="deal-heart-icon">{isSaved ? "♥" : "♡"}</span>
         </button>
       </div>
 
-      {/* 1. Image Area: Photo sits directly on the dark gradient */}
-      <div className="ksam-card-img-wrap">
-        {/* Shimmer skeleton while loading */}
-        {!imgLoaded && !imgFailed && (
-          <div aria-hidden="true" className="ksam-card-img-skeleton" />
-        )}
-
-        {/* Product photo */}
-        <img
-          src={displayImage}
-          alt={product.name}
-          loading="lazy"
-          decoding="async"
-          onLoad={() => setImgLoaded(true)}
-          onError={() => {
-            if (!imgFailed) {
-              setImgFailed(true);
-            }
-            setImgLoaded(true);
-          }}
-          className={`ksam-card-img ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-        />
-
-        {/* Fallback gradient banner with product name if image fails */}
-        {imgFailed && (
-          <div className="ksam-card-img-fallback">
-            <span>{product.name}</span>
-          </div>
-        )}
-      </div>
-
-      {/* 2. Content Area */}
-      <div className="ksam-card-content">
-        {/* Product Name */}
-        <h3 title={product.name} className="ksam-card-title">
-          {product.name}
-        </h3>
-
-        {/* Price Row on one line */}
-        <div className="ksam-card-price-row">
-          <div className="ksam-card-price-col">
-            <span className="ksam-card-price">
-              ₹{Number(product.price || 0).toLocaleString("en-IN")}
+      {/* 2. CARD CONTENT BODY */}
+      <div className="deal-card-content">
+        {/* Meta row: category + platform chip */}
+        <div className="deal-card-meta-row">
+          <span className="deal-card-cat-label">{product.category || "Deals"}</span>
+          {platformName && (
+            <span className="deal-platform-chip" title={`Best offer from ${platformName}`}>
+              on {platformName}
             </span>
-            {/* Original price directly under current price */}
-            {product.oldPrice > product.price && (
-              <del className="ksam-card-old-price">
-                ₹{Number(product.oldPrice).toLocaleString("en-IN")}
-              </del>
-            )}
-          </div>
-
-          {/* Yellow star rating on the right */}
-          <div className="ksam-card-rating">
-            <Star
-              size={18}
-              fill="#ffc107"
-              stroke="#ffc107"
-              className="shrink-0"
-            />
-            <span className="ksam-card-rating-num">{ratingValue}</span>
-          </div>
+          )}
         </div>
 
-        {/* 3. Button: Full-width WHITE pill with black bold "View Product" */}
-        <div className="ksam-card-btn-wrap">
+        {/* Bold clickable product name */}
+        <h3 className="deal-card-name">
+          <a href={productUrl} className="deal-card-name-link">
+            {product.name}
+          </a>
+        </h3>
+
+        {/* Grey brand name */}
+        <p className="deal-card-brand">
+          {product.brand || platformName || "KSAM Certified"}
+        </p>
+
+        {/* 2-line short description */}
+        <p className="deal-card-desc">
+          {product.description}
+        </p>
+
+        {/* Price row */}
+        <div className="deal-card-price-row">
+          <span className="deal-current-price">
+            ₹{Number(product.price || 0).toLocaleString("en-IN")}
+          </span>
+          {product.oldPrice > product.price && (
+            <span className="deal-original-price">
+              ₹{Number(product.oldPrice).toLocaleString("en-IN")}
+            </span>
+          )}
+        </div>
+
+        {/* Green stock line */}
+        {showStock && (
+          <p className="deal-stock-line">
+            {product.stock > 0 ? `${product.stock} items available` : "Out of stock"}
+          </p>
+        )}
+
+        {/* 3. FOOTER ROW */}
+        <div className="deal-card-actions">
+          {/* Black square cart button */}
           <button
             type="button"
-            onClick={handleCardClick}
-            className="ksam-view-btn"
+            className={`deal-cart-btn ${addedQuick ? "is-added" : ""}`}
+            onClick={handleQuickAddToCart}
+            aria-label={`Add ${product.name} to Cart`}
+            title="Add to Cart"
+            disabled={showStock && product.stock <= 0}
           >
-            <ArrowUpRight
-              size={20}
-              strokeWidth={2.6}
-              className="ksam-view-btn-icon shrink-0"
-            />
-            <span>View Product</span>
+            {addedQuick ? (
+              <Check size={20} strokeWidth={2.5} />
+            ) : (
+              <ShoppingBag size={20} strokeWidth={2} />
+            )}
           </button>
+
+          {/* Light-green outlined View Product button */}
+          <a
+            href={productUrl}
+            className="deal-view-btn"
+            aria-label={`View details for ${product.name}`}
+          >
+            <span className="deal-view-btn-full">View Product</span>
+            <span className="deal-view-btn-short">View</span>
+            <ArrowRight size={16} className="deal-view-btn-arrow" />
+          </a>
         </div>
       </div>
     </article>

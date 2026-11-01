@@ -13,6 +13,7 @@ import AudioCategorySection from "./AudioCategorySection.jsx";
 import AudioOfferSection from "./AudioOfferSection.jsx";
 import AudioSpotlight from "./AudioSpotlight.jsx";
 import AudioFeatures from "./AudioFeatures.jsx";
+import AudioFeedback from "./AudioFeedback.jsx";
 
 import audioData from "../../api/audio-products.json";
 import { requireAuth } from "../../auth/auth.js";
@@ -33,7 +34,7 @@ const CART_KEY = "cartProductLS";
 const getImagePath = (image) => {
     if (!image) return "";
     if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const base = import.meta.env.BASE_URL || "/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     let clean = image.replace(/^\/+/, "");
     clean = clean.replace(/\.(png|jpe?g)$/i, ".webp");
@@ -199,6 +200,12 @@ function AudioMain() {
         });
     }, []);
 
+    const scrollToCategories = useCallback(() => {
+        document.getElementById("audio-categories")?.scrollIntoView({
+            behavior: "smooth"
+        });
+    }, []);
+
     const handleSelectCategory = (catName) => {
         setCategory(catName);
         scrollToProducts();
@@ -213,26 +220,13 @@ function AudioMain() {
             <AudioBackgroundVideo />
 
             {/* =================================================
-                ANNOUNCEMENT BAR
-            ================================================= */}
-            <div className="audio-announcement" aria-label="Audio Announcements">
-                <div>FREE DELIVERY ABOVE ₹999</div>
-                <span aria-hidden="true">•</span>
-                <div>30 DAY EASY RETURNS</div>
-                <span aria-hidden="true">•</span>
-                <div>SECURE CHECKOUT</div>
-                <span aria-hidden="true">•</span>
-                <div>NEW AUDIO COLLECTION</div>
-                <span aria-hidden="true">•</span>
-                <div>FREE DELIVERY ABOVE ₹999</div>
-            </div>
-
-            {/* =================================================
-                HERO
+                HERO (Full Video Header)
             ================================================= */}
             <AudioHero
                 hero={audioData.hero}
+                dealProduct={products[0]}
                 onExplore={scrollToProducts}
+                onExploreCategories={scrollToCategories}
             />
 
             {/* =================================================
@@ -287,16 +281,19 @@ function AudioMain() {
             )}
 
             {/* =================================================
-                SPOTLIGHT
+                SPOTLIGHT (Featured Spotlight Slider)
             ================================================= */}
-            {spotlightProduct && (
-                <AudioSpotlight
-                    spotlightProduct={spotlightProduct}
-                    getImagePath={getImagePath}
-                    addToCart={addToCart}
-                    toggleWishlist={toggleWishlist}
-                />
-            )}
+            <AudioSpotlight
+                products={spotlightProducts.length > 0 ? spotlightProducts : products.slice(0, 4)}
+                getImagePath={getImagePath}
+                addToCart={addToCart}
+                toggleWishlist={toggleWishlist}
+                isInWishlist={(id) =>
+                    wishlist.some(
+                        (item) => String(item.id) === String(id) || String(item.uid) === String(id)
+                    )
+                }
+            />
 
             {/* =================================================
                 FEATURES
@@ -311,6 +308,24 @@ function AudioMain() {
                 id="audio-products"
                 aria-label="All Audio Products"
             >
+                {/* Task 4: Product Grid Section Heading (Matching Spotlight design) */}
+                <div className="audio-products-header-wrap">
+                    <div className="audio-products-eyebrow-pill">
+                        <span className="audio-products-live-dot" aria-hidden="true" />
+                        <span className="audio-products-eyebrow-text">AUDIO COLLECTION</span>
+                    </div>
+
+                    <h2 className="audio-products-section-title">
+                        Top Picks For Your <span className="audio-lime-gradient-text">Ears.</span>
+                    </h2>
+
+                    <div className="audio-spotlight-underline" aria-hidden="true" />
+
+                    <p className="audio-products-section-subtitle">
+                        Showing {filteredProducts.length} {category === "All" ? "premium audio devices" : `${category.toLowerCase()} products`} ready for instant dispatch.
+                    </p>
+                </div>
+
                 {/* Screen reader live update when category filter changes */}
                 <div className="sr-only" aria-live="polite" aria-atomic="true">
                     Showing {filteredProducts.length} {category === "All" ? "" : category} products
@@ -346,6 +361,11 @@ function AudioMain() {
                     </div>
                 )}
             </section>
+
+            {/* =================================================
+                CUSTOMER FEEDBACK (Task 5: Customer Reviews)
+            ================================================= */}
+            <AudioFeedback />
 
             {/* =================================================
                 TOAST

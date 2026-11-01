@@ -92,10 +92,15 @@
             "icon": "🔊",
             "color": "#f0f8ff",
             "link": "./audio.html",
-            "bannerImage": "",
-            "video": null,
-            "poster": "",
-            "objectPosition": "72% 50%",
+            "bannerImage": "assets/videos/speakers-category-poster.webp",
+            "video": [
+                { "src": "assets/videos/speakers-category_mobile.webm", "type": "video/webm", "media": "(max-width: 768px)" },
+                { "src": "assets/videos/speakers-category_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
+                { "src": "assets/videos/speakers-category.webm", "type": "video/webm" },
+                { "src": "assets/videos/speakers-category.mp4", "type": "video/mp4" }
+            ],
+            "poster": "assets/videos/speakers-category-poster.webp",
+            "objectPosition": "80% 50%",
             "fit": "cover",
             "scale": 1
         },
@@ -121,7 +126,7 @@
             "productIds": [],
             "icon": "⚡",
             "color": "#e8f1ff",
-            "link": "./fashionSpeaker.html",
+            "link": "./electronics.html",
             "bannerImage": "",
             "video": [
                 { "src": "assets/videos/Gaming_mouse_exploded_view_eb900f91.mp4", "type": "video/mp4" },
@@ -139,7 +144,7 @@
             "productIds": [],
             "icon": "👕",
             "color": "#fff0f5",
-            "link": "./Product.html",
+            "link": "./clothes.html",
             "bannerImage": "",
             "video": null,
             "poster": "",

@@ -5,7 +5,7 @@ import { buildProductUid } from "../../lib/cartHelper.js";
 const getImagePath = (image) => {
     if (!image) return "";
     if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const base = import.meta.env.BASE_URL || "/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     let clean = image.replace(/^\/+/, "");
     clean = clean.replace(/\.(png|jpe?g)$/i, ".webp");
@@ -23,7 +23,7 @@ function AudioCard({
 }) {
     const [addedQuick, setAddedQuick] = useState(false);
 
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const base = import.meta.env.BASE_URL || "/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     const uid = product.uid || buildProductUid(product.category, product.id);
     const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "Audio")}&uid=${encodeURIComponent(uid)}&from=audio`;

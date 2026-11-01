@@ -71,20 +71,30 @@ export const CATEGORY_PARENT_MAP = {
   "boots": "shoes",
   "men": "shoes",
 
-  // Audio and Gadgets (headphones/speakers/gadgets = audio and gadgets)
-  "earbuds": "audio-gadgets",
-  "headphones": "audio-gadgets",
-  "audio": "audio-gadgets",
-  "speakers": "audio-gadgets",
-  "neckbands": "audio-gadgets",
-  "gadgets": "audio-gadgets",
-  "laptops": "audio-gadgets",
-  "mobiles": "audio-gadgets",
-  "smartphones": "audio-gadgets",
-  "computers": "audio-gadgets",
-  "cameras": "audio-gadgets",
-  "gaming": "audio-gadgets",
-  "smart-home": "audio-gadgets",
+  // Audio
+  "earbuds": "audio",
+  "headphones": "audio",
+  "audio": "audio",
+  "speakers": "audio",
+  "neckbands": "audio",
+
+  // Electronics & Gadgets
+  "electronics": "electronics",
+  "electronic": "electronics",
+  "smartphones": "electronics",
+  "smartphone": "electronics",
+  "mobiles": "electronics",
+  "mobile": "electronics",
+  "laptops": "electronics",
+  "laptop": "electronics",
+  "computers": "electronics",
+  "computer": "electronics",
+  "cameras": "electronics",
+  "camera": "electronics",
+  "gaming": "electronics",
+  "smart-home": "electronics",
+  "gadgets": "electronics",
+  "gadget": "electronics",
 
   // Clothes
   "tops": "clothes",
@@ -121,7 +131,7 @@ const catalogByUid = new Map();
 const catalogByCategoryAndId = new Map();
 const catalogByIdList = new Map();
 
-function registerRawItem(item, defaultCategory = "General") {
+function registerRawItem(item, defaultCategory = "General", options = {}) {
   if (!item || item.id === undefined || item.id === null) return;
 
   const rawCat = item.category || defaultCategory;
@@ -155,6 +165,32 @@ function registerRawItem(item, defaultCategory = "General") {
     catalogByCategoryAndId.set(catIdKey, normalized);
   }
 
+  // Also index under parent category (e.g. mens-watches -> watches, laptops -> electronics)
+  const parentCat = CATEGORY_PARENT_MAP[categorySlug] || (options.aliasCategory ? slugify(options.aliasCategory) : null);
+  if (parentCat && parentCat !== categorySlug) {
+    const parentUid = `${parentCat}-${idStr.toLowerCase()}`;
+    if (!catalogByUid.has(parentUid)) {
+      catalogByUid.set(parentUid, normalized);
+    }
+    const parentCatKey = `${parentCat}::${idStr.toLowerCase()}`;
+    if (!catalogByCategoryAndId.has(parentCatKey)) {
+      catalogByCategoryAndId.set(parentCatKey, normalized);
+    }
+  }
+
+  // Support explicit alias category if provided
+  if (options.aliasCategory) {
+    const aliasSlug = slugify(options.aliasCategory);
+    const aliasUid = `${aliasSlug}-${idStr.toLowerCase()}`;
+    if (!catalogByUid.has(aliasUid)) {
+      catalogByUid.set(aliasUid, normalized);
+    }
+    const aliasCatKey = `${aliasSlug}::${idStr.toLowerCase()}`;
+    if (!catalogByCategoryAndId.has(aliasCatKey)) {
+      catalogByCategoryAndId.set(aliasCatKey, normalized);
+    }
+  }
+
   const idKey = idStr.toLowerCase();
   if (!catalogByIdList.has(idKey)) {
     catalogByIdList.set(idKey, []);
@@ -162,10 +198,10 @@ function registerRawItem(item, defaultCategory = "General") {
   catalogByIdList.get(idKey).push(normalized);
 }
 
-function registerRawList(data, defaultCategory) {
+function registerRawList(data, defaultCategory, options = {}) {
   if (!data) return;
   const list = Array.isArray(data) ? data : data.products || [];
-  list.forEach((item) => registerRawItem(item, defaultCategory));
+  list.forEach((item) => registerRawItem(item, defaultCategory, options));
 }
 
 // Ingest in logical priority order
@@ -180,7 +216,7 @@ registerRawList(headerProducts, "General");
 registerRawList(chairProducts, "Furniture");
 registerRawList(productsBox2, "Furniture");
 registerRawList(horizScrollProd, "Furniture");
-registerRawList(shopProducts, "General");
+registerRawList(shopProducts, "Electronics", { aliasCategory: "electronics" });
 registerRawList(defaultProducts, "General");
 registerRawList(promoProducts, "Gadgets");
 

@@ -112,7 +112,7 @@ const ElectronicsPromoCarousel = () => {
     const pointerStart = useRef({ x: 0, y: 0 });
     const draggedDist = useRef(0);
 
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const base = import.meta.env.BASE_URL || "/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
 
     const getProductUrl = (card) => {

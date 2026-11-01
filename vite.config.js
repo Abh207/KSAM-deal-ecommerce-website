@@ -4,6 +4,7 @@ import compression from "vite-plugin-compression";
 import { visualizer } from "rollup-plugin-visualizer";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = resolve(__filename, "..");
@@ -13,6 +14,20 @@ export default defineConfig({
 
     plugins: [
         react(),
+        {
+            name: "duplicate-product-html-casing",
+            closeBundle() {
+                try {
+                    const upper = resolve(__dirname, "dist/Product.html");
+                    const lower = resolve(__dirname, "dist/product.html");
+                    if (fs.existsSync(upper) && !fs.existsSync(lower)) {
+                        fs.copyFileSync(upper, lower);
+                    } else if (fs.existsSync(lower) && !fs.existsSync(upper)) {
+                        fs.copyFileSync(lower, upper);
+                    }
+                } catch (e) {}
+            }
+        },
         compression({
             algorithm: "gzip",
             ext: ".gz"
@@ -37,7 +52,6 @@ export default defineConfig({
             input: {
                 main: resolve(__dirname, "index.html"),
                 shop: resolve(__dirname, "shop.html"),
-                heardeprod: resolve(__dirname, "heardeprod.html"),
                 contact: resolve(__dirname, "contact.html"),
                 login: resolve(__dirname, "login.html"),
                 product: resolve(__dirname, "Product.html"),

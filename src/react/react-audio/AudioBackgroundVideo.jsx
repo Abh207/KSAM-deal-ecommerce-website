@@ -29,9 +29,7 @@ export default function AudioBackgroundVideo() {
         // Defer playback until after first paint
         const startPlay = () => {
             if (videoRef.current) {
-                videoRef.current.play().catch(() => {
-                    setFallback(true);
-                });
+                videoRef.current.play().catch(() => {});
             }
         };
 
@@ -57,7 +55,7 @@ export default function AudioBackgroundVideo() {
         };
     }, [reducedMotion, fallback]);
 
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const base = import.meta.env.BASE_URL || "/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     const videoSrc = `${normalizedBase}assets/videos/audio-bg.mp4`;
     const mobileVideoSrc = `${normalizedBase}assets/videos/audio-bg_mobile.mp4`;
@@ -67,7 +65,7 @@ export default function AudioBackgroundVideo() {
 
     return (
         <div className="audio-bg-video-wrap" aria-hidden="true">
-            {!reducedMotion && !fallback ? (
+            {!reducedMotion ? (
                 <video
                     ref={videoRef}
                     className="audio-bg-video"
@@ -77,7 +75,6 @@ export default function AudioBackgroundVideo() {
                     playsInline
                     preload="metadata"
                     poster={posterSrc}
-                    onError={() => setFallback(true)}
                 >
                     <source
                         media="(max-width: 768px)"

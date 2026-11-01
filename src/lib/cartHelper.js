@@ -75,7 +75,7 @@ export function resolveImagePath(path) {
     (typeof import.meta !== "undefined" &&
       import.meta.env &&
       import.meta.env.BASE_URL) ||
-    "/KSAM-deal-ecommerce-website/";
+    "/";
 
   const normalizedBase = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
   const baseWithoutSlashes = normalizedBase.replace(/^\/+|\/+$/g, "");

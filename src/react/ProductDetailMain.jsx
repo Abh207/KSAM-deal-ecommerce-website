@@ -10,13 +10,15 @@ import {
   ShieldCheck,
   Truck,
   RotateCcw,
-  ArrowRight
+  ArrowRight,
+  ExternalLink
 } from "lucide-react";
 
 import Navbar from "../deals/components/Navbar.jsx";
 import {
   findProduct,
   getRelatedProducts,
+  getAllCatalogProducts,
   buildProductUid,
   addProductToCart,
   formatPrice,
@@ -28,6 +30,13 @@ import {
   toggleWishlist,
   subscribeWishlist
 } from "../lib/wishlist.js";
+import {
+  getSupabaseDealByIdOrUid,
+  getDeals,
+  isSafeAffiliateUrl,
+  logPlatformClick
+} from "../deals/services/productService.js";
+import { getCategoryPage, getCategoryBackLabel } from "../lib/categoryPageMap.js";
 
 import "./productDetail.css";
 
@@ -55,8 +64,8 @@ function getProductDescription(product) {
     return `Immerse yourself in rich, high-fidelity sound with the ${name}. Tuned with precision acoustic drivers and advanced noise isolation, it reproduces crisp highs, natural vocals, and deep bass. Available today at ${priceStr} with certified audio clarity.`;
   } else if (cat.includes("cloth") || cat.includes("shirt") || cat.includes("apparel") || cat.includes("fashion")) {
     return `Crafted with premium organic textiles, the ${name} provides breathable softness and a tailored modern silhouette. Its reinforced double stitching and anti-fade weave ensure lasting wear through daily routines. Add timeless wardrobe value at ${priceStr}.`;
-  } else if (cat.includes("chair") || cat.includes("furniture")) {
-    return `Designed for ultimate postural alignment, the ${name} integrates ergonomic lumbar contouring with high-density pressure-relief cushioning. Tested for heavy-duty daily performance and smooth multi-directional movement, it elevates any space. Exceptional seating value at ${priceStr}.`;
+  } else if (cat.includes("chair") || cat.includes("furniture") || cat.includes("home")) {
+    return `Designed for ultimate postural alignment, the ${name} integrates ergonomic lumbar contouring with high-density pressure-relief cushioning. Tested for heavy-duty daily performance and smooth multi-directional movement, it elevates any space. Exceptional value at ${priceStr}.`;
   } else if (cat.includes("beauty") || cat.includes("skin") || cat.includes("cosmetic")) {
     return `Infused with nutrient-rich botanical active extracts, the ${name} revitalizes and deeply hydrates your skin. Dermatologist tested and hypoallergenic, this clean formula restores balanced glow throughout the day. Elevate your self-care routine at ${priceStr}.`;
   }
@@ -66,6 +75,16 @@ function getProductDescription(product) {
 
 // Category-specific bullet features
 function getKeyFeatures(product) {
+  if (Array.isArray(product.keyFeatures) && product.keyFeatures.length > 0) {
+    return product.keyFeatures;
+  }
+  if (Array.isArray(product.key_features) && product.key_features.length > 0) {
+    return product.key_features;
+  }
+  if (Array.isArray(product.features) && product.features.length > 0) {
+    return product.features;
+  }
+
   const cat = (product.category || "").toLowerCase();
   if (
     cat.includes("audio") ||
@@ -96,10 +115,6 @@ function getKeyFeatures(product) {
     ];
   }
 
-  if (Array.isArray(product.features) && product.features.length > 0) {
-    return product.features;
-  }
-
   if (cat.includes("watch")) {
     return [
       "High-precision Japanese quartz / automatic movement",
@@ -124,7 +139,7 @@ function getKeyFeatures(product) {
       "Breathable moisture-wicking weave for all-day comfort",
       "Easy-care machine washable with wrinkle resistance"
     ];
-  } else if (cat.includes("chair") || cat.includes("furniture")) {
+  } else if (cat.includes("chair") || cat.includes("furniture") || cat.includes("home")) {
     return [
       "Ergonomic lumbar contouring with multi-angle tilt lock",
       "High-density molded memory foam seat cushion",
@@ -140,7 +155,56 @@ function getKeyFeatures(product) {
       "Free from parabens, sulfates, phthalates, and synthetic dyes",
       "Cruelty-free certified formulation for sensitive skin"
     ];
+  } else if (cat.includes("laptop") || cat.includes("computer")) {
+    return [
+      "High-performance multi-core processor with turbo boost capability",
+      "Vibrant high-resolution anti-glare display with wide viewing angles",
+      "Ultra-fast PCIe NVMe SSD storage with high-speed DDR memory",
+      "Precision backlit keyboard and multi-gesture glass trackpad",
+      "All-day battery life with rapid USB-C Power Delivery charging"
+    ];
+  } else if (cat.includes("phone") || cat.includes("mobile") || cat.includes("smartphone")) {
+    return [
+      "Ultra-responsive 120Hz AMOLED / OLED edge-to-edge display",
+      "Advanced multi-lens camera system with optical image stabilization",
+      "Next-generation 5G connectivity with ultra-low latency streaming",
+      "All-day intelligent battery optimization with fast wireless charging",
+      "Durable aerospace-grade frame with IP68 water & dust resistance"
+    ];
+  } else if (cat.includes("camera")) {
+    return [
+      "High-resolution sensor with wide dynamic range and low-noise capture",
+      "Ultra-fast hybrid autofocus with real-time subject tracking",
+      "4K Ultra HD video recording with cinematic stabilization",
+      "Weather-sealed ergonomic body with dual memory card slots",
+      "High-speed Wi-Fi and Bluetooth for seamless instant mobile transfer"
+    ];
+  } else if (cat.includes("gaming")) {
+    return [
+      "Ultra-low latency mechanical / optical switches for competitive gaming",
+      "Dynamic customizable per-key RGB backlighting with sync effects",
+      "Ergonomic contoured profile designed for extended gameplay sessions",
+      "High-polling rate sensor with pinpoint precision tracking",
+      "Reinforced braided cable and durable tournament-grade build"
+    ];
+  } else if (cat.includes("smart") || cat.includes("home")) {
+    return [
+      "Seamless smart home integration with voice assistant compatibility",
+      "High-definition room-filling audio / visual performance",
+      "Secure encrypted wireless communication with easy Wi-Fi pairing",
+      "Automated scheduling and energy-efficient ambient sensors",
+      "Intuitive companion mobile app with multi-device remote control"
+    ];
+  } else if (cat.includes("electronic") || cat.includes("gadget")) {
+    return [
+      "Engineered with cutting-edge micro-architecture for peak efficiency",
+      "Universal high-speed connectivity with robust cross-platform support",
+      "Sleek minimalist industrial aesthetic with premium tactile finish",
+      "Advanced thermal management system ensuring cool and quiet operation",
+      "Backed by full manufacturer warranty and verified KSAM Deal support"
+    ];
   }
+
   return [
     "Precision engineered with durable high-grade materials",
     "Rigorously tested for long-lasting daily performance",
@@ -161,11 +225,11 @@ function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [sizeError, setSizeError] = useState("");
 
-  const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+  const base = import.meta.env.BASE_URL || "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
   const wishlistUrl = `${normalizedBase}watchwishlist.html`;
   const homeUrl = `${normalizedBase}`;
-  const shopUrl = `${normalizedBase}shop.html`;
+  const dealsUrl = `${normalizedBase}deals.html`;
 
   useEffect(() => {
     // Scroll to the very top on load
@@ -175,33 +239,77 @@ function ProductDetailPage() {
     const uid = params.get("uid");
     const id = params.get("id");
     const category = params.get("category");
+    const from = params.get("from");
 
+    // Missing id/uid -> redirect to Deals page
     if (!uid && !id) {
-      setLoading(false);
+      window.location.replace(dealsUrl);
       return;
     }
 
-    // Lookup strictly by uid first, then category + id. Never fall back to wrong category item!
-    const item = findProduct({ uid, category, id });
+    async function fetchProductData() {
+      let item = null;
 
-    if (item) {
-      const resolvedCategory = item.category || category || "General";
-      const populatedProduct = {
-        ...item,
-        category: resolvedCategory,
-        uid: item.uid || buildProductUid(resolvedCategory, item.id)
-      };
-      setProduct(populatedProduct);
-      setActiveImage(resolveImagePath(populatedProduct.image));
-      setIsWishlisted(isInWishlist(populatedProduct.uid || populatedProduct.id));
+      // 1. If from !== "deals", check catalog first
+      if (from !== "deals") {
+        item = findProduct({ uid, category, id });
+      }
 
-      // Shared related products helper (strictly same category / parent group)
-      const related = getRelatedProducts(populatedProduct, 4);
-      setRelatedProducts(related);
-    } else {
-      setProduct(null);
+      // 2. If not found in local catalog or came from deals, check Supabase deals
+      if (!item) {
+        item = await getSupabaseDealByIdOrUid(id, uid);
+      }
+
+      // 3. Fallback: check catalog if not found from Supabase
+      if (!item) {
+        item = findProduct({ uid, category, id });
+      }
+
+      if (item) {
+        const resolvedCategory = item.category || category || "General";
+        const populatedProduct = {
+          ...item,
+          category: resolvedCategory,
+          uid: item.uid || buildProductUid(resolvedCategory, item.id)
+        };
+        setProduct(populatedProduct);
+        const resolvedImg = resolveImagePath(populatedProduct.image || populatedProduct.image_url);
+        setActiveImage(resolvedImg);
+        setIsWishlisted(isInWishlist(populatedProduct.uid || populatedProduct.id));
+
+        // Related products: fetch related deals or catalog items (always exactly 4)
+        if (from === "deals" || populatedProduct.offers) {
+          try {
+            const relRes = await getDeals({ category: resolvedCategory, pageSize: 8 });
+            let filtered = (relRes.products || []).filter(
+              (p) => String(p.id) !== String(populatedProduct.id)
+            );
+            if (filtered.length < 4) {
+              const allDealsRes = await getDeals({ pageSize: 12 });
+              const additional = (allDealsRes.products || []).filter(
+                (p) =>
+                  String(p.id) !== String(populatedProduct.id) &&
+                  !filtered.some((f) => String(f.id) === String(p.id))
+              );
+              filtered = [...filtered, ...additional];
+            }
+            setRelatedProducts(
+              filtered.length > 0 ? filtered.slice(0, 4) : getRelatedProducts(populatedProduct, 4)
+            );
+          } catch {
+            setRelatedProducts(getRelatedProducts(populatedProduct, 4));
+          }
+        } else {
+          const related = getRelatedProducts(populatedProduct, 4);
+          setRelatedProducts(related);
+        }
+      } else {
+        setProduct(null);
+      }
+      setLoading(false);
     }
-    setLoading(false);
+
+    fetchProductData();
   }, []);
 
   // Sync wishlist status
@@ -218,7 +326,7 @@ function ProductDetailPage() {
     if (!product) return;
 
     // 1. Dynamic Title
-    document.title = `${product.name} | Buy Online at KSAM Deal`;
+    document.title = `${product.name || product.title} | Buy Online at KSAM Deal`;
 
     // 2. Dynamic Description
     const metaDesc = document.querySelector('meta[name="description"]');
@@ -251,7 +359,7 @@ function ProductDetailPage() {
     const jsonLdData = {
       "@context": "https://schema.org",
       "@type": "Product",
-      "name": product.name,
+      "name": product.name || product.title,
       "image": fullImageUrl,
       "description": product.description || `Buy ${product.name} on KSAM Deal.`,
       "brand": {
@@ -271,65 +379,61 @@ function ProductDetailPage() {
   }, [product]);
 
   const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
-  const isFromWishlist =
-    params.get("from") === "wishlist" ||
-    (typeof document !== "undefined" &&
-      document.referrer &&
-      document.referrer.toLowerCase().includes("wishlist"));
 
-  const isFromAudio =
-    !isFromWishlist &&
-    (params.get("from") === "audio" ||
-      (typeof document !== "undefined" &&
-        document.referrer &&
-        document.referrer.toLowerCase().includes("audio.html")) ||
-      Boolean(
-        product &&
-          ["audio", "earbuds", "headphones", "speakers", "neckbands"].some(
-            (c) => String(product.category || "").toLowerCase().includes(c)
-          )
-      ));
+  const fromParam = (params.get("from") || "").toLowerCase().trim();
+  const referrer = (typeof document !== "undefined" && document.referrer ? document.referrer.toLowerCase() : "");
+  const catParam = (params.get("category") || "").toLowerCase().trim();
+  const prodCat = (product?.category || "").toLowerCase().trim();
 
-  const isFromClothing =
-    !isFromWishlist &&
-    !isFromAudio &&
-    (params.get("from") === "clothing" ||
-      (typeof document !== "undefined" &&
-        document.referrer &&
-        document.referrer.toLowerCase().includes("clothes.html")) ||
-      Boolean(
-        product &&
-          ["tops", "dresses", "bottoms", "jackets", "shirts", "clothes"].some(
-            (c) => String(product.category || "").toLowerCase().includes(c)
-          )
-      ));
+  // 1. Explicit ?from= parameter takes highest precedence
+  let origin = null;
+  if (fromParam === "wishlist") origin = "wishlist";
+  else if (fromParam === "deals") origin = "deals";
+  else if (fromParam === "audio" || fromParam === "speakers") origin = "audio";
+  else if (fromParam === "electronics" || fromParam === "gadgets") origin = "electronics";
+  else if (fromParam === "clothing" || fromParam === "clothes" || fromParam === "fashion") origin = "clothing";
+  else if (fromParam === "watches" || fromParam === "watch") origin = "watches";
+  else if (fromParam === "shoes" || fromParam === "shoe") origin = "shoes";
+  else if (fromParam === "beauty") origin = "beauty";
+  else if (fromParam === "chairs" || fromParam === "furniture") origin = "chairs";
 
-  const isFromElectronics =
-    !isFromWishlist &&
-    !isFromAudio &&
-    !isFromClothing &&
-    (params.get("from") === "electronics" ||
-      (typeof document !== "undefined" &&
-        document.referrer &&
-        (document.referrer.toLowerCase().includes("electronics.html") ||
-          document.referrer.toLowerCase().includes("fashionspeaker.html"))) ||
-      Boolean(
-        product &&
-          ["smartphones", "laptops", "cameras", "gaming", "smart home", "electronics", "gadgets"].some(
-            (c) => String(product.category || "").toLowerCase().includes(c)
-          )
-      ));
+  // 2. Referrer check if no explicit ?from=
+  if (!origin && referrer) {
+    if (referrer.includes("wishlist")) origin = "wishlist";
+    else if (referrer.includes("deals.html") || referrer.includes("deal.html")) origin = "deals";
+    else if (referrer.includes("audio.html")) origin = "audio";
+    else if (referrer.includes("electronics.html") || referrer.includes("fashionspeaker.html")) origin = "electronics";
+    else if (referrer.includes("clothes.html")) origin = "clothing";
+    else if (referrer.includes("watchshop")) origin = "watches";
+    else if (referrer.includes("shoes.html")) origin = "shoes";
+    else if (referrer.includes("beauty.html")) origin = "beauty";
+    else if (referrer.includes("chair")) origin = "chairs";
+  }
 
-  const isFromWatches =
-    !isFromWishlist &&
-    !isFromAudio &&
-    !isFromClothing &&
-    !isFromElectronics &&
-    (params.get("from") === "watches" ||
-      (typeof document !== "undefined" &&
-        document.referrer &&
-        document.referrer.toLowerCase().includes("watchshop")) ||
-      Boolean(product && String(product.category || "").toLowerCase().includes("watch")));
+  // 3. Fallback to product category / query category using getCategoryPage mapping
+  if (!origin) {
+    const targetCat = prodCat || catParam;
+    if (targetCat) {
+      const targetPage = getCategoryPage(targetCat);
+      if (targetPage === "electronics.html") origin = "electronics";
+      else if (targetPage === "audio.html") origin = "audio";
+      else if (targetPage === "clothes.html") origin = "clothing";
+      else if (targetPage === "watchshop.html") origin = "watches";
+      else if (targetPage === "shoes.html") origin = "shoes";
+      else if (targetPage === "beauty.html") origin = "beauty";
+      else if (targetPage === "moreChairProd.html") origin = "chairs";
+    }
+  }
+
+  const isFromWishlist = origin === "wishlist";
+  const isFromDeals = origin === "deals";
+  const isFromAudio = origin === "audio";
+  const isFromElectronics = origin === "electronics";
+  const isFromClothing = origin === "clothing";
+  const isFromWatches = origin === "watches";
+  const isFromShoes = origin === "shoes";
+  const isFromBeauty = origin === "beauty";
+  const isFromChairs = origin === "chairs";
 
   const handleToggleWishlist = (e) => {
     e.preventDefault();
@@ -367,7 +471,9 @@ function ProductDetailPage() {
     const id = relProd.id !== undefined && relProd.id !== null ? relProd.id : "";
     const category = relProd.category || "";
     const uid = relProd.uid || buildProductUid(category, id);
-    const fromParam = isFromAudio
+    const fromParam = isFromDeals
+      ? "&from=deals"
+      : isFromAudio
       ? "&from=audio"
       : isFromClothing
       ? "&from=clothing"
@@ -378,6 +484,52 @@ function ProductDetailPage() {
       : "";
     window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}&uid=${encodeURIComponent(uid)}${fromParam}`;
   };
+
+  // Back link destinations & labels
+  const fallbackCat = product?.category || params.get("category") || "";
+  const backUrl = isFromDeals
+    ? dealsUrl
+    : isFromAudio
+    ? `${normalizedBase}audio.html`
+    : isFromClothing
+    ? `${normalizedBase}clothes.html`
+    : isFromElectronics
+    ? `${normalizedBase}electronics.html`
+    : isFromWatches
+    ? `${normalizedBase}watchshop.html`
+    : isFromShoes
+    ? `${normalizedBase}shoes.html`
+    : isFromBeauty
+    ? `${normalizedBase}beauty.html`
+    : isFromChairs
+    ? `${normalizedBase}moreChairProd.html`
+    : isFromWishlist
+    ? wishlistUrl
+    : fallbackCat
+    ? `${normalizedBase}${getCategoryPage(fallbackCat)}`
+    : dealsUrl;
+
+  const backLabel = isFromDeals
+    ? "Back to Deals"
+    : isFromAudio
+    ? "Back to Audio"
+    : isFromClothing
+    ? "Back to Clothing"
+    : isFromElectronics
+    ? "Back to Electronics"
+    : isFromWatches
+    ? "Back to Watches"
+    : isFromShoes
+    ? "Back to Shoes"
+    : isFromBeauty
+    ? "Back to Beauty"
+    : isFromChairs
+    ? "Back to Furniture"
+    : isFromWishlist
+    ? "Back to Wishlist"
+    : fallbackCat
+    ? getCategoryBackLabel(fallbackCat)
+    : "Back to Deals";
 
   if (loading) {
     return (
@@ -393,6 +545,8 @@ function ProductDetailPage() {
   }
 
   if (!product) {
+    const suggested = getAllCatalogProducts().slice(0, 4);
+
     return (
       <div className="product-detail-page">
         <Navbar />
@@ -406,33 +560,60 @@ function ProductDetailPage() {
               The product you are looking for doesn't exist, has an invalid ID or category, or has been removed from the catalog.
             </p>
             <a
-              href={
-                isFromAudio
-                  ? `${normalizedBase}audio.html`
-                  : isFromClothing
-                  ? `${normalizedBase}clothes.html`
-                  : isFromElectronics
-                  ? `${normalizedBase}electronics.html`
-                  : isFromWatches
-                  ? `${normalizedBase}watchshop.html`
-                  : wishlistUrl
-              }
+              href={backUrl}
               className="product-detail-notfound-btn"
             >
               <ArrowLeft size={16} />
-              <span>
-                {isFromAudio
-                  ? "Back to Audio"
-                  : isFromClothing
-                  ? "← Back to Clothing"
-                  : isFromElectronics
-                  ? "Back to Electronics"
-                  : isFromWatches
-                  ? "Back to Watches"
-                  : "Back to Wishlist"}
-              </span>
+              <span>{backLabel}</span>
             </a>
           </div>
+
+          {/* Suggested Products Section */}
+          {suggested.length > 0 && (
+            <section className="product-detail-related" style={{ marginTop: 48 }}>
+              <div className="product-detail-related-header">
+                <h2>Suggested Popular Products</h2>
+                <p>Discover other top-rated items from KSAM Deal.</p>
+              </div>
+              <div className="product-detail-related-grid">
+                {suggested.map((item) => {
+                  const uid = item.uid || buildProductUid(item.category, item.id);
+                  const pUrl = `${normalizedBase}product.html?id=${encodeURIComponent(item.id)}&category=${encodeURIComponent(item.category || "General")}&uid=${encodeURIComponent(uid)}&from=deals`;
+                  return (
+                    <article
+                      key={uid}
+                      className="product-detail-related-card"
+                      onClick={() => { window.location.href = pUrl; }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className="img-wrap">
+                        <img
+                          src={resolveImagePath(item.image)}
+                          alt={item.name}
+                          loading="lazy"
+                          onError={(e) => { e.currentTarget.style.display = "none"; }}
+                        />
+                      </div>
+                      <div className="card-body">
+                        <span className="card-cat">{item.category}</span>
+                        <h4 className="card-title">{item.name}</h4>
+                        <div className="card-price-row">
+                          <span className="price-now">{formatPrice(item.price)}</span>
+                        </div>
+                        <a
+                          href={pUrl}
+                          className="card-view-btn"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          View Product →
+                        </a>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          )}
         </main>
       </div>
     );
@@ -450,7 +631,7 @@ function ProductDetailPage() {
     : 0;
 
   const ratingVal = product.rating ? Number(product.rating) : 4.8;
-  const reviewsCount = 40 + Math.abs(String(product.id).length * 19);
+  const reviewsCount = product.reviews || product.review_count || (40 + Math.abs(String(product.id).length * 19));
   const description = getProductDescription(product);
   const keyFeatures = getKeyFeatures(product);
 
@@ -462,16 +643,49 @@ function ProductDetailPage() {
       ))
   );
 
-  // Specifications
+  const isElectronics = Boolean(
+    isFromElectronics ||
+    (product &&
+      ["smartphones", "laptops", "cameras", "gaming", "smart home", "electronics", "gadgets"].some(
+        (c) => String(product.category || "").toLowerCase().includes(c)
+      ))
+  );
+
+  // Best platform & Buy URL setup
+  const bestPlatform =
+    product.bestOffer?.platform || product.platform || product.store || "Amazon";
+
+  const rawBuyUrl =
+    product.bestOffer?.affiliateUrl ||
+    product.affiliateUrl ||
+    product.affiliate_url ||
+    product.productUrl ||
+    product.product_url ||
+    product.url;
+
+  const safeBuyUrl = isSafeAffiliateUrl(rawBuyUrl) ? rawBuyUrl : null;
+  const isInStock = product.bestOffer?.inStock !== false && product.stock !== 0;
+
+  const handlePlatformBuy = (e) => {
+    e.preventDefault();
+    if (!safeBuyUrl || !isInStock) return;
+    logPlatformClick(product.id, bestPlatform, safeBuyUrl);
+    window.open(safeBuyUrl, "_blank", "noopener,noreferrer,sponsored");
+  };
+
+  // Specifications table mapping
   const specs = [
-    { label: "Brand", value: product.brand || product.store || (isAudio ? "KSAM Audio" : "KSAM Signature") },
+    { label: "Brand", value: product.brand || bestPlatform || (isAudio ? "KSAM Audio" : "KSAM Certified") },
     { label: "Category", value: product.category || (isAudio ? "Audio" : "General") },
-    { label: "Model / SKU", value: product.sku || `KSAM-${product.id}` },
+    { label: "Model / SKU", value: product.sku || (product.specs && product.specs["Model / SKU"]) || `KSAM-${product.id}` },
     isAudio
-      ? { label: "Connectivity", value: product.connectivity || "Bluetooth 5.3 / Wireless" }
+      ? { label: "Connectivity", value: (product.specs && product.specs["Connectivity"]) || product.connectivity || "Bluetooth 5.3 / Wireless" }
+      : isElectronics
+      ? { label: "Connectivity", value: (product.specs && product.specs["Connectivity"]) || "USB-C / High-Speed Wi-Fi / Bluetooth 5.3" }
       : {
           label: "Material",
           value:
+            (product.specs && product.specs["Material"]) ||
             product.material ||
             (String(product.category || "").toLowerCase().includes("watch")
               ? "Stainless Steel / Sapphire Crystal"
@@ -481,13 +695,16 @@ function ProductDetailPage() {
               ? "Reinforced Steel / High-Density Foam"
               : "Certified High-Grade Composite")
         },
-    ...(isAudio && product.battery ? [{ label: "Battery / Playback", value: product.battery }] : []),
+    ...(isElectronics ? [{ label: "Compatibility", value: "Universal / Android / iOS / Windows / macOS" }] : []),
+    ...(isAudio && (product.battery || product.specs?.["Battery / Playback"])
+      ? [{ label: "Battery / Playback", value: product.battery || product.specs?.["Battery / Playback"] }]
+      : []),
     ...(isAudio && product.waterResistance ? [{ label: "Water Resistance", value: product.waterResistance }] : []),
-    { label: "Warranty", value: "1-Year Official Manufacturer Warranty" },
-    { label: "Availability", value: "In Stock (Ships in 24 Hours)" }
+    { label: "Warranty", value: product.specs?.["Warranty"] || "1-Year Official Manufacturer Warranty" },
+    { label: "Availability", value: isInStock ? "In Stock (Ships in 24 Hours)" : "Currently unavailable" }
   ];
 
-  const mainImgSrc = resolveImagePath(product.image);
+  const mainImgSrc = resolveImagePath(product.image || product.image_url);
   const thumbnailList =
     Array.isArray(product.images) && product.images.length > 1
       ? product.images.map(resolveImagePath)
@@ -496,26 +713,14 @@ function ProductDetailPage() {
   return (
     <div className="product-detail-page">
       {/* 1. Shared KSAM Navbar */}
-      <Navbar searchPlaceholder={isAudio ? `Search ${product.category?.toLowerCase() || "audio"}...` : undefined} />
+      <Navbar searchPlaceholder={`Search ${product.category?.toLowerCase() || "deals"}...`} />
 
       <main className="product-detail-main">
         {/* Breadcrumb Navigation: Home / Category / Product Name */}
         <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
           <a href={homeUrl}>Home</a>
           <span className="sep">/</span>
-          <a
-            href={
-              isFromAudio
-                ? `${normalizedBase}audio.html`
-                : isFromClothing
-                ? `${normalizedBase}clothes.html`
-                : isFromElectronics
-                ? `${normalizedBase}electronics.html`
-                : isFromWatches || (product.category && product.category.toLowerCase().includes("watch"))
-                ? `${normalizedBase}watchshop.html`
-                : `${shopUrl}?category=${encodeURIComponent(product.category || "All")}`
-            }
-          >
+          <a href={backUrl}>
             {product.category || "Catalog"}
           </a>
           <span className="sep">/</span>
@@ -610,11 +815,11 @@ function ProductDetailPage() {
               </div>
               <span className="product-detail-rating-num">{ratingVal.toFixed(1)}</span>
               <span className="product-detail-rating-count">
-                ({reviewsCount} verified customer reviews)
+                ({reviewsCount} verified reviews)
               </span>
             </div>
 
-            {/* Price Box */}
+            {/* Price Box with Platform indicator */}
             <div className="product-detail-price-box">
               <span className="product-detail-current-price">
                 {formatPrice(product.price)}
@@ -629,6 +834,9 @@ function ProductDetailPage() {
                   Save {discountPct}%
                 </span>
               ) : null}
+              <div className="product-detail-platform-tag">
+                Best price on {bestPlatform}
+              </div>
             </div>
 
             {/* Description */}
@@ -650,7 +858,7 @@ function ProductDetailPage() {
               </ul>
             </div>
 
-            {/* Specifications Table (Light with zebra stripes) */}
+            {/* Specifications Table */}
             <div className="product-detail-specs-block">
               <h2 className="product-detail-section-title">Specifications</h2>
               <div className="product-detail-specs-table">
@@ -681,7 +889,7 @@ function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Quantity Selector & Add to Cart Section */}
+            {/* Quantity Selector & Action Buttons */}
             <div className="product-detail-buy-section">
               {/* Clothing Options: Color & Size Selector */}
               {(product.color || (Array.isArray(product.sizes) && product.sizes.length > 0)) && (
@@ -753,6 +961,7 @@ function ProductDetailPage() {
               </div>
 
               <div className="product-detail-action-btns">
+                {/* 1. Full-width Add to Cart button */}
                 <button
                   type="button"
                   className={`product-detail-add-btn${added ? " is-added" : ""}`}
@@ -772,32 +981,80 @@ function ProductDetailPage() {
                   )}
                 </button>
 
-                <a
-                  href={
-                    isFromAudio
-                      ? `${normalizedBase}audio.html`
-                      : isFromClothing
-                      ? `${normalizedBase}clothes.html`
-                      : isFromElectronics
-                      ? `${normalizedBase}electronics.html`
-                      : isFromWatches
-                      ? `${normalizedBase}watchshop.html`
-                      : wishlistUrl
-                  }
-                  className="product-detail-back-link"
+                {/* 2. Full-width Buy on <Platform> button directly below Add to Cart */}
+                <button
+                  type="button"
+                  className="product-detail-buy-platform-btn"
+                  disabled={!isInStock || !safeBuyUrl}
+                  onClick={handlePlatformBuy}
+                  aria-label={isInStock ? `Buy on ${bestPlatform}` : "Currently unavailable"}
                 >
+                  <span>{isInStock ? `Buy on ${bestPlatform}` : "Currently unavailable"}</span>
+                  <ExternalLink size={18} />
+                </button>
+
+                {/* 3. Compact Compare prices list if multiple offers exist */}
+                {Array.isArray(product.offers) && product.offers.length > 1 && (
+                  <div className="product-detail-compare-wrap">
+                    <div className="product-detail-compare-title">
+                      <span>Compare prices across stores</span>
+                      <span style={{ fontSize: 11, color: "#64748b", fontWeight: 500 }}>
+                        {product.offers.length} stores tracked
+                      </span>
+                    </div>
+                    <div className="product-detail-compare-list">
+                      {product.offers.map((off, idx) => {
+                        const offUrl = off.affiliateUrl || off.affiliate_url;
+                        const offSafe = isSafeAffiliateUrl(offUrl) ? offUrl : null;
+                        const isBest = off.price === product.price;
+                        return (
+                          <div key={idx} className="product-detail-compare-row">
+                            <div className="product-detail-compare-platform">
+                              <span>{off.platform}</span>
+                              {isBest && <span className="product-detail-best-tag">Best price</span>}
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                              <span className="product-detail-compare-price">{formatPrice(off.price)}</span>
+                              {off.discountPercent > 0 && (
+                                <span style={{ fontSize: 11, fontWeight: 700, color: "#16a34a" }}>
+                                  -{off.discountPercent}%
+                                </span>
+                              )}
+                              {offSafe && off.inStock !== false ? (
+                                <a
+                                  href={offSafe}
+                                  target="_blank"
+                                  rel="noopener noreferrer sponsored"
+                                  onClick={() => logPlatformClick(product.id, off.platform, offSafe)}
+                                  className="product-detail-compare-buy-btn"
+                                >
+                                  Buy ↗
+                                </a>
+                              ) : (
+                                <span style={{ fontSize: 11, color: "#94a3b8" }}>Unavailable</span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Redirect disclaimer & affiliate disclosure */}
+                <div className="product-detail-platform-note">
+                  <p style={{ margin: "4px 0" }}>
+                    You will be redirected to the {bestPlatform} website to complete your purchase. Prices and availability may change.
+                  </p>
+                  <p style={{ margin: "2px 0", color: "#94a3b8" }}>
+                    Disclosure: As an affiliate, KSAM Deal may earn a commission from qualifying purchases.
+                  </p>
+                </div>
+
+                {/* 5. Back link */}
+                <a href={backUrl} className="product-detail-back-link">
                   <ArrowLeft size={16} />
-                  <span>
-                    {isFromAudio
-                      ? "Back to Audio"
-                      : isFromClothing
-                      ? "← Back to Clothing"
-                      : isFromElectronics
-                      ? "Back to Electronics"
-                      : isFromWatches
-                      ? "Back to Watches"
-                      : "Back to Wishlist"}
-                  </span>
+                  <span>{backLabel}</span>
                 </a>
               </div>
             </div>
@@ -807,20 +1064,20 @@ function ProductDetailPage() {
         {/* Divider between main product block & Related Section */}
         {relatedProducts.length > 0 && <div className="product-detail-divider" />}
 
-        {/* Section: "You may also like" (4 related products from SAME category / type) */}
+        {/* Section: "You may also like" (4 related products from SAME category / deals) */}
         {relatedProducts.length > 0 && (
           <section className="product-detail-related-section">
             <div className="product-detail-related-header">
               <h2>You may also like</h2>
               <p className="product-detail-related-subtitle">
-                More {product.category || "items"} you might like
+                More {product.category || "deals"} you might like
               </p>
             </div>
 
             <div className="product-detail-related-grid">
               {relatedProducts.map((rel) => {
                 const relOldPrice =
-                  rel.originalPrice || rel.oldPrice || rel.actualPrice || 0;
+                  rel.originalPrice || rel.oldPrice || rel.actualPrice || rel.mrp || 0;
                 const relHasDiscount = Boolean(relOldPrice && relOldPrice > rel.price);
                 const relDiscount = relHasDiscount
                   ? Math.round(((relOldPrice - rel.price) / relOldPrice) * 100)
@@ -840,7 +1097,7 @@ function ProductDetailPage() {
                         </span>
                       )}
                       <img
-                        src={resolveImagePath(rel.image)}
+                        src={resolveImagePath(rel.image || rel.image_url)}
                         alt={rel.name || rel.title}
                         loading="lazy"
                         onError={(e) => {
@@ -908,8 +1165,6 @@ function ProductDetailPage() {
           {added ? "Added ✓" : "Add to Cart"}
         </button>
       </div>
-
-      {/* NO FOOTER per requirement */}
     </div>
   );
 }
@@ -920,4 +1175,3 @@ if (rootEl) {
 }
 
 export default ProductDetailPage;
-

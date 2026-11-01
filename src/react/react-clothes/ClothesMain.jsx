@@ -1,7 +1,8 @@
 import React, {
     useEffect,
     useMemo,
-    useState
+    useState,
+    useRef
 } from "react";
 
 import { createRoot } from "react-dom/client";
@@ -10,6 +11,8 @@ import ClothesCard from "./ClothesCard";
 
 import FashionCampaign from "./FashionCampaign";
 import ClothesHero from "./ClothesHero";
+import ClothesFeedback from "./ClothesFeedback.jsx";
+import AudioBackgroundVideo from "../react-audio/AudioBackgroundVideo.jsx";
 
 import clothesData from "../../api/clothesproducts.json";
 import { requireAuth } from "../../auth/auth.js";
@@ -532,6 +535,210 @@ function ClothesMain() {
     };
 
 
+
+    /* =====================================================
+       TASK 1: CATEGORY CIRCLES AUTO-MOVE ON MOBILE ONLY
+    ====================================================== */
+    const categorySectionRef = useRef(null);
+    const categoryScrollerRef = useRef(null);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const mobileMq = window.matchMedia("(max-width: 768px)");
+        const motionMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+        let isMobile = mobileMq.matches;
+        let isReducedMotion = motionMq.matches;
+
+        let animFrameId = null;
+        let isVisible = false;
+        let isInteracting = false;
+        let resumeTimer = null;
+
+        // Auto-move direction: 1 = forward (Women -> Accessories), -1 = backward (glide back)
+        let direction = 1;
+        let pauseUntil = 0;
+        let lastTime = 0;
+        let currentScroll = 0;
+        const SPEED = 35; // px/sec
+
+        const step = (timestamp) => {
+            if (!isMobile || isReducedMotion || !isVisible) {
+                animFrameId = null;
+                return;
+            }
+
+            const scroller = categoryScrollerRef.current;
+            if (!scroller) {
+                animFrameId = null;
+                return;
+            }
+
+            if (!lastTime) lastTime = timestamp;
+            const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
+            lastTime = timestamp;
+
+            const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+
+            if (maxScroll > 2 && !isInteracting) {
+                if (timestamp >= pauseUntil) {
+                    if (direction === 1) {
+                        currentScroll += SPEED * dt;
+                        if (currentScroll >= maxScroll) {
+                            currentScroll = maxScroll;
+                            scroller.scrollLeft = maxScroll;
+                            direction = -1;
+                            pauseUntil = timestamp + 1000;
+                        } else {
+                            scroller.scrollLeft = currentScroll;
+                        }
+                    } else {
+                        currentScroll -= (SPEED * 1.5) * dt;
+                        if (currentScroll <= 0) {
+                            currentScroll = 0;
+                            scroller.scrollLeft = 0;
+                            direction = 1;
+                            pauseUntil = timestamp + 1000;
+                        } else {
+                            scroller.scrollLeft = currentScroll;
+                        }
+                    }
+                }
+            }
+
+            animFrameId = requestAnimationFrame(step);
+        };
+
+        const startAnimation = () => {
+            if (!animFrameId && isMobile && !isReducedMotion && isVisible && !document.hidden) {
+                const scroller = categoryScrollerRef.current;
+                if (scroller) {
+                    currentScroll = scroller.scrollLeft;
+                }
+                lastTime = 0;
+                animFrameId = requestAnimationFrame(step);
+            }
+        };
+
+        const stopAnimation = () => {
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+                animFrameId = null;
+            }
+        };
+
+        // 1. IntersectionObserver (threshold: 0.4)
+        let observer = null;
+        if ("IntersectionObserver" in window && categorySectionRef.current) {
+            observer = new IntersectionObserver(
+                ([entry]) => {
+                    isVisible = entry.isIntersecting;
+                    if (isVisible) {
+                        startAnimation();
+                    } else {
+                        stopAnimation();
+                    }
+                },
+                { threshold: 0.4 }
+            );
+            observer.observe(categorySectionRef.current);
+        } else {
+            isVisible = true;
+            startAnimation();
+        }
+
+        // 2. Tab visibility changes
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                stopAnimation();
+            } else if (isVisible) {
+                startAnimation();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // 3. User interaction pausing
+        const markInteraction = () => {
+            isInteracting = true;
+            if (resumeTimer) clearTimeout(resumeTimer);
+        };
+
+        const endInteraction = () => {
+            if (resumeTimer) clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(() => {
+                const scroller = categoryScrollerRef.current;
+                if (scroller) {
+                    currentScroll = scroller.scrollLeft;
+                }
+                isInteracting = false;
+                lastTime = 0;
+            }, 2000);
+        };
+
+        const scrollerEl = categoryScrollerRef.current;
+        if (scrollerEl) {
+            scrollerEl.addEventListener("touchstart", markInteraction, { passive: true });
+            scrollerEl.addEventListener("touchmove", markInteraction, { passive: true });
+            scrollerEl.addEventListener("touchend", endInteraction, { passive: true });
+            scrollerEl.addEventListener("touchcancel", endInteraction, { passive: true });
+            scrollerEl.addEventListener("pointerdown", markInteraction, { passive: true });
+            scrollerEl.addEventListener("pointerup", endInteraction, { passive: true });
+            scrollerEl.addEventListener("pointercancel", endInteraction, { passive: true });
+            scrollerEl.addEventListener("wheel", markInteraction, { passive: true });
+            scrollerEl.addEventListener("mouseleave", endInteraction, { passive: true });
+        }
+
+        // 4. Media query listeners
+        const handleMobileChange = (e) => {
+            isMobile = e.matches;
+            if (isMobile && isVisible && !isReducedMotion) {
+                startAnimation();
+            } else {
+                stopAnimation();
+            }
+        };
+        const handleMotionChange = (e) => {
+            isReducedMotion = e.matches;
+            if (isReducedMotion) {
+                stopAnimation();
+            } else if (isMobile && isVisible) {
+                startAnimation();
+            }
+        };
+
+        if (mobileMq.addEventListener) {
+            mobileMq.addEventListener("change", handleMobileChange);
+            motionMq.addEventListener("change", handleMotionChange);
+        }
+
+        if (isMobile && isVisible && !isReducedMotion) {
+            startAnimation();
+        }
+
+        return () => {
+            stopAnimation();
+            if (resumeTimer) clearTimeout(resumeTimer);
+            if (observer) observer.disconnect();
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            if (scrollerEl) {
+                scrollerEl.removeEventListener("touchstart", markInteraction);
+                scrollerEl.removeEventListener("touchmove", markInteraction);
+                scrollerEl.removeEventListener("touchend", endInteraction);
+                scrollerEl.removeEventListener("touchcancel", endInteraction);
+                scrollerEl.removeEventListener("pointerdown", markInteraction);
+                scrollerEl.removeEventListener("pointerup", endInteraction);
+                scrollerEl.removeEventListener("pointercancel", endInteraction);
+                scrollerEl.removeEventListener("wheel", markInteraction);
+                scrollerEl.removeEventListener("mouseleave", endInteraction);
+            }
+            if (mobileMq.removeEventListener) {
+                mobileMq.removeEventListener("change", handleMobileChange);
+                motionMq.removeEventListener("change", handleMotionChange);
+            }
+        };
+    }, []);
+
     /* =====================================================
        RENDER
     ====================================================== */
@@ -542,6 +749,9 @@ function ClothesMain() {
 
             {/* Shared Deals-style Navbar */}
             <Navbar />
+
+            {/* Moving Video Background behind all content */}
+            <AudioBackgroundVideo />
 
 
             {/* =================================================
@@ -607,6 +817,7 @@ function ClothesMain() {
             <section
                 className="clothes-category-section"
                 id="categories"
+                ref={categorySectionRef}
             >
 
                 <div className="clothes-section-heading">
@@ -641,7 +852,8 @@ function ClothesMain() {
                 </div>
 
 
-                <div className="clothes-category-scroller">
+                <div className="clothes-category-scroller-wrap">
+                <div className="clothes-category-scroller" ref={categoryScrollerRef}>
 
                     {categories.map(
                         (category) => {
@@ -709,6 +921,7 @@ function ClothesMain() {
                         }
                     )}
 
+                </div>
                 </div>
 
             </section>
@@ -923,217 +1136,7 @@ function ClothesMain() {
                 DYNAMIC FOOTER
             ================================================== */}
 
-            <footer
-                className="clothes-footer"
-                id="sale"
-            >
-
-                <div className="clothes-footer-top">
-
-
-                    {/* BRAND */}
-
-                    <div className="clothes-footer-brand">
-
-                        <a
-                            href="#new"
-                            className="clothes-footer-logo"
-                        >
-
-                            KSAM
-                            <span>
-                                DEAL
-                            </span>
-
-                        </a>
-
-
-                        <p>
-                            Modern fashion, everyday confidence.
-                            Discover clothing made to move with
-                            your style.
-                        </p>
-
-
-                        <div className="clothes-socials">
-
-                            <a
-                                href="https://github.com/Abh207"
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label="GitHub"
-                            >
-                                <i className="fa-brands fa-github"></i>
-                            </a>
-
-
-                            <a
-                                href="https://www.linkedin.com/in/abhay-chauhan-ab4a0937b"
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label="LinkedIn"
-                            >
-                                <i className="fa-brands fa-linkedin-in"></i>
-                            </a>
-
-
-                            <a
-                                href="#new"
-                                aria-label="Instagram"
-                            >
-                                <i className="fa-brands fa-instagram"></i>
-                            </a>
-
-
-                            <a
-                                href="#new"
-                                aria-label="Facebook"
-                            >
-                                <i className="fa-brands fa-facebook-f"></i>
-                            </a>
-
-                        </div>
-
-                    </div>
-
-
-                    {/* SHOP */}
-
-                    <div>
-
-                        <h3>
-                            Shop
-                        </h3>
-
-                        <a href="#new">
-                            New In
-                        </a>
-
-                        <a href="#women">
-                            Women
-                        </a>
-
-                        <a href="#men">
-                            Men
-                        </a>
-
-                        <a href="#categories">
-                            Accessories
-                        </a>
-
-                        <a href="#trending">
-                            Trending
-                        </a>
-
-                    </div>
-
-
-                    {/* HELP */}
-
-                    <div>
-
-                        <h3>
-                            Help
-                        </h3>
-
-                        <a href="#new">
-                            Shipping
-                        </a>
-
-                        <a href="#new">
-                            Returns
-                        </a>
-
-                        <a href="#new">
-                            Size Guide
-                        </a>
-
-                        <a href="#new">
-                            Payment
-                        </a>
-
-                        <a href="#new">
-                            Contact
-                        </a>
-
-                    </div>
-
-
-                    {/* NEWSLETTER */}
-
-                    <div className="clothes-footer-newsletter">
-
-                        <span>
-                            STAY IN THE LOOP
-                        </span>
-
-                        <h3>
-                            Get fresh drops
-                            in your inbox.
-                        </h3>
-
-
-                        <form
-                            onSubmit={(event) => {
-
-                                event.preventDefault();
-
-                                showToast(
-                                    "Thanks! You're on the KSAM Deal list."
-                                );
-
-                                event.currentTarget.reset();
-
-                            }}
-                        >
-
-                            <input
-                                type="email"
-                                placeholder="Your email address"
-                                aria-label="Email address"
-                                required
-                            />
-
-
-                            <button
-                                type="submit"
-                                aria-label="Subscribe"
-                            >
-
-                                <i className="fa-solid fa-arrow-right"></i>
-
-                            </button>
-
-                        </form>
-
-
-                        <small>
-                            New drops, offers and style updates.
-                            No spam.
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                {/* FOOTER BOTTOM */}
-
-                <div className="clothes-footer-bottom">
-
-                    <span>
-                        © {new Date().getFullYear()}
-                        {" "}
-                        KSAM Deal. All rights reserved.
-                    </span>
-
-                    <span>
-                        Designed for modern shopping.
-                    </span>
-
-                </div>
-
-            </footer>
+            <ClothesFeedback />
 
 
             {/* =================================================

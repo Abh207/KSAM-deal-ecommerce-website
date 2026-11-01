@@ -366,18 +366,6 @@ export default function AudioOfferSection({
                         </div>
                     </div>
                 </div>
-
-                {/* Scrolling Ticker Line at Bottom of Glass Card */}
-                <div className="audio-offer-ticker-bar" aria-hidden="true">
-                    <div className="audio-ticker-track">
-                        <span>
-                            FREE DELIVERY ABOVE ₹999 • 60% OFF FLASH SALE • LIMITED STOCK • 1-YEAR WARRANTY • DISPATCH IN 24H • SECURE CHECKOUT •
-                        </span>
-                        <span>
-                            FREE DELIVERY ABOVE ₹999 • 60% OFF FLASH SALE • LIMITED STOCK • 1-YEAR WARRANTY • DISPATCH IN 24H • SECURE CHECKOUT •
-                        </span>
-                    </div>
-                </div>
             </div>
         </section>
     );

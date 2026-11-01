@@ -6,6 +6,7 @@ import {
   getCategoryBannerOverride,
   resolveProductImage,
 } from "./categoryDataMap.js";
+import { getCategoryPage } from "../../lib/categoryPageMap.js";
 import "./CategorySection.css";
 
 /* =========================================================
@@ -132,6 +133,19 @@ export const CATEGORY_VIDEOS = {
     fit: "cover",
     scale: 1,
     fadeLoop: false
+  },
+  speakers: {
+    video: [
+      { src: "assets/videos/speakers-category_mobile.webm", type: "video/webm", media: "(max-width: 768px)" },
+      { src: "assets/videos/speakers-category_mobile.mp4", type: "video/mp4", media: "(max-width: 768px)" },
+      { src: "assets/videos/speakers-category.webm", type: "video/webm" },
+      { src: "assets/videos/speakers-category.mp4", type: "video/mp4" }
+    ],
+    poster: "assets/videos/speakers-category-poster.webp",
+    objectPosition: "80% 50%",
+    fit: "cover",
+    scale: 1,
+    fadeLoop: false
   }
 };
 
@@ -175,8 +189,16 @@ function CategoryProductCard({ product, category }) {
   })();
 
   const handleCardClick = () => {
-    const target = product.link || category.link;
-    if (target) window.location.href = target;
+    if (product.link) {
+      window.location.href = product.link;
+      return;
+    }
+    const base = import.meta.env.BASE_URL || "/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const catName = category.name || category.id || "General";
+    const catSlug = String(category.id || category.name || "").toLowerCase();
+    const uid = product.uid || `${catSlug}-${product.id}`;
+    window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(catName)}&uid=${encodeURIComponent(uid)}&from=${encodeURIComponent(catSlug)}`;
   };
 
   return (
@@ -386,7 +408,7 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
           setBannerInView(entry.isIntersecting);
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.15, rootMargin: "200px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -510,7 +532,7 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
         setBannerFailed(false);
         setVideoFailed(false);
         setFading(false);
-      }, 400); // 400ms crossfade between categories per motion design spec
+      }, 300); // 300ms crossfade between categories per motion design spec
     },
     [activeCatId]
   );
@@ -789,7 +811,10 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                   type="button"
                   className="cs-banner-btn"
                   onClick={() => {
-                    if (activeCategory.link) window.location.href = activeCategory.link;
+                    const base = import.meta.env.BASE_URL || "/";
+                    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+                    const targetPage = getCategoryPage(activeCategory.id || activeCategory.name);
+                    window.location.href = `${normalizedBase}${targetPage}`;
                   }}
                 >
                   View All <span aria-hidden="true">→</span>

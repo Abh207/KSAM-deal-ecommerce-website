@@ -15,7 +15,7 @@ const ShopProductCard = ({ product, onAddToCart }) => {
         return unsub;
     }, []);
 
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
+    const base = import.meta.env.BASE_URL || "/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     const uid = product.uid || buildProductUid(product.category, product.id);
     const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category)}&uid=${encodeURIComponent(uid)}&from=electronics`;

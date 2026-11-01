@@ -98,7 +98,7 @@ export function getProductDetailsLink(product) {
     (typeof import.meta !== "undefined" &&
       import.meta.env &&
       import.meta.env.BASE_URL) ||
-    "/KSAM-deal-ecommerce-website/";
+    "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
   const id = product?.id !== undefined && product?.id !== null ? product.id : "";
   const category = product?.category || "";
@@ -129,7 +129,7 @@ export function getProductPageLink(product, catalogItem) {
     (typeof import.meta !== "undefined" &&
       import.meta.env &&
       import.meta.env.BASE_URL) ||
-    "/KSAM-deal-ecommerce-website/";
+    "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
   return `${normalizedBase}shop.html`;
 }

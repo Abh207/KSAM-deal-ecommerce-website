@@ -4270,3 +4270,113 @@ img {
 
 /* End of clothes stylesheet */
 
+
+
+/* =========================================================
+   TASK 2: BACKGROUND VIDEO BEHIND CLOTHES PAGE CONTENT
+========================================================= */
+.clothes-page {
+    background: transparent !important;
+}
+
+.clothes-announcement {
+    background: rgba(3, 4, 3, 0.85) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.clothes-category-section {
+    background: transparent !important;
+}
+
+.clothes-products-section {
+    background: transparent !important;
+}
+
+.audio-bg-video-wrap {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: #050505;
+}
+
+.audio-bg-video,
+.audio-bg-video-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.audio-bg-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .audio-bg-video {
+        display: none !important;
+    }
+    .audio-bg-video-poster {
+        display: block !important;
+    }
+}
+
+/* =========================================================
+   TASK 1: CATEGORY CIRCLES AUTO-MOVE ON MOBILE ONLY (<= 768px)
+========================================================= */
+@media (max-width: 768px) {
+    .clothes-category-scroller-wrap {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 20px,
+            black calc(100% - 20px),
+            transparent
+        );
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 20px,
+            black calc(100% - 20px),
+            transparent
+        );
+    }
+
+    .clothes-category-scroller {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 16px 20px 16px;
+        scroll-behavior: auto;
+    }
+
+    .clothes-category-scroller::-webkit-scrollbar {
+        display: none;
+    }
+
+    .clothes-category-item {
+        flex: 0 0 100px;
+    }
+
+    /* Prevent any horizontal body overflow on mobile */
+    body,
+    html {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
