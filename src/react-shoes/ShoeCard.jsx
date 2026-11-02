@@ -25,7 +25,7 @@ function ShoeCard({
     const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     const uid = product.uid || buildProductUid(product.category || "Shoes", product.id);
-    const productUrl = `${normalizedBase}Product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "Shoes")}&uid=${encodeURIComponent(uid)}`;
+    const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "Shoes")}&uid=${encodeURIComponent(uid)}`;
 
     const handleQuickAddToCart = (e) => {
         e.preventDefault();

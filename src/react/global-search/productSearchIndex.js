@@ -196,7 +196,7 @@ const detectSourcePage = (product, fileName) => {
     }
 
 
-    return "./Product.html";
+    return "./product.html";
 };
 
 

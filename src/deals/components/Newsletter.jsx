@@ -211,7 +211,7 @@ function Newsletter({ variant = "default" }) {
             <div className="kx-newsletter-dark-visual">
               <div className="kx-newsletter-dark-img-wrap">
                 <img
-                  src="/KSAM-deal-ecommerce-website/products/newsletter-person1.png"
+                  src={`${import.meta.env.BASE_URL}products/newsletter-person1.png`}
                   alt="KSAM Deal shopping"
                   className="kx-newsletter-dark-img"
                 />
@@ -2047,7 +2047,7 @@ function Newsletter({ variant = "default" }) {
               <div className="ksam-shine"></div>
 
               <img
-                src="/KSAM-deal-ecommerce-website/products/newsletter-person1.png"
+                src={`${import.meta.env.BASE_URL}products/newsletter-person1.png`}
                 alt="KSAM Deal shopping"
                 className="ksam-image"
               />

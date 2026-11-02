@@ -788,7 +788,7 @@ function ShoesMain() {
                         Home
                     </a>
 
-                    <a href="./Product.html">
+                    <a href="./product.html">
                         Products
                     </a>
 
@@ -1864,7 +1864,7 @@ function ShoesMain() {
                             Home
                         </a>
 
-                        <a href="./Product.html">
+                        <a href="./product.html">
                             Products
                         </a>
 

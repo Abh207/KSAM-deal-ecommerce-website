@@ -262,7 +262,7 @@ export function getWishlist() {
       categorySlug: "shoes",
       price: 8999,
       originalPrice: 11999,
-      image: "/KSAM-deal-ecommerce-website/nikedunkshoes.png",
+      image: "nikedunkshoes.png",
       rating: 4.8
     },
     {
@@ -273,7 +273,7 @@ export function getWishlist() {
       categorySlug: "chairs",
       price: 12499,
       originalPrice: 15999,
-      image: "/KSAM-deal-ecommerce-website/chair.png",
+      image: "chair.png",
       rating: 4.7
     },
     {
@@ -284,7 +284,7 @@ export function getWishlist() {
       categorySlug: "audio",
       price: 16999,
       originalPrice: 21999,
-      image: "/KSAM-deal-ecommerce-website/audio1.png",
+      image: "audio1.png",
       rating: 4.9
     },
     {
@@ -295,7 +295,7 @@ export function getWishlist() {
       categorySlug: "clothes",
       price: 6499,
       originalPrice: 8999,
-      image: "/KSAM-deal-ecommerce-website/cloths2.png",
+      image: "cloths2.png",
       rating: 4.6
     }
   ];

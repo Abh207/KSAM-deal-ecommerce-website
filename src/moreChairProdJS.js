@@ -39,40 +39,10 @@ if (!moreProductTemplate) {
    LOAD JSON
 ===================================================== */
 
-fetch("./src/api/moreChairProdjn.json")
+import moreChairProdjn from "./api/moreChairProdjn.json";
 
-    .then(function (response) {
-
-        if (!response.ok) {
-            throw new Error(
-                "Failed to load JSON: " +
-                response.status
-            );
-        }
-
-        return response.json();
-    })
-
-    .then(function (products) {
-
-        console.log(
-            "Products loaded:",
-            products.length
-        );
-
-        allProducts = products;
-
-        // Show New Products initially
-        showProducts("new");
-    })
-
-    .catch(function (error) {
-
-        console.error(
-            "Product loading error:",
-            error
-        );
-    });
+allProducts = moreChairProdjn;
+showProducts("new");
 
 
 /* =====================================================

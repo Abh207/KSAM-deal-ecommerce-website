@@ -107,7 +107,7 @@ const getProductUrl = (productId, category) => {
     const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
     const uid = buildProductUid(category || "Shoes", productId);
-    return `${normalizedBase}Product.html?id=${encodeURIComponent(productId)}&category=${encodeURIComponent(category || "Shoes")}&uid=${encodeURIComponent(uid)}`;
+    return `${normalizedBase}product.html?id=${encodeURIComponent(productId)}&category=${encodeURIComponent(category || "Shoes")}&uid=${encodeURIComponent(uid)}`;
 };
 
 const AUTOPLAY_DELAY = 4000;

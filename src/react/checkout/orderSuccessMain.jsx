@@ -24,7 +24,7 @@ function OrderSuccess() {
                 <button
                     onClick={() => {
                         window.location.href =
-                            "./Product.html";
+                            "./product.html";
                     }}
                 >
                     Continue Shopping

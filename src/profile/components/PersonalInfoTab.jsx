@@ -93,7 +93,7 @@ export default function PersonalInfoTab({
     try {
       const { error } = await supabase.auth.updateUser(
         { email: newEmail.trim() },
-        { emailRedirectTo: `${BASE_URL}email-verified.html` }
+        { emailRedirectTo: `${window.location.origin}${BASE_URL}email-verified.html` }
       );
 
       if (error) throw error;

@@ -47,14 +47,32 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     </noscript>
 
-    <!-- Prefetches -->
-    <link rel="prefetch" href="./shop.html">
-    <link rel="prefetch" href="./Product.html">
 </head>
 
 <body>
+    <noscript>
+        <div style="padding: 40px 20px; text-align: center; font-family: sans-serif; color: #111;">
+            <h2>JavaScript Required</h2>
+            <p>Please enable JavaScript in your browser to view audio products on KSAM Deal.</p>
+        </div>
+    </noscript>
 
     <div id="audio-root"></div>
+    <script>
+      window.addEventListener('error', function() {
+        var r = document.getElementById('audio-root');
+        if (r && (!r.children || r.children.length === 0)) {
+          var e = document.getElementById('ksam-err-msg');
+          if (!e) {
+            e = document.createElement('div');
+            e.id = 'ksam-err-msg';
+            e.style.cssText = 'padding:40px 20px;text-align:center;font-family:sans-serif;color:#111;max-width:600px;margin:40px auto;';
+            e.innerHTML = '<h2 style="color:#ef4444;font-size:20px;margin-bottom:12px;">Failed to load Audio page</h2><p style="color:#4b5563;margin-bottom:16px;">We encountered an issue loading this page. Please refresh or check your connection.</p><button onclick="window.location.reload()" style="background:#22c55e;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;">Refresh Page</button>';
+            document.body.appendChild(e);
+          }
+        }
+      });
+    </script>
 
     <script
         type="module"

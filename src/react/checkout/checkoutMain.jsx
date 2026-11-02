@@ -745,7 +745,7 @@ const handleProcessPayment = () => {
                     onClick={() => {
 
                         window.location.href =
-                            "./Product.html";
+                            "./product.html";
 
                     }}
                 >

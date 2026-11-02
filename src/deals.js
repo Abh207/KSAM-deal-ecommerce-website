@@ -5,50 +5,44 @@ const productTemplate =
     document.querySelector("#productTemplate");
 
 
-fetch("./src/api/horizScrollProd.json")
+import products from "./api/horizScrollProd.json";
 
-    .then(function(response) {
-        return response.json();
-    })
+if (dealsProductContainer && productTemplate) {
+    products.forEach(function(product) {
 
-    .then(function(products) {
+        const card =
+            productTemplate.content.cloneNode(true);
 
-        products.forEach(function(product) {
+        card.querySelector(".deal-image").src =
+            product.image;
 
-            const card =
-                productTemplate.content.cloneNode(true);
+        card.querySelector(".deal-image").alt =
+            product.name;
 
-            card.querySelector(".deal-image").src =
-                product.image;
+        card.querySelector(".deal-discount").textContent =
+            product.discount + "% off";
 
-            card.querySelector(".deal-image").alt =
-                product.name;
+        card.querySelector(".deal-category").textContent =
+            product.category;
 
-            card.querySelector(".deal-discount").textContent =
-                product.discount + "% off";
+        card.querySelector(".deal-name").textContent =
+            product.name;
 
-            card.querySelector(".deal-category").textContent =
-                product.category;
+        card.querySelector(".deal-current-price").textContent =
+            "$" + product.price.toFixed(2);
 
-            card.querySelector(".deal-name").textContent =
-                product.name;
+        card.querySelector(".deal-old-price").textContent =
+            "$" + product.oldPrice.toFixed(2);
 
-            card.querySelector(".deal-current-price").textContent =
-                "$" + product.price.toFixed(2);
+        card.querySelector(".deal-rating-number").textContent =
+            product.rating;
 
-            card.querySelector(".deal-old-price").textContent =
-                "$" + product.oldPrice.toFixed(2);
-
-            card.querySelector(".deal-rating-number").textContent =
-                product.rating;
-
-            dealsProductContainer.appendChild(card);
-
-        });
-
-        watchDealsSection();
+        dealsProductContainer.appendChild(card);
 
     });
+
+    watchDealsSection();
+}
 
 
 function watchDealsSection() {
