@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Sparkles,
+  Package,
   Check,
   CheckCircle2,
   Bell,
@@ -268,6 +269,30 @@ export default function OverviewTab({
         </div>
       </section>
 
+      {/* Orders & Live Tracking Quick Bar */}
+      <section className="ks-card ks-overview-lower-card mb-5 border border-[rgba(45,255,178,0.2)] bg-[#0A0F17]/80">
+        <div className="ks-overview-card-header">
+          <div className="ks-overview-header-icon bg-[#2DFFB2]/10 text-[#2DFFB2]">
+            <Package size={18} />
+          </div>
+
+          <div className="ks-overview-header-text">
+            <h3 className="ks-overview-card-title">Orders & Live Deliveries</h3>
+            <p className="ks-overview-card-subtitle">Track real-time shipment milestones and submit verified product feedback</p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onNavigateTab("orders")}
+            className="ks-overview-view-all-link text-[#2DFFB2] hover:text-[#4efec1]"
+            aria-label="View Order History"
+          >
+            <span>Track Orders</span>
+            <ChevronRight size={14} className="ks-chevron-nudge" />
+          </button>
+        </div>
+      </section>
+
       {/* 3. Two-Column Row: Active Price Alerts & Recently Viewed */}
       <div className="ks-overview-two-col-grid">
         {/* Active Price Alerts Card */}
@@ -339,7 +364,7 @@ export default function OverviewTab({
                         {alert.product?.name}
                       </h5>
                       <div className="ks-overview-item-prices">
-                        <span>Target: <strong className="text-[#22FF88]">₹{alert.target_price}</strong></span>
+                        <span>Target: <strong className="text-[#8cff00]">₹{alert.target_price}</strong></span>
                         <span>·</span>
                         <span>Now: ₹{alert.product?.price}</span>
                       </div>
@@ -424,7 +449,7 @@ export default function OverviewTab({
                         {item.name}
                       </h5>
                       <div className="ks-overview-item-prices">
-                        <strong className="text-[#22FF88]">₹{item.price}</strong>
+                        <strong className="text-[#8cff00]">₹{item.price}</strong>
                         {item.store && <span className="text-gray-500">· {item.store}</span>}
                       </div>
                     </div>

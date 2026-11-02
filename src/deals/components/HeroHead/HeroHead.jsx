@@ -159,7 +159,7 @@ export function HeroHead({ paused = false }) {
                 >
                   <defs>
                     <linearGradient id="heroUnderlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#22ff88" />
+                      <stop offset="0%" stopColor="#8cff00" />
                       <stop offset="50%" stopColor="#38bdf8" />
                       <stop offset="100%" stopColor="#ffd60a" />
                     </linearGradient>

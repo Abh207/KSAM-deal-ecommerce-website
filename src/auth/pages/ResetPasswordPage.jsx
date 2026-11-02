@@ -22,7 +22,7 @@ function calculateStrength(pwd) {
   if (score <= 25) return { score, label: "Weak", color: "#ef4444", pct: 25 };
   if (score <= 50) return { score, label: "Fair", color: "#f59e0b", pct: 50 };
   if (score <= 75) return { score, label: "Good", color: "#38bdf8", pct: 75 };
-  return { score, label: "Strong", color: "#22ff88", pct: 100 };
+  return { score, label: "Strong", color: "#8cff00", pct: 100 };
 }
 
 export function ResetPasswordPage() {

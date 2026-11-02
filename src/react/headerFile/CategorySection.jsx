@@ -562,8 +562,11 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
         setVideoFailed(false);
         setFading(false);
       }, 300); // 300ms crossfade between categories per motion design spec
+      if (onCategorySelect) {
+        onCategorySelect(catId);
+      }
     },
-    [activeCatId]
+    [activeCatId, onCategorySelect]
   );
 
 
@@ -723,8 +726,12 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
           })}
         </nav>
 
-        {/* ── MOBILE: horizontal chip row ── */}
-        <div className="cs-chip-row" ref={chipRowRef} role="tablist" aria-label="Category list" aria-orientation="horizontal">
+        {/* ── MOBILE: Responsive 2-3 Column Compact Category Grid ── */}
+        <div
+          className="cs-mobile-grid"
+          role="tablist"
+          aria-label="Category selection grid"
+        >
           {categories.map((cat) => {
             const isActive = cat.id === activeCatId;
             return (
@@ -735,16 +742,17 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                 tabIndex={isActive ? 0 : -1}
                 aria-selected={isActive}
                 aria-controls={panelId}
-                className={`cs-chip${isActive ? " active" : ""}`}
+                className={`cs-mobile-cat-card${isActive ? " is-active" : ""}`}
                 onClick={(e) => {
                   e.preventDefault();
                   handleSelect(cat.id);
                 }}
               >
-                <span className="cs-chip-icon" aria-hidden="true">
+                <span className="cs-mobile-cat-icon" aria-hidden="true">
                   {getIconForCategory(cat.id)}
                 </span>
-                {cat.name}
+                <span className="cs-mobile-cat-name">{cat.name}</span>
+                {isActive && <span className="cs-mobile-active-dot" aria-hidden="true" />}
               </button>
             );
           })}

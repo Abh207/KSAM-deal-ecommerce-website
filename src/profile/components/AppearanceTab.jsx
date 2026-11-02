@@ -35,7 +35,7 @@ const THEMES = [
 ];
 
 const ACCENTS = [
-  { id: "green", name: "Neon Green", color: "#22FF88" },
+  { id: "green", name: "Neon Green", color: "#8cff00" },
   { id: "blue", name: "Sky Cyan", color: "#38BDF8" },
   { id: "yellow", name: "Electric Yellow", color: "#FFD60A" }
 ];
@@ -200,7 +200,7 @@ export default function AppearanceTab({
               <div className="flex items-center justify-between gap-2 w-full mt-auto">
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <Icon size={14} className={isSelected ? "text-[#22FF88]" : "text-gray-400"} />
+                    <Icon size={14} className={isSelected ? "text-[#8cff00]" : "text-gray-400"} />
                     <h4 className="text-sm font-bold text-white tracking-[-0.01em]">
                       {t.label}
                     </h4>
@@ -211,7 +211,7 @@ export default function AppearanceTab({
                 </div>
 
                 {isSelected && (
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#22FF88] text-black shrink-0">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8cff00] text-black shrink-0">
                     <Check size={12} strokeWidth={3} />
                   </div>
                 )}

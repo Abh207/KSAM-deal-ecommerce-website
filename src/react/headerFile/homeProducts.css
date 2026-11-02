@@ -1069,8 +1069,8 @@
     width: var(--card-stock-dot-size, 9px);
     height: var(--card-stock-dot-size, 9px);
     border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    background: #8cff00;
+    box-shadow: 0 0 8px rgba(140, 255, 0, 0.6);
 }
 
 
@@ -1156,8 +1156,8 @@
 }
 
 .home-product-cart-btn.is-added {
-    background: #4ade80 !important;
-    border-color: #4ade80 !important;
+    background: #8cff00 !important;
+    border-color: #8cff00 !important;
     color: #0c0c0c !important;
 }
 

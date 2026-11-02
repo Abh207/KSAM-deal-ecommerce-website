@@ -8,8 +8,8 @@
     --navbar-height: 72px;
     --watch-gold: #c89b3c;
     --watch-gold-light: #d6ad5a;
-    --watch-accent: #15803d;
-    --watch-accent-light: #22c55e;
+    --watch-accent: #3f7800;
+    --watch-accent-light: #8cff00;
 }
 
 * {
@@ -374,7 +374,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: #15803d;
+    background: #3f7800;
     color: #ffffff;
     font-size: 17px;
     font-weight: 800;

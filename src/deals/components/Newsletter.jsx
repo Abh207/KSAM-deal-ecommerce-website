@@ -188,7 +188,7 @@ function Newsletter({ variant = "default" }) {
               {message && (
                 isSubscribed ? (
                   <div className="kx-newsletter-dark-msg-success">
-                    <svg className="kx-check-draw" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22FF88" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <svg className="kx-check-draw" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8cff00" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17L4 12" />
                     </svg>
                     <span>{message}</span>
@@ -220,18 +220,18 @@ function Newsletter({ variant = "default" }) {
               {/* Floating Badges */}
               {/* 1. Price drop card */}
               <div className="kx-dark-badge kx-dark-badge-deal">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#22FF88] text-black">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#8cff00] text-black">
                   <TrendingDown size={18} />
                 </div>
                 <div>
                   <p className="text-[10px] font-bold tracking-wider text-[#AEBAB4] uppercase m-0">PRICE DROP</p>
-                  <h4 className="text-xs font-bold text-white m-0">Up to <strong className="text-[#22FF88]">70% OFF</strong></h4>
+                  <h4 className="text-xs font-bold text-white m-0">Up to <strong className="text-[#8cff00]">70% OFF</strong></h4>
                 </div>
               </div>
 
               {/* 2. Rating card */}
               <div className="kx-dark-badge kx-dark-badge-rating">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22FF88] to-[#38BDF8] text-black font-extrabold text-xs flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8cff00] to-[#38BDF8] text-black font-extrabold text-xs flex items-center justify-center">
                   KD
                 </div>
                 <div>
@@ -253,7 +253,7 @@ function Newsletter({ variant = "default" }) {
                   <p className="text-[10px] font-bold tracking-wider text-[#AEBAB4] uppercase m-0">NEW DEAL ALERT</p>
                   <strong className="text-xs text-white block">Nike Air Max — 42% OFF</strong>
                 </div>
-                <div className="w-2 h-2 rounded-full bg-[#22FF88] animate-pulse ml-1" />
+                <div className="w-2 h-2 rounded-full bg-[#8cff00] animate-pulse ml-1" />
               </div>
 
               {/* 4. Discount sticker */}

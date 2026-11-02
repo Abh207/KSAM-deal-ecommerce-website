@@ -4,7 +4,7 @@ import { useMarquee } from "./useMarquee.js";
 import { requireAuth } from "../../../auth/auth.js";
 
 function burstSparks(originX, originY) {
-  const colors = ["#22ff88", "#38bdf8", "#ffd60a"];
+  const colors = ["#8cff00", "#38bdf8", "#ffd60a"];
   const sparkCount = 8;
 
   for (let i = 0; i < sparkCount; i++) {

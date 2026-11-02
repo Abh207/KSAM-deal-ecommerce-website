@@ -39,7 +39,7 @@ const WATCH_PROMO_DATA = [
         image: "products/watch1.png",
         productId: 1001,
         productUid: "mens-watches-1001",
-        accent: "#16a34a"
+        accent: "#448000"
     },
     {
         id: "watch-promo-4",
@@ -78,7 +78,7 @@ const WATCH_PROMO_DATA = [
         image: "products/watch16.png",
         productId: 1015,
         productUid: "sport-watches-1015",
-        accent: "#16a34a"
+        accent: "#448000"
     },
     {
         id: "watch-promo-7",

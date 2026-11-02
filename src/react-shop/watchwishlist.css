@@ -1,15 +1,15 @@
 /* ==========================================================================
    KSAM DEAL - WISHLIST PAGE STYLES
    Color System: Black (#000000 / #050505), Near-black card (#0a0a0a),
-   Light Green (#4ade80), White (#ffffff).
+   Light Green (#8cff00), White (#ffffff).
    NO RED.
    ========================================================================== */
 
 :root {
   --card-bg: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
-  --accent: #22c55e;
-  --accent-light: #4ade80;
-  --price: #15803d;
+  --accent: #8cff00;
+  --accent-light: #8cff00;
+  --price: #3f7800;
 
   /* ========================================================================
      WISHLIST GRID & CARD RESPONSIVE TOKENS
@@ -230,7 +230,7 @@ body {
 }
 
 .ksam-wishlist-title-highlight {
-  background: linear-gradient(90deg, #16a34a, #4ade80);
+  background: linear-gradient(90deg, #448000, #8cff00);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -361,10 +361,10 @@ body {
 }
 
 .ksam-wishlist-chip.is-active {
-  background: linear-gradient(135deg, #4ade80, #22c55e);
+  background: linear-gradient(135deg, #8cff00, #8cff00);
   color: #052e16;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+  box-shadow: 0 4px 14px rgba(140, 255, 0, 0.35);
 }
 
 .ksam-wishlist-chip-count {
@@ -378,7 +378,7 @@ body {
 }
 
 .ksam-wishlist-chip.is-active .ksam-wishlist-chip-count {
-  background: #15803d;
+  background: #3f7800;
   color: #ffffff;
 }
 
@@ -462,7 +462,7 @@ body {
 
 .ksam-wishlist-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 18px 45px rgba(34, 197, 94, 0.28);
+  box-shadow: 0 18px 45px rgba(140, 255, 0, 0.28);
 }
 
 .ksam-wishlist-card.is-removing {
@@ -515,13 +515,13 @@ body {
 
 /* 2. DISCOUNT PILL (top-left) */
 .ksam-wishlist-discount-pill {
-  background: linear-gradient(135deg, #10b981, #22c55e);
-  color: #ffffff;
+  background: linear-gradient(135deg, #8cff00, #8cff00);
+  color: #050a02;
   font-size: var(--wishlist-pill-font, 13px);
   font-weight: 800;
   padding: var(--wishlist-pill-pad, 4px 12px);
   border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 4px 14px rgba(140, 255, 0, 0.4);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -555,7 +555,7 @@ body {
 }
 
 .ksam-wishlist-heart-btn:hover {
-  border-color: var(--accent, #22c55e);
+  border-color: var(--accent, #8cff00);
   transform: scale(1.08);
 }
 
@@ -615,7 +615,7 @@ body {
 }
 
 .ksam-wishlist-card-title:hover {
-  color: var(--price, #15803d);
+  color: var(--price, #3f7800);
 }
 
 /* Rating Row: stars 16px (phone 12px), text 14px (phone 12px), 8px space above */
@@ -658,7 +658,7 @@ body {
 .ksam-wishlist-card-price {
   font-size: var(--wishlist-price-size, 26px);
   font-weight: 800;
-  color: var(--price, #15803d);
+  color: var(--price, #3f7800);
   line-height: 1;
 }
 
@@ -695,7 +695,7 @@ body {
 }
 
 .ksam-wishlist-swatch.is-selected {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--accent-light, #4ade80);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--accent-light, #8cff00);
 }
 
 /* 7. BUTTON ROW (52px high desktop, 40px phone, sticks to bottom, cart icon square, view product flex 1 on ONE line) */
@@ -717,7 +717,7 @@ body {
   min-width: var(--wishlist-cart-btn-size, 52px);
   flex-shrink: 0;
   border-radius: 14px;
-  background: #bbf7d0;
+  background: rgba(140, 255, 0, 0.35);
   border: none;
   display: flex;
   align-items: center;
@@ -733,7 +733,7 @@ body {
 }
 
 .ksam-wishlist-cart-btn:hover {
-  background: #86efac;
+  background: #a8ff3e;
   transform: translateY(-2px);
 }
 
@@ -742,7 +742,7 @@ body {
   flex: 1;
   height: var(--wishlist-actions-height, 52px);
   border-radius: 999px;
-  background: linear-gradient(135deg, #34f5b0, #4ade80);
+  background: linear-gradient(135deg, #34f5b0, #8cff00);
   border: none;
   color: #0b0f0e;
   font-size: var(--wishlist-view-btn-font, 16px);
@@ -753,7 +753,7 @@ body {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(74, 222, 128, 0.4);
+  box-shadow: 0 8px 22px rgba(140, 255, 0, 0.4);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
   padding: var(--wishlist-view-btn-pad, 0 16px);
   white-space: nowrap;
@@ -761,7 +761,7 @@ body {
 
 .ksam-wishlist-view-btn:hover {
   filter: brightness(1.05);
-  box-shadow: 0 12px 28px rgba(74, 222, 128, 0.5);
+  box-shadow: 0 12px 28px rgba(140, 255, 0, 0.5);
 }
 
 .ksam-wishlist-view-arrow {
@@ -832,19 +832,19 @@ body {
   gap: 8px;
   padding: 12px 28px;
   border-radius: 999px;
-  background: #4ade80;
+  background: #8cff00;
   color: #000000;
   font-weight: 700;
   font-size: 14px;
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(74, 222, 128, 0.35);
+  box-shadow: 0 4px 16px rgba(140, 255, 0, 0.35);
   transition: all 0.2s ease;
 }
 
 .ksam-wishlist-cta-btn:hover {
-  background: #86efac;
+  background: #a8ff3e;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(74, 222, 128, 0.45);
+  box-shadow: 0 6px 20px rgba(140, 255, 0, 0.45);
 }
 
 .ksam-wishlist-empty-filter {

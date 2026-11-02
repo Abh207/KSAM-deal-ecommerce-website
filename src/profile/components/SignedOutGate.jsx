@@ -48,7 +48,7 @@ export default function SignedOutGate() {
         </div>
 
         <div className="ks-hero-content-wrapper flex flex-col items-center justify-center relative z-10 py-16 sm:py-24 text-center max-w-4xl mx-auto px-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#22FF88]/10 border border-[#22FF88]/30 text-xs font-bold text-[#22FF88] mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#8cff00]/10 border border-[#8cff00]/30 text-xs font-bold text-[#8cff00] mb-6">
             <Lock size={13} />
             <span>KSAM Deal Member Hub</span>
           </div>
@@ -86,7 +86,7 @@ export default function SignedOutGate() {
           {/* 3 Quick Value Highlights */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 text-left">
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
-              <div className="h-9 w-9 rounded-xl bg-[#22FF88]/10 border border-[#22FF88]/20 flex items-center justify-center text-[#22FF88] mb-2.5">
+              <div className="h-9 w-9 rounded-xl bg-[#8cff00]/10 border border-[#8cff00]/20 flex items-center justify-center text-[#8cff00] mb-2.5">
                 <Bell size={18} />
               </div>
               <h4 className="text-sm font-bold text-white mb-1">Instant Price Alerts</h4>
@@ -130,14 +130,14 @@ export default function SignedOutGate() {
         {/* Overlay gradient mask */}
         <div className="ks-gate-preview-gradient-overlay flex items-center justify-center">
           <div className="text-center p-8 rounded-3xl bg-[#0a0e14]/90 border border-white/15 backdrop-blur-xl max-w-md shadow-2xl">
-            <Sparkles size={28} className="text-[#22FF88] mx-auto mb-3" />
+            <Sparkles size={28} className="text-[#8cff00] mx-auto mb-3" />
             <h3 className="text-lg font-bold text-white mb-1">Signed-Out Preview</h3>
             <p className="text-xs text-gray-400 mb-5">
               Sign in with your email or Google account to load your saved data and custom dashboard.
             </p>
             <a
               href={loginUrl}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#22FF88] text-black font-extrabold text-xs hover:opacity-90 transition"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#8cff00] text-black font-extrabold text-xs hover:opacity-90 transition"
             >
               <LogIn size={15} />
               <span>Sign In Now</span>

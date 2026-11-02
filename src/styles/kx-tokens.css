@@ -16,7 +16,7 @@
   
   --kx-border: rgba(148, 163, 184, 0.14);
   --kx-border-subtle: rgba(148, 163, 184, 0.08);
-  --kx-border-hover: rgba(0, 245, 160, 0.35);
+  --kx-border-hover: rgba(140, 255, 0, 0.35);
   
   /* Text Hierarchy */
   --kx-text: #F8FAFC;
@@ -32,15 +32,15 @@
   --kx-text-inverse: #050505;
   
   /* Primary & Accent System */
-  --kx-accent: #00F5A0;
+  --kx-accent: #8cff00;
   --kx-accent-highlight: #22D3EE;
-  --kx-accent-glow: rgba(0, 245, 160, 0.28);
-  --kx-accent-soft: rgba(0, 245, 160, 0.10);
-  --kx-accent-border: rgba(0, 245, 160, 0.22);
+  --kx-accent-glow: rgba(140, 255, 0, 0.28);
+  --kx-accent-soft: rgba(140, 255, 0, 0.10);
+  --kx-accent-border: rgba(140, 255, 0, 0.22);
   --kx-accent-text: #050505;
   
   /* Palette Tokens */
-  --kx-emerald: #00F5A0;
+  --kx-emerald: #8cff00;
   --kx-cyan: #22D3EE;
   --kx-blue: #3B82F6;
   --kx-purple: #A855F7;
@@ -85,12 +85,12 @@
   --kx-text-label: #475569;
   --kx-text-placeholder: #94A3B8;
   --kx-text-disabled: #CBD5E1;
-  --kx-text-important: #047857;
+  --kx-text-important: #3f7800;
   --kx-text-inverse: #FFFFFF;
 
   /* Primary Accent (High Contrast Emerald on Light) */
-  --kx-accent: #059669;
-  --kx-accent-highlight: #10B981;
+  --kx-accent: #448000;
+  --kx-accent-highlight: #8cff00;
   --kx-accent-glow: rgba(5, 150, 105, 0.22);
   --kx-accent-soft: rgba(5, 150, 105, 0.08);
   --kx-accent-border: rgba(5, 150, 105, 0.28);
@@ -753,7 +753,7 @@
   transition: all 200ms ease;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2322ff88%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%238cff00%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
 }
@@ -806,7 +806,7 @@
 }
 
 .kx-otp-digit.filled {
-  border-color: rgba(34, 255, 136, 0.4) !important;
+  border-color: rgba(140, 255, 0, 0.4) !important;
   color: var(--kx-accent) !important;
 }
 

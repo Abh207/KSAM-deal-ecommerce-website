@@ -407,8 +407,8 @@
   }
   .pr-dot-active {
     width: 24px !important;
-    background: #22FF88 !important;
-    box-shadow: 0 0 10px rgba(34, 255, 136, 0.5) !important;
+    background: #8cff00 !important;
+    box-shadow: 0 0 10px rgba(140, 255, 0, 0.5) !important;
   }
 
   /* ------------------------------------------------------------
@@ -1157,8 +1157,8 @@
   }
   .pr-dot-active {
     width: 24px !important;
-    background: #22FF88 !important;
-    box-shadow: 0 0 10px rgba(34, 255, 136, 0.5) !important;
+    background: #8cff00 !important;
+    box-shadow: 0 0 10px rgba(140, 255, 0, 0.5) !important;
     position: relative !important;
     overflow: hidden !important;
   }
@@ -1388,8 +1388,8 @@
   }
   .pr-dot-active {
     width: 24px !important;
-    background: #22FF88 !important;
-    box-shadow: 0 0 10px rgba(34, 255, 136, 0.5) !important;
+    background: #8cff00 !important;
+    box-shadow: 0 0 10px rgba(140, 255, 0, 0.5) !important;
     position: relative !important;
     overflow: hidden !important;
   }
@@ -1425,9 +1425,9 @@
     transition: all 0.2s ease !important;
   }
   .pr-arrow-btn:hover {
-    background: rgba(34, 255, 136, 0.15) !important;
-    border-color: #22FF88 !important;
-    color: #22FF88 !important;
+    background: rgba(140, 255, 0, 0.15) !important;
+    border-color: #8cff00 !important;
+    color: #8cff00 !important;
   }
   .pr-arrow-prev svg {
     transform: rotate(180deg) !important;

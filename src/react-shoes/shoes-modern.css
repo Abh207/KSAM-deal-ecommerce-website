@@ -453,7 +453,7 @@ body {
     font-weight: 800 !important;
     text-transform: uppercase !important;
     letter-spacing: 1.2px !important;
-    color: #16a34a !important;
+    color: #448000 !important;
 }
 
 .shoe-beauty-card .beauty-product-name {
@@ -471,7 +471,7 @@ body {
 }
 
 .shoe-beauty-card .beauty-product-name-link:hover {
-    color: #16a34a !important;
+    color: #448000 !important;
 }
 
 .shoe-beauty-card .beauty-product-brand {
@@ -564,8 +564,8 @@ body {
     padding: 0 16px !important;
     border-radius: 12px !important;
     background: #f0fdf4 !important;
-    color: #15803d !important;
-    border: 1px solid #bbf7d0 !important;
+    color: #448000 !important;
+    border: 1px solid rgba(140, 255, 0, 0.35) !important;
     font-size: 13.5px !important;
     font-weight: 700 !important;
     text-decoration: none !important;
@@ -973,7 +973,7 @@ body {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #16a34a;
+    color: #448000;
     margin-bottom: 6px;
 }
 
@@ -1003,7 +1003,7 @@ body {
     gap: 8px;
     font-size: 13.5px;
     font-weight: 800;
-    color: #16a34a;
+    color: #448000;
     transition: gap 0.2s ease, color 0.2s ease;
     pointer-events: none !important;
 }

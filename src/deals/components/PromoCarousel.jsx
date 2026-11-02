@@ -16,10 +16,10 @@ const Earbuds = () => (
     <rect x="12" y="76" width="80" height="22" rx="8" fill="#f08a24" />
     <ellipse cx="38" cy="86" rx="11" ry="9" fill="#fff" /><ellipse cx="66" cy="84" rx="11" ry="9" fill="#fff" />
     <rect x="60" y="40" width="12" height="40" rx="6" fill="#fff" />
-    <circle cx="52" cy="124" r="3" fill="#4ade80" />
+    <circle cx="52" cy="124" r="3" fill="#8cff00" />
     <path d="M110 136V76q0-24 30-28v-6h20v6q30 4 30 28v60q0 6-6 6h-68q-6 0-6-6z" fill="url(#eb-brown)" />
     <rect x="122" y="56" width="18" height="40" rx="9" fill="#d9b99b" /><rect x="160" y="56" width="18" height="40" rx="9" fill="#d9b99b" />
-    <rect x="140" y="112" width="22" height="4" rx="2" fill="#4ade80" />
+    <rect x="140" y="112" width="22" height="4" rx="2" fill="#8cff00" />
     <rect x="200" y="80" width="94" height="56" rx="26" fill="url(#eb-blue)" />
     <ellipse cx="228" cy="88" rx="14" ry="12" fill="#6f87f0" /><ellipse cx="266" cy="88" rx="14" ry="12" fill="#6f87f0" />
     <text x="247" y="124" fontSize="8" fontWeight="700" fill="#fff" textAnchor="middle">ONEPLUS</text>
@@ -64,7 +64,7 @@ const Blender = () => (
     <rect x="120" y="108" width="62" height="56" rx="8" fill="#1c1c1f" /><rect x="116" y="30" width="70" height="80" rx="10" fill="#ffffff66" stroke="#fff" />
     <circle cx="136" cy="56" r="9" fill="#f43f5e" /><circle cx="160" cy="48" r="9" fill="#fbbf24" /><circle cx="148" cy="80" r="10" fill="#fb7185" /><circle cx="168" cy="84" r="8" fill="#a3e635" />
     <rect x="126" y="22" width="50" height="10" rx="4" fill="#26262a" />
-    <rect x="200" y="62" width="34" height="68" rx="8" fill="#ffffff66" stroke="#fff" /><rect x="204" y="96" width="26" height="30" rx="4" fill="#facc15" /><rect x="204" y="70" width="26" height="26" fill="#4ade80" />
+    <rect x="200" y="62" width="34" height="68" rx="8" fill="#ffffff66" stroke="#fff" /><rect x="204" y="96" width="26" height="30" rx="4" fill="#facc15" /><rect x="204" y="70" width="26" height="26" fill="#8cff00" />
     <rect x="248" y="96" width="38" height="34" rx="5" fill="#d9f99d" stroke="#fff" /><circle cx="226" cy="140" r="12" fill="#fb923c" />
   </svg>
 );
@@ -72,10 +72,10 @@ const Blender = () => (
 const Mop = () => (
   <svg viewBox="0 0 300 170" className="art">
     <rect x="0" y="120" width="300" height="50" fill="#e8e2d6" />
-    <ellipse cx="120" cy="108" rx="62" ry="14" fill="#16a34a" /><path d="M58 108v36q0 14 62 14t62 -14v-36z" fill="#22c55e" />
-    <ellipse cx="120" cy="108" rx="52" ry="9" fill="#15803d" />
+    <ellipse cx="120" cy="108" rx="62" ry="14" fill="#448000" /><path d="M58 108v36q0 14 62 14t62 -14v-36z" fill="#8cff00" />
+    <ellipse cx="120" cy="108" rx="52" ry="9" fill="#448000" />
     <path d="M214 12L120 118" stroke="#cbd5e1" strokeWidth="6" strokeLinecap="round" />
-    <ellipse cx="86" cy="138" rx="40" ry="12" fill="#f8fafc" /><circle cx="86" cy="134" r="10" fill="#4ade80" />
+    <ellipse cx="86" cy="138" rx="40" ry="12" fill="#f8fafc" /><circle cx="86" cy="134" r="10" fill="#8cff00" />
     <path d="M40 60l8-30 14 4-4 30z" fill="#f472b6" /><path d="M54 60l14-28 14 8-8 26z" fill="#ec4899" />
     <rect x="186" y="62" width="14" height="50" rx="4" fill="#7dd3c0" /><rect x="188" y="52" width="10" height="12" fill="#0ea5a5" />
     <path d="M214 96h54l-6 52h-42z" fill="#9ca3af" />

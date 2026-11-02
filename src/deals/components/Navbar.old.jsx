@@ -110,7 +110,7 @@ const CSS = `
 .ksam-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .ksam-panel{position:relative;width:100%;max-width:62rem;max-height:calc(100vh - 5.5rem);display:flex;flex-direction:column;overflow:hidden;color:#fff;
   background:linear-gradient(180deg,#0f1512 0%,#080808 100%);border:1px solid rgba(255,255,255,.1);border-radius:22px;
-  box-shadow:0 40px 90px rgba(0,0,0,.85),0 0 0 1px rgba(34,255,136,.07),0 0 80px rgba(34,255,136,.06);animation:ksamPop .22s cubic-bezier(.2,.9,.3,1.1)}
+  box-shadow:0 40px 90px rgba(0,0,0,.85),0 0 0 1px rgba(140, 255, 0, .07),0 0 80px rgba(140, 255, 0, .06);animation:ksamPop .22s cubic-bezier(.2,.9,.3,1.1)}
 .ksam-panel *{box-sizing:border-box}
 .ksam-panel button{font:inherit;cursor:pointer}
 .ksam-panel button:focus-visible,.ksam-panel select:focus-visible{outline:2px solid #38BDF8;outline-offset:2px}
@@ -119,10 +119,10 @@ const CSS = `
 .ksam-bar-icon{color:#38BDF8;flex-shrink:0}
 .ksam-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-size:1.05rem;font-family:inherit}
 .ksam-input::placeholder{color:#6b7280}
-.ksam-spin{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.15);border-top-color:#22FF88;animation:ksamSpin .7s linear infinite;flex-shrink:0}
+.ksam-spin{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.15);border-top-color:#8cff00;animation:ksamSpin .7s linear infinite;flex-shrink:0}
 .ksam-iconbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#9ca3af;transition:.15s;flex-shrink:0}
 .ksam-iconbtn:hover{color:#fff;border-color:rgba(255,255,255,.3)}
-.ksam-go{padding:.55rem 1.1rem;border-radius:10px;border:0;background:linear-gradient(135deg,#22FF88,#38BDF8);color:#000;font-weight:800;font-size:.85rem;flex-shrink:0;transition:transform .15s}
+.ksam-go{padding:.55rem 1.1rem;border-radius:10px;border:0;background:linear-gradient(135deg,#8cff00,#38BDF8);color:#000;font-weight:800;font-size:.85rem;flex-shrink:0;transition:transform .15s}
 .ksam-go:hover{transform:scale(1.05)}
 
 .ksam-body{overflow-y:auto;padding:1.25rem;scrollbar-width:thin;scrollbar-color:#333 transparent}
@@ -131,11 +131,11 @@ const CSS = `
 .ksam-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:0 0 .8rem;font-size:.82rem;font-weight:700;color:#9ca3af}
 .ksam-h span{display:flex;align-items:center;gap:.45rem}
 .ksam-link{background:none;border:0;color:#6b7280;font-size:.75rem}
-.ksam-link:hover{color:#22FF88}
+.ksam-link:hover{color:#8cff00}
 
 .ksam-chips{display:flex;flex-wrap:wrap;gap:.5rem}
 .ksam-chip{padding:.5rem 1rem;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:#e5e7eb;font-size:.85rem;transition:.15s}
-.ksam-chip:hover{background:#22FF88;border-color:#22FF88;color:#000;transform:translateY(-1px)}
+.ksam-chip:hover{background:#8cff00;border-color:#8cff00;color:#000;transform:translateY(-1px)}
 
 .ksam-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}
 .ksam-cat{display:flex;align-items:center;gap:.75rem;padding:.75rem .9rem;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#e5e7eb;font-size:.9rem;text-align:left;transition:.15s}
@@ -145,7 +145,7 @@ const CSS = `
 
 .ksam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:.9rem}
 .ksam-card{display:flex;flex-direction:column;padding:0;text-align:left;color:inherit;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);transition:transform .2s,border-color .2s,box-shadow .2s}
-.ksam-card:hover{transform:translateY(-4px);border-color:rgba(34,255,136,.5);box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 24px rgba(34,255,136,.1)}
+.ksam-card:hover{transform:translateY(-4px);border-color:rgba(140, 255, 0, .5);box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 24px rgba(140, 255, 0, .1)}
 .ksam-img{position:relative;aspect-ratio:1/1;overflow:hidden;background:#141414}
 .ksam-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
 .ksam-card:hover .ksam-img img{transform:scale(1.07)}
@@ -155,10 +155,10 @@ const CSS = `
 .ksam-name{margin:0;font-size:.85rem;font-weight:600;line-height:1.3;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.2em}
 .ksam-rate{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:#9ca3af}
 .ksam-price{display:flex;align-items:baseline;gap:.5rem;margin-top:auto}
-.ksam-now{font-size:1.05rem;font-weight:800;color:#22FF88}
+.ksam-now{font-size:1.05rem;font-weight:800;color:#8cff00}
 .ksam-was{font-size:.75rem;color:#6b7280;text-decoration:line-through}
-.ksam-cta{margin-top:.35rem;padding:.45rem;border-radius:10px;text-align:center;font-size:.78rem;font-weight:700;color:#22FF88;border:1px solid rgba(34,255,136,.35);transition:.15s}
-.ksam-card:hover .ksam-cta{background:#22FF88;color:#000}
+.ksam-cta{margin-top:.35rem;padding:.45rem;border-radius:10px;text-align:center;font-size:.78rem;font-weight:700;color:#8cff00;border:1px solid rgba(140, 255, 0, .35);transition:.15s}
+.ksam-card:hover .ksam-cta{background:#8cff00;color:#000}
 
 .ksam-sort{display:flex;gap:.4rem;flex-wrap:wrap}
 .ksam-sortbtn{padding:.3rem .7rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#9ca3af;font-size:.75rem;transition:.15s}
@@ -174,7 +174,7 @@ const CSS = `
 
 .ksam-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1.25rem;border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.4)}
 .ksam-foot small{color:#6b7280;font-size:.75rem}
-.ksam-all{display:flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:10px;border:0;background:linear-gradient(135deg,#22FF88,#38BDF8);color:#000;font-weight:800;font-size:.85rem}
+.ksam-all{display:flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:10px;border:0;background:linear-gradient(135deg,#8cff00,#38BDF8);color:#000;font-weight:800;font-size:.85rem}
 
 @media (max-width:640px){
   .ksam-overlay{padding:0}
@@ -784,16 +784,16 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
             <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
                 <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
                     <a href="#home" className="flex items-center gap-2 text-xl font-black text-white">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#22FF88] to-[#38BDF8] text-black">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#8cff00] to-[#38BDF8] text-black">
                             K
                         </span>
                         KSAM
-                        <span className="text-[#22FF88]">DEAL</span>
+                        <span className="text-[#8cff00]">DEAL</span>
                     </a>
 
                     <div className="hidden items-center gap-7 lg:flex">
                         {LINKS.map(([label, href]) => (
-                            <a key={label} href={href} className="text-sm font-medium text-gray-300 transition hover:text-[#22FF88]">
+                            <a key={label} href={href} className="text-sm font-medium text-gray-300 transition hover:text-[#8cff00]">
                                 {label}
                             </a>
                         ))}
@@ -814,7 +814,7 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
                             type="button"
                             aria-label="Cart"
                             data-ksam-cart
-                            className="relative rounded-xl bg-[#22FF88] p-2.5 text-black transition hover:scale-105"
+                            className="relative rounded-xl bg-[#8cff00] p-2.5 text-black transition hover:scale-105"
                         >
                             <ShoppingBag size={19} />
                             {cartCount > 0 && (
@@ -839,7 +839,7 @@ function Navbar({ cartCount = 0, onProductClick, onViewAll }) {
                     <div className="border-t border-white/10 bg-[#050505] px-5 py-5 lg:hidden">
                         <div className="flex flex-col gap-5">
                             {LINKS.map(([label, href]) => (
-                                <a key={label} href={href} onClick={() => setOpen(false)} className="text-gray-200 hover:text-[#22FF88]">
+                                <a key={label} href={href} onClick={() => setOpen(false)} className="text-gray-200 hover:text-[#8cff00]">
                                     {label}
                                 </a>
                             ))}

@@ -95,7 +95,7 @@ export default function NotificationsTab({
       {/* Clean Section Heading (No redundant outer card container) */}
       <div className="kx-notifications-heading mb-6 px-1">
         <h2 className="flex items-center gap-2.5 text-lg font-bold text-white tracking-[-0.01em]">
-          <Bell size={20} className="text-[#22FF88]" />
+          <Bell size={20} className="text-[#8cff00]" />
           <span>Notification Channels</span>
         </h2>
         <p className="text-[13.5px] text-[#98A3A0] mt-1 leading-[1.55]">

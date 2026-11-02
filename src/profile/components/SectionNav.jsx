@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import {
   LayoutDashboard,
+  Package,
   User,
   MapPin,
   Bell,
@@ -22,6 +23,16 @@ export const SECTIONS = [
     eyebrow: "Account Overview",
     desc: "Track profile completion milestones, price alert monitors, and recent browsing history.",
     icon: LayoutDashboard
+  },
+  {
+    id: "orders",
+    label: "Orders",
+    fullLabel: "Order History",
+    title: "Order History & Live Tracking",
+    eyebrow: "Purchase History",
+    desc: "Track shipments in real time, view delivery milestones, and submit verified product reviews.",
+    icon: Package,
+    countKey: "orders"
   },
   {
     id: "profile",

@@ -11,7 +11,8 @@ import "./checkout.css";
 
 
 import paymentData from "../../api/paymentMethods.json";
-import { requireAuth } from "../../auth/auth.js";
+import { requireAuth, getStoredSessionSync } from "../../auth/auth.js";
+import { createOrder } from "../../lib/orderService.js";
 
 
 
@@ -432,7 +433,7 @@ const handlePaymentSelect = (paymentId) => {
 
 
 
-const handleProcessPayment = () => {
+const handleProcessPayment = async () => {
     if (!requireAuth({ type: "place_order" })) {
         return;
     }
@@ -499,6 +500,24 @@ const handleProcessPayment = () => {
 
         };
 
+        try {
+            const activeSession = getStoredSessionSync();
+            await createOrder({
+                user: activeSession?.user || null,
+                orderNumber: newOrderId,
+                cart: cart,
+                customer: address,
+                paymentMethod: "Cash on Delivery",
+                subtotal: subtotal,
+                deliveryCharge: deliveryCharge,
+                discount: discount,
+                tax: tax,
+                grandTotal: grandTotal
+            });
+        } catch (ordErr) {
+            console.warn("[checkout] createOrder sync error:", ordErr);
+        }
+
         localStorage.setItem(
             "ksamLastOrder",
             JSON.stringify(order)
@@ -554,7 +573,27 @@ const handleProcessPayment = () => {
         image:
             `${import.meta.env.BASE_URL}products/hero-product19.png`,
 
-        handler: function (response) {
+        handler: async function (response) {
+
+            try {
+                const activeSession = getStoredSessionSync();
+                await createOrder({
+                    user: activeSession?.user || null,
+                    orderNumber: newOrderId,
+                    cart: cart,
+                    customer: address,
+                    paymentMethod: selectedPayment || "Online Payment",
+                    paymentId: response.razorpay_payment_id,
+                    signature: response.razorpay_signature || "",
+                    subtotal: subtotal,
+                    deliveryCharge: deliveryCharge,
+                    discount: discount,
+                    tax: tax,
+                    grandTotal: grandTotal
+                });
+            } catch (ordErr) {
+                console.warn("[checkout] createOrder sync error:", ordErr);
+            }
 
             const order = {
 

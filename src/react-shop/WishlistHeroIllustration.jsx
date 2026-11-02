@@ -19,28 +19,28 @@ export default function WishlistHeroIllustration() {
           </linearGradient>
 
           <radialGradient id="screenCenterGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#4ade80" stopOpacity="0.45" />
-            <stop offset="60%" stopColor="#22c55e" stopOpacity="0.15" />
+            <stop offset="0%" stopColor="#8cff00" stopOpacity="0.45" />
+            <stop offset="60%" stopColor="#8cff00" stopOpacity="0.15" />
             <stop offset="100%" stopColor="#052e16" stopOpacity="0" />
           </radialGradient>
 
           {/* Heart Gradients */}
           <linearGradient id="laptopHeartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#86efac" />
-            <stop offset="50%" stopColor="#4ade80" />
-            <stop offset="100%" stopColor="#16a34a" />
+            <stop offset="0%" stopColor="#a8ff3e" />
+            <stop offset="50%" stopColor="#8cff00" />
+            <stop offset="100%" stopColor="#448000" />
           </linearGradient>
 
           <linearGradient id="badgeHeartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4ade80" />
-            <stop offset="100%" stopColor="#16a34a" />
+            <stop offset="0%" stopColor="#8cff00" />
+            <stop offset="100%" stopColor="#448000" />
           </linearGradient>
 
           {/* Phone Screen Gradient */}
           <linearGradient id="phoneScreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#052e16" />
             <stop offset="60%" stopColor="#14532d" />
-            <stop offset="100%" stopColor="#22c55e" />
+            <stop offset="100%" stopColor="#8cff00" />
           </linearGradient>
 
           {/* Shadows */}
@@ -73,10 +73,10 @@ export default function WishlistHeroIllustration() {
           {/* Soil */}
           <ellipse cx="26" cy="40" rx="12" ry="3" fill="#475569" />
           {/* Leaves */}
-          <path d="M26 39 Q20 22 10 24 Q16 32 24 39 Z" fill="#15803d" />
-          <path d="M26 39 Q26 12 18 10 Q22 24 26 39 Z" fill="#22c55e" />
-          <path d="M26 39 Q32 18 40 18 Q34 28 27 39 Z" fill="#16a34a" />
-          <path d="M26 39 Q36 28 44 32 Q36 38 28 40 Z" fill="#4ade80" />
+          <path d="M26 39 Q20 22 10 24 Q16 32 24 39 Z" fill="#448000" />
+          <path d="M26 39 Q26 12 18 10 Q22 24 26 39 Z" fill="#8cff00" />
+          <path d="M26 39 Q32 18 40 18 Q34 28 27 39 Z" fill="#448000" />
+          <path d="M26 39 Q36 28 44 32 Q36 38 28 40 Z" fill="#8cff00" />
         </g>
 
         {/* 3. Phone leaning at the left of Laptop */}
@@ -154,7 +154,7 @@ export default function WishlistHeroIllustration() {
           {/* Trackpad Notch */}
           <rect x="108" y="154" width="40" height="3" rx="1.5" fill="#090d16" />
           {/* Subtle Keyboard Glow Line */}
-          <line x1="20" y1="156" x2="236" y2="156" stroke="#4ade80" strokeWidth="1.5" strokeOpacity="0.4" />
+          <line x1="20" y1="156" x2="236" y2="156" stroke="#8cff00" strokeWidth="1.5" strokeOpacity="0.4" />
         </g>
 
         {/* 5. Right Potted Plant (on floor) */}
@@ -166,11 +166,11 @@ export default function WishlistHeroIllustration() {
           <ellipse cx="36" cy="80" rx="20" ry="5" fill="#f1f5f9" />
           <ellipse cx="36" cy="80" rx="18" ry="4" fill="#334155" />
           {/* Tall Tropical Leaves */}
-          <path d="M36 78 Q22 40 14 18 Q26 30 36 78 Z" fill="#15803d" />
-          <path d="M36 78 Q36 28 42 6 Q44 26 36 78 Z" fill="#22c55e" />
-          <path d="M36 78 Q52 42 66 22 Q54 44 38 78 Z" fill="#16a34a" />
-          <path d="M36 78 Q48 58 68 52 Q56 66 38 78 Z" fill="#4ade80" />
-          <path d="M36 78 Q20 54 4 48 Q16 62 34 78 Z" fill="#16a34a" />
+          <path d="M36 78 Q22 40 14 18 Q26 30 36 78 Z" fill="#448000" />
+          <path d="M36 78 Q36 28 42 6 Q44 26 36 78 Z" fill="#8cff00" />
+          <path d="M36 78 Q52 42 66 22 Q54 44 38 78 Z" fill="#448000" />
+          <path d="M36 78 Q48 58 68 52 Q56 66 38 78 Z" fill="#8cff00" />
+          <path d="M36 78 Q20 54 4 48 Q16 62 34 78 Z" fill="#448000" />
         </g>
 
         {/* 6. Floating Round White Badge with Green Heart (above-left) */}
@@ -193,7 +193,7 @@ export default function WishlistHeroIllustration() {
         <g className="ksam-wishlist-sparkle-1" transform="translate(426, 48)">
           <path
             d="M10 0 L12 7 L19 10 L12 13 L10 20 L8 13 L1 10 L8 7 Z"
-            fill="#4ade80"
+            fill="#8cff00"
             filter="url(#softGlowSparkle)"
           />
         </g>
@@ -202,14 +202,14 @@ export default function WishlistHeroIllustration() {
         <g className="ksam-wishlist-sparkle-2" transform="translate(90, 80)">
           <path
             d="M8 0 L9.5 5.5 L15 8 L9.5 10.5 L8 16 L6.5 10.5 L1 8 L6.5 5.5 Z"
-            fill="#22c55e"
+            fill="#8cff00"
           />
         </g>
 
         {/* Sparkle 3 (Small dot near right plant) */}
-        <circle cx="474" cy="116" r="3.5" fill="#4ade80" opacity="0.85" />
-        <circle cx="106" cy="164" r="2.5" fill="#86efac" opacity="0.8" />
-        <circle cx="400" cy="94" r="2" fill="#22c55e" opacity="0.75" />
+        <circle cx="474" cy="116" r="3.5" fill="#8cff00" opacity="0.85" />
+        <circle cx="106" cy="164" r="2.5" fill="#a8ff3e" opacity="0.8" />
+        <circle cx="400" cy="94" r="2" fill="#8cff00" opacity="0.75" />
       </svg>
     </div>
   );

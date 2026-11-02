@@ -19,7 +19,7 @@ const features = [
     icon: Search,
     title: "One Search",
     text: "Search products without opening multiple shopping apps.",
-    accent: "#22FF88",
+    accent: "#8cff00",
     visual: "search",
   },
   {
@@ -140,10 +140,10 @@ function CompareVisual({ shown }) {
               style={{
                 width: shown ? `${w}%` : "0%",
                 transitionDelay: `${500 + i * 160}ms`,
-                background: best ? "linear-gradient(90deg,#38BDF8,#22FF88)" : "rgba(255,255,255,.14)",
+                background: best ? "linear-gradient(90deg,#38BDF8,#8cff00)" : "rgba(255,255,255,.14)",
               }} />
           </div>
-          <span className={`ft-bar-price ${best ? "text-[#22FF88]" : "text-white/45"}`}>{price}</span>
+          <span className={`ft-bar-price ${best ? "text-[#8cff00]" : "text-white/45"}`}>{price}</span>
         </div>
       ))}
     </div>
@@ -179,7 +179,7 @@ function StoresVisual() {
     <div className="ft-vis-stores">
       {["A", "B", "C", "D"].map((l, i) => (
         <span key={l} className="ft-avatar"
-          style={{ background: ["#22FF88", "#38BDF8", "#A855F7", "#FFD60A"][i], animationDelay: `${i * 220}ms` }}>
+          style={{ background: ["#8cff00", "#38BDF8", "#A855F7", "#FFD60A"][i], animationDelay: `${i * 220}ms` }}>
           {l}
         </span>
       ))}
@@ -302,7 +302,7 @@ function Features() {
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="ft-dots absolute inset-0" />
         <div className="ft-par absolute" style={{ "--k": 1, left: "-4rem", top: "8rem" }}>
-          <div className="ft-float ft-blur h-96 w-96 rounded-full bg-[#22FF88]/[0.06]" />
+          <div className="ft-float ft-blur h-96 w-96 rounded-full bg-[#8cff00]/[0.06]" />
         </div>
         <div className="ft-par absolute" style={{ "--k": -1.3, right: "-3rem", bottom: "6rem" }}>
           <div className="ft-float ft-blur h-96 w-96 rounded-full bg-[#38BDF8]/[0.06]" style={{ animationDelay: "-7s" }} />
@@ -313,7 +313,7 @@ function Features() {
         {/* Header */}
         <div ref={headRef} className="ft-head" style={revealStyle(headShown, 0, 40)}>
           <div className="ft-head-left">
-            <p className="ft-eyebrow text-sm font-bold uppercase text-[#22FF88]">
+            <p className="ft-eyebrow text-sm font-bold uppercase text-[#8cff00]">
               <span className="ft-eyebrow-line" />
               WHY KSAM DEAL
             </p>
@@ -376,7 +376,7 @@ function Features() {
           mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 75%);
         }
         .ft-gradient-text {
-          background: linear-gradient(90deg, #38BDF8, #22FF88, #A855F7, #38BDF8);
+          background: linear-gradient(90deg, #38BDF8, #8cff00, #A855F7, #38BDF8);
           background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
           color: transparent; animation: ftShift 6s linear infinite;
         }
@@ -388,9 +388,9 @@ function Features() {
         .ft-section .ft-head-left { display: flex; flex-direction: column; gap: 1.5rem; max-width: 44rem; }
         .ft-section .ft-head-right { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; max-width: 26rem; }
         .ft-section .ft-eyebrow { display: flex; align-items: center; gap: .875rem; letter-spacing: .3em; }
-        .ft-section .ft-eyebrow-line { display: block; width: 2rem; height: 1px; background: linear-gradient(90deg, transparent, #22FF88); }
+        .ft-section .ft-eyebrow-line { display: block; width: 2rem; height: 1px; background: linear-gradient(90deg, transparent, #8cff00); }
         .ft-section .ft-link { display: inline-flex; align-items: center; gap: .625rem; padding: .75rem 1.25rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); font-size: .875rem; font-weight: 700; color: #fff; transition: all .3s ease; }
-        .ft-section .ft-link:hover { border-color: rgba(34,255,136,.5); color: #22FF88; background: rgba(34,255,136,.06); }
+        .ft-section .ft-link:hover { border-color: rgba(140, 255, 0, .5); color: #8cff00; background: rgba(140, 255, 0, .06); }
 
         .ft-section .ft-grid { margin-top: 4rem; display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
 
@@ -421,7 +421,7 @@ function Features() {
 
         /* mini visuals */
         .ft-section .ft-vis-search { display: flex; align-items: center; gap: .75rem; width: 100%; padding: .75rem 1rem; border-radius: .875rem; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); min-height: 2.75rem; }
-        .ft-section .ft-caret { width: 2px; height: 1.1rem; background: #22FF88; animation: ftBlink 1s steps(2) infinite; }
+        .ft-section .ft-caret { width: 2px; height: 1.1rem; background: #8cff00; animation: ftBlink 1s steps(2) infinite; }
         .ft-section .ft-vis-compare { display: flex; flex-direction: column; gap: .625rem; width: 100%; }
         .ft-section .ft-bar-row { display: grid; grid-template-columns: 3.5rem 1fr 3.5rem; align-items: center; gap: .75rem; font-size: .75rem; }
         .ft-section .ft-bar-label { color: rgba(255,255,255,.4); }
@@ -442,11 +442,11 @@ function Features() {
 
         /* CTA strip */
         .ft-section .ft-cta { margin-top: 4rem; display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: 1.75rem; border-radius: 24px; border: 1px solid rgba(255,255,255,.1);
-          background: linear-gradient(120deg, rgba(34,255,136,.07), rgba(56,189,248,.05) 50%, rgba(168,85,247,.07)); }
+          background: linear-gradient(120deg, rgba(140, 255, 0, .07), rgba(56,189,248,.05) 50%, rgba(168,85,247,.07)); }
         .ft-section .ft-cta-text { display: flex; flex-direction: column; gap: .5rem; }
         .ft-section .ft-cta-btn { position: relative; display: inline-flex; align-items: center; gap: .75rem; padding: 1rem 1.75rem; overflow: hidden; border-radius: 1rem; font-size: .875rem; font-weight: 900; color: #050505;
-          background: linear-gradient(90deg, #22FF88, #38BDF8); transition: box-shadow .3s ease, transform .3s ease; }
-        .ft-section .ft-cta-btn:hover { box-shadow: 0 0 40px rgba(34,255,136,.35); transform: translateY(-2px); }
+          background: linear-gradient(90deg, #8cff00, #38BDF8); transition: box-shadow .3s ease, transform .3s ease; }
+        .ft-section .ft-cta-btn:hover { box-shadow: 0 0 40px rgba(140, 255, 0, .35); transform: translateY(-2px); }
         .ft-section .ft-shine { position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent); transition: transform .7s ease; }
         .ft-section .ft-cta-btn:hover .ft-shine { transform: translateX(100%); }
 

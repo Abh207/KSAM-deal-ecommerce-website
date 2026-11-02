@@ -50,7 +50,7 @@
   width: clamp(320px, 45vw, 650px);
   height: clamp(320px, 45vw, 650px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 255, 136, 0.22) 0%, rgba(163, 230, 53, 0.12) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(140, 255, 0, 0.22) 0%, rgba(163, 230, 53, 0.12) 45%, transparent 70%);
   filter: blur(65px);
   animation: ksamAuroraDrift1 22s ease-in-out infinite alternate;
 }
@@ -87,7 +87,7 @@
   inset: -50% -50% 0 -50%;
   height: 200%;
   background-image: 
-    linear-gradient(rgba(34, 255, 136, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(140, 255, 0, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
   background-size: 60px 60px;
   transform: perspective(600px) rotateX(68deg) translateY(-20%);
@@ -149,10 +149,10 @@
   width: 96%;
   height: 96%;
   border-width: 1.8px;
-  border-color: rgba(34, 255, 136, 0.65);
+  border-color: rgba(140, 255, 0, 0.65);
   box-shadow: 
-    0 0 25px rgba(34, 255, 136, 0.35),
-    inset 0 0 20px rgba(34, 255, 136, 0.2);
+    0 0 25px rgba(140, 255, 0, 0.35),
+    inset 0 0 20px rgba(140, 255, 0, 0.2);
   transform: rotateX(68deg) rotateY(18deg);
   animation: ksamSpin3D-1 18s linear infinite;
 }
@@ -168,8 +168,8 @@
   border-radius: 50%;
   background: #ffffff;
   box-shadow: 
-    0 0 14px #22ff88,
-    0 0 28px #22ff88;
+    0 0 14px #8cff00,
+    0 0 28px #8cff00;
   transform: translateX(-50%);
 }
 
@@ -219,7 +219,7 @@
   width: 70%;
   height: 70%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 255, 136, 0.3) 0%, rgba(6, 182, 212, 0.18) 45%, transparent 75%);
+  background: radial-gradient(circle, rgba(140, 255, 0, 0.3) 0%, rgba(6, 182, 212, 0.18) 45%, transparent 75%);
   filter: blur(28px);
   animation: ksamCoreGlowPulse 4s ease-in-out infinite alternate;
 }
@@ -236,7 +236,7 @@
   background: radial-gradient(
     circle at 35% 30%,
     rgba(255, 255, 255, 0.28) 0%,
-    rgba(34, 255, 136, 0.25) 28%,
+    rgba(140, 255, 0, 0.25) 28%,
     rgba(6, 182, 212, 0.18) 55%,
     rgba(7, 18, 17, 0.88) 95%
   );
@@ -244,10 +244,10 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 
-    0 0 35px rgba(34, 255, 136, 0.45),
+    0 0 35px rgba(140, 255, 0, 0.45),
     0 0 70px rgba(6, 182, 212, 0.25),
     inset 0 0 25px rgba(255, 255, 255, 0.2),
-    inset 0 0 45px rgba(34, 255, 136, 0.35);
+    inset 0 0 45px rgba(140, 255, 0, 0.35);
   transform-style: preserve-3d;
   animation: ksamOrbBreath 4.5s ease-in-out infinite alternate;
   z-index: 5;
@@ -259,7 +259,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, transparent 50%, rgba(34, 255, 136, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, transparent 50%, rgba(140, 255, 0, 0.15) 100%);
   pointer-events: none;
 }
 
@@ -272,7 +272,7 @@
   justify-content: center;
   width: 58%;
   height: 58%;
-  filter: drop-shadow(0 0 12px rgba(34, 255, 136, 0.8));
+  filter: drop-shadow(0 0 12px rgba(140, 255, 0, 0.8));
   animation: ksamEmblemFloat 3s ease-in-out infinite alternate;
 }
 
@@ -305,9 +305,9 @@
 .ksam-badge-hot-deal {
   top: 6%;
   right: -6%;
-  background: linear-gradient(135deg, rgba(34, 255, 136, 0.22), rgba(6, 182, 212, 0.12));
-  border-color: rgba(34, 255, 136, 0.4);
-  box-shadow: 0 0 20px rgba(34, 255, 136, 0.25);
+  background: linear-gradient(135deg, rgba(140, 255, 0, 0.22), rgba(6, 182, 212, 0.12));
+  border-color: rgba(140, 255, 0, 0.4);
+  box-shadow: 0 0 20px rgba(140, 255, 0, 0.25);
   animation: ksamFloatBadge1 6.5s ease-in-out infinite alternate;
 }
 
@@ -330,7 +330,7 @@
   height: 58px;
   border-radius: 10px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(34, 255, 136, 0.25);
+  border: 1px solid rgba(140, 255, 0, 0.25);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -347,7 +347,7 @@
   width: 100%;
   height: 52%;
   border-radius: 6px;
-  background: linear-gradient(135deg, rgba(34, 255, 136, 0.25), rgba(6, 182, 212, 0.15));
+  background: linear-gradient(135deg, rgba(140, 255, 0, 0.25), rgba(6, 182, 212, 0.15));
 }
 
 .ksam-mini-card-line {
@@ -359,7 +359,7 @@
 
 .ksam-mini-card-line.short {
   width: 50%;
-  background: rgba(34, 255, 136, 0.5);
+  background: rgba(140, 255, 0, 0.5);
 }
 
 /* Floating Mini Card 2 (Bottom Right) */
@@ -420,11 +420,11 @@
 }
 
 .ksam-word-deal {
-  background: linear-gradient(135deg, #22ff88 0%, #38bdf8 100%);
+  background: linear-gradient(135deg, #8cff00 0%, #38bdf8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 25px rgba(34, 255, 136, 0.55));
+  filter: drop-shadow(0 0 25px rgba(140, 255, 0, 0.55));
   display: inline-block;
   animation: ksamBrandReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -457,8 +457,8 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: #22ff88;
-  box-shadow: 0 0 8px #22ff88;
+  background-color: #8cff00;
+  box-shadow: 0 0 8px #8cff00;
 }
 
 /* --------------------------------------------------------------------------
@@ -492,9 +492,9 @@
   left: 0;
   height: 100%;
   border-radius: 9999px;
-  background: linear-gradient(90deg, #10b981 0%, #22ff88 40%, #38bdf8 80%, #a855f7 100%);
+  background: linear-gradient(90deg, #8cff00 0%, #8cff00 40%, #38bdf8 80%, #a855f7 100%);
   box-shadow: 
-    0 0 16px rgba(34, 255, 136, 0.8),
+    0 0 16px rgba(140, 255, 0, 0.8),
     0 0 32px rgba(56, 189, 248, 0.5);
   transition: width 0.1s linear;
   will-change: width;
@@ -547,12 +547,12 @@
 }
 
 .ksam-loader-status-pct {
-  color: #22ff88;
+  color: #8cff00;
   font-weight: 800;
   letter-spacing: 0.06em;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 10px rgba(34, 255, 136, 0.5);
+  text-shadow: 0 0 10px rgba(140, 255, 0, 0.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -692,15 +692,15 @@
 
 .ksam-loader-skip-btn:hover {
   background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(34, 255, 136, 0.45);
+  border-color: rgba(140, 255, 0, 0.45);
   color: #ffffff;
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .ksam-loader-skip-btn:focus-visible {
-  border-color: #22ff88;
-  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.35);
+  border-color: #8cff00;
+  box-shadow: 0 0 0 2px rgba(140, 255, 0, 0.35);
 }
 
 /* --------------------------------------------------------------------------

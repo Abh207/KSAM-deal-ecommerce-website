@@ -31,16 +31,16 @@ function WishlistProductCard({
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
   const [cardImage, setCardImage] = useState(() => resolveImagePath(product.image));
 
-  // Determine colors: product.colors if available (up to 4), else fallback [#15803d, #111111, #a3a3a3]
+  // Determine colors: product.colors if available (up to 4), else fallback [#448000, #111111, #a3a3a3]
   const colors = useMemo(() => {
     if (Array.isArray(product.colors) && product.colors.length > 0) {
       return product.colors.slice(0, 4).map((c) => {
         if (typeof c === "string") return { hex: c };
-        return { hex: c.hex || c.color || "#15803d", image: c.image };
+        return { hex: c.hex || c.color || "#448000", image: c.image };
       });
     }
     return [
-      { hex: "#15803d" },
+      { hex: "#448000" },
       { hex: "#111111" },
       { hex: "#a3a3a3" }
     ];

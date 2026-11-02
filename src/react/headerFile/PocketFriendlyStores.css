@@ -38,10 +38,10 @@
     width: 40px;
     height: 40px;
     padding: 0;
-    border: 1px solid rgba(34, 255, 136, 0.25);
+    border: 1px solid rgba(140, 255, 0, 0.25);
     border-radius: 50%;
-    background: rgba(34, 255, 136, 0.08);
-    color: #22ff88;
+    background: rgba(140, 255, 0, 0.08);
+    color: #8cff00;
     font-size: 20px;
     line-height: 1;
     cursor: pointer;
@@ -53,9 +53,9 @@
 
 .pocket-header-arrow:hover {
     transform: translateX(4px);
-    background: #22ff88;
+    background: #8cff00;
     color: #030303;
-    box-shadow: 0 0 16px rgba(34, 255, 136, 0.35);
+    box-shadow: 0 0 16px rgba(140, 255, 0, 0.35);
 }
 
 /* ========================================
@@ -101,8 +101,8 @@
 }
 
 .pocket-store-card:hover .pocket-store-image-wrapper {
-    border-color: rgba(34, 255, 136, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(34, 255, 136, 0.12);
+    border-color: rgba(140, 255, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(140, 255, 0, 0.12);
 }
 
 .pocket-store-card:hover .pocket-store-image {

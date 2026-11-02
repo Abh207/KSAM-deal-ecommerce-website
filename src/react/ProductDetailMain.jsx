@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Star,
@@ -11,7 +11,8 @@ import {
   Truck,
   RotateCcw,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  ArrowUp
 } from "lucide-react";
 
 import Navbar from "../deals/components/Navbar.jsx";
@@ -40,6 +41,14 @@ import { getCategoryPage, getCategoryBackLabel } from "../lib/categoryPageMap.js
 import { ProductCard } from "../deals/components/ProductCard.jsx";
 import { getCategoryProducts } from "./headerFile/categoryDataMap.js";
 import { getCategoryConfigBySlug, mapCategoryDisplayLabel, USD_TO_INR_RATE } from "./headerFile/categoryConfig.js";
+import { slugify } from "../lib/productCatalog.js";
+
+import ProductListVideoHeader from "./ProductListVideoHeader.jsx";
+import TrendingDealsCarousel from "./TrendingDealsCarousel.jsx";
+import ProductListFeedback from "./ProductListFeedback.jsx";
+import CategoryTilesSection, { deriveProductSubCategory } from "./common/CategoryTilesSection.jsx";
+import FlashSaleBanner from "./common/FlashSaleBanner.jsx";
+import ProductReviewsSection from "./common/ProductReviewsSection.jsx";
 
 import "./productDetail.css";
 
@@ -217,25 +226,103 @@ function getKeyFeatures(product) {
   ];
 }
 
-function CategoryListingView({ categorySlug }) {
+function CategoryListingView({ categorySlug: initialCategorySlug }) {
   const base = import.meta.env.BASE_URL || "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
   const homeUrl = normalizedBase;
   const shopUrl = `${normalizedBase}shop.html`;
 
-  const config = getCategoryConfigBySlug(categorySlug);
-  const categoryLabel = config?.label || mapCategoryDisplayLabel(categorySlug);
-  const searchPlaceholder = config?.searchPlaceholder || `Search ${categoryLabel.toLowerCase()}...`;
-
+  const [currentCategory, setCurrentCategory] = useState(initialCategorySlug || "fashion");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("All");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("featured");
+  const [viewLayout, setViewLayout] = useState("grid");
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  const pageBgVideoRef = useRef(null);
+
+  const config = getCategoryConfigBySlug(currentCategory);
+  const categoryLabel = config?.label || mapCategoryDisplayLabel(currentCategory);
+  const searchPlaceholder = config?.searchPlaceholder || `Search ${categoryLabel.toLowerCase()}...`;
+
+  // Background video asset paths
+  const listBgMp4 = `${normalizedBase}assets/videos/list-bg.mp4`;
+  const listBgMobileMp4 = `${normalizedBase}assets/videos/list-bg_mobile.mp4`;
+  const listBgWebm = `${normalizedBase}assets/videos/list-bg.webm`;
+  const listBgMobileWebm = `${normalizedBase}assets/videos/list-bg_mobile.webm`;
+  const listBgPoster = `${normalizedBase}assets/videos/list-bg-poster.webp`;
+
+  // Check prefers-reduced-motion & slow connection
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const saveData = Boolean(navigator.connection?.saveData);
+    const slowConn = ["slow-2g", "2g", "3g"].includes(navigator.connection?.effectiveType);
+    setPrefersReducedMotion(mq.matches || saveData || slowConn);
+  }, []);
+
+  // Background video playback lifecycle
+  useEffect(() => {
+    if (prefersReducedMotion || !pageBgVideoRef.current) return;
+    const v = pageBgVideoRef.current;
+    const play = () => v.play().catch(() => {});
+    if (document.readyState === "complete") {
+      play();
+    } else {
+      window.addEventListener("load", play, { once: true });
+    }
+    const handleVis = () => {
+      if (document.hidden) v.pause();
+      else v.play().catch(() => {});
+    };
+    document.addEventListener("visibilitychange", handleVis);
+    return () => document.removeEventListener("visibilitychange", handleVis);
+  }, [prefersReducedMotion]);
+
+  // Listen to popstate (browser back/forward)
+  useEffect(() => {
+    const handlePopState = () => {
+      const p = new URLSearchParams(window.location.search);
+      const cat = p.get("category") || "fashion";
+      setCurrentCategory(cat);
+      setSelectedSubCategory("All");
+      setSearchQuery("");
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Floating scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSelectCategory = (newSlug) => {
+    if (newSlug === currentCategory) return;
+    setCurrentCategory(newSlug);
+    setSelectedSubCategory("All");
+    setSearchQuery("");
+    const newUrl = `${normalizedBase}product.html?view=list&category=${encodeURIComponent(newSlug)}`;
+    window.history.pushState({ category: newSlug }, "", newUrl);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    document.title = `${categoryLabel} | KSAM Deal`;
+    document.title = `${categoryLabel} Collection | KSAM Deal`;
 
-    const rawList = getCategoryProducts(categorySlug);
-    const isFashion = String(categorySlug).toLowerCase().trim() === "fashion";
+    const rawList = getCategoryProducts(currentCategory);
+    const isFashion = String(currentCategory).toLowerCase().trim() === "fashion";
 
     const normalized = (rawList || []).map((p, idx) => {
       let price = Number(p.price) || 0;
@@ -266,65 +353,195 @@ function CategoryListingView({ categorySlug }) {
         stock: p.stock !== undefined ? p.stock : 25,
         image: p.image || p.image_url || DEFAULT_PLACEHOLDER_IMAGE,
         description: p.description || p.desc || getProductDescription(p),
-        from: categorySlug
+        from: "list"
       };
     });
 
     setProducts(normalized);
     setLoading(false);
-  }, [categorySlug, categoryLabel]);
+  }, [currentCategory, categoryLabel]);
+
+  // Max discount for stats chip
+  const maxDiscount = React.useMemo(() => {
+    if (!products.length) return 0;
+    return Math.max(0, ...products.map((p) => p.discount || 0));
+  }, [products]);
+
+  // Filter & sort products (sub-category + search + sort)
+  const displayProducts = React.useMemo(() => {
+    let result = [...products];
+
+    // Sub-category filter
+    if (selectedSubCategory && selectedSubCategory !== "All") {
+      result = result.filter(
+        (p) => deriveProductSubCategory(p, currentCategory) === selectedSubCategory
+      );
+    }
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        (p) =>
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.brand && p.brand.toLowerCase().includes(q)) ||
+          (p.description && p.description.toLowerCase().includes(q)) ||
+          (p.category && p.category.toLowerCase().includes(q))
+      );
+    }
+
+    // Sort
+    if (sortBy === "price-asc") {
+      result.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+    } else if (sortBy === "price-desc") {
+      result.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+    } else if (sortBy === "discount-desc") {
+      result.sort((a, b) => (Number(b.discount) || 0) - (Number(a.discount) || 0));
+    } else if (sortBy === "rating-desc") {
+      result.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+    }
+
+    return result;
+  }, [products, selectedSubCategory, searchQuery, sortBy, currentCategory]);
 
   return (
     <div className="product-detail-page product-list-mode-page">
+      {/* TASK 6: Fixed Full-Page Background Video behind list mode */}
+      <div className="product-list-page-video-wrap" aria-hidden="true">
+        {!prefersReducedMotion ? (
+          <video
+            ref={pageBgVideoRef}
+            className="product-list-page-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={listBgPoster}
+          >
+            <source media="(max-width: 768px)" src={listBgMobileWebm} type="video/webm" />
+            <source media="(max-width: 768px)" src={listBgMobileMp4} type="video/mp4" />
+            <source src={listBgWebm} type="video/webm" />
+            <source src={listBgMp4} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            src={listBgPoster}
+            alt=""
+            className="product-list-page-poster"
+            loading="eager"
+            decoding="async"
+          />
+        )}
+        {/* Dark Video Overlay */}
+        <div className="product-list-page-video-overlay" />
+      </div>
+
       <Navbar searchPlaceholder={searchPlaceholder} />
-      <main className="product-list-main">
+
+      {/* Video Header Hero Band */}
+      <ProductListVideoHeader
+        categorySlug={currentCategory}
+        categoryLabel={categoryLabel}
+        categoryConfig={config}
+        totalProductsCount={products.length}
+        maxDiscount={maxDiscount}
+        onSelectCategory={handleSelectCategory}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        viewLayout={viewLayout}
+        setViewLayout={setViewLayout}
+        filteredCount={displayProducts.length}
+      />
+
+      {/* TASK 2: Category Tiles Section (Data-Driven Sub-Categories) */}
+      <CategoryTilesSection
+        categorySlug={currentCategory}
+        categoryLabel={categoryLabel}
+        products={products}
+        selectedSubCategory={selectedSubCategory}
+        onSelectSubCategory={setSelectedSubCategory}
+      />
+
+      {/* TASK 1: Flash-Sale Drop Banner (with rotating clock-hand green sweep) */}
+      <FlashSaleBanner
+        categorySlug={currentCategory}
+        categoryLabel={categoryLabel}
+        products={products}
+      />
+
+      <main className="product-list-main" id="products-grid">
         <div className="product-list-container">
-          {/* Breadcrumb Navigation: Home / Shop / Category */}
-          <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
-            <a href={homeUrl}>Home</a>
-            <span className="sep">/</span>
-            <a href={shopUrl}>Shop</a>
-            <span className="sep">/</span>
-            <span className="current">{categoryLabel}</span>
-          </nav>
-
-          {/* Category Header */}
-          <header className="product-list-header">
-            <div className="product-list-header-left">
-              <span className="product-list-badge">{categoryLabel}</span>
-              <h1 className="product-list-title">{categoryLabel} Collection</h1>
-              <p className="product-list-subtitle">
-                {products.length} {products.length === 1 ? "Product" : "Products"} Available
-              </p>
-            </div>
-            <a href={shopUrl} className="product-list-back-btn" aria-label="Back to Shop">
-              <ArrowLeft size={16} />
-              <span>Back to Shop</span>
-            </a>
-          </header>
-
-          {/* Product Grid: 4 per row desktop, 2 per row mobile */}
+          {/* Product Grid / List view */}
           {loading ? (
-            <div className="product-list-loading">Loading {categoryLabel} products...</div>
-          ) : products.length > 0 ? (
-            <div className="product-list-grid">
-              {products.map((item) => (
+            <div className="product-list-loading">
+              <div className="product-list-spinner" />
+              <span>Loading {categoryLabel} products...</span>
+            </div>
+          ) : displayProducts.length > 0 ? (
+            <div className={`product-list-grid ${viewLayout === "list" ? "is-list-view" : ""}`}>
+              {displayProducts.map((item) => (
                 <ProductCard key={item.uid || item.id} product={item} />
               ))}
             </div>
           ) : (
             <div className="product-list-empty">
-              <AlertCircle size={40} className="product-list-empty-icon" />
-              <h2>No products found in this category</h2>
-              <p>Explore other categories in the KSAM Deal shop.</p>
-              <a href={shopUrl} className="deal-view-btn">
-                <span>Explore Shop</span>
-                <ArrowRight size={16} />
-              </a>
+              <AlertCircle size={44} className="product-list-empty-icon" />
+              <h2>No matching products found</h2>
+              <p>
+                {searchQuery
+                  ? `No items in ${categoryLabel} match "${searchQuery}".`
+                  : selectedSubCategory !== "All"
+                  ? `No items found in sub-category "${selectedSubCategory}".`
+                  : `No products available in this category.`}
+              </p>
+              {searchQuery ? (
+                <button
+                  type="button"
+                  className="product-list-reset-btn"
+                  onClick={() => setSearchQuery("")}
+                >
+                  Clear Search
+                </button>
+              ) : selectedSubCategory !== "All" ? (
+                <button
+                  type="button"
+                  className="product-list-reset-btn"
+                  onClick={() => setSelectedSubCategory("All")}
+                >
+                  View All {categoryLabel}
+                </button>
+              ) : (
+                <a href={shopUrl} className="deal-view-btn">
+                  <span>Explore Shop</span>
+                  <ArrowRight size={16} />
+                </a>
+              )}
             </div>
           )}
         </div>
+
+        {/* TASK 5: Auto-Moving Trending Deals Section (Images 7 & 8 style) */}
+        <TrendingDealsCarousel currentCategorySlug={currentCategory} />
+
+        {/* TASK 4: Feedback Section at the END of the page */}
+        <ProductListFeedback categorySlug={currentCategory} />
       </main>
+
+      {/* Floating Scroll To Top Button */}
+      {showScrollTop && (
+        <button
+          type="button"
+          className="product-list-scroll-top-btn"
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          title="Scroll to top"
+        >
+          <ArrowUp size={20} />
+        </button>
+      )}
     </div>
   );
 }
@@ -336,6 +553,7 @@ function ProductSingleDetail() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
   const [activeImage, setActiveImage] = useState("");
+  const [dynamicRating, setDynamicRating] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedSize, setSelectedSize] = useState("");
   const [sizeError, setSizeError] = useState("");
@@ -512,7 +730,8 @@ function ProductSingleDetail() {
 
   // 1. Explicit ?from= parameter takes highest precedence
   let origin = null;
-  if (fromParam === "wishlist") origin = "wishlist";
+  if (fromParam === "list") origin = "list";
+  else if (fromParam === "wishlist") origin = "wishlist";
   else if (fromParam === "deals") origin = "deals";
   else if (fromParam === "audio" || fromParam === "speakers" || fromParam === "gadgets") origin = "audio";
   else if (fromParam === "electronics") origin = "electronics";
@@ -559,6 +778,7 @@ function ProductSingleDetail() {
     }
   }
 
+  const isFromList = origin === "list" || fromParam === "list";
   const isFromWishlist = origin === "wishlist";
   const isFromDeals = origin === "deals";
   const isFromAudio = origin === "audio";
@@ -608,7 +828,9 @@ function ProductSingleDetail() {
     const id = relProd.id !== undefined && relProd.id !== null ? relProd.id : "";
     const category = relProd.category || "";
     const uid = relProd.uid || buildProductUid(category, id);
-    const fromParam = isFromDeals
+    const fromParam = isFromList
+      ? "&from=list"
+      : isFromDeals
       ? "&from=deals"
       : isFromAudio
       ? "&from=audio"
@@ -624,7 +846,13 @@ function ProductSingleDetail() {
 
   // Back link destinations & labels
   const fallbackCat = product?.category || params.get("category") || "";
-  const backUrl = isFromDeals
+  const listTargetCat = catParam || prodCat || fallbackCat || "fashion";
+  const listTargetSlug = slugify(listTargetCat);
+  const listTargetLabel = mapCategoryDisplayLabel(listTargetSlug);
+
+  const backUrl = isFromList
+    ? `${normalizedBase}product.html?view=list&category=${encodeURIComponent(listTargetSlug)}`
+    : isFromDeals
     ? dealsUrl
     : isFromAudio
     ? `${normalizedBase}audio.html`
@@ -652,7 +880,9 @@ function ProductSingleDetail() {
     ? `${normalizedBase}${getCategoryPage(fallbackCat)}`
     : dealsUrl;
 
-  const backLabel = isFromDeals
+  const backLabel = isFromList
+    ? `Back to ${listTargetLabel}`
+    : isFromDeals
     ? "Back to Deals"
     : isFromAudio
     ? "Back to Audio"
@@ -685,7 +915,7 @@ function ProductSingleDetail() {
       <div className="product-detail-page">
         <Navbar />
         <main className="product-detail-main">
-          <div style={{ textAlign: "center", padding: "100px 20px", color: "#16a34a", fontSize: "18px", fontWeight: 600 }}>
+          <div style={{ textAlign: "center", padding: "100px 20px", color: "#448000", fontSize: "18px", fontWeight: 600 }}>
             Loading product details...
           </div>
         </main>
@@ -779,8 +1009,8 @@ function ProductSingleDetail() {
     ? Math.round(((rawOldPrice - product.price) / rawOldPrice) * 100)
     : 0;
 
-  const ratingVal = product.rating ? Number(product.rating) : 4.8;
-  const reviewsCount = product.reviews || product.review_count || (40 + Math.abs(String(product.id).length * 19));
+  const ratingVal = dynamicRating ? dynamicRating.avg : (product.rating ? Number(product.rating) : 4.8);
+  const reviewsCount = dynamicRating ? dynamicRating.count : (product.reviews || product.review_count || (40 + Math.abs(String(product.id).length * 19)));
   const description = getProductDescription(product);
   const keyFeatures = getKeyFeatures(product);
 
@@ -899,8 +1129,8 @@ function ProductSingleDetail() {
                 <Heart
                   size={20}
                   strokeWidth={2}
-                  fill={isWishlisted ? "#22c55e" : "none"}
-                  color={isWishlisted ? "#22c55e" : "#0f172a"}
+                  fill={isWishlisted ? "#8cff00" : "none"}
+                  color={isWishlisted ? "#8cff00" : "#0f172a"}
                 />
               </button>
 
@@ -1165,7 +1395,7 @@ function ProductSingleDetail() {
                             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                               <span className="product-detail-compare-price">{formatPrice(off.price)}</span>
                               {off.discountPercent > 0 && (
-                                <span style={{ fontSize: 11, fontWeight: 700, color: "#16a34a" }}>
+                                <span style={{ fontSize: 11, fontWeight: 700, color: "#448000" }}>
                                   -{off.discountPercent}%
                                 </span>
                               )}
@@ -1209,6 +1439,14 @@ function ProductSingleDetail() {
             </div>
           </div>
         </div>
+
+        {/* Verified Customer Reviews & Rating Breakdown */}
+        <ProductReviewsSection
+          productId={product.id || product.uid}
+          productTitle={product.name || product.title}
+          category={product.category}
+          onRatingCalculated={(avg, count) => setDynamicRating({ avg, count })}
+        />
 
         {/* Divider between main product block & Related Section */}
         {relatedProducts.length > 0 && <div className="product-detail-divider" />}

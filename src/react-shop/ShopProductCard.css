@@ -225,7 +225,7 @@
     margin: 0 0 16px;
     font-size: 12px;
     font-weight: 700;
-    color: #059669;
+    color: #448000;
 }
 
 /* Actions Row */
@@ -284,8 +284,8 @@
     padding: 0 16px;
     border-radius: 14px;
     background: #effdf4;
-    color: #15803d !important;
-    border: 1px solid #bbf7d0;
+    color: #3f7800 !important;
+    border: 1px solid rgba(140, 255, 0, 0.35);
     font-size: 13.5px;
     font-weight: 700;
     display: inline-flex;
@@ -301,7 +301,7 @@
 }
 
 .beauty-view-btn-arrow {
-    color: #15803d !important;
+    color: #3f7800 !important;
     transition: transform 0.25s ease, color 0.25s ease;
     display: inline-flex;
     align-items: center;
@@ -310,10 +310,10 @@
 /* Hover state ONLY on the button itself (wrapped in @media (hover: hover)) */
 @media (hover: hover) {
     .beauty-view-product-btn:hover {
-        background: #16a34a !important;
+        background: #448000 !important;
         color: #ffffff !important;
-        border-color: #16a34a !important;
-        box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
+        border-color: #448000 !important;
+        box-shadow: 0 6px 16px rgba(140, 255, 0, 0.35);
     }
 
     .beauty-view-product-btn:hover .beauty-view-btn-arrow {
@@ -324,11 +324,11 @@
 
 /* Keyboard focus (:focus-visible) shows hover style + visible focus ring */
 .beauty-view-product-btn:focus-visible {
-    background: #16a34a !important;
+    background: #448000 !important;
     color: #ffffff !important;
-    border-color: #16a34a !important;
-    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
-    outline: 2px solid #16a34a;
+    border-color: #448000 !important;
+    box-shadow: 0 6px 16px rgba(140, 255, 0, 0.35);
+    outline: 2px solid #448000;
     outline-offset: 2px;
 }
 
@@ -340,10 +340,10 @@
 /* Touch devices (hover: none): pressed state on tap (:active) */
 @media (hover: none) {
     .beauty-view-product-btn:active {
-        background: #16a34a !important;
+        background: #448000 !important;
         color: #ffffff !important;
-        border-color: #16a34a !important;
-        box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
+        border-color: #448000 !important;
+        box-shadow: 0 6px 16px rgba(140, 255, 0, 0.35);
     }
 
     .beauty-view-product-btn:active .beauty-view-btn-arrow {

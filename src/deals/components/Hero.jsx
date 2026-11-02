@@ -67,7 +67,7 @@ function Hero() {
                     h-72
                     w-72
                     rounded-full
-                    bg-[#22FF88]/10
+                    bg-[#8cff00]/10
                     blur-[100px]
                 "
             />
@@ -113,12 +113,12 @@ function Hero() {
                             gap-2
                             rounded-full
                             border
-                            border-[#22FF88]/20
-                            bg-[#22FF88]/5
+                            border-[#8cff00]/20
+                            bg-[#8cff00]/5
                             px-4
                             py-2
                             text-sm
-                            text-[#22FF88]
+                            text-[#8cff00]
                         "
                     >
 
@@ -151,7 +151,7 @@ function Hero() {
                             className="
                                 block
                                 bg-gradient-to-r
-                                from-[#22FF88]
+                                from-[#8cff00]
                                 via-white
                                 to-[#38BDF8]
                                 bg-clip-text
@@ -196,14 +196,14 @@ function Hero() {
                                 items-center
                                 gap-2
                                 rounded-xl
-                                bg-[#22FF88]
+                                bg-[#8cff00]
                                 px-6
                                 py-4
                                 font-black
                                 text-black
                                 transition
                                 hover:-translate-y-1
-                                hover:shadow-[0_0_35px_rgba(34,255,136,.3)]
+                                hover:shadow-[0_0_35px_rgba(140, 255, 0, .3)]
                             "
                         >
                             Explore Deals
@@ -259,7 +259,7 @@ function Hero() {
                         <span className="flex gap-2">
                             <ShieldCheck
                                 size={17}
-                                className="text-[#22FF88]"
+                                className="text-[#8cff00]"
                             />
                             Verified links
                         </span>
@@ -296,7 +296,7 @@ function Hero() {
                             h-72
                             w-72
                             rounded-full
-                            bg-[#22FF88]/10
+                            bg-[#8cff00]/10
                             blur-[100px]
                         "
                     />
@@ -347,7 +347,7 @@ function Hero() {
                                 Wireless Headphones
                             </p>
 
-                            <p className="mt-1 text-2xl font-black text-[#22FF88]">
+                            <p className="mt-1 text-2xl font-black text-[#8cff00]">
                                 ₹1,499
                             </p>
 

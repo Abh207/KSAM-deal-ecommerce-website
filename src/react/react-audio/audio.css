@@ -1396,7 +1396,7 @@ a {
 
 .audio-cycle-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4ade80, #8cff00);
+    background: linear-gradient(90deg, #8cff00, #8cff00);
     box-shadow: 0 0 8px #8cff00;
     transition: width 1s linear;
 }
@@ -1438,7 +1438,7 @@ a {
 .audio-claimed-fill {
     height: 100%;
     border-radius: 9999px;
-    background: linear-gradient(90deg, #10b981 0%, #8cff00 100%);
+    background: linear-gradient(90deg, #8cff00 0%, #8cff00 100%);
     box-shadow: 0 0 12px rgba(140, 255, 0, 0.5);
     animation: fillGrow 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -1673,7 +1673,7 @@ a {
 }
 
 .audio-lime-gradient-text {
-    background: linear-gradient(135deg, #8cff00 0%, #4ade80 100%);
+    background: linear-gradient(135deg, #8cff00 0%, #8cff00 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 30px rgba(140, 255, 0, 0.3);
@@ -1759,7 +1759,7 @@ a {
 
 .audio-spotlight-progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #4ade80, #8cff00);
+    background: linear-gradient(90deg, #8cff00, #8cff00);
     box-shadow: 0 0 8px #8cff00;
     animation: spotlightProgress linear forwards;
 }
@@ -2198,7 +2198,7 @@ a {
 }
 
 .audio-features-title-neon {
-    background: linear-gradient(135deg, #8cff00 0%, #22c55e 100%);
+    background: linear-gradient(135deg, #8cff00 0%, #8cff00 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -2609,8 +2609,8 @@ a {
 
 .watch-wishlist-btn.is-active,
 .watch-wishlist-btn.active {
-    color: #10b981 !important;
-    border-color: #10b981 !important;
+    color: #8cff00 !important;
+    border-color: #8cff00 !important;
     box-shadow: 0 0 14px rgba(16, 185, 129, 0.45) !important;
 }
 
@@ -2629,7 +2629,7 @@ a {
     font-weight: 800 !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
-    color: #15803d !important;
+    color: #448000 !important;
 }
 
 .watch-name {
@@ -2647,7 +2647,7 @@ a {
 }
 
 .watch-name a:hover {
-    color: #15803d !important;
+    color: #448000 !important;
 }
 
 .watch-brand {
@@ -2691,7 +2691,7 @@ a {
     margin: 0 0 16px !important;
     font-size: 13px !important;
     font-weight: 700 !important;
-    color: #15803d !important;
+    color: #448000 !important;
 }
 
 .watch-actions-row {
@@ -2720,14 +2720,14 @@ a {
 
 .watch-quick-cart-btn:hover:not(:disabled) {
     transform: translateY(-2px) !important;
-    background: #15803d !important;
-    border-color: #15803d !important;
+    background: #448000 !important;
+    border-color: #448000 !important;
     box-shadow: 0 4px 14px rgba(21, 128, 61, 0.35) !important;
 }
 
 .watch-quick-cart-btn.is-added {
-    background: #15803d !important;
-    border-color: #15803d !important;
+    background: #448000 !important;
+    border-color: #448000 !important;
     color: #ffffff !important;
 }
 
@@ -2742,8 +2742,8 @@ a {
     padding: 0 16px !important;
     border-radius: 12px !important;
     background: #f0fdf4 !important;
-    color: #15803d !important;
-    border: 1px solid #bbf7d0 !important;
+    color: #448000 !important;
+    border: 1px solid rgba(140, 255, 0, 0.35) !important;
     font-size: 13.5px !important;
     font-weight: 700 !important;
     text-decoration: none !important;
@@ -2757,9 +2757,9 @@ a {
 }
 
 .watch-view-btn:hover {
-    background: #dcfce7 !important;
-    border-color: #86efac !important;
-    color: #166534 !important;
+    background: rgba(140, 255, 0, 0.14) !important;
+    border-color: #a8ff3e !important;
+    color: #3f7800 !important;
     transform: translateY(-2px) !important;
 }
 
@@ -3038,7 +3038,7 @@ a {
 }
 
 .audio-product-price span {
-    color: #16a34a;
+    color: #448000;
 
     font-size: 10px;
 
@@ -3076,7 +3076,7 @@ a {
 
     margin-top: 12px;
 
-    color: #16a34a;
+    color: #448000;
 
     font-size: 9px;
 
@@ -3089,7 +3089,7 @@ a {
 
     border-radius: 50%;
 
-    background: #22c55e;
+    background: #8cff00;
 }
 
 
@@ -4058,12 +4058,12 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: #166534;
+    color: #3f7800;
     font-weight: 600;
 }
 
 .audio-meta-pin-icon {
-    color: #166534;
+    color: #3f7800;
     flex-shrink: 0;
 }
 
@@ -4076,12 +4076,12 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: #166534;
+    color: #3f7800;
     font-weight: 700;
 }
 
 .audio-verified-tick {
-    color: #166534;
+    color: #3f7800;
     flex-shrink: 0;
 }
 
@@ -4111,7 +4111,7 @@ a {
 }
 
 .audio-chip-bag-icon {
-    color: #166534;
+    color: #3f7800;
     flex-shrink: 0;
 }
 
@@ -4127,7 +4127,7 @@ a {
 }
 
 .audio-feedback-quote-icon {
-    color: #15803d;
+    color: #448000;
     opacity: 0.85;
     flex-shrink: 0;
     margin-top: 2px;
@@ -4162,7 +4162,7 @@ a {
 .audio-feedback-dot.active {
     width: 26px;
     border-radius: 12px;
-    background: linear-gradient(90deg, #4ade80, #8cff00);
+    background: linear-gradient(90deg, #8cff00, #8cff00);
     box-shadow: 0 0 10px rgba(140, 255, 0, 0.5);
 }
 

@@ -4,13 +4,13 @@
    ========================================================================== */
 
 :root {
-  --fd-accent: #22FF88;
+  --fd-accent: #8cff00;
   --fd-accent-2: #38BDF8;
   --fd-accent-yellow: #FFD60A;
   --fd-card: rgba(255, 255, 255, 0.04);
   --fd-card-hover: rgba(255, 255, 255, 0.07);
   --fd-border: rgba(255, 255, 255, 0.10);
-  --fd-border-focus: rgba(34, 255, 136, 0.55);
+  --fd-border-focus: rgba(140, 255, 0, 0.55);
   --fd-radius: 14px;
   --fd-text-muted: #9CA3AF;
   --fd-bg-sticky: rgba(6, 8, 12, 0.94);
@@ -70,8 +70,8 @@
   gap: 8px;
   padding: 4px 12px;
   border-radius: 9999px;
-  background: rgba(34, 255, 136, 0.08);
-  border: 1px solid rgba(34, 255, 136, 0.25);
+  background: rgba(140, 255, 0, 0.08);
+  border: 1px solid rgba(140, 255, 0, 0.25);
   color: var(--fd-accent);
   font-size: 11px;
   font-weight: 700;
@@ -166,7 +166,7 @@
 .fd-search-box:focus-within {
   border-color: var(--fd-border-focus);
   background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.18), 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .fd-search-icon {
@@ -319,7 +319,7 @@
 
 .fd-chip:focus-visible {
   border-color: var(--fd-accent);
-  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 0 0 2px rgba(140, 255, 0, 0.35);
 }
 
 /* Selected Chip: Solid green-to-cyan gradient with dark text and soft glow */
@@ -328,13 +328,13 @@
   color: #041009 !important;
   font-weight: 700 !important;
   border-color: transparent !important;
-  box-shadow: 0 4px 18px rgba(34, 255, 136, 0.32), 0 0 10px rgba(56, 189, 248, 0.2) !important;
+  box-shadow: 0 4px 18px rgba(140, 255, 0, 0.32), 0 0 10px rgba(56, 189, 248, 0.2) !important;
 }
 
 @media (hover: hover) {
   .fd-chip-active:hover {
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 22px rgba(34, 255, 136, 0.42) !important;
+    box-shadow: 0 6px 22px rgba(140, 255, 0, 0.42) !important;
   }
 }
 
@@ -402,7 +402,7 @@
 
 .fd-select:focus {
   border-color: var(--fd-accent);
-  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.25);
+  box-shadow: 0 0 0 2px rgba(140, 255, 0, 0.25);
 }
 
 .fd-select option {
@@ -481,8 +481,8 @@
   height: 28px;
   padding: 0 10px;
   border-radius: 9999px;
-  background: rgba(34, 255, 136, 0.08);
-  border: 1px solid rgba(34, 255, 136, 0.3);
+  background: rgba(140, 255, 0, 0.08);
+  border: 1px solid rgba(140, 255, 0, 0.3);
   color: var(--fd-accent);
   font-size: 11.5px;
   font-weight: 600;
@@ -493,7 +493,7 @@
 }
 
 .fd-active-chip:hover {
-  background: rgba(34, 255, 136, 0.18);
+  background: rgba(140, 255, 0, 0.18);
   border-color: var(--fd-accent);
   transform: scale(1.03);
 }
@@ -537,8 +537,8 @@
 
 @media (hover: hover) {
   .fd-toolbar-glass-card:hover {
-    border-color: rgba(34, 255, 136, 0.32);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.48), 0 0 24px rgba(34, 255, 136, 0.08);
+    border-color: rgba(140, 255, 0, 0.32);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.48), 0 0 24px rgba(140, 255, 0, 0.08);
   }
 }
 
@@ -582,9 +582,9 @@
   align-items: center;
   padding: 1px 8px;
   border-radius: 9999px;
-  background: rgba(34, 255, 136, 0.14);
-  border: 1px solid rgba(34, 255, 136, 0.35);
-  color: var(--fd-accent, #22FF88);
+  background: rgba(140, 255, 0, 0.14);
+  border: 1px solid rgba(140, 255, 0, 0.35);
+  color: var(--fd-accent, #8cff00);
   font-size: 10.5px;
   font-weight: 700;
   text-transform: capitalize;
@@ -656,8 +656,8 @@
 
 .fd-styled-select:focus-visible,
 .fd-styled-select:focus {
-  border-color: var(--fd-accent, #22FF88);
-  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.32);
+  border-color: var(--fd-accent, #8cff00);
+  box-shadow: 0 0 0 2px rgba(140, 255, 0, 0.32);
 }
 
 .fd-styled-select option {
@@ -680,7 +680,7 @@
 
 .fd-custom-select-wrap:focus-within .fd-select-icon-left,
 .fd-custom-select-wrap:focus-within .fd-select-custom-chevron {
-  color: var(--fd-accent, #22FF88);
+  color: var(--fd-accent, #8cff00);
 }
 
 /* Refresh Action Button */
@@ -698,9 +698,9 @@
   min-height: 44px;
   padding: 0 22px;
   border-radius: 9999px;
-  background: rgba(34, 255, 136, 0.08);
-  border: 1px solid rgba(34, 255, 136, 0.35);
-  color: var(--fd-accent, #22FF88);
+  background: rgba(140, 255, 0, 0.08);
+  border: 1px solid rgba(140, 255, 0, 0.35);
+  color: var(--fd-accent, #8cff00);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -712,15 +712,15 @@
 
 @media (hover: hover) {
   .fd-action-refresh-btn:hover:not(:disabled) {
-    background: rgba(34, 255, 136, 0.2);
-    border-color: var(--fd-accent, #22FF88);
-    box-shadow: 0 0 18px rgba(34, 255, 136, 0.35);
+    background: rgba(140, 255, 0, 0.2);
+    border-color: var(--fd-accent, #8cff00);
+    box-shadow: 0 0 18px rgba(140, 255, 0, 0.35);
     transform: translateY(-1px);
   }
 }
 
 .fd-action-refresh-btn:focus-visible {
-  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.5);
+  box-shadow: 0 0 0 2px rgba(140, 255, 0, 0.5);
 }
 
 .fd-action-refresh-btn:disabled {
@@ -831,7 +831,7 @@
 .fd-refresh-btn:hover:not(:disabled) {
   border-color: var(--fd-accent);
   color: var(--fd-accent);
-  background: rgba(34, 255, 136, 0.06);
+  background: rgba(140, 255, 0, 0.06);
   transform: translateY(-1px);
 }
 

@@ -98,7 +98,7 @@ export default function LiveBackdrop({
     if (isReduced || isLowPower || isSmallMobile) {
       canvas.width = Math.floor(window.innerWidth * 0.35);
       canvas.height = Math.floor(window.innerHeight * 0.35);
-      ctx.fillStyle = "rgba(34, 255, 136, 0.08)";
+      ctx.fillStyle = "rgba(140, 255, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       return;
     }

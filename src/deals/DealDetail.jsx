@@ -62,8 +62,8 @@ function PriceHistoryChart({ points }) {
           {/* Gradient Area */}
           <defs>
             <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#22FF88" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#22FF88" stopOpacity="0" />
+              <stop offset="0%" stopColor="#8cff00" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#8cff00" stopOpacity="0" />
             </linearGradient>
           </defs>
           <polygon
@@ -73,7 +73,7 @@ function PriceHistoryChart({ points }) {
           {/* Main Price Line */}
           <polyline
             fill="none"
-            stroke="#22FF88"
+            stroke="#8cff00"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -81,7 +81,7 @@ function PriceHistoryChart({ points }) {
           />
           {/* Data Points */}
           {coords.map((c, i) => (
-            <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#22FF88" stroke="#000" strokeWidth="1.5" />
+            <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#8cff00" stroke="#000" strokeWidth="1.5" />
           ))}
         </svg>
       </div>
@@ -212,7 +212,7 @@ export function DealDetail() {
           </p>
           <a
             href={base}
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#22FF88] px-6 py-3 font-bold text-black transition hover:scale-105"
+            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#8cff00] px-6 py-3 font-bold text-black transition hover:scale-105"
           >
             <ArrowLeft size={16} />
             Back to Deals

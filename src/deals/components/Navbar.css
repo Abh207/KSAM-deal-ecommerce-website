@@ -1,3 +1,12 @@
+
+:root {
+  --accent: #8cff00;
+  --accent-strong: #9dff1a;
+  --accent-soft: rgba(140, 255, 0, 0.14);
+  --accent-glow: rgba(140, 255, 0, 0.40);
+  --accent-on-light: #448000;
+  --on-accent: #050a02;
+}
 /* ==========================================================================
    KSAM HEAD NAVBAR & MINI CART STYLES (SCOPED kh-nav-)
    ========================================================================== */
@@ -22,8 +31,8 @@
 
 .kh-nav-header.kh-nav-scrolled {
   background: #05070a;
-  border-bottom-color: rgba(34, 255, 136, 0.22);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(34, 255, 136, 0.05);
+  border-bottom-color: rgba(140, 255, 0, 0.22);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(140, 255, 0, 0.05);
 }
 
 .kh-nav-container {
@@ -61,7 +70,7 @@
 }
 
 .kh-nav-brand:hover {
-  filter: drop-shadow(0 0 16px rgba(34, 255, 136, 0.65));
+  filter: drop-shadow(0 0 16px rgba(140, 255, 0, 0.65));
 }
 
 .kh-nav-brand:hover .kh-nav-logo-bag-body {
@@ -245,7 +254,7 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background: linear-gradient(135deg, #22ff88, #38bdf8);
+  background: linear-gradient(135deg, #8cff00, #38bdf8);
   border-radius: 999px;
   transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -277,12 +286,12 @@
   min-width: 17px;
   height: 17px;
   padding: 0 4.5px;
-  background: #4ade80;
+  background: #8cff00;
   color: #000000;
   font-size: 0.68rem;
   font-weight: 800;
   border-radius: 999px;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.45);
+  box-shadow: 0 0 8px rgba(140, 255, 0, 0.45);
   border: 1px solid #000000;
   line-height: 1;
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -296,12 +305,12 @@
   height: 22px;
   padding: 0 6px;
   margin-left: auto;
-  background: #4ade80;
+  background: #8cff00;
   color: #000000;
   font-size: 0.72rem;
   font-weight: 800;
   border-radius: 999px;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+  box-shadow: 0 0 8px rgba(140, 255, 0, 0.4);
 }
 
 /* --------------------------------------------------------------------------
@@ -324,17 +333,17 @@
   background: rgba(14, 21, 32, 0.85);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(34, 255, 136, 0.3);
+  border: 1px solid rgba(140, 255, 0, 0.3);
   border-radius: 24px;
-  box-shadow: 0 0 14px rgba(34, 255, 136, 0.12), 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 14px rgba(140, 255, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
 @keyframes khNavSearchPillGlow {
-  0% { border-color: rgba(34, 255, 136, 0.28); box-shadow: 0 0 12px rgba(34, 255, 136, 0.1); }
+  0% { border-color: rgba(140, 255, 0, 0.28); box-shadow: 0 0 12px rgba(140, 255, 0, 0.1); }
   50% { border-color: rgba(56, 189, 248, 0.38); box-shadow: 0 0 18px rgba(56, 189, 248, 0.18); }
-  100% { border-color: rgba(34, 255, 136, 0.28); box-shadow: 0 0 12px rgba(34, 255, 136, 0.1); }
+  100% { border-color: rgba(140, 255, 0, 0.28); box-shadow: 0 0 12px rgba(140, 255, 0, 0.1); }
 }
 
 .kh-nav-search-box {
@@ -342,13 +351,13 @@
 }
 
 .kh-nav-search-box:hover {
-  border-color: #22ff88;
-  box-shadow: 0 0 20px rgba(34, 255, 136, 0.3);
+  border-color: #8cff00;
+  box-shadow: 0 0 20px rgba(140, 255, 0, 0.3);
   transform: translateY(-1px);
 }
 
 .kh-nav-search-icon {
-  color: #22ff88;
+  color: #8cff00;
   flex-shrink: 0;
   margin-right: 10px;
   transition: transform 0.25s ease;
@@ -450,7 +459,7 @@
   position: absolute;
   inset: 0px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 255, 136, 0.35) 0%, rgba(56, 189, 248, 0.2) 60%, transparent 85%);
+  background: radial-gradient(circle, rgba(140, 255, 0, 0.35) 0%, rgba(56, 189, 248, 0.2) 60%, transparent 85%);
   filter: blur(4px);
   opacity: 0.45;
   z-index: 0;
@@ -462,7 +471,7 @@
   inset: 0;
   border-radius: 50%;
   padding: 2px;
-  background: conic-gradient(from 0deg, #22ff88, #38bdf8, #ffd60a, #22ff88);
+  background: conic-gradient(from 0deg, #8cff00, #38bdf8, #ffd60a, #8cff00);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -526,7 +535,7 @@
   min-width: 22px;
   height: 22px;
   padding: 0 5px;
-  background: linear-gradient(135deg, #ffd60a 0%, #22ff88 100%);
+  background: linear-gradient(135deg, #ffd60a 0%, #8cff00 100%);
   color: #05070a;
   font-size: 0.75rem;
   font-weight: 800;
@@ -534,7 +543,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 12px rgba(34, 255, 136, 0.45);
+  box-shadow: 0 0 12px rgba(140, 255, 0, 0.45);
   border: 1.5px solid #080c12;
   z-index: 10;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -568,14 +577,14 @@
   right: 0;
   padding: 6px 14px;
   background: linear-gradient(#0e1520, #0e1520) padding-box,
-              linear-gradient(135deg, #22ff88, #38bdf8, #ffd60a) border-box;
+              linear-gradient(135deg, #8cff00, #38bdf8, #ffd60a) border-box;
   border: 1.5px solid transparent;
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
   color: #ffffff;
   white-space: nowrap;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(34, 255, 136, 0.2);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(140, 255, 0, 0.2);
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
@@ -618,7 +627,7 @@
 }
 
 .kh-nav-avatar-btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.45);
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.45);
 }
 
 .kh-nav-avatar-btn:hover {
@@ -634,7 +643,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, #22ff88, #38bdf8, #ffd60a, #22ff88);
+  background: conic-gradient(from 0deg, #8cff00, #38bdf8, #ffd60a, #8cff00);
   animation: khNavAvatarSpin 4s linear infinite;
   z-index: 1;
 }
@@ -674,7 +683,7 @@
 .kh-nav-avatar-initials {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #22ff88 0%, #38bdf8 100%);
+  background: linear-gradient(135deg, #8cff00 0%, #38bdf8 100%);
   color: #05070a;
   font-family: 'Space Grotesk', -apple-system, sans-serif;
   font-weight: 800;
@@ -703,10 +712,10 @@
 }
 
 .kh-nav-avatar-btn:hover .kh-nav-avatar-guest-inner {
-  border-color: rgba(34, 255, 136, 0.5);
-  color: #22ff88;
-  background: rgba(34, 255, 136, 0.08);
-  box-shadow: 0 0 16px rgba(34, 255, 136, 0.25);
+  border-color: rgba(140, 255, 0, 0.5);
+  color: #8cff00;
+  background: rgba(140, 255, 0, 0.08);
+  box-shadow: 0 0 16px rgba(140, 255, 0, 0.25);
 }
 
 .kh-nav-avatar-silhouette {
@@ -721,14 +730,14 @@
   transform: translateX(50%) translateY(-6px);
   padding: 6px 14px;
   background: linear-gradient(#0c121d, #0c121d) padding-box,
-              linear-gradient(135deg, #22ff88, #38bdf8, #ffd60a) border-box;
+              linear-gradient(135deg, #8cff00, #38bdf8, #ffd60a) border-box;
   border: 1.5px solid transparent;
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
   color: #ffffff;
   white-space: nowrap;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(34, 255, 136, 0.2);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(140, 255, 0, 0.2);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -942,12 +951,12 @@
 
 .kh-nav-mobile-link.kh-nav-active {
   color: #ffffff;
-  background: rgba(34, 255, 136, 0.08);
+  background: rgba(140, 255, 0, 0.08);
 }
 
 .kh-nav-mobile-link.kh-nav-active .kh-nav-mobile-dot {
-  background: #22ff88;
-  box-shadow: 0 0 10px #22ff88;
+  background: #8cff00;
+  box-shadow: 0 0 10px #8cff00;
 }
 
 .kh-nav-mobile-footer {
@@ -966,7 +975,7 @@
   justify-content: center;
   gap: 10px;
   text-decoration: none;
-  background: linear-gradient(135deg, #22ff88, #38bdf8);
+  background: linear-gradient(135deg, #8cff00, #38bdf8);
   color: #05070a;
   border-radius: 12px;
   border: none;
@@ -976,7 +985,7 @@
 
 .kh-nav-mobile-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 8px 24px rgba(140, 255, 0, 0.35);
 }
 
 /* --------------------------------------------------------------------------
@@ -1010,7 +1019,7 @@
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border-left: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(34, 255, 136, 0.08);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(140, 255, 0, 0.08);
   z-index: 10070;
   display: flex;
   flex-direction: column;
@@ -1046,9 +1055,9 @@
 .kh-nav-cart-drawer-count-badge {
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(34, 255, 136, 0.15);
-  border: 1px solid rgba(34, 255, 136, 0.35);
-  color: #22ff88;
+  background: rgba(140, 255, 0, 0.15);
+  border: 1px solid rgba(140, 255, 0, 0.35);
+  color: #8cff00;
   font-size: 0.76rem;
   font-weight: 700;
 }
@@ -1076,7 +1085,7 @@
 /* Free Delivery Bar */
 .kh-nav-cart-delivery-box {
   padding: 14px 24px;
-  background: rgba(34, 255, 136, 0.04);
+  background: rgba(140, 255, 0, 0.04);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -1102,15 +1111,15 @@
 
 .kh-nav-cart-delivery-fill {
   height: 100%;
-  background: linear-gradient(135deg, #22ff88, #38bdf8);
+  background: linear-gradient(135deg, #8cff00, #38bdf8);
   border-radius: 999px;
-  box-shadow: 0 0 12px #22ff88;
+  box-shadow: 0 0 12px #8cff00;
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .kh-nav-cart-delivery-fill.complete {
-  background: linear-gradient(90deg, #22ff88, #ffd60a);
-  box-shadow: 0 0 16px #22ff88;
+  background: linear-gradient(90deg, #8cff00, #ffd60a);
+  box-shadow: 0 0 16px #8cff00;
 }
 
 /* Scrollable Item Rows */
@@ -1136,7 +1145,7 @@
 
 .kh-nav-cart-item-row:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(34, 255, 136, 0.3);
+  border-color: rgba(140, 255, 0, 0.3);
 }
 
 .kh-nav-cart-item-row.slide-out {
@@ -1176,7 +1185,7 @@
 .kh-nav-cart-item-price {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #22ff88;
+  color: #8cff00;
 }
 
 .kh-nav-cart-item-oldprice {
@@ -1218,8 +1227,8 @@
 }
 
 .kh-nav-cart-stepper-btn:hover {
-  background: rgba(34, 255, 136, 0.2);
-  color: #22ff88;
+  background: rgba(140, 255, 0, 0.2);
+  color: #8cff00;
 }
 
 .kh-nav-cart-stepper-qty {
@@ -1289,7 +1298,7 @@
 .kh-nav-cart-empty-browse-btn {
   padding: 12px 24px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #22ff88, #38bdf8);
+  background: linear-gradient(135deg, #8cff00, #38bdf8);
   color: #05070a;
   font-weight: 700;
   font-size: 0.92rem;
@@ -1300,7 +1309,7 @@
 
 .kh-nav-cart-empty-browse-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 8px 24px rgba(140, 255, 0, 0.35);
 }
 
 /* Footer & Checkout */
@@ -1327,17 +1336,17 @@
 }
 
 .kh-nav-cart-savings-line {
-  color: #22ff88;
+  color: #8cff00;
 }
 
 .kh-nav-cart-savings-val {
   font-weight: 700;
-  color: #22ff88;
+  color: #8cff00;
 }
 
 .kh-nav-cart-shipping-val {
   font-weight: 700;
-  color: #22ff88;
+  color: #8cff00;
 }
 
 .kh-nav-cart-total-line {
@@ -1355,7 +1364,7 @@
 .kh-nav-cart-total-val {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #22ff88;
+  color: #8cff00;
 }
 
 .kh-nav-cart-checkout-btn {
@@ -1365,7 +1374,7 @@
   height: 52px;
   margin-top: 6px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #22ff88, #38bdf8);
+  background: linear-gradient(135deg, #8cff00, #38bdf8);
   color: #05070a;
   font-weight: 800;
   font-size: 1rem;
@@ -1380,7 +1389,7 @@
 
 .kh-nav-cart-checkout-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(34, 255, 136, 0.4);
+  box-shadow: 0 10px 28px rgba(140, 255, 0, 0.4);
 }
 
 .kh-nav-cart-checkout-btn:disabled {
@@ -1400,7 +1409,7 @@
   padding: 12px 20px;
   margin-top: 10px;
   border-radius: 14px;
-  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+  background: linear-gradient(90deg, #8cff00 0%, #06b6d4 100%);
   border: none;
   color: #050505 !important;
   font-size: 14px;
@@ -1764,7 +1773,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: #0b0f17;
   color: #fff;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(34, 255, 136, 0.15);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(140, 255, 0, 0.15);
   overflow: hidden;
   animation: ksamPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1779,7 +1788,7 @@
 }
 
 .ksam-bar-icon {
-  color: #22ff88;
+  color: #8cff00;
   flex-shrink: 0;
 }
 
@@ -1801,7 +1810,7 @@
   padding: 0.45rem 1rem;
   border-radius: 10px;
   border: 0;
-  background: #22ff88;
+  background: #8cff00;
   color: #000;
   font-weight: 700;
   font-size: 0.85rem;
@@ -1837,8 +1846,8 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid rgba(34, 255, 136, 0.2);
-  border-top-color: #22ff88;
+  border: 2px solid rgba(140, 255, 0, 0.2);
+  border-top-color: #8cff00;
   animation: ksamSpin 0.7s linear infinite;
   flex-shrink: 0;
 }
@@ -1905,9 +1914,9 @@
 }
 
 .ksam-chip:hover {
-  border-color: #22ff88;
-  color: #22ff88;
-  background: rgba(34, 255, 136, 0.08);
+  border-color: #8cff00;
+  color: #8cff00;
+  background: rgba(140, 255, 0, 0.08);
 }
 
 .ksam-cats {
@@ -1973,7 +1982,7 @@
 }
 
 .ksam-card:hover {
-  border-color: rgba(34, 255, 136, 0.4);
+  border-color: rgba(140, 255, 0, 0.4);
   transform: translateY(-3px);
   box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.6);
 }
@@ -2061,7 +2070,7 @@
 .ksam-now {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #22ff88;
+  color: #8cff00;
 }
 
 .ksam-was {
@@ -2077,13 +2086,13 @@
   text-align: center;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #22ff88;
-  border: 1px solid rgba(34, 255, 136, 0.35);
+  color: #8cff00;
+  border: 1px solid rgba(140, 255, 0, 0.35);
   transition: all 0.15s ease;
 }
 
 .ksam-card:hover .ksam-cta {
-  background: #22ff88;
+  background: #8cff00;
   color: #000;
 }
 
@@ -2175,7 +2184,7 @@
   padding: 0.55rem 1.1rem;
   border-radius: 10px;
   border: 0;
-  background: linear-gradient(135deg, #22ff88, #38bdf8);
+  background: linear-gradient(135deg, #8cff00, #38bdf8);
   color: #000;
   font-weight: 800;
   font-size: 0.85rem;

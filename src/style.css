@@ -1,3 +1,12 @@
+:root {
+  --accent: #8cff00;
+  --accent-strong: #9dff1a;
+  --accent-soft: rgba(140, 255, 0, 0.14);
+  --accent-glow: rgba(140, 255, 0, 0.40);
+  --accent-on-light: #448000;
+  --on-accent: #050a02;
+}
+
 *{
     margin: 0;
     padding:0;

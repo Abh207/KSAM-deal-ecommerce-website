@@ -32,7 +32,7 @@ function SupabaseTest() {
                 style={{
                     minHeight: "100vh",
                     background: "#000",
-                    color: "#22FF88",
+                    color: "#8cff00",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -72,7 +72,7 @@ function SupabaseTest() {
                 padding: "40px"
             }}
         >
-            <h1 style={{ color: "#22FF88" }}>
+            <h1 style={{ color: "#8cff00" }}>
                 Supabase Connection Successful
             </h1>
 

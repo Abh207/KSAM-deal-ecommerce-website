@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         margin-bottom: 0.75rem;
         font-size: 0.82rem;
         font-weight: 700;
-        color: var(--kx-accent, #22ff88);
+        color: var(--kx-accent, #8cff00);
         text-decoration: none;
         transition: opacity 0.2s;
       `;
@@ -93,9 +93,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       messageBox.style.color = "#dc2626";
       messageBox.style.border = "1px solid rgba(239, 68, 68, 0.35)";
     } else {
-      messageBox.style.background = "rgba(34, 255, 136, 0.15)";
-      messageBox.style.color = "#15803d";
-      messageBox.style.border = "1px solid rgba(34, 255, 136, 0.4)";
+      messageBox.style.background = "rgba(140, 255, 0, 0.15)";
+      messageBox.style.color = "#448000";
+      messageBox.style.border = "1px solid rgba(140, 255, 0, 0.4)";
     }
   }
 

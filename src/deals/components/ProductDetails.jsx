@@ -506,7 +506,7 @@ export function ProductDetails({ product, onClose, onSelectProduct }) {
                         padding: "4px 12px",
                         fontSize: "12px",
                         fontWeight: 700,
-                        color: "#34d399"
+                        color: "#8cff00"
                       }}
                     >
                       You save ₹{savings.toLocaleString("en-IN")}

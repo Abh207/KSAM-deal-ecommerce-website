@@ -66,7 +66,7 @@ function ScrollProgress() {
                 className="
                     h-full
                     bg-gradient-to-r
-                    from-[#22FF88]
+                    from-[#8cff00]
                     to-[#38BDF8]
                 "
                 style={{

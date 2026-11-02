@@ -115,7 +115,7 @@ function Testimonials() {
                             w-14
                             rounded-full
                             border-2
-                            border-[#22FF88]
+                            border-[#8cff00]
                         "
                     />
 

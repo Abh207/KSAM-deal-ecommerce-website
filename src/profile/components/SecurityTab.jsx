@@ -25,7 +25,7 @@ export default function SecurityTab({ session, onShowToast }) {
     if (newPassword.length >= 12) score++;
 
     const labels = ["Weak", "Fair", "Good", "Strong"];
-    const colors = ["#ef4444", "#f59e0b", "#38BDF8", "#22FF88"];
+    const colors = ["#ef4444", "#f59e0b", "#38BDF8", "#8cff00"];
     const idx = Math.min(3, Math.max(0, score - 1));
 
     return {
@@ -122,7 +122,7 @@ export default function SecurityTab({ session, onShowToast }) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
           <div>
             <h2 className="ks-card-title text-base">
-              <Key size={18} color="#22FF88" />
+              <Key size={18} color="#8cff00" />
               <span>Change Password</span>
             </h2>
             <p className="ks-card-desc">
@@ -249,7 +249,7 @@ export default function SecurityTab({ session, onShowToast }) {
           )}
 
           {success && (
-            <div className="flex items-center gap-2 rounded-xl border border-[#22FF88]/30 bg-[#22FF88]/10 p-3 text-xs text-[#22FF88]">
+            <div className="flex items-center gap-2 rounded-xl border border-[#8cff00]/30 bg-[#8cff00]/10 p-3 text-xs text-[#8cff00]">
               <CheckCircle2 size={15} className="shrink-0" />
               <span>{success}</span>
             </div>
@@ -284,7 +284,7 @@ export default function SecurityTab({ session, onShowToast }) {
           {providers.includes("email") && (
             <div className="ks-connected-row">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/20 shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#8cff00]/10 text-[#8cff00] border border-[#8cff00]/20 shrink-0">
                   <Mail size={18} />
                 </div>
                 <div className="min-w-0">

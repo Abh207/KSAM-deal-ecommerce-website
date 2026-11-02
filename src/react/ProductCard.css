@@ -80,7 +80,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--accent-dark, #0f9d76);
+    color: var(--accent-dark, #448000);
 }
 
 .beauty-product-name {
@@ -106,9 +106,9 @@
 
 /* Wishlist button active state */
 .beauty-card-wishlist-btn.is-active {
-    color: var(--accent, #1de9b6) !important;
-    border-color: var(--accent, #1de9b6) !important;
-    box-shadow: 0 0 16px var(--accent-glow, rgba(29, 233, 182, 0.45)) !important;
+    color: var(--accent, #8cff00) !important;
+    border-color: var(--accent, #8cff00) !important;
+    box-shadow: 0 0 16px var(--accent-glow, rgba(140, 255, 0, )) !important;
 }
 
 /* Price */
@@ -167,7 +167,7 @@
 }
 
 .beauty-product-name-link:hover {
-    color: #16a34a;
+    color: #448000;
 }
 
 /* Actions Row: [Square Cart Button] [View Product Button] */
@@ -198,16 +198,16 @@
 
 .beauty-quick-cart-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    background: #16a34a;
-    border-color: #16a34a;
-    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.35);
+    background: #448000;
+    border-color: #448000;
+    box-shadow: 0 6px 18px rgba(140, 255, 0, 0.35);
 }
 
 .beauty-quick-cart-btn.is-added {
-    background: #16a34a;
-    border-color: #16a34a;
+    background: #448000;
+    border-color: #448000;
     color: #ffffff;
-    box-shadow: 0 0 16px rgba(22, 163, 74, 0.45);
+    box-shadow: 0 0 16px rgba(140, 255, 0, 0.45);
     transform: scale(1.04);
 }
 
@@ -225,8 +225,8 @@
     padding: 0 16px;
     border-radius: 12px;
     background: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
+    color: #3f7800;
+    border: 1px solid rgba(140, 255, 0, 0.35);
     font-size: 13.5px;
     font-weight: 700;
     text-decoration: none;
@@ -240,10 +240,10 @@
 }
 
 .beauty-view-product-btn:hover {
-    background: #22c55e;
-    color: #ffffff;
-    border-color: #22c55e;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    background: #8cff00;
+    color: #050a02;
+    border-color: #8cff00;
+    box-shadow: 0 4px 12px rgba(140, 255, 0, 0.3);
     transform: translateY(-2px);
 }
 

@@ -1,15 +1,15 @@
 /**
  * KSAM Deal - Theme & Accent Preference Manager
  * Supports: Dark (default), Light, Auto (system preference)
- * Accents: Green (#22FF88), Blue (#38BDF8), Yellow (#FFD60A)
+ * Accents: Green (#8cff00), Blue (#38BDF8), Yellow (#FFD60A)
  */
 
 export const ACCENT_COLORS = {
   green: {
     name: "Emerald Green",
-    value: "#22FF88",
+    value: "#8cff00",
     rgb: "34, 255, 136",
-    glow: "rgba(34, 255, 136, 0.25)"
+    glow: "rgba(140, 255, 0, 0.25)"
   },
   blue: {
     name: "Sky Blue",

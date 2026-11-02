@@ -73,7 +73,7 @@ function HowItWorks() {
                         "
                     >
                         Three steps.
-                        <span className="text-[#22FF88]">
+                        <span className="text-[#8cff00]">
                             {" "}That's it.
                         </span>
                     </h2>
@@ -113,9 +113,9 @@ function HowItWorks() {
                                             justify-center
                                             rounded-2xl
                                             border
-                                            border-[#22FF88]/30
+                                            border-[#8cff00]/30
                                             bg-[#0a0a0a]
-                                            text-[#22FF88]
+                                            text-[#8cff00]
                                         "
                                     >
 
@@ -135,7 +135,7 @@ function HowItWorks() {
                                                 h-full
                                                 w-px
                                                 bg-gradient-to-b
-                                                from-[#22FF88]
+                                                from-[#8cff00]
                                                 to-transparent
                                             "
                                         />

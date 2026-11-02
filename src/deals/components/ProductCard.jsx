@@ -10,7 +10,7 @@ import "./dealCardV2.css";
  * - White card, rounded 20-24px, soft shadow
  * - Light grey image area (#f8f8f8) with centered contain image
  * - Black "N% OFF" pill top-left
- * - Round wishlist heart top-right (green filled #22c55e when active)
+ * - Round wishlist heart top-right (green filled #8cff00 when active)
  * - Small platform chip (e.g. "on Amazon")
  * - Small uppercase green category label
  * - Bold product name (max 2 lines with ellipsis)

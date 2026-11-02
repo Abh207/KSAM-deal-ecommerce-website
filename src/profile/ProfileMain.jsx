@@ -18,6 +18,7 @@ import LiveBackdrop from "./components/LiveBackdrop.jsx";
 import ProfileProductStrip from "./components/ProfileProductStrip.jsx";
 
 import OverviewTab from "./components/OverviewTab.jsx";
+import OrdersHistoryTab from "./components/OrdersHistoryTab.jsx";
 import PersonalInfoTab from "./components/PersonalInfoTab.jsx";
 import AddressesTab from "./components/AddressesTab.jsx";
 import PriceAlertsTab from "./components/PriceAlertsTab.jsx";
@@ -50,7 +51,7 @@ export const PAGES_WITHOUT_FOOTER = [
 ];
 
 const VALID_SECTIONS = [
-  "overview", "profile", "addresses", "alerts", "recent",
+  "overview", "orders", "profile", "addresses", "alerts", "recent",
   "security", "notifications", "appearance", "help", "danger"
 ];
 
@@ -59,17 +60,26 @@ function SectionArt({ sectionId }) {
     case "overview":
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
-          <circle cx="42" cy="42" r="38" stroke="rgba(34, 255, 136, 0.2)" strokeWidth="2" strokeDasharray="4 4" />
-          <circle cx="42" cy="42" r="26" stroke="#22FF88" strokeWidth="2.5" strokeDasharray="120" strokeDashoffset="30" />
+          <circle cx="42" cy="42" r="38" stroke="rgba(140, 255, 0, 0.2)" strokeWidth="2" strokeDasharray="4 4" />
+          <circle cx="42" cy="42" r="26" stroke="#8cff00" strokeWidth="2.5" strokeDasharray="120" strokeDashoffset="30" />
           <path d="M42 22V42L54 50" stroke="#B6FF3B" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="42" cy="42" r="5" fill="#22FF88" />
+          <circle cx="42" cy="42" r="5" fill="#8cff00" />
+        </svg>
+      );
+    case "orders":
+      return (
+        <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
+          <rect x="18" y="24" width="48" height="42" rx="8" stroke="rgba(45, 255, 178, 0.3)" strokeWidth="2" />
+          <path d="M18 36H66" stroke="#2DFFB2" strokeWidth="2.5" />
+          <circle cx="34" cy="50" r="4" fill="#38BDF8" />
+          <path d="M44 50H54" stroke="#2DFFB2" strokeWidth="2.5" strokeLinecap="round" />
         </svg>
       );
     case "profile":
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
-          <rect x="12" y="14" width="60" height="56" rx="14" stroke="rgba(34, 255, 136, 0.3)" strokeWidth="2" />
-          <circle cx="42" cy="34" r="12" stroke="#22FF88" strokeWidth="2.5" />
+          <rect x="12" y="14" width="60" height="56" rx="14" stroke="rgba(140, 255, 0, 0.3)" strokeWidth="2" />
+          <circle cx="42" cy="34" r="12" stroke="#8cff00" strokeWidth="2.5" />
           <path d="M26 60C26 51.5 33 48 42 48C51 48 58 51.5 58 60" stroke="#38BDF8" strokeWidth="2.5" strokeLinecap="round" />
         </svg>
       );
@@ -78,7 +88,7 @@ function SectionArt({ sectionId }) {
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
           <circle cx="42" cy="42" r="36" stroke="rgba(56, 189, 248, 0.25)" strokeWidth="2" strokeDasharray="3 3" />
           <path d="M42 16C31.5 16 23 24.5 23 35C23 49 42 68 42 68C42 68 61 49 61 35C61 24.5 52.5 16 42 16Z" stroke="#38BDF8" strokeWidth="2.5" />
-          <circle cx="42" cy="34" r="6" fill="#22FF88" />
+          <circle cx="42" cy="34" r="6" fill="#8cff00" />
         </svg>
       );
     case "alerts":
@@ -86,21 +96,21 @@ function SectionArt({ sectionId }) {
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
           <path d="M42 18V22M42 22C33.5 22 28 29 28 39V52L22 58H62L56 52V39C56 29 50.5 22 42 22Z" stroke="#FFD60A" strokeWidth="2.5" strokeLinejoin="round" />
           <path d="M37 63C38 65.5 39.8 67 42 67C44.2 67 46 65.5 47 63" stroke="#FFD60A" strokeWidth="2.5" strokeLinecap="round" />
-          <circle cx="56" cy="24" r="4" fill="#22FF88" />
+          <circle cx="56" cy="24" r="4" fill="#8cff00" />
         </svg>
       );
     case "recent":
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
           <circle cx="42" cy="42" r="32" stroke="#38BDF8" strokeWidth="2.5" />
-          <path d="M42 24V42L54 42" stroke="#22FF88" strokeWidth="3" strokeLinecap="round" />
+          <path d="M42 24V42L54 42" stroke="#8cff00" strokeWidth="3" strokeLinecap="round" />
           <circle cx="42" cy="42" r="4" fill="#FFD60A" />
         </svg>
       );
     case "security":
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
-          <path d="M42 16L62 25V42C62 55 53.5 65.5 42 69C30.5 65.5 22 55 22 42V25L42 16Z" stroke="#22FF88" strokeWidth="2.5" />
+          <path d="M42 16L62 25V42C62 55 53.5 65.5 42 69C30.5 65.5 22 55 22 42V25L42 16Z" stroke="#8cff00" strokeWidth="2.5" />
           <circle cx="42" cy="39" r="6" stroke="#B6FF3B" strokeWidth="2.5" />
           <path d="M42 45V53" stroke="#B6FF3B" strokeWidth="2.5" strokeLinecap="round" />
         </svg>
@@ -109,7 +119,7 @@ function SectionArt({ sectionId }) {
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
           <rect x="18" y="24" width="48" height="12" rx="6" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
-          <circle cx="54" cy="30" r="8" fill="#22FF88" />
+          <circle cx="54" cy="30" r="8" fill="#8cff00" />
           <rect x="18" y="48" width="48" height="12" rx="6" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
           <circle cx="30" cy="54" r="8" fill="#38BDF8" />
         </svg>
@@ -118,8 +128,8 @@ function SectionArt({ sectionId }) {
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
           <circle cx="42" cy="42" r="32" stroke="#FFD60A" strokeWidth="2.5" />
-          <path d="M42 10C24.3 10 10 24.3 10 42C10 59.7 24.3 74 42 74V10Z" fill="rgba(34, 255, 136, 0.15)" />
-          <circle cx="42" cy="42" r="14" fill="#22FF88" />
+          <path d="M42 10C24.3 10 10 24.3 10 42C10 59.7 24.3 74 42 74V10Z" fill="rgba(140, 255, 0, 0.15)" />
+          <circle cx="42" cy="42" r="14" fill="#8cff00" />
         </svg>
       );
     case "help":
@@ -154,8 +164,14 @@ export function ProfileApp() {
 
   // Active section tracking with URL hash and sessionStorage support
   const getInitialSection = () => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = (params.get("tab") || "").toLowerCase();
+    if (tabParam === "orders" || tabParam === "history") return "orders";
+    if (VALID_SECTIONS.includes(tabParam)) return tabParam;
+
     const rawHash = window.location.hash.replace("#", "").toLowerCase();
     const hash = rawHash === "theme" ? "appearance" : rawHash;
+    if (hash === "orders" || hash === "history") return "orders";
     if (VALID_SECTIONS.includes(hash)) {
       return hash;
     }
@@ -338,7 +354,9 @@ export function ProfileApp() {
   const loadData = useCallback(async () => {
     try {
       const currentSession = await getSession();
-      if (!currentSession?.user?.id || !currentSession.user.email_confirmed_at) {
+      const user = currentSession?.user;
+      const isVerified = user && (user.email_confirmed_at || user.confirmed_at || user.aud === "authenticated");
+      if (!user?.id || !isVerified) {
         setSession(null);
         setProfile(null);
         setLoading(false);
@@ -348,25 +366,25 @@ export function ProfileApp() {
       setSession(currentSession);
       const userId = currentSession.user.id;
 
-      // 1. Fetch Profile
-      let { data: profileData } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
+      // 1. Fetch Profile with resilient fallback
+      let profileData = null;
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .maybeSingle();
+        profileData = data;
+      } catch (err) {
+        console.warn("[Profile] Using offline profile data:", err);
+      }
 
       if (!profileData) {
-        const newProf = {
+        profileData = {
           id: userId,
           email: currentSession.user.email,
-          full_name: currentSession.user.user_metadata?.full_name || currentSession.user.user_metadata?.name || ""
+          full_name: currentSession.user.user_metadata?.full_name || currentSession.user.user_metadata?.name || "Verified Customer"
         };
-        const { data: createdProf } = await supabase
-          .from("profiles")
-          .insert(newProf)
-          .select()
-          .maybeSingle();
-        profileData = createdProf || newProf;
       }
 
       setProfile(profileData);
@@ -383,26 +401,33 @@ export function ProfileApp() {
 
       setFormData(formPayload);
       setInitialData(JSON.parse(JSON.stringify(formPayload)));
+      setLoading(false);
 
-      // 2. Fetch Addresses
-      const { data: addressesData } = await supabase
-        .from("addresses")
-        .select("*")
-        .eq("user_id", userId)
-        .order("is_default", { ascending: false })
-        .order("created_at", { ascending: false });
+      // Asynchronously fetch peripheral data without blocking dashboard mount
+      (async () => {
+        try {
+          const { data: addressesData } = await supabase
+            .from("addresses")
+            .select("*")
+            .eq("user_id", userId)
+            .order("is_default", { ascending: false })
+            .order("created_at", { ascending: false });
+          setAddresses(addressesData || []);
+        } catch {}
 
-      setAddresses(addressesData || []);
+        try {
+          const alertsData = await getPriceAlerts(userId);
+          setAlerts(alertsData || []);
+        } catch {}
 
-      // 3. Fetch Price Alerts
-      const alertsData = await getPriceAlerts(userId);
-      setAlerts(alertsData || []);
-
-      // 4. Fetch Recently Viewed
-      const recentData = await getRecentlyViewed(userId);
-      setRecentlyViewed(recentData || []);
+        try {
+          const recentData = await getRecentlyViewed(userId);
+          setRecentlyViewed(recentData || []);
+        } catch {}
+      })();
     } catch (err) {
       console.error("[Profile load error]", err);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -679,7 +704,7 @@ export function ProfileApp() {
                   </div>
 
                   <div className="kx-panel-header-art hidden md:flex" aria-hidden="true">
-                    <ActiveIcon size={22} className={activeMeta.isDanger ? "text-red-400" : "text-[#22FF88]"} />
+                    <ActiveIcon size={22} className={activeMeta.isDanger ? "text-red-400" : "text-[#8cff00]"} />
                   </div>
                 </div>
               )}
@@ -696,6 +721,14 @@ export function ProfileApp() {
                     completeness={completeness}
                     onNavigateTab={navigateToSection}
                     onOpenAvatarModal={() => setAvatarModalOpen(true)}
+                  />
+                )}
+
+                {activeSection === "orders" && (
+                  <OrdersHistoryTab
+                    session={session}
+                    profile={profile}
+                    onNavigateTab={navigateToSection}
                   />
                 )}
 

@@ -10,7 +10,7 @@ export default {
         extend: {
 
             colors: {
-                neon: "#22FF88",
+                neon: "#8cff00",
                 yellow: "#FFD60A",
                 sky: "#38BDF8",
                 dark: "#000000",
@@ -20,7 +20,7 @@ export default {
 
             boxShadow: {
                 neon:
-                    "0 0 30px rgba(34,255,136,0.18)",
+                    "0 0 30px rgba(140, 255, 0, 0.18)",
 
                 blue:
                     "0 0 30px rgba(56,189,248,0.18)",

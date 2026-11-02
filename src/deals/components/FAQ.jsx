@@ -141,7 +141,7 @@ function FAQ() {
                                             size={20}
                                             className={`
                                                 shrink-0
-                                                text-[#22FF88]
+                                                text-[#8cff00]
                                                 transition
                                                 ${
                                                     isOpen

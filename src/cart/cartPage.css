@@ -1,7 +1,7 @@
 /* ==========================================================================
    KSAM DEAL - MODERN E-COMMERCE CART PAGE REDESIGN
    Color Palette:
-     - Primary Green: #08C76A
+     - Primary Green: #70d900
      - Dark Green: #059B50
      - Black Canvas: #080B0A
      - Dark Surface: #111614
@@ -13,7 +13,7 @@
    ========================================================================== */
 
 :root {
-  --ks-primary: #08C76A;
+  --ks-primary: #70d900;
   --ks-primary-dark: #059B50;
   --ks-black: #080B0A;
   --ks-surface: #111614;
@@ -29,8 +29,8 @@
   --ks-coupon-bg: rgba(108, 76, 232, 0.12);
   --ks-radius-card: 18px;
   --ks-radius-btn: 12px;
-  --ks-grad-green: linear-gradient(90deg, #08C76A 0%, #10b981 50%, #22d3ee 100%);
-  --ks-grad-btn: linear-gradient(135deg, #08C76A 0%, #059B50 100%);
+  --ks-grad-green: linear-gradient(90deg, #70d900 0%, #8cff00 50%, #22d3ee 100%);
+  --ks-grad-btn: linear-gradient(135deg, #70d900 0%, #059B50 100%);
 }
 
 * {
@@ -1104,7 +1104,7 @@ h3.shop-cart-title {
 }
 
 .btn-view-all-coupons:hover {
-  color: #34d399 !important;
+  color: #8cff00 !important;
   text-decoration: underline;
 }
 
@@ -1313,7 +1313,7 @@ h3.shop-cart-title {
 }
 
 .delivery-meter-fill.unlocked {
-  background: #08C76A;
+  background: #70d900;
   box-shadow: 0 0 10px rgba(8, 199, 106, 0.6);
 }
 
@@ -2329,7 +2329,7 @@ h3.shop-cart-title {
 
 .free-shipping-fill {
   height: 100%;
-  background: linear-gradient(90deg, #08C76A 0%, #10b981 50%, #22d3ee 100%);
+  background: linear-gradient(90deg, #70d900 0%, #8cff00 50%, #22d3ee 100%);
   border-radius: 999px;
   transition: width 0.4s ease;
   background-size: 200% 100%;

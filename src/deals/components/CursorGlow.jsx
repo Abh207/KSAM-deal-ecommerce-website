@@ -50,7 +50,7 @@ function CursorGlow() {
                 -translate-x-1/2
                 -translate-y-1/2
                 rounded-full
-                bg-[#22FF88]/5
+                bg-[#8cff00]/5
                 blur-3xl
                 lg:block
             "

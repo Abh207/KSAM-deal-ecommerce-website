@@ -48,7 +48,7 @@ const PROMO_CARDS = [
         title: "Smart Home & Voice Gadgets",
         description: "Hands-free voice assistant with 360° room-filling acoustic audio and smart ecosystem hub.",
         image: "images/remote/unsplash_1589492477829-5e65395b66cc.webp",
-        accent: "#10b981"
+        accent: "#8cff00"
     },
     {
         id: "promo-5",
@@ -96,7 +96,7 @@ const PROMO_CARDS = [
         title: "New Flagship Arrivals",
         description: "Discover the Samsung Galaxy S24 series with AI productivity and all-day endurance.",
         image: "images/remote/unsplash_1580910051074-3eb694886505.webp",
-        accent: "#10b981"
+        accent: "#8cff00"
     }
 ];
 

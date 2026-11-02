@@ -12,7 +12,7 @@ import "./Navbar.css";
    STATIC DATA & SEARCH DEFAULTS
 ===================================================== */
 const LINKS = [
-  ["Home", "#home"],
+  ["Home", "products.html"],
   ["Shop", "shop.html"],
   ["Deals", "#deals"],
   ["How It Works", "terms.html"],
@@ -207,6 +207,7 @@ function ProductCard({ p, onClick, cta = "View deal" }) {
 ===================================================== */
 export default function Navbar({ onProductClick, onViewAll, searchPlaceholder }) {
   // Cross-page detection: check if on deals/home page vs category/shop page vs terms page vs wishlist page
+  const isProductsPage = typeof window !== "undefined" && window.location.pathname.includes("products.html");
   const isShopPage = typeof window !== "undefined" && window.location.pathname.includes("shop.html");
   const isTermsPage = (() => {
     if (typeof window === "undefined") return false;
@@ -230,7 +231,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
     if (typeof window === "undefined") return true;
     const path = window.location.pathname.replace(/\/+$/, "") || "/";
     const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
-    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("watchwishlist.html") || path.includes("addtocart")) {
+    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("products.html") || path.includes("watchwishlist.html") || path.includes("addtocart")) {
       return false;
     }
 
@@ -241,7 +242,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   })();
 
   const getLinkHref = (href) => {
-    if (href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
+    if (href === "products.html" || href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
       const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
       return `${base}/${href}`;
     }
@@ -252,7 +253,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   };
 
   const handleNavLinkClick = (e, href) => {
-    if (href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
+    if (href === "products.html" || href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
       return;
     }
     if (isHomePage && href.startsWith("#")) {
@@ -270,6 +271,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   };
 
   const isActiveLink = (href) => {
+    if (href === "products.html") return isProductsPage;
     if (href === "shop.html") return isShopPage;
     if (href === "terms.html") return isTermsPage;
     if (href === "watchwishlist.html") return isWishlistPage;
@@ -1088,9 +1090,9 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                     padding: "10px 16px",
                     margin: "0 0 14px",
                     borderRadius: "8px",
-                    background: "rgba(34, 197, 94, 0.08)",
-                    border: "1px solid rgba(34, 197, 94, 0.2)",
-                    color: "#86efac",
+                    background: "rgba(140, 255, 0, 0.08)",
+                    border: "1px solid rgba(140, 255, 0, 0.2)",
+                    color: "#a8ff3e",
                     fontSize: "13px",
                     display: "flex",
                     alignItems: "center",
@@ -1146,9 +1148,9 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                     type="button"
                     onClick={() => runSearch(query)}
                     style={{
-                      background: "rgba(34, 197, 94, 0.2)",
-                      border: "1px solid rgba(34, 197, 94, 0.4)",
-                      color: "#4ade80",
+                      background: "rgba(140, 255, 0, 0.2)",
+                      border: "1px solid rgba(140, 255, 0, 0.4)",
+                      color: "#8cff00",
                       padding: "4px 10px",
                       borderRadius: "6px",
                       cursor: "pointer",
@@ -1248,14 +1250,14 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
             >
               <defs>
                 <linearGradient id="khNavLogoBagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#4dffa3" />
-                  <stop offset="45%" stopColor="#16c86b" />
-                  <stop offset="100%" stopColor="#0e9f55" />
+                  <stop offset="0%" stopColor="#b5ff4d" />
+                  <stop offset="45%" stopColor="#70d900" />
+                  <stop offset="100%" stopColor="#448000" />
                 </linearGradient>
 
                 <linearGradient id="khNavLogoSpeedGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="30" y2="0">
-                  <stop offset="0%" stopColor="#4dffa3" />
-                  <stop offset="100%" stopColor="#16c86b" />
+                  <stop offset="0%" stopColor="#b5ff4d" />
+                  <stop offset="100%" stopColor="#70d900" />
                 </linearGradient>
 
                 <linearGradient id="khNavLogoKsamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1264,17 +1266,17 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                 </linearGradient>
 
                 <linearGradient id="khNavLogoDealGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#22ff88" />
+                  <stop offset="0%" stopColor="#8cff00" />
                   <stop offset="100%" stopColor="#38bdf8" />
                 </linearGradient>
 
                 <linearGradient id="khNavLogoLeafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="0%" stopColor="#8cff00" />
                   <stop offset="100%" stopColor="#7cff9b" />
                 </linearGradient>
 
                 <linearGradient id="khNavCartIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22ff88" />
+                  <stop offset="0%" stopColor="#8cff00" />
                   <stop offset="100%" stopColor="#38bdf8" />
                 </linearGradient>
               </defs>
@@ -1282,7 +1284,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
               {/* Icon Group: Speed Lines + Bag + Cart */}
               <g className="kh-nav-logo-icon-wrap" filter="url(#khNavLogoIconGlow)">
                 <g className="kh-nav-logo-speed-lines">
-                  <circle className="kh-nav-speed-dot" cx="4" cy="19.5" r="2.1" fill="#4dffa3" />
+                  <circle className="kh-nav-speed-dot" cx="4" cy="19.5" r="2.1" fill="#b5ff4d" />
                   <rect className="kh-nav-speed-line sl-1" x="9" y="18" width="13.5" height="3" rx="1.5" fill="url(#khNavLogoSpeedGrad)" />
                   <rect className="kh-nav-speed-line sl-2" x="1.5" y="24.5" width="23.5" height="3.5" rx="1.75" fill="url(#khNavLogoSpeedGrad)" />
                   <rect className="kh-nav-speed-line sl-3" x="5.5" y="31" width="16.5" height="3" rx="1.5" fill="url(#khNavLogoSpeedGrad)" />
@@ -1292,18 +1294,18 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                   <path className="kh-nav-bag-handle" d="M 32 10.5 C 32 3.5, 46 3.5, 46 10.5" fill="none" stroke="url(#khNavLogoBagGrad)" strokeWidth="2.8" strokeLinecap="round" />
                   <path className="kh-nav-bag-tote" d="M 25 10.5 L 53 10.5 C 55.5 10.5, 57.2 12.5, 56.7 15 L 53.8 32 C 53.2 34.2, 51.2 35.5, 48.8 35.5 L 29.2 35.5 C 26.8 35.5, 24.8 34.2, 24.2 32 L 21.3 15 C 20.8 12.5, 22.5 10.5, 25 10.5 Z" fill="url(#khNavLogoBagGrad)" stroke="rgba(255, 255, 255, 0.28)" strokeWidth="0.8" />
                   <path className="kh-nav-bag-gloss" d="M 25.2 11.5 L 52.8 11.5 C 54.5 11.5, 55.5 12.8, 55 14.5 L 53.8 19.5 C 47.5 22, 27.5 22, 23 19.5 L 22.2 14.5 C 21.7 12.8, 22.7 11.5, 25.2 11.5 Z" fill="#ffffff" fillOpacity="0.32" />
-                  <circle cx="32" cy="12" r="1.6" fill="#0e9f55" stroke="#4dffa3" strokeWidth="0.8" />
-                  <circle cx="46" cy="12" r="1.6" fill="#0e9f55" stroke="#4dffa3" strokeWidth="0.8" />
+                  <circle cx="32" cy="12" r="1.6" fill="#448000" stroke="#b5ff4d" strokeWidth="0.8" />
+                  <circle cx="46" cy="12" r="1.6" fill="#448000" stroke="#b5ff4d" strokeWidth="0.8" />
 
                   <g className="kh-nav-logo-cart">
                     <path className="kh-nav-cart-basket" d="M 26 17.5 L 30 17.5 L 34.5 29 L 47.5 29 L 50.5 21.5 L 32 21.5" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                     <g className="kh-nav-cart-wheel-left" transform="translate(35.5, 33.5)">
                       <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
-                      <circle cx="0.7" cy="0" r="0.65" fill="#16c86b" />
+                      <circle cx="0.7" cy="0" r="0.65" fill="#70d900" />
                     </g>
                     <g className="kh-nav-cart-wheel-right" transform="translate(46, 33.5)">
                       <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
-                      <circle cx="0.7" cy="0" r="0.65" fill="#16c86b" />
+                      <circle cx="0.7" cy="0" r="0.65" fill="#70d900" />
                     </g>
                   </g>
                 </g>
@@ -1324,7 +1326,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
               {/* Leaf Anchor Attached to 'l' */}
               <g className="kh-nav-logo-leaf-anchor" transform="translate(208.5, 16)">
                 <g className="kh-nav-logo-leaf-wrap">
-                  <path className="kh-nav-leaf-stem" d="M 0 0 C 2 -3, 4 -5.5, 7.5 -8" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" />
+                  <path className="kh-nav-leaf-stem" d="M 0 0 C 2 -3, 4 -5.5, 7.5 -8" fill="none" stroke="#8cff00" strokeWidth="2" strokeLinecap="round" />
                   <path className="kh-nav-leaf-blade-main" d="M 7.5 -8 C 6 -14, 16 -18, 22.5 -13.5 C 22.5 -7, 14 -3, 7.5 -8 Z" fill="url(#khNavLogoLeafGrad)" />
                   <path className="kh-nav-leaf-vein" d="M 7.5 -8 Q 14 -12, 20.5 -13.5" fill="none" stroke="#ffffff" strokeWidth="0.9" opacity="0.8" strokeLinecap="round" />
                   <path className="kh-nav-leaf-blade-sub" d="M 5 -6 C 1.5 -8.5, -1 -13.5, 3 -14.5 C 6 -13.5, 7 -8.5, 5 -6 Z" fill="url(#khNavLogoLeafGrad)" />
@@ -1579,7 +1581,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                 className="kh-nav-mobile-link"
                 onClick={() => setIsMobileNavOpen(false)}
               >
-                <span className="kh-nav-mobile-dot" style={{ background: "#22ff88" }} />
+                <span className="kh-nav-mobile-dot" style={{ background: "#8cff00" }} />
                 Contact Us
               </a>
             </li>
@@ -1633,10 +1635,10 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
         <div className="kh-nav-cart-delivery-box">
           <div className="kh-nav-cart-delivery-text">
             {subtotal >= threshold ? (
-              <span>🎉 <strong style={{ color: "#22ff88" }}>You've unlocked FREE Express Delivery!</strong></span>
+              <span>🎉 <strong style={{ color: "#8cff00" }}>You've unlocked FREE Express Delivery!</strong></span>
             ) : (
               <span>
-                Add <strong className="kh-nav-cart-delivery-needed">{formatPrice(remainingForDelivery)}</strong> more for <span style={{ color: "#22ff88" }}>FREE Express Delivery</span>
+                Add <strong className="kh-nav-cart-delivery-needed">{formatPrice(remainingForDelivery)}</strong> more for <span style={{ color: "#8cff00" }}>FREE Express Delivery</span>
               </span>
             )}
           </div>

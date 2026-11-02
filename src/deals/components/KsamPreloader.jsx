@@ -28,7 +28,7 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
       left: `${(i * 7 + 11) % 90 + 5}%`,
       top: `${(i * 13 + 23) % 80 + 10}%`,
       size: `${(i % 3) * 1.5 + 2.5}px`,
-      color: i % 2 === 0 ? "rgba(34, 255, 136, 0.75)" : "rgba(56, 189, 248, 0.75)",
+      color: i % 2 === 0 ? "rgba(140, 255, 0, 0.75)" : "rgba(56, 189, 248, 0.75)",
       delay: `${(i * 0.45).toFixed(2)}s`,
       duration: `${(8 + (i % 4)).toFixed(1)}s`
     }));
@@ -166,12 +166,12 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
               >
                 <defs>
                   <linearGradient id="ksamBagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#22FF88" />
+                    <stop offset="0%" stopColor="#8cff00" />
                     <stop offset="100%" stopColor="#06B6D4" />
                   </linearGradient>
                   <linearGradient id="ksamSpeedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#22FF88" stopOpacity="0" />
-                    <stop offset="100%" stopColor="#22FF88" stopOpacity="0.9" />
+                    <stop offset="0%" stopColor="#8cff00" stopOpacity="0" />
+                    <stop offset="100%" stopColor="#8cff00" stopOpacity="0.9" />
                   </linearGradient>
                 </defs>
 
@@ -199,7 +199,7 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
                 <path
                   d="M33 24 L27 33 L33 33 L31 42 L39 31 L33 31 Z"
                   fill="#FFFFFF"
-                  stroke="#22FF88"
+                  stroke="#8cff00"
                   strokeWidth="0.8"
                   strokeLinejoin="round"
                 />
@@ -210,7 +210,7 @@ export function KsamPreloader({ isExiting = false, onComplete }) {
           {/* 3. Floating Deal-Discovery Visual Elements */}
           {/* Badge 1: Hot Deal */}
           <div className="ksam-floating-badge ksam-badge-hot-deal">
-            <Flame size={12} className="text-[#22FF88] animate-pulse" />
+            <Flame size={12} className="text-[#8cff00] animate-pulse" />
             <span>Hot Deal</span>
           </div>
 

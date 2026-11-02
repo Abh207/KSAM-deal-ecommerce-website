@@ -129,7 +129,7 @@ export function AffiliateDisclosurePage() {
                       className="p-4 rounded-2xl bg-[rgba(255,255,255,0.04)]"
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs uppercase bg-[linear-gradient(135deg,#00F5A0,#22D3EE)] text-[#050505]">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs uppercase bg-[linear-gradient(135deg,#8cff00,#22D3EE)] text-[#050505]">
                           {prog.name.slice(0, 2)}
                         </div>
                         <h3 className="text-sm font-bold text-[var(--kx-text)]">

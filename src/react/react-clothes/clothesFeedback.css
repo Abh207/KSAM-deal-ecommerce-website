@@ -204,7 +204,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: #2e7d32;
+  color: #366800;
   font-weight: 700;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .clothes-feedback-chip-icon {
-  color: #2e7d32;
+  color: #366800;
 }
 
 /* Review body */

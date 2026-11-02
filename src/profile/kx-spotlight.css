@@ -179,7 +179,7 @@ html[data-theme="light"] body {
 .kx-page .kx-spot[data-tone="green"]:hover,
 .kx-page .kx-spot[data-tone="green"]:focus-within {
   box-shadow: 0 12px 32px -4px var(--spot-green-shadow), 0 4px 16px rgba(0, 0, 0, 0.35);
-  border-color: rgba(34, 255, 136, 0.25);
+  border-color: rgba(140, 255, 0, 0.25);
 }
 
 /* Yellow Tone */
@@ -263,9 +263,9 @@ html[data-theme="light"] body {
 }
 
 .kx-page .kx-spot-icon-tile--green {
-  background: rgba(34, 255, 136, 0.12);
+  background: rgba(140, 255, 0, 0.12);
   color: var(--spot-green);
-  border: 1px solid rgba(34, 255, 136, 0.25);
+  border: 1px solid rgba(140, 255, 0, 0.25);
 }
 
 .kx-page .kx-spot-icon-tile--yellow {
@@ -335,15 +335,15 @@ html[data-theme="light"] body {
 }
 
 .kx-page .kx-toggle-btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.35);
 }
 
 /* Active / On Track */
 .kx-page .kx-toggle-btn.is-active,
 .kx-page .kx-toggle-btn[aria-checked="true"] {
-  background: linear-gradient(135deg, #22FF88 0%, #38BDF8 100%);
+  background: linear-gradient(135deg, #8cff00 0%, #38BDF8 100%);
   border-color: transparent;
-  box-shadow: 0 0 14px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 0 14px rgba(140, 255, 0, 0.35);
 }
 
 /* 24px Sliding Thumb */
@@ -371,7 +371,7 @@ html[data-theme="light"] body {
 .kx-page .kx-toggle-btn:disabled {
   cursor: not-allowed;
   opacity: 0.55;
-  background: rgba(34, 255, 136, 0.35);
+  background: rgba(140, 255, 0, 0.35);
   border-color: transparent;
 }
 
@@ -394,7 +394,7 @@ html[data-theme="light"] body {
   padding: 24px 28px;
   min-height: 112px;
   border-radius: 24px;
-  background: radial-gradient(circle at top right, rgba(34, 255, 136, 0.12) 0%, rgba(56, 189, 248, 0.08) 40%, transparent 70%), #0D1114;
+  background: radial-gradient(circle at top right, rgba(140, 255, 0, 0.12) 0%, rgba(56, 189, 248, 0.08) 40%, transparent 70%), #0D1114;
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.5);
   margin-bottom: 24px;
@@ -418,7 +418,7 @@ html[data-theme="light"] body {
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--kx-accent, #22FF88);
+  color: var(--kx-accent, #8cff00);
   letter-spacing: 0;
   text-transform: capitalize;
   margin-bottom: 6px;
@@ -445,8 +445,8 @@ html[data-theme="light"] body {
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(34, 255, 136, 0.15), rgba(56, 189, 248, 0.12));
-  border: 1px solid rgba(34, 255, 136, 0.28);
+  background: linear-gradient(135deg, rgba(140, 255, 0, 0.15), rgba(56, 189, 248, 0.12));
+  border: 1px solid rgba(140, 255, 0, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -507,7 +507,7 @@ html[data-theme="light"] body {
   height: clamp(480px, 52vw, 800px);
   top: -12%;
   left: -8%;
-  background: radial-gradient(circle at 45% 45%, rgba(0, 245, 160, 0.22) 0%, rgba(0, 217, 139, 0.08) 45%, transparent 70%);
+  background: radial-gradient(circle at 45% 45%, rgba(140, 255, 0, 0.22) 0%, rgba(0, 217, 139, 0.08) 45%, transparent 70%);
   animation: kxOrbDriftEmerald 34s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
@@ -645,7 +645,7 @@ html[data-theme="light"] body {
   background: radial-gradient(circle at 45% 45%, rgba(56, 189, 248, 0.22) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 70%);
 }
 .kx-page .kx-live-backdrop[data-palette="help"] .kx-orb-cyan {
-  background: radial-gradient(circle at 50% 50%, rgba(0, 245, 160, 0.20) 0%, rgba(0, 217, 139, 0.07) 50%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(140, 255, 0, 0.20) 0%, rgba(0, 217, 139, 0.07) 50%, transparent 70%);
 }
 
 .kx-page .kx-live-backdrop[data-palette="appearance"][data-accent="yellow"] .kx-orb-emerald {
@@ -667,7 +667,7 @@ html[data-theme="light"] body {
     transparent 0deg,
     rgba(39, 215, 255, 0.025) 40deg,
     transparent 85deg,
-    rgba(0, 245, 160, 0.035) 130deg,
+    rgba(140, 255, 0, 0.035) 130deg,
     transparent 180deg,
     rgba(139, 92, 246, 0.025) 230deg,
     transparent 360deg
@@ -700,7 +700,7 @@ html[data-theme="light"] body {
   width: 440px;
   height: 440px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 245, 160, 0.09) 0%, rgba(39, 215, 255, 0.04) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(140, 255, 0, 0.09) 0%, rgba(39, 215, 255, 0.04) 40%, transparent 70%);
   filter: blur(55px);
   pointer-events: none;
   opacity: 0;
@@ -816,7 +816,7 @@ html[data-theme="light"] body {
 .kx-page .kx-strip-eyebrow {
   font-size: 12px;
   font-weight: 700;
-  color: #22FF88;
+  color: #8cff00;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 6px;
@@ -832,7 +832,7 @@ html[data-theme="light"] body {
 }
 
 .kx-page .kx-strip-title-gradient {
-  background: linear-gradient(135deg, #22FF88 0%, #38BDF8 100%);
+  background: linear-gradient(135deg, #8cff00 0%, #38BDF8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -930,7 +930,7 @@ html[data-theme="light"] body {
   pointer-events: none;
   opacity: 0;
   transition: opacity 220ms ease;
-  background: linear-gradient(135deg, #22FF88, #38BDF8);
+  background: linear-gradient(135deg, #8cff00, #38BDF8);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -954,7 +954,7 @@ html[data-theme="light"] body {
   font-size: 10px;
   font-weight: 800;
   color: #07090B;
-  background: #22FF88;
+  background: #8cff00;
   border-radius: 6px;
   padding: 1px 5px;
   z-index: 3;
@@ -992,7 +992,7 @@ html[data-theme="light"] body {
 .kx-page .kx-strip-fallback-letter {
   font-size: 24px;
   font-weight: 800;
-  color: #22FF88;
+  color: #8cff00;
 }
 
 .kx-page .kx-strip-prod-name {
@@ -1018,7 +1018,7 @@ html[data-theme="light"] body {
 .kx-page .kx-strip-price {
   font-size: 13.5px;
   font-weight: 700;
-  color: #22FF88;
+  color: #8cff00;
 }
 
 .kx-page .kx-strip-old-price {
@@ -1130,8 +1130,8 @@ html[data-theme="light"] body {
    -------------------------------------------------------------------------- */
 .kx-page .kx-help-featured-banner {
   border-radius: 24px;
-  border: 1px solid rgba(34, 255, 136, 0.28);
-  background: linear-gradient(135deg, rgba(34, 255, 136, 0.10) 0%, rgba(56, 189, 248, 0.06) 50%, rgba(13, 17, 20, 0.85) 100%);
+  border: 1px solid rgba(140, 255, 0, 0.28);
+  background: linear-gradient(135deg, rgba(140, 255, 0, 0.10) 0%, rgba(56, 189, 248, 0.06) 50%, rgba(13, 17, 20, 0.85) 100%);
   padding: 24px 28px;
   margin-bottom: 24px;
   display: flex;
@@ -1170,7 +1170,7 @@ html[data-theme="light"] body {
   gap: 6px;
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--kx-accent, #22FF88);
+  color: var(--kx-accent, #8cff00);
   text-decoration: none;
   cursor: pointer;
   transition: color 200ms ease;
@@ -1292,13 +1292,13 @@ html[data-theme="light"] body {
 }
 
 .kx-page .kx-theme-card.is-selected {
-  border-color: var(--kx-accent, #22FF88);
-  background: rgba(34, 255, 136, 0.05);
-  box-shadow: 0 8px 24px -4px var(--kx-accent-glow, rgba(34, 255, 136, 0.25));
+  border-color: var(--kx-accent, #8cff00);
+  background: rgba(140, 255, 0, 0.05);
+  box-shadow: 0 8px 24px -4px var(--kx-accent-glow, rgba(140, 255, 0, 0.25));
 }
 
 .kx-page .kx-theme-card:focus-visible {
-  outline: 2px solid var(--kx-accent, #22FF88);
+  outline: 2px solid var(--kx-accent, #8cff00);
   outline-offset: 2px;
 }
 
@@ -1360,7 +1360,7 @@ html[data-theme="light"] body {
 .kx-page .kx-mini-block {
   flex: 1;
   border-radius: 6px;
-  background: rgba(34, 255, 136, 0.25);
+  background: rgba(140, 255, 0, 0.25);
 }
 
 /* 40px Circular Swatches */
@@ -1412,7 +1412,7 @@ html[data-theme="light"] body {
 }
 
 .kx-page .kx-swatch-chip:focus-visible {
-  outline: 2px solid var(--kx-accent, #22FF88);
+  outline: 2px solid var(--kx-accent, #8cff00);
   outline-offset: 4px;
 }
 

@@ -1075,3 +1075,116 @@
     transition: none !important;
   }
 }
+/* ═══════════════════════════════════════════════════════════
+   MOBILE CATEGORY GRID (Compact 2-3 columns, all 10 visible)
+   ═══════════════════════════════════════════════════════════ */
+.cs-mobile-grid {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .cs-list-panel {
+    display: none !important;
+  }
+  .cs-chip-row {
+    display: none !important;
+  }
+
+  .cs-frame {
+    flex-direction: column !important;
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+
+  .cs-mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 480px) and (max-width: 767px) {
+    .cs-mobile-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+  }
+
+  .cs-mobile-cat-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    outline: none;
+    min-height: 44px;
+    min-width: 0;
+  }
+
+  .cs-mobile-cat-card:hover {
+    background: rgba(140, 255, 0, 0.08);
+    border-color: rgba(140, 255, 0, 0.35);
+  }
+
+  .cs-mobile-cat-card.is-active {
+    background: linear-gradient(135deg, rgba(140, 255, 0, 0.22), rgba(20, 240, 192, 0.12));
+    border-color: #8cff00;
+    box-shadow: 0 0 16px rgba(140, 255, 0, 0.35);
+  }
+
+  .cs-mobile-cat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: #94a3b8;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .cs-mobile-cat-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cs-mobile-cat-card.is-active .cs-mobile-cat-icon {
+    color: #8cff00;
+    transform: scale(1.1);
+  }
+
+  .cs-mobile-cat-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  .cs-mobile-cat-card.is-active .cs-mobile-cat-name {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .cs-mobile-active-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #8cff00;
+    box-shadow: 0 0 8px #8cff00;
+    flex-shrink: 0;
+  }
+}

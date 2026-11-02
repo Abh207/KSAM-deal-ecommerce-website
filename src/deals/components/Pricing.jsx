@@ -18,7 +18,7 @@ const plans = [
     amount: 99,
     description: "For frequent deal hunters.",
     icon: "flame",
-    accent: "#22FF88",
+    accent: "#8cff00",
     features: ["Everything in Explorer", "Deal alerts", "Saved products", "Price tracking"],
     popular: true,
   },
@@ -121,7 +121,7 @@ function Billing({ yearly, setYearly }) {
     <div className="pr-bill inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] backdrop-blur">
       <div className="relative grid grid-cols-2">
         <span
-          className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-gradient-to-r from-[#22FF88] to-[#38BDF8] shadow-[0_0_25px_rgba(34,255,136,.3)] transition-transform duration-500"
+          className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-gradient-to-r from-[#8cff00] to-[#38BDF8] shadow-[0_0_25px_rgba(140, 255, 0, .3)] transition-transform duration-500"
           style={{ transform: yearly ? "translateX(100%)" : "translateX(0)", transitionTimingFunction: "cubic-bezier(.34,1.56,.64,1)" }}
         />
         {[["Monthly", false], ["Yearly", true]].map(([label, val]) => (
@@ -181,7 +181,7 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly, currentPlan 
           {/* Cursor spotlight */}
           <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             style={{ background: `radial-gradient(380px circle at var(--mx,50%) var(--my,50%), ${accent}22, transparent 60%)` }} />
-          {popular && <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#22FF88]/10 blur-3xl" />}
+          {popular && <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#8cff00]/10 blur-3xl" />}
 
           {/* Top row: icon + badge */}
           <div className="relative flex items-start justify-between gap-2">
@@ -200,7 +200,7 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly, currentPlan 
                 </span>
               )}
               {isCurrentPlan && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#22FF88]/15 border border-[#22FF88]/40 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-[#22FF88] shrink-0">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#8cff00]/15 border border-[#8cff00]/40 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-[#8cff00] shrink-0">
                   <Icon name="check" size={11} />
                   <span>Current plan</span>
                 </span>
@@ -254,9 +254,9 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly, currentPlan 
               } catch (e) {}
             }}
             aria-pressed={isSelected}
-            className={`pr-cta group/btn relative flex w-full items-center justify-center overflow-hidden rounded-2xl border text-sm font-black transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22FF88] active:scale-[0.97] ${
+            className={`pr-cta group/btn relative flex w-full items-center justify-center overflow-hidden rounded-2xl border text-sm font-black transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8cff00] active:scale-[0.97] ${
               popular || isSelected
-                ? "border-transparent bg-gradient-to-r from-[#22FF88] to-[#38BDF8] text-black hover:shadow-[0_0_40px_rgba(34,255,136,.35)]"
+                ? "border-transparent bg-gradient-to-r from-[#8cff00] to-[#38BDF8] text-black hover:shadow-[0_0_40px_rgba(140, 255, 0, .35)]"
                 : "border-white/15 text-white hover:border-transparent hover:bg-white hover:text-black"
             }`}
           >
@@ -519,7 +519,7 @@ function Pricing({ currentPlan: propPlan }) {
           <div className="pr-float h-80 w-80 pr-b110 rounded-full bg-[#38BDF8]/[0.07]" />
         </div>
         <div className="pr-par absolute" style={{ "--k": -1.3, bottom: "2.5rem", right: "6%" }}>
-          <div className="pr-float h-96 w-96 pr-b120 rounded-full bg-[#22FF88]/[0.07]" style={{ animationDelay: "-6s" }} />
+          <div className="pr-float h-96 w-96 pr-b120 rounded-full bg-[#8cff00]/[0.07]" style={{ animationDelay: "-6s" }} />
         </div>
         <div className="pr-par absolute left-1/2 top-1/2" style={{ "--k": 0.6 }}>
           <div className="pr-float h-72 w-72 pr-b110 rounded-full bg-[#A855F7]/[0.06]" style={{ animationDelay: "-11s" }} />
@@ -612,7 +612,7 @@ function Pricing({ currentPlan: propPlan }) {
           className={`pr-notes flex flex-wrap items-center justify-center text-sm text-white/40 transition-all duration-1000 ${noteShown ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>
           {["No hidden charges", "Cancel anytime", "Secure checkout"].map((t) => (
             <span key={t} className="flex items-center gap-2.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#22FF88]/10 text-[#22FF88]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8cff00]/10 text-[#8cff00]">
                 <Icon name="check" size={12} />
               </span>
               {t}
@@ -637,7 +637,7 @@ function Pricing({ currentPlan: propPlan }) {
           mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
         }
         .pr-gradient-text {
-          background: linear-gradient(90deg, #22FF88, #38BDF8, #A855F7, #22FF88);
+          background: linear-gradient(90deg, #8cff00, #38BDF8, #A855F7, #8cff00);
           background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
           color: transparent; animation: prShift 6s linear infinite;
         }

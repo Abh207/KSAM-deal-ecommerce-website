@@ -342,7 +342,7 @@ function FeaturedDeals() {
                 <RefreshCw
                   size={15}
                   strokeWidth={2.4}
-                  className={`fd-refresh-icon ${loading ? "animate-spin text-[#22FF88]" : ""}`}
+                  className={`fd-refresh-icon ${loading ? "animate-spin text-[#8cff00]" : ""}`}
                 />
                 <span>Refresh</span>
               </button>
@@ -363,7 +363,7 @@ function FeaturedDeals() {
             <p className="mt-2 text-xs text-gray-500">{error}</p>
             <button
               onClick={() => loadDeals(true)}
-              className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#22FF88] px-5 py-2.5 text-xs font-bold text-black transition hover:scale-105"
+              className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#8cff00] px-5 py-2.5 text-xs font-bold text-black transition hover:scale-105"
             >
               <RefreshCw size={14} /> Retry
             </button>
@@ -424,14 +424,14 @@ function FeaturedDeals() {
                     font-bold
                     text-white
                     transition-all
-                    hover:border-[#22FF88]/50
-                    hover:shadow-[0_0_25px_rgba(34,255,136,.15)]
+                    hover:border-[#8cff00]/50
+                    hover:shadow-[0_0_25px_rgba(140, 255, 0, .15)]
                     disabled:opacity-50
                   "
                 >
                   {loadingMore ? (
                     <>
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-[#22FF88]" />
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-[#8cff00]" />
                       <span>Loading more deals...</span>
                     </>
                   ) : (
@@ -455,7 +455,7 @@ function FeaturedDeals() {
             </p>
             <button
               onClick={resetFilters}
-              className="mt-6 inline-flex min-h-[44px] items-center rounded-xl bg-[#22FF88] px-5 py-2.5 text-xs font-bold text-black transition hover:scale-105"
+              className="mt-6 inline-flex min-h-[44px] items-center rounded-xl bg-[#8cff00] px-5 py-2.5 text-xs font-bold text-black transition hover:scale-105"
             >
               Clear filters
             </button>

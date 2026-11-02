@@ -32,6 +32,7 @@ import {
   subscribeWishlist
 } from "../lib/wishlist.js";
 
+import ProductReviewsSection from "./common/ProductReviewsSection.jsx";
 import "./productDetail.css";
 
 function BeautyProductDetailPage() {
@@ -42,6 +43,7 @@ function BeautyProductDetailPage() {
   const [added, setAdded] = useState(false);
   const [activeImage, setActiveImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [dynamicRating, setDynamicRating] = useState(null);
 
   const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
@@ -192,7 +194,7 @@ function BeautyProductDetailPage() {
       <div className="product-detail-page">
         <Navbar />
         <main className="product-detail-main">
-          <div style={{ textAlign: "center", padding: "100px 20px", color: "#16a34a", fontSize: "18px", fontWeight: 600 }}>
+          <div style={{ textAlign: "center", padding: "100px 20px", color: "#448000", fontSize: "18px", fontWeight: 600 }}>
             Loading beauty product details...
           </div>
         </main>
@@ -292,8 +294,8 @@ function BeautyProductDetailPage() {
                 <Heart
                   size={20}
                   strokeWidth={2}
-                  fill={isWishlisted ? "#22c55e" : "none"}
-                  color={isWishlisted ? "#22c55e" : "#0f172a"}
+                  fill={isWishlisted ? "#8cff00" : "none"}
+                  color={isWishlisted ? "#8cff00" : "#0f172a"}
                 />
               </button>
 
@@ -488,6 +490,14 @@ function BeautyProductDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Verified Customer Reviews & Rating Breakdown */}
+        <ProductReviewsSection
+          productId={product.id || product.uid}
+          productTitle={product.name || product.title}
+          category={product.category || "Beauty"}
+          onRatingCalculated={(avg, count) => setDynamicRating({ avg, count })}
+        />
 
         {/* Divider */}
         {relatedProducts.length > 0 && <div className="product-detail-divider" />}

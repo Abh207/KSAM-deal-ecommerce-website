@@ -36,7 +36,7 @@ const REVIEWS = [
         id: "rev-4",
         name: "Sneha Reddy",
         initials: "SR",
-        bgGradient: "linear-gradient(135deg, #10b981, #059669)",
+        bgGradient: "linear-gradient(135deg, #8cff00, #448000)",
         rating: 5,
         location: "Hyderabad",
         product: "Aloe Vera Face Wash",

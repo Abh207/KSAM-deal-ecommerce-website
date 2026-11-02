@@ -570,7 +570,7 @@ export default function AddressesTab({
                     type="checkbox"
                     checked={formData.is_default}
                     onChange={(e) => setFormData({ ...formData, is_default: e.target.checked })}
-                    style={{ accentColor: "#22FF88", width: 18, height: 18 }}
+                    style={{ accentColor: "#8cff00", width: 18, height: 18 }}
                   />
                   <span>Make this my default shipping address</span>
                 </label>

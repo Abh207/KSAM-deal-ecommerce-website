@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Products | KSAM Deal</title>
+    <meta name="description" content="Explore products across watches, shoes, electronics, beauty, fashion, and home appliances with real-time discounts on KSAM Deal.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://abh207.github.io/KSAM-deal-ecommerce-website/products.html">
+    <meta name="theme-color" content="#050a02">
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="48x48" href="%BASE_URL%assets/images/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="%BASE_URL%assets/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="%BASE_URL%assets/images/favicon-192x192.png">
+    <link rel="apple-touch-icon" href="%BASE_URL%assets/images/apple-touch-icon.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="KSAM Deal">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://abh207.github.io/KSAM-deal-ecommerce-website/products.html">
+    <meta property="og:title" content="Products | KSAM Deal">
+    <meta property="og:description" content="Explore products across watches, shoes, electronics, beauty, fashion, and home appliances with real-time discounts on KSAM Deal.">
+    <meta property="og:image" content="https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://abh207.github.io/KSAM-deal-ecommerce-website/products.html">
+    <meta name="twitter:title" content="Products | KSAM Deal">
+    <meta name="twitter:description" content="Explore products across watches, shoes, electronics, beauty, fashion, and home appliances with real-time discounts on KSAM Deal.">
+    <meta name="twitter:image" content="https://abh207.github.io/KSAM-deal-ecommerce-website/assets/images/logo-512.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- LCP Hero Poster Preload -->
+    <link rel="preload" as="image" href="%BASE_URL%videos/products/products_hero-poster.webp" fetchpriority="high">
+</head>
+
+<body class="bg-black text-white antialiased" style="margin: 0; background: #000000; color: #ffffff; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; overflow-x: hidden;">
+    <noscript>
+        <div style="padding: 40px 20px; text-align: center; font-family: sans-serif; color: #fff;">
+            <h2>JavaScript Required</h2>
+            <p>Please enable JavaScript in your browser to view products on KSAM Deal.</p>
+        </div>
+    </noscript>
+
+    <!-- React will load the complete product section here -->
+    <div id="products-root"></div>
+    <script>
+      window.addEventListener('error', function() {
+        var r = document.getElementById('products-root');
+        if (r && (!r.children || r.children.length === 0)) {
+          var e = document.getElementById('ksam-err-msg');
+          if (!e) {
+            e = document.createElement('div');
+            e.id = 'ksam-err-msg';
+            e.style.cssText = 'padding:40px 20px;text-align:center;font-family:sans-serif;color:#fff;max-width:600px;margin:40px auto;';
+            e.innerHTML = '<h2 style="color:#ef4444;font-size:20px;margin-bottom:12px;">Failed to load Products</h2><p style="color:#9ca3af;margin-bottom:16px;">We encountered an issue loading this page. Please refresh or check your connection.</p><button onclick="window.location.reload()" style="background:#8cff00;color:#050a02;border:none;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;">Refresh Page</button>';
+            document.body.appendChild(e);
+          }
+        }
+      });
+    </script>
+
+    <!-- React Entry File -->
+    <script type="module" src="./src/react/headerFile/homeProductsMain.jsx"></script>
+</body>
+
+</html>
+

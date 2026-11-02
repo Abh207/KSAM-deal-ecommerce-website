@@ -38,7 +38,7 @@
         "name": "iPhone 15 Pro White Titanium",
         "src": "assets/products/iphone-white.png",
         "accent": "green",
-        "accentHex": "#22ff88",
+        "accentHex": "#8cff00",
         "price": 799,
         "oldPrice": 1199,
         "discount": 33

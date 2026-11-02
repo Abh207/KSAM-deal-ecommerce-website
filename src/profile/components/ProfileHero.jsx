@@ -261,9 +261,9 @@ export default function ProfileHero({
                 <button
                   type="button"
                   onClick={() => onNavigateSection && onNavigateSection("profile")}
-                  className="ks-hero-prompt-btn hover:text-[#22FF88] transition text-left"
+                  className="ks-hero-prompt-btn hover:text-[#8cff00] transition text-left"
                 >
-                  Welcome! <span className="underline decoration-dotted decoration-[#22FF88]/60">Add your name</span> →
+                  Welcome! <span className="underline decoration-dotted decoration-[#8cff00]/60">Add your name</span> →
                 </button>
               )}
             </h1>

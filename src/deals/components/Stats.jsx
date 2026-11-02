@@ -8,7 +8,7 @@ const stats = [
   {
     value: 12000, suffix: "+", label: "Deals tracked",
     description: "Updated across multiple stores",
-    icon: Zap, color: "#22FF88", glow: "rgba(34,255,136,.18)", progress: 92,
+    icon: Zap, color: "#8cff00", glow: "rgba(140, 255, 0, .18)", progress: 92,
     spark: "M0 50 C20 46 30 54 50 42 S80 32 100 36 S140 16 160 20 S190 8 200 4",
   },
   {
@@ -204,7 +204,7 @@ function Stats() {
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="st-grid-bg absolute inset-0" />
         <div className="st-par absolute" style={{ "--k": 1, left: "6%", top: "10%" }}>
-          <div className="st-float st-blur h-80 w-80 rounded-full bg-[#22FF88]/[0.07]" />
+          <div className="st-float st-blur h-80 w-80 rounded-full bg-[#8cff00]/[0.07]" />
         </div>
         <div className="st-par absolute" style={{ "--k": -1.4, right: "6%", bottom: "6%" }}>
           <div className="st-float st-blur h-80 w-80 rounded-full bg-[#A855F7]/[0.07]" style={{ animationDelay: "-7s" }} />
@@ -265,7 +265,7 @@ function Stats() {
           mask-image: radial-gradient(ellipse at center, #000 15%, transparent 70%);
         }
         .st-gradient-text {
-          background: linear-gradient(90deg, #22FF88, #38BDF8, #A855F7, #22FF88);
+          background: linear-gradient(90deg, #8cff00, #38BDF8, #A855F7, #8cff00);
           background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
           color: transparent; animation: stShift 6s linear infinite;
         }
@@ -274,9 +274,9 @@ function Stats() {
         .st-section { padding: 5rem 0; }
         .st-section .st-wrap { max-width: 80rem; margin: 0 auto; padding: 0 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 3.5rem; }
         .st-section .st-head { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; max-width: 46rem; text-align: center; }
-        .st-section .st-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .55rem 1.1rem; border-radius: 999px; border: 1px solid rgba(34,255,136,.28);
-          background: rgba(34,255,136,.06); color: #22FF88; font-size: .68rem; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
-        .st-section .st-badge-dot { width: .4rem; height: .4rem; border-radius: 999px; background: #22FF88; animation: stPulse 1.8s ease-in-out infinite; }
+        .st-section .st-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .55rem 1.1rem; border-radius: 999px; border: 1px solid rgba(140, 255, 0, .28);
+          background: rgba(140, 255, 0, .06); color: #8cff00; font-size: .68rem; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
+        .st-section .st-badge-dot { width: .4rem; height: .4rem; border-radius: 999px; background: #8cff00; animation: stPulse 1.8s ease-in-out infinite; }
         .st-section .st-sub { max-width: 34rem; line-height: 1.8; }
         .st-section .st-grid { width: 100%; display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
 
@@ -329,7 +329,7 @@ function Stats() {
 
         .st-section .st-status { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .6rem; color: rgba(255,255,255,.28);
           font-size: .62rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; text-align: center; }
-        .st-section .st-status-dot { width: .4rem; height: .4rem; border-radius: 999px; background: #22FF88; box-shadow: 0 0 10px #22FF88; animation: stPulse 1.8s ease-in-out infinite; }
+        .st-section .st-status-dot { width: .4rem; height: .4rem; border-radius: 999px; background: #8cff00; box-shadow: 0 0 10px #8cff00; animation: stPulse 1.8s ease-in-out infinite; }
 
         @media (min-width: 640px) {
           .st-section { padding: 6rem 0; }

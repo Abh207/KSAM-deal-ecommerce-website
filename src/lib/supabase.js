@@ -76,7 +76,7 @@ export async function testSupabaseConnection() {
       const data = await response.json();
       console.log(
         "%c[Supabase Connection Test] Connected successfully to auth server!",
-        "color: #22ff88; font-weight: bold;",
+        "color: #8cff00; font-weight: bold;",
         {
           projectUrl: SUPABASE_URL,
           version: data.version,

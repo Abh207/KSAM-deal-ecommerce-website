@@ -822,3 +822,51 @@
     }
 
 }
+/* =========================================================
+   MOBILE SLIDER OPTIMIZATIONS (1.5 - 2 Cards Visible)
+========================================================= */
+.horizontal-products-section {
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.horizontal-slider-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+@media (max-width: 767px) {
+    .horizontal-products-slider {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 12px;
+        gap: 14px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .horizontal-product-card {
+        scroll-snap-align: start;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Displays ~1.6 product cards at once on mobile */
+    .horizontal-product-card {
+        flex: 0 0 calc((100% - 14px) / 1.62) !important;
+        min-width: calc((100% - 14px) / 1.62) !important;
+        max-width: calc((100% - 14px) / 1.62) !important;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    /* Displays ~2 product cards at once on wider smartphones */
+    .horizontal-product-card {
+        flex: 0 0 calc((100% - 16px) / 2) !important;
+        min-width: calc((100% - 16px) / 2) !important;
+        max-width: calc((100% - 16px) / 2) !important;
+    }
+}

@@ -159,7 +159,7 @@ export default function PriceAlertsTab({
                           )}
                         </div>
                         <h4 className="text-sm font-bold text-white line-clamp-1">
-                          <a href={detailUrl} className="hover:text-[#22FF88] transition">
+                          <a href={detailUrl} className="hover:text-[#8cff00] transition">
                             {alert.product?.name}
                           </a>
                         </h4>
@@ -168,7 +168,7 @@ export default function PriceAlertsTab({
                             Current: <strong className="text-white">₹{currentPrice.toLocaleString("en-IN")}</strong>
                           </span>
                           <span className="text-gray-600">·</span>
-                          <span className="text-[#22FF88]">
+                          <span className="text-[#8cff00]">
                             Target: <strong className="font-black">₹{targetPrice.toLocaleString("en-IN")}</strong>
                           </span>
                         </div>
@@ -182,7 +182,7 @@ export default function PriceAlertsTab({
                         type="button"
                         onClick={() => handleToggle(alert)}
                         className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                          alert.is_active ? "bg-[#22FF88]" : "bg-gray-700"
+                          alert.is_active ? "bg-[#8cff00]" : "bg-gray-700"
                         }`}
                         aria-label="Toggle price alert active"
                       >
@@ -224,7 +224,7 @@ export default function PriceAlertsTab({
                       </div>
                       <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-[#38BDF8] to-[#22FF88]"
+                          className="h-full bg-gradient-to-r from-[#38BDF8] to-[#8cff00]"
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>

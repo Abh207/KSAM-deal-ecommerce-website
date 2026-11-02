@@ -105,7 +105,7 @@ export default function RecentlyViewedTab({
 
                       {/* Discount Badge */}
                       {item.discount > 0 && (
-                        <span className="absolute left-2.5 top-2.5 rounded-full bg-[#00F5A0] px-2 py-0.5 text-[10px] font-black text-black">
+                        <span className="absolute left-2.5 top-2.5 rounded-full bg-[#8cff00] px-2 py-0.5 text-[10px] font-black text-black">
                           -{item.discount}%
                         </span>
                       )}
@@ -123,7 +123,7 @@ export default function RecentlyViewedTab({
 
                     {/* Title */}
                     <h4 className="text-sm font-bold text-white line-clamp-2 min-h-[40px] leading-snug">
-                      <a href={detailUrl} className="hover:text-[#00F5A0] transition">
+                      <a href={detailUrl} className="hover:text-[#8cff00] transition">
                         {item.name}
                       </a>
                     </h4>
@@ -132,7 +132,7 @@ export default function RecentlyViewedTab({
                   {/* Price & Action Row (No horizontal divider) */}
                   <div className="mt-4 flex items-center justify-between pt-1">
                     <div>
-                      <p className="text-base font-black text-[#00F5A0]">
+                      <p className="text-base font-black text-[#8cff00]">
                         ₹{Number(item.price || 0).toLocaleString("en-IN")}
                       </p>
                       {item.oldPrice > item.price && (

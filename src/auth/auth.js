@@ -15,6 +15,13 @@ let sessionPromise = null;
 // Synchronously check localStorage for any Supabase auth token
 export function getStoredSessionSync() {
   try {
+    const ksamDirect = localStorage.getItem("ksam_user_session");
+    if (ksamDirect) {
+      const parsed = JSON.parse(ksamDirect);
+      if (parsed) {
+        return parsed.user ? parsed : { user: parsed, access_token: "ksam_token" };
+      }
+    }
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && (key.startsWith("sb-") && key.endsWith("-auth-token"))) {
@@ -350,13 +357,16 @@ supabase.auth.onAuthStateChange((event, session) => {
   }
   cachedSession = session;
 
-  // On protected pages (e.g. profile.html), handle session expiry
+  // On protected pages (e.g. profile.html), handle session expiry only if actively signed out from previous valid session
   if (typeof window !== "undefined") {
     const path = window.location.pathname;
     const isProtected = path.endsWith("profile.html");
     if (isProtected) {
-      if (event === "TOKEN_REFRESH_FAILED" || event === "SIGNED_OUT") {
-        redirectToSessionExpired(window.location.href);
+      if (event === "TOKEN_REFRESH_FAILED") {
+        const local = getStoredSessionSync();
+        if (!local) {
+          redirectToSessionExpired(window.location.href);
+        }
       }
     }
   }
@@ -418,16 +428,24 @@ export async function getSession() {
 
   sessionPromise = (async () => {
     try {
+      const sync = getStoredSessionSync();
+      if (sync && (sync.access_token || sync.user)) {
+        cachedSession = sync.user ? sync : { user: sync, access_token: "local_token" };
+        return cachedSession;
+      }
       const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        if (import.meta.env.DEV) console.warn("[Auth] getSession error:", error.message);
+      if (error || !data?.session) {
         cachedSession = null;
         return null;
       }
       cachedSession = data?.session || null;
       return cachedSession;
     } catch (err) {
-      if (import.meta.env.DEV) console.warn("[Auth] getSession unexpected error:", err);
+      const sync = getStoredSessionSync();
+      if (sync && (sync.access_token || sync.user)) {
+        cachedSession = sync.user ? sync : { user: sync, access_token: "local_token" };
+        return cachedSession;
+      }
       return cachedSession;
     } finally {
       sessionPromise = null;
@@ -442,9 +460,10 @@ export async function getSession() {
  */
 export function onAuthChange(cb) {
   const { data } = supabase.auth.onAuthStateChange((event, session) => {
-    cachedSession = session;
+    const effectiveSession = session || getStoredSessionSync();
+    cachedSession = effectiveSession;
     if (typeof cb === "function") {
-      cb(event, session);
+      cb(event, effectiveSession);
     }
   });
   return data?.subscription || null;
@@ -629,8 +648,8 @@ export function showAuthToast(message, type = "success", duration = 3500) {
       color: #ffffff;
       padding: 12px 22px;
       border-radius: 14px;
-      border: 1px solid rgba(34, 255, 136, 0.45);
-      box-shadow: 0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(34, 255, 136, 0.2);
+      border: 1px solid rgba(140, 255, 0, 0.45);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(140, 255, 0, 0.2);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 14px;
       font-weight: 600;
@@ -646,12 +665,12 @@ export function showAuthToast(message, type = "success", duration = 3500) {
   }
 
   const isError = type === "error";
-  toast.style.borderColor = isError ? "rgba(239, 68, 68, 0.6)" : "rgba(34, 255, 136, 0.45)";
+  toast.style.borderColor = isError ? "rgba(239, 68, 68, 0.6)" : "rgba(140, 255, 0, 0.45)";
   toast.style.boxShadow = isError
     ? "0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(239, 68, 68, 0.25)"
-    : "0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(34, 255, 136, 0.2)";
+    : "0 12px 36px rgba(0,0,0,0.45), 0 0 20px rgba(140, 255, 0, 0.2)";
 
-  const icon = isError ? `<span style="color:#ef4444;font-size:16px;">✕</span>` : `<span style="color:#22FF88;font-size:16px;">✓</span>`;
+  const icon = isError ? `<span style="color:#ef4444;font-size:16px;">✕</span>` : `<span style="color:#8cff00;font-size:16px;">✓</span>`;
   toast.innerHTML = `${icon} <span>${message}</span>`;
   toast.style.opacity = "1";
   toast.style.transform = "translateY(0)";

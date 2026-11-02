@@ -22,7 +22,7 @@ const PROMO_DATA = [
         badge: "SPECIAL BUNDLE",
         discount: "BUY 2 GET 1",
         image: "assets/images/beauty/promo-2.jpg",
-        accent: "#10b981"
+        accent: "#8cff00"
     },
     {
         id: "promo-3",
@@ -44,7 +44,7 @@ const PROMO_DATA = [
         badge: "BEST VALUE",
         discount: "STARTING ₹199",
         image: "assets/images/beauty/promo-4.jpg",
-        accent: "#10b981"
+        accent: "#8cff00"
     },
     {
         id: "promo-5",

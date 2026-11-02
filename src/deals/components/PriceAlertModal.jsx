@@ -90,7 +90,7 @@ export default function PriceAlertModal({ product, isOpen, onClose, onSuccess })
 
         {success ? (
           <div className="py-6 text-center space-y-3">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#22FF88]/15 text-[#22FF88] border border-[#22FF88]/30">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#8cff00]/15 text-[#8cff00] border border-[#8cff00]/30">
               <CheckCircle2 size={32} />
             </div>
             <h3 className="text-xl font-bold text-white">Price Alert Set!</h3>
@@ -124,7 +124,7 @@ export default function PriceAlertModal({ product, isOpen, onClose, onSuccess })
                 </span>
               </div>
               {diffPercent > 0 && (
-                <div className="flex items-center justify-between text-[#22FF88]">
+                <div className="flex items-center justify-between text-[#8cff00]">
                   <span className="flex items-center gap-1">
                     <TrendingDown size={13} /> Desired Drop:
                   </span>
@@ -151,7 +151,7 @@ export default function PriceAlertModal({ product, isOpen, onClose, onSuccess })
                   required
                   value={targetPrice}
                   onChange={(e) => setTargetPrice(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-black/60 pl-8 pr-4 py-2.5 text-sm font-bold text-white placeholder-gray-500 focus:border-[#22FF88] focus:outline-none focus:ring-1 focus:ring-[#22FF88]"
+                  className="w-full rounded-xl border border-white/15 bg-black/60 pl-8 pr-4 py-2.5 text-sm font-bold text-white placeholder-gray-500 focus:border-[#8cff00] focus:outline-none focus:ring-1 focus:ring-[#8cff00]"
                   placeholder={`e.g. ${Math.floor(currentPrice * 0.9)}`}
                 />
               </div>
@@ -180,7 +180,7 @@ export default function PriceAlertModal({ product, isOpen, onClose, onSuccess })
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#22FF88] to-[#38BDF8] px-5 py-2 text-xs font-black text-black hover:opacity-90 transition disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#8cff00] to-[#38BDF8] px-5 py-2 text-xs font-black text-black hover:opacity-90 transition disabled:opacity-50"
               >
                 {loading ? "Saving..." : "Set Alert"}
               </button>

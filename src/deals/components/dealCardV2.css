@@ -4,7 +4,7 @@
    - White card, rounded 20-24px, soft shadow
    - Light grey image area (#f8f8f8), image centered (object-fit: contain)
    - Black "N% OFF" pill top-left
-   - Round wishlist heart top-right (green filled #22c55e when active)
+   - Round wishlist heart top-right (green filled #8cff00 when active)
    - Platform chip ("on Amazon", "on Flipkart")
    - Small uppercase green category label
    - Bold product name (2 lines ellipsis)
@@ -124,8 +124,8 @@
 
 .deal-card-heart-btn.is-active {
   background: #ffffff;
-  color: #22c55e !important;
-  border-color: #22c55e;
+  color: #8cff00 !important;
+  border-color: #8cff00;
 }
 
 .deal-heart-icon {
@@ -157,7 +157,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #16a34a; /* vibrant green */
+  color: #448000; /* vibrant green */
 }
 
 .deal-platform-chip {
@@ -195,7 +195,7 @@
 }
 
 .deal-card-name-link:hover {
-  color: #16a34a;
+  color: #448000;
 }
 
 /* Brand name */
@@ -249,7 +249,7 @@
   margin: 0 0 14px;
   font-size: 11px;
   font-weight: 600;
-  color: #16a34a;
+  color: #448000;
 }
 
 /* 3. FOOTER ROW: Cart button + View Product button */
@@ -283,8 +283,8 @@
 }
 
 .deal-cart-btn.is-added {
-  background: #22c55e !important;
-  color: #ffffff !important;
+  background: #8cff00 !important;
+  color: #050a02 !important;
 }
 
 .deal-view-btn {
@@ -292,8 +292,8 @@
   height: 48px;
   border-radius: 12px;
   background: #ffffff;
-  border: 1.5px solid #22c55e;
-  color: #15803d;
+  border: 1.5px solid #8cff00;
+  color: #3f7800;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -307,9 +307,9 @@
 }
 
 .deal-view-btn:hover {
-  background: #22c55e;
-  color: #ffffff;
-  border-color: #22c55e;
+  background: #8cff00;
+  color: #050a02;
+  border-color: #8cff00;
   transform: translateY(-1px);
 }
 

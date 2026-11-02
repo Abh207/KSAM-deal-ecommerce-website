@@ -84,7 +84,7 @@ export default function HelpLegalTab() {
       {/* 1. Wide Featured Assistance Banner */}
       <div className="kx-help-featured-banner">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/25 shrink-0">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#8cff00]/10 text-[#8cff00] border border-[#8cff00]/25 shrink-0">
             <MessageSquare size={22} />
           </div>
           <div>
@@ -99,7 +99,7 @@ export default function HelpLegalTab() {
 
         <a
           href={`${BASE_URL}contact-us.html`}
-          className="shrink-0 rounded-xl bg-gradient-to-r from-[#22FF88] to-[#38BDF8] px-6 py-3 text-xs font-black text-black hover:opacity-90 transition shadow-lg inline-flex items-center justify-center"
+          className="shrink-0 rounded-xl bg-gradient-to-r from-[#8cff00] to-[#38BDF8] px-6 py-3 text-xs font-black text-black hover:opacity-90 transition shadow-lg inline-flex items-center justify-center"
         >
           Get Help Now
         </a>

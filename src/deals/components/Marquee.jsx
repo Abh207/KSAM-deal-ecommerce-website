@@ -22,8 +22,8 @@ function ProductMiniCard({ product }) {
                 p-3
                 transition
                 hover:scale-[1.03]
-                hover:border-[#22FF88]/50
-                hover:shadow-[0_0_30px_rgba(34,255,136,.1)]
+                hover:border-[#8cff00]/50
+                hover:shadow-[0_0_30px_rgba(140, 255, 0, .1)]
             "
         >
 
@@ -57,7 +57,7 @@ function ProductMiniCard({ product }) {
                     className="
                         mt-1
                         font-black
-                        text-[#22FF88]
+                        text-[#8cff00]
                     "
                 >
                     ₹{product.price.toLocaleString("en-IN")}
@@ -89,7 +89,7 @@ function ProductMiniCard({ product }) {
             <button
                 className="
                     rounded-lg
-                    bg-[#22FF88]
+                    bg-[#8cff00]
                     px-3
                     py-2
                     text-xs
@@ -203,7 +203,7 @@ function Marquee() {
                         "
                     >
                         Deals moving
-                        <span className="text-[#22FF88]">
+                        <span className="text-[#8cff00]">
                             {" "}all day.
                         </span>
                     </h2>

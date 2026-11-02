@@ -1,6 +1,6 @@
 /* ==========================================================================
    KSAM DEAL - CUSTOMER PROFILE STYLES
-   Dark theme with brand accents (#22FF88, #38BDF8, #FFD60A)
+   Dark theme with brand accents (#8cff00, #38BDF8, #FFD60A)
    Responsive for 360px phones up to 4K displays
    ========================================================================== */
 
@@ -82,7 +82,7 @@
   position: relative;
   width: 100%;
   padding: 48px 24px 36px;
-  background: radial-gradient(circle at 18% 25%, rgba(34, 255, 136, 0.16) 0%, transparent 45%),
+  background: radial-gradient(circle at 18% 25%, rgba(140, 255, 0, 0.16) 0%, transparent 45%),
               radial-gradient(circle at 82% 40%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
               radial-gradient(circle at 50% 90%, rgba(255, 214, 10, 0.06) 0%, transparent 50%),
               #070b12;
@@ -101,7 +101,7 @@
 .ks-particle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 255, 136, 0.8) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(140, 255, 0, 0.8) 0%, transparent 70%);
   animation: ksParticleFloat 9s ease-in-out infinite alternate;
   will-change: transform, opacity;
 }
@@ -265,8 +265,8 @@
   font-weight: 700;
   padding: 3px 9px;
   border-radius: 999px;
-  background: rgba(34, 255, 136, 0.12);
-  border: 1px solid rgba(34, 255, 136, 0.35);
+  background: rgba(140, 255, 0, 0.12);
+  border: 1px solid rgba(140, 255, 0, 0.35);
   color: var(--ks-brand-green);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -308,8 +308,8 @@
 }
 
 .ks-stat-chip:hover {
-  border-color: rgba(34, 255, 136, 0.3);
-  background: rgba(34, 255, 136, 0.04);
+  border-color: rgba(140, 255, 0, 0.3);
+  background: rgba(140, 255, 0, 0.04);
   transform: translateY(-2px);
 }
 
@@ -334,7 +334,7 @@
 }
 
 .ks-stat-chip-icon.completeness {
-  background: rgba(34, 255, 136, 0.14);
+  background: rgba(140, 255, 0, 0.14);
   color: var(--ks-brand-green);
 }
 
@@ -428,7 +428,7 @@
   background: linear-gradient(90deg, var(--ks-brand-green), var(--ks-brand-blue));
   border-radius: 3px;
   transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 12px rgba(34, 255, 136, 0.5);
+  box-shadow: 0 0 12px rgba(140, 255, 0, 0.5);
 }
 
 /* Tab Panels */
@@ -532,7 +532,7 @@
 .ks-float-input:focus,
 .ks-float-select:focus {
   border-color: var(--ks-brand-green);
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.15);
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.15);
   background: rgba(18, 29, 49, 0.9);
 }
 
@@ -658,7 +658,7 @@
 
 .ks-switch input:checked + .ks-slider {
   background-color: var(--ks-brand-green);
-  box-shadow: 0 0 14px rgba(34, 255, 136, 0.4);
+  box-shadow: 0 0 14px rgba(140, 255, 0, 0.4);
 }
 
 .ks-switch input:checked + .ks-slider:before {
@@ -683,20 +683,20 @@
   gap: 8px;
   padding: 11px 22px;
   border-radius: 12px;
-  background: var(--ks-gradient-primary, linear-gradient(135deg, #00F5A0 0%, #00C982 50%, #25C8FF 100%)) !important;
+  background: var(--ks-gradient-primary, linear-gradient(135deg, #8cff00 0%, #00C982 50%, #25C8FF 100%)) !important;
   color: #050708 !important;
   font-weight: 700;
   font-size: 14px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 0 20px rgba(0, 245, 160, 0.28);
+  box-shadow: 0 0 20px rgba(140, 255, 0, 0.28);
   text-decoration: none;
 }
 
 .ks-btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 28px rgba(0, 245, 160, 0.45);
+  box-shadow: 0 0 28px rgba(140, 255, 0, 0.45);
 }
 
 .ks-btn-primary:active {
@@ -787,13 +787,13 @@
 
 .ks-address-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 245, 160, 0.35);
-  box-shadow: var(--ks-shadow-elevated, 0 16px 40px rgba(0, 0, 0, 0.25)), 0 0 20px rgba(0, 245, 160, 0.08);
+  border-color: rgba(140, 255, 0, 0.35);
+  box-shadow: var(--ks-shadow-elevated, 0 16px 40px rgba(0, 0, 0, 0.25)), 0 0 20px rgba(140, 255, 0, 0.08);
 }
 
 .ks-address-card.is-default {
-  border-color: rgba(0, 245, 160, 0.45);
-  background: linear-gradient(145deg, rgba(0, 245, 160, 0.06) 0%, rgba(17, 25, 37, 0.98) 60%);
+  border-color: rgba(140, 255, 0, 0.45);
+  background: linear-gradient(145deg, rgba(140, 255, 0, 0.06) 0%, rgba(17, 25, 37, 0.98) 60%);
 }
 
 .ks-address-card-header {
@@ -825,8 +825,8 @@
   font-weight: 800;
   padding: 3px 10px;
   border-radius: 999px;
-  background: rgba(34, 255, 136, 0.15);
-  border: 1px solid rgba(34, 255, 136, 0.4);
+  background: rgba(140, 255, 0, 0.15);
+  border: 1px solid rgba(140, 255, 0, 0.4);
   color: var(--ks-brand-green);
 }
 
@@ -891,7 +891,7 @@
 }
 
 .ks-address-act-btn.set-default:hover {
-  background: rgba(34, 255, 136, 0.1);
+  background: rgba(140, 255, 0, 0.1);
 }
 
 /* Empty State */
@@ -962,10 +962,10 @@
 }
 
 .ks-filter-chip.is-selected {
-  background: rgba(34, 255, 136, 0.14);
+  background: rgba(140, 255, 0, 0.14);
   border-color: var(--ks-brand-green);
   color: var(--ks-brand-green);
-  box-shadow: 0 0 16px rgba(34, 255, 136, 0.15);
+  box-shadow: 0 0 16px rgba(140, 255, 0, 0.15);
 }
 
 /* --------------------------------------------------------------------------
@@ -1007,8 +1007,8 @@
   background: rgba(13, 21, 36, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(34, 255, 136, 0.4);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(34, 255, 136, 0.2);
+  border: 1px solid rgba(140, 255, 0, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(140, 255, 0, 0.2);
   border-radius: 999px;
   padding: 10px 24px;
   display: flex;
@@ -1074,7 +1074,7 @@
   border: 1px solid var(--ks-border);
   border-radius: 20px;
   padding: 28px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(34, 255, 136, 0.1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(140, 255, 0, 0.1);
   position: relative;
   max-height: 90vh;
   overflow-y: auto;
@@ -1283,8 +1283,8 @@
 }
 
 .ks-user-badge.verified {
-  background: rgba(34, 255, 136, 0.12);
-  border: 1px solid rgba(34, 255, 136, 0.35);
+  background: rgba(140, 255, 0, 0.12);
+  border: 1px solid rgba(140, 255, 0, 0.35);
   color: var(--ks-brand-green);
   display: inline-flex;
   align-items: center;
@@ -1321,7 +1321,7 @@
 
 .ks-phone-input-group:focus-within {
   border-color: var(--ks-brand-green);
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.15);
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.15);
   background: rgba(18, 29, 49, 0.9);
 }
 
@@ -1397,7 +1397,7 @@
 }
 
 .ks-sidebar-btn.is-active {
-  background: rgba(34, 255, 136, 0.12);
+  background: rgba(140, 255, 0, 0.12);
   color: var(--ks-brand-green);
   font-weight: 700;
   border-left: 3px solid var(--ks-brand-green);
@@ -1463,7 +1463,7 @@
     color: #030508;
     border-color: var(--ks-brand-green);
     font-weight: 800;
-    box-shadow: 0 0 15px rgba(34, 255, 136, 0.3);
+    box-shadow: 0 0 15px rgba(140, 255, 0, 0.3);
   }
 }
 
@@ -1572,7 +1572,7 @@
   bottom: -4px;
   right: 0;
   background: var(--kx-surface-2, #141a1f);
-  border: 1.5px solid var(--kx-accent, #22ff88);
+  border: 1.5px solid var(--kx-accent, #8cff00);
   padding: 3px 8px;
   border-radius: 999px;
   font-size: 11px;
@@ -1870,8 +1870,8 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--kx-accent, #22ff88);
-  box-shadow: 0 0 8px var(--kx-accent, #22ff88);
+  background: var(--kx-accent, #8cff00);
+  box-shadow: 0 0 8px var(--kx-accent, #8cff00);
 }
 
 /* --------------------------------------------------------------------------
@@ -1925,8 +1925,8 @@
   top: 2px;
   bottom: 2px;
   border-radius: 999px;
-  background: var(--kx-accent, #22ff88);
-  box-shadow: 0 2px 14px rgba(34, 255, 136, 0.4);
+  background: var(--kx-accent, #8cff00);
+  box-shadow: 0 2px 14px rgba(140, 255, 0, 0.4);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
   pointer-events: none;
   z-index: 1;
@@ -1955,7 +1955,7 @@
 }
 
 .ks-nav-pill-btn:focus-visible {
-  box-shadow: 0 0 0 2px var(--kx-accent, #22ff88);
+  box-shadow: 0 0 0 2px var(--kx-accent, #8cff00);
 }
 
 .ks-nav-pill-btn.is-active {
@@ -2013,7 +2013,7 @@
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--kx-accent, #22ff88);
+  color: var(--kx-accent, #8cff00);
   margin-bottom: 8px;
 }
 
@@ -2037,7 +2037,7 @@
 
 /* Alternating Section Background Styles */
 .ks-band--mesh {
-  background: radial-gradient(circle at 10% 20%, rgba(34, 255, 136, 0.05) 0%, transparent 40%),
+  background: radial-gradient(circle at 10% 20%, rgba(140, 255, 0, 0.05) 0%, transparent 40%),
               radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
               var(--kx-base, #07090b);
   border-bottom: 1px solid var(--kx-border-subtle, rgba(255, 255, 255, 0.04));
@@ -2271,8 +2271,8 @@
 }
 
 .ks-password-input:focus {
-  border-color: var(--kx-accent, #22FF88) !important;
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.18) !important;
+  border-color: var(--kx-accent, #8cff00) !important;
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.18) !important;
   outline: none !important;
 }
 
@@ -2333,9 +2333,9 @@
 }
 
 .ks-status-pill.is-active {
-  background: rgba(34, 255, 136, 0.12);
-  color: #22FF88;
-  border: 1px solid rgba(34, 255, 136, 0.3);
+  background: rgba(140, 255, 0, 0.12);
+  color: #8cff00;
+  border: 1px solid rgba(140, 255, 0, 0.3);
 }
 
 .ks-status-pill.is-linked {
@@ -2398,11 +2398,11 @@
   border-radius: 50%;
   overflow: hidden;
   background: #000000;
-  border: 3px solid rgba(34, 255, 136, 0.35);
+  border: 3px solid rgba(140, 255, 0, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 24px rgba(34, 255, 136, 0.2);
+  box-shadow: 0 0 24px rgba(140, 255, 0, 0.2);
 }
 
 .ks-avatar-anchor-btn {
@@ -2412,7 +2412,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: var(--kx-accent, #22FF88);
+  background: var(--kx-accent, #8cff00);
   color: #07090b;
   display: flex;
   align-items: center;
@@ -2519,16 +2519,16 @@
 }
 
 .ks-phone-combined-input:focus-within {
-  border-color: var(--kx-accent, #22FF88);
-  box-shadow: 0 0 0 3px rgba(34, 255, 136, 0.18);
+  border-color: var(--kx-accent, #8cff00);
+  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.18);
 }
 
 .ks-phone-prefix-chip {
   padding: 0 14px;
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--kx-accent, #22FF88);
-  background: rgba(34, 255, 136, 0.08);
+  color: var(--kx-accent, #8cff00);
+  background: rgba(140, 255, 0, 0.08);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   height: 100%;
   display: flex;
@@ -2657,9 +2657,9 @@
     position: absolute;
     left: 0;
     border-radius: 12px;
-    background: rgba(34, 255, 136, 0.12);
-    border: 1px solid rgba(34, 255, 136, 0.35);
-    box-shadow: 0 0 20px rgba(34, 255, 136, 0.15);
+    background: rgba(140, 255, 0, 0.12);
+    border: 1px solid rgba(140, 255, 0, 0.35);
+    box-shadow: 0 0 20px rgba(140, 255, 0, 0.15);
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
     z-index: 1;
     pointer-events: none;
@@ -2688,7 +2688,7 @@
   }
 
   .ks-hub-sidebar .ks-nav-pill-btn.is-active {
-    color: var(--kx-accent, #22FF88) !important;
+    color: var(--kx-accent, #8cff00) !important;
     font-weight: 700;
     background: transparent !important;
   }
@@ -2720,9 +2720,9 @@
 }
 
 .ks-nav-pill-btn.is-active .ks-nav-count-badge {
-  background: rgba(34, 255, 136, 0.2);
-  color: #22FF88;
-  border-color: rgba(34, 255, 136, 0.4);
+  background: rgba(140, 255, 0, 0.2);
+  color: #8cff00;
+  border-color: rgba(140, 255, 0, 0.4);
 }
 
 /* Active Panel Main Area */
@@ -2758,7 +2758,7 @@
   padding: 24px 28px;
   min-height: 96px;
   border-radius: 24px;
-  background: radial-gradient(circle at 12% 20%, rgba(0, 245, 160, 0.12) 0%, transparent 55%), #0D121B;
+  background: radial-gradient(circle at 12% 20%, rgba(140, 255, 0, 0.12) 0%, transparent 55%), #0D121B;
   border: 1px solid rgba(148, 163, 184, 0.22);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
   margin-bottom: 24px;
@@ -2804,8 +2804,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(0, 245, 160, 0.15) 0%, rgba(37, 200, 255, 0.1) 100%);
-  border: 1px solid rgba(0, 245, 160, 0.25);
+  background: linear-gradient(135deg, rgba(140, 255, 0, 0.15) 0%, rgba(37, 200, 255, 0.1) 100%);
+  border: 1px solid rgba(140, 255, 0, 0.25);
 }
 
 @media (max-width: 640px) {
@@ -2914,14 +2914,14 @@
 }
 
 .ks-unsaved-btn--save {
-  background: var(--kx-accent, #22FF88);
-  border: 1px solid var(--kx-accent, #22FF88);
+  background: var(--kx-accent, #8cff00);
+  border: 1px solid var(--kx-accent, #8cff00);
   color: #05070a;
 }
 
 .ks-unsaved-btn--save:hover {
   background: #1de077;
-  box-shadow: 0 4px 16px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 4px 16px rgba(140, 255, 0, 0.35);
 }
 
 /* ==========================================================================
@@ -2964,8 +2964,8 @@
 
   .ks-hub-sidebar .ks-nav-active-pill {
     border-radius: 12px !important;
-    background: rgba(34, 255, 136, 0.12) !important;
-    border: 1px solid rgba(34, 255, 136, 0.3) !important;
+    background: rgba(140, 255, 0, 0.12) !important;
+    border: 1px solid rgba(140, 255, 0, 0.3) !important;
   }
 }
 
@@ -3527,7 +3527,7 @@
 }
 
 .ks-outline-pill-btn:focus-visible {
-  outline: 2px solid var(--kx-accent, #22FF88);
+  outline: 2px solid var(--kx-accent, #8cff00);
   outline-offset: 2px;
 }
 
@@ -3610,9 +3610,9 @@
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(34, 255, 136, 0.12);
-  color: #22FF88;
-  border: 1px solid rgba(34, 255, 136, 0.3);
+  background: rgba(140, 255, 0, 0.12);
+  color: #8cff00;
+  border: 1px solid rgba(140, 255, 0, 0.3);
   flex-shrink: 0;
 }
 
@@ -3728,8 +3728,8 @@
   width: 112px;
   height: 112px;
   border-radius: 50%;
-  border: 2px solid var(--kx-accent, #22FF88);
-  box-shadow: 0 0 16px rgba(34, 255, 136, 0.22);
+  border: 2px solid var(--kx-accent, #8cff00);
+  box-shadow: 0 0 16px rgba(140, 255, 0, 0.22);
   background: #000000;
   overflow: hidden;
   display: flex;
@@ -3746,7 +3746,7 @@
   border-radius: 50%;
   background: var(--kx-surface-2, #141a1f);
   border: 1.5px solid var(--kx-border-hover, rgba(255, 255, 255, 0.25));
-  color: var(--kx-accent, #22FF88);
+  color: var(--kx-accent, #8cff00);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3758,7 +3758,7 @@
 
 .ks-avatar-anchor-btn:hover {
   background: var(--kx-surface-3, #1c242b);
-  border-color: var(--kx-accent, #22FF88);
+  border-color: var(--kx-accent, #8cff00);
   transform: scale(1.06);
 }
 
@@ -3810,7 +3810,7 @@
   border-radius: 12px;
   font-size: 13.5px;
   font-weight: 700;
-  background: var(--kx-accent, #22FF88);
+  background: var(--kx-accent, #8cff00);
   color: #030508;
   border: none;
   cursor: pointer;
@@ -3819,7 +3819,7 @@
 
 .ks-photo-primary-btn:hover {
   background: #1de077;
-  box-shadow: 0 0 20px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 0 20px rgba(140, 255, 0, 0.35);
 }
 
 .ks-photo-primary-btn:active {
@@ -3930,9 +3930,9 @@
   height: 28px;
   padding: 0 10px;
   border-radius: 999px;
-  background: rgba(34, 255, 136, 0.08);
-  border: 1px solid rgba(34, 255, 136, 0.25);
-  color: var(--kx-accent, #22FF88);
+  background: rgba(140, 255, 0, 0.08);
+  border: 1px solid rgba(140, 255, 0, 0.25);
+  color: var(--kx-accent, #8cff00);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -3991,8 +3991,8 @@
 }
 
 .ks-unified-field:focus-within {
-  border-color: var(--kx-accent, #22FF88) !important;
-  box-shadow: 0 0 0 4px var(--kx-accent-soft, rgba(34, 255, 136, 0.14)) !important;
+  border-color: var(--kx-accent, #8cff00) !important;
+  box-shadow: 0 0 0 4px var(--kx-accent-soft, rgba(140, 255, 0, 0.14)) !important;
 }
 
 .ks-unified-field.is-error {
@@ -4106,7 +4106,7 @@
 }
 
 .ks-unified-field:focus-within .ks-unified-label {
-  color: var(--kx-accent, #22FF88);
+  color: var(--kx-accent, #8cff00);
 }
 
 /* Email "Change" Button */
@@ -4253,8 +4253,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--kx-accent, #22FF88);
-  box-shadow: 0 0 10px var(--kx-accent, #22FF88);
+  background: var(--kx-accent, #8cff00);
+  box-shadow: 0 0 10px var(--kx-accent, #8cff00);
   flex-shrink: 0;
 }
 
@@ -4293,7 +4293,7 @@
   height: 38px;
   padding: 0 16px;
   border-radius: 10px;
-  background: var(--kx-accent, #22FF88);
+  background: var(--kx-accent, #8cff00);
   border: none;
   color: #030508;
   font-size: 13px;
@@ -4307,7 +4307,7 @@
 
 .ks-save-bar .ks-btn-primary:hover {
   background: #1de077;
-  box-shadow: 0 0 16px rgba(34, 255, 136, 0.35);
+  box-shadow: 0 0 16px rgba(140, 255, 0, 0.35);
 }
 
 .ks-save-bar .ks-btn-primary:active {
@@ -4496,8 +4496,8 @@
 .ks-address-card:hover,
 .ks-product-dashboard-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 245, 160, 0.28) !important;
-  box-shadow: var(--ks-shadow-elevated, 0 16px 40px rgba(0, 0, 0, 0.32)), 0 12px 40px rgba(0, 245, 160, 0.06) !important;
+  border-color: rgba(140, 255, 0, 0.28) !important;
+  box-shadow: var(--ks-shadow-elevated, 0 16px 40px rgba(0, 0, 0, 0.32)), 0 12px 40px rgba(140, 255, 0, 0.06) !important;
 }
 
 /* 3. Modern Page Headings and Hero Cards (Band) */
@@ -4509,8 +4509,8 @@
   padding: 28px 32px !important;
   min-height: 96px;
   border-radius: 22px !important;
-  background: radial-gradient(circle at top right, rgba(0, 245, 160, 0.12), transparent 70%), linear-gradient(145deg, #101722, #080C12) !important;
-  border: 1px solid rgba(0, 245, 160, 0.14) !important;
+  background: radial-gradient(circle at top right, rgba(140, 255, 0, 0.12), transparent 70%), linear-gradient(145deg, #101722, #080C12) !important;
+  border: 1px solid rgba(140, 255, 0, 0.14) !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25) !important;
   margin-bottom: 24px;
   position: relative;
@@ -4528,7 +4528,7 @@
   letter-spacing: 0.14em !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
-  color: #00F5A0 !important;
+  color: #8cff00 !important;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -4554,8 +4554,8 @@
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(0, 245, 160, 0.15), rgba(39, 215, 255, 0.12));
-  border: 1px solid rgba(0, 245, 160, 0.25);
+  background: linear-gradient(135deg, rgba(140, 255, 0, 0.15), rgba(39, 215, 255, 0.12));
+  border: 1px solid rgba(140, 255, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4603,10 +4603,10 @@
 }
 
 .ks-empty-icon-tile--green {
-  background: rgba(0, 245, 160, 0.12) !important;
-  color: #00F5A0 !important;
-  border: 1px solid rgba(0, 245, 160, 0.3) !important;
-  box-shadow: 0 0 20px rgba(0, 245, 160, 0.15);
+  background: rgba(140, 255, 0, 0.12) !important;
+  color: #8cff00 !important;
+  border: 1px solid rgba(140, 255, 0, 0.3) !important;
+  box-shadow: 0 0 20px rgba(140, 255, 0, 0.15);
 }
 
 /* 5. Notification Preference Row Cards */
@@ -4620,14 +4620,14 @@
 
 .ks-notification-row:hover {
   background: linear-gradient(145deg, rgba(20, 30, 44, 0.85), rgba(11, 16, 24, 0.95)) !important;
-  border-color: rgba(0, 245, 160, 0.22) !important;
+  border-color: rgba(140, 255, 0, 0.22) !important;
 }
 
 /* Neon Green Active Toggle */
-.ks-tab-panel button.bg-\[\#22FF88\],
-.ks-tab-panel button.bg-\[\#00F5A0\] {
-  background-color: #00F5A0 !important;
-  box-shadow: 0 0 16px rgba(0, 245, 160, 0.35) !important;
+.ks-tab-panel button.bg-\[\#8cff00\],
+.ks-tab-panel button.bg-\[\#8cff00\] {
+  background-color: #8cff00 !important;
+  box-shadow: 0 0 16px rgba(140, 255, 0, 0.35) !important;
 }
 
 /* 6. Theme Selection Cards */
@@ -4714,7 +4714,7 @@
   }
 
   .ks-hub-sidebar .ks-nav-pill-btn:focus-visible {
-    outline: 2px solid var(--kx-accent, #22FF88) !important;
+    outline: 2px solid var(--kx-accent, #8cff00) !important;
     outline-offset: 2px !important;
   }
 

@@ -136,7 +136,7 @@ export default function PersonalInfoTab({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="text-3xl font-black text-[#22FF88] tracking-wider select-none">
+                <div className="text-3xl font-black text-[#8cff00] tracking-wider select-none">
                   {initials}
                 </div>
               )}
@@ -199,7 +199,7 @@ export default function PersonalInfoTab({
         <div className="ks-form-card-header">
           <div className="ks-form-header-left">
             <h3 className="ks-form-card-title">
-              <User size={18} className="text-[#22FF88] shrink-0" />
+              <User size={18} className="text-[#8cff00] shrink-0" />
               <span>Personal Details</span>
             </h3>
             <p className="ks-form-card-desc">
@@ -208,7 +208,7 @@ export default function PersonalInfoTab({
           </div>
 
           <div className="ks-dpdp-pill" aria-label="DPDP 2023 Protected">
-            <ShieldCheck size={14} className="shrink-0 text-[#22FF88]" />
+            <ShieldCheck size={14} className="shrink-0 text-[#8cff00]" />
             <span>DPDP 2023 Protected</span>
           </div>
         </div>
@@ -389,7 +389,7 @@ export default function PersonalInfoTab({
 
             {emailSuccess ? (
               <div className="py-4 text-center space-y-2">
-                <CheckCircle2 size={36} className="mx-auto text-[#22FF88]" />
+                <CheckCircle2 size={36} className="mx-auto text-[#8cff00]" />
                 <h4 className="text-sm font-bold text-white">Confirmation Link Sent!</h4>
                 <p className="text-xs text-gray-300">
                   Please check <strong>{newEmail}</strong> and click the link to confirm your new email.

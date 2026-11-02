@@ -24,7 +24,7 @@ const ROUTINE_STEPS = [
         icon: Feather,
         tip: "Seal in essential nourishment and replenish skin barrier lipids with a lightweight ceramide moisturizer.",
         tag: "Barrier Support",
-        color: "#10b981"
+        color: "#8cff00"
     },
     {
         num: "04",

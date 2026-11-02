@@ -24,7 +24,7 @@ function OrderSuccess() {
                 <button
                     onClick={() => {
                         window.location.href =
-                            "./product.html";
+                            "./products.html";
                     }}
                 >
                     Continue Shopping
@@ -128,15 +128,28 @@ function OrderSuccess() {
                 </div>
 
 
-                <button
-                    className="success-button"
-                    onClick={() => {
-                        window.location.href =
-                            "./shop.html";
-                    }}
-                >
-                    Continue Shopping →
-                </button>
+                <div className="success-actions-row" style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "24px", flexWrap: "wrap" }}>
+                    <button
+                        className="success-button"
+                        style={{ background: "linear-gradient(135deg, #2DFFB2, #26D9F8)", color: "#05070B", fontWeight: 700 }}
+                        onClick={() => {
+                            window.location.href =
+                                "./profile.html?tab=orders";
+                        }}
+                    >
+                        Track Order in History 📦
+                    </button>
+                    <button
+                        className="success-button"
+                        style={{ background: "transparent", border: "1px solid rgba(148, 163, 184, 0.3)", color: "#cbd5e1" }}
+                        onClick={() => {
+                            window.location.href =
+                                "./products.html";
+                        }}
+                    >
+                        Continue Shopping →
+                    </button>
+                </div>
 
             </div>
 

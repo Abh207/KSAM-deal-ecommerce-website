@@ -48,7 +48,7 @@ export function showWishlistToast(message, type = "success") {
   toast.className = "ksam-wishlist-toast";
   const isRemoved = message.toLowerCase().includes("remove");
   const icon = isRemoved ? "✕" : "♥";
-  const accentColor = isRemoved ? "#ffffff" : "#4ade80";
+  const accentColor = isRemoved ? "#ffffff" : "#8cff00";
 
   toast.style.cssText = `
     display: flex;

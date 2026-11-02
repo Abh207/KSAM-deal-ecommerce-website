@@ -5,7 +5,7 @@
 
 :root {
     --testimonials-bg: linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
-    --testimonials-label: #059669;
+    --testimonials-label: #448000;
     --testimonials-heading: #0b1230;
     --testimonials-subtitle: #475569;
     --testimonials-card-bg: #ffffff;
@@ -21,10 +21,10 @@
     --testimonials-arrow-border: 1px solid #e2e8f0;
     --testimonials-arrow-color: #0b1230;
     --testimonials-arrow-hover-bg: #f0fdf4;
-    --testimonials-arrow-hover-border: #059669;
-    --testimonials-arrow-hover-color: #059669;
+    --testimonials-arrow-hover-border: #448000;
+    --testimonials-arrow-hover-color: #448000;
     --testimonials-dot-inactive: #cbd5e1;
-    --testimonials-dot-active: #059669;
+    --testimonials-dot-active: #448000;
     --testimonials-counter-color: #475569;
 }
 
@@ -185,7 +185,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #22ff88, #38bdf8);
+    background: linear-gradient(135deg, #8cff00, #38bdf8);
     color: #030303;
     font-size: 14px;
     font-weight: 800;
@@ -217,7 +217,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #22ff88;
+    background: #8cff00;
     color: #030303;
     font-size: 10px;
     font-weight: 800;

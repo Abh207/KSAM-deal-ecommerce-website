@@ -4020,12 +4020,12 @@
     inset: 0;
     pointer-events: none;
     z-index: 2;
-    /* Soft mint blend: fade from hero mint (#f0fff7) on the left over ~28%, subtle mint tint rgba(220,252,231,0.15), and soft bottom fade */
+    /* Soft mint blend: fade from hero mint (#f0fff7) on the left over ~28%, subtle mint tint rgba(140, 255, 0, 0.14), and soft bottom fade */
     background:
         linear-gradient(90deg, #f0fff7 0%, rgba(240, 255, 247, 0.85) 12%, transparent 28%),
         linear-gradient(to bottom, transparent 82%, #f0fff7 100%),
         radial-gradient(circle at 100% 100%, #f0fff7 0%, rgba(240, 255, 247, 0.85) 10%, transparent 25%),
-        rgba(220, 252, 231, 0.15);
+        rgba(140, 255, 0, 0.14);
 }
 
 /* MOBILE HERO VIDEO BLOCK (under 768px, appears below text) */

@@ -27,11 +27,11 @@
    -------------------------------------------------------------------------- */
 .kx-page [data-tone="green-blue"],
 .kx-page.kx-tone-green-blue {
-  --tone-from: #00F5A0;
+  --tone-from: #8cff00;
   --tone-to: #22D3EE;
-  --tone-glow: rgba(0, 245, 160, 0.28);
-  --tone-soft: rgba(0, 245, 160, 0.10);
-  --tone-text: #00F5A0;
+  --tone-glow: rgba(140, 255, 0, 0.28);
+  --tone-soft: rgba(140, 255, 0, 0.10);
+  --tone-text: #8cff00;
 }
 
 .kx-page [data-tone="blue-purple"],
@@ -46,7 +46,7 @@
 .kx-page [data-tone="yellow-green"],
 .kx-page.kx-tone-yellow-green {
   --tone-from: #FACC15;
-  --tone-to: #00F5A0;
+  --tone-to: #8cff00;
   --tone-glow: rgba(250, 204, 21, 0.28);
   --tone-soft: rgba(250, 204, 21, 0.10);
   --tone-text: #FACC15;
@@ -72,28 +72,28 @@
 
 .kx-page [data-tone="green-purple"],
 .kx-page.kx-tone-green-purple {
-  --tone-from: #00F5A0;
+  --tone-from: #8cff00;
   --tone-to: #A855F7;
-  --tone-glow: rgba(0, 245, 160, 0.28);
-  --tone-soft: rgba(0, 245, 160, 0.10);
-  --tone-text: #00F5A0;
+  --tone-glow: rgba(140, 255, 0, 0.28);
+  --tone-soft: rgba(140, 255, 0, 0.10);
+  --tone-text: #8cff00;
 }
 
 /* Light Mode Tone Adjustments for WCAG AA */
 .kx-page[data-theme="light"] [data-tone="green-blue"] {
-  --tone-from: #059669;
+  --tone-from: #448000;
   --tone-to: #0284C7;
   --tone-glow: rgba(5, 150, 105, 0.18);
   --tone-soft: rgba(5, 150, 105, 0.08);
-  --tone-text: #059669;
+  --tone-text: #448000;
 }
 
 .kx-page[data-theme="light"] [data-tone="green-purple"] {
-  --tone-from: #059669;
+  --tone-from: #448000;
   --tone-to: #7C3AED;
   --tone-glow: rgba(5, 150, 105, 0.18);
   --tone-soft: rgba(5, 150, 105, 0.08);
-  --tone-text: #059669;
+  --tone-text: #448000;
 }
 
 .kx-page[data-theme="light"] [data-tone="blue-purple"] {
@@ -106,7 +106,7 @@
 
 .kx-page[data-theme="light"] [data-tone="yellow-green"] {
   --tone-from: #B45309;
-  --tone-to: #059669;
+  --tone-to: #448000;
   --tone-glow: rgba(180, 83, 9, 0.18);
   --tone-soft: rgba(180, 83, 9, 0.08);
   --tone-text: #B45309;
@@ -132,7 +132,7 @@
    3. Key Heading Gradient Accent (Phrase Only, Never Body)
    -------------------------------------------------------------------------- */
 .kx-page .kx-gradient-text {
-  background: linear-gradient(135deg, var(--tone-from, #22FF88) 0%, var(--tone-to, #38BDF8) 100%);
+  background: linear-gradient(135deg, var(--tone-from, #8cff00) 0%, var(--tone-to, #38BDF8) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -163,9 +163,9 @@
   padding: 1.5px;
   background: conic-gradient(
     from var(--kx-angle, 0deg),
-    var(--tone-from, #22FF88),
+    var(--tone-from, #8cff00),
     var(--tone-to, #38BDF8),
-    var(--tone-from, #22FF88)
+    var(--tone-from, #8cff00)
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -190,14 +190,14 @@
 }
 
 .kx-page .kx-glow:hover {
-  box-shadow: 0 12px 32px -4px var(--tone-glow, rgba(34, 255, 136, 0.18));
+  box-shadow: 0 12px 32px -4px var(--tone-glow, rgba(140, 255, 0, 0.18));
   border-color: transparent;
 }
 
 /* Static Fallback for unsupported browsers */
 @supports not (background: paint(something)) {
   .kx-page .kx-glow::before {
-    background: linear-gradient(135deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+    background: linear-gradient(135deg, var(--tone-from, #8cff00), var(--tone-to, #38BDF8));
   }
 }
 
@@ -226,7 +226,7 @@
   height: clamp(240px, 40vw, 480px);
   top: -15%;
   left: -8%;
-  background: radial-gradient(circle, var(--tone-from, #22FF88) 0%, transparent 68%);
+  background: radial-gradient(circle, var(--tone-from, #8cff00) 0%, transparent 68%);
   opacity: 0.22;
   animation: kxAuroraDrift1 24s ease-in-out infinite alternate;
 }
@@ -246,7 +246,7 @@
   height: clamp(180px, 28vw, 360px);
   bottom: -15%;
   left: 28%;
-  background: radial-gradient(circle, var(--tone-from, #22FF88) 0%, transparent 65%);
+  background: radial-gradient(circle, var(--tone-from, #8cff00) 0%, transparent 65%);
   opacity: 0.16;
   animation: kxAuroraDrift3 22s ease-in-out infinite alternate;
 }
@@ -381,15 +381,15 @@
 }
 
 .kx-page .kx-btn-primary-gradient {
-  background: linear-gradient(135deg, #22FF88 0%, #38BDF8 100%);
+  background: linear-gradient(135deg, #8cff00 0%, #38BDF8 100%);
   color: #05070B !important;
   border: none;
-  box-shadow: 0 4px 20px rgba(34, 255, 136, 0.3);
+  box-shadow: 0 4px 20px rgba(140, 255, 0, 0.3);
 }
 
 .kx-page .kx-btn-primary-gradient:hover {
   background: linear-gradient(135deg, #29FFA0 0%, #4FC3F7 100%);
-  box-shadow: 0 8px 28px rgba(34, 255, 136, 0.42);
+  box-shadow: 0 8px 28px rgba(140, 255, 0, 0.42);
 }
 
 .kx-page .kx-btn-outline-glow {
@@ -433,8 +433,8 @@
 .kx-reading-progress-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #22FF88 0%, #38BDF8 100%);
-  box-shadow: 0 0 8px rgba(34, 255, 136, 0.5);
+  background: linear-gradient(90deg, #8cff00 0%, #38BDF8 100%);
+  box-shadow: 0 0 8px rgba(140, 255, 0, 0.5);
   transition: width 60ms linear;
 }
 
@@ -467,7 +467,7 @@
   color: var(--tone-from, var(--kx-accent));
   border: 1px solid var(--tone-from, var(--kx-accent-border));
   box-shadow: inset 0 0 20px var(--tone-glow, var(--kx-accent-glow)),
-              0 8px 24px -4px var(--tone-glow, rgba(34, 255, 136, 0.2));
+              0 8px 24px -4px var(--tone-glow, rgba(140, 255, 0, 0.2));
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
 
@@ -488,9 +488,9 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: linear-gradient(135deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  background: linear-gradient(135deg, var(--tone-from, #8cff00), var(--tone-to, #38BDF8));
   color: #05070B;
-  box-shadow: 0 4px 12px var(--tone-glow, rgba(34, 255, 136, 0.3));
+  box-shadow: 0 4px 12px var(--tone-glow, rgba(140, 255, 0, 0.3));
   z-index: 10;
 }
 
@@ -569,8 +569,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--tone-from, #22FF88) 0%, var(--tone-to, #38BDF8) 100%);
-  box-shadow: 0 0 8px var(--tone-glow, rgba(34, 255, 136, 0.4));
+  background: linear-gradient(135deg, var(--tone-from, #8cff00) 0%, var(--tone-to, #38BDF8) 100%);
+  box-shadow: 0 0 8px var(--tone-glow, rgba(140, 255, 0, 0.4));
 }
 
 .kx-page .kx-callout-block {
@@ -590,7 +590,7 @@
   bottom: 0;
   width: 4px;
   border-radius: 16px 0 0 16px;
-  background: linear-gradient(to bottom, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  background: linear-gradient(to bottom, var(--tone-from, #8cff00), var(--tone-to, #38BDF8));
 }
 
 .kx-page .kx-animated-link {
@@ -608,7 +608,7 @@
   left: 0;
   width: 100%;
   height: 1.5px;
-  background: linear-gradient(90deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  background: linear-gradient(90deg, var(--tone-from, #8cff00), var(--tone-to, #38BDF8));
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -670,7 +670,7 @@
   bottom: 0;
   width: 3.5px;
   border-radius: 0 4px 4px 0;
-  background: linear-gradient(180deg, var(--tone-from, #22FF88), var(--tone-to, #38BDF8));
+  background: linear-gradient(180deg, var(--tone-from, #8cff00), var(--tone-to, #38BDF8));
 }
 
 .kx-page .kx-toc-link .kx-toc-bullet {
@@ -682,8 +682,8 @@
 }
 
 .kx-page .kx-toc-link.is-active .kx-toc-bullet {
-  background: var(--tone-from, #22FF88);
-  box-shadow: 0 0 8px var(--tone-from, #22FF88);
+  background: var(--tone-from, #8cff00);
+  box-shadow: 0 0 8px var(--tone-from, #8cff00);
 }
 
 /* Mobile horizontal pill bar */
@@ -722,7 +722,7 @@
 }
 
 .kx-page .kx-mobile-toc-pill.is-active {
-  background: linear-gradient(135deg, var(--tone-from, #22FF88) 0%, var(--tone-to, #38BDF8) 100%);
+  background: linear-gradient(135deg, var(--tone-from, #8cff00) 0%, var(--tone-to, #38BDF8) 100%);
   color: #05070B !important;
   font-weight: 800;
   border-color: transparent;
@@ -859,7 +859,7 @@
    15. LiveBackdrop Palette Overrides for the 4 Pages
    -------------------------------------------------------------------------- */
 .kx-page .kx-live-backdrop[data-palette="contact"] .kx-orb-emerald {
-  background: radial-gradient(circle at 45% 45%, rgba(34, 255, 136, 0.24) 0%, rgba(34, 255, 136, 0.08) 45%, transparent 70%);
+  background: radial-gradient(circle at 45% 45%, rgba(140, 255, 0, 0.24) 0%, rgba(140, 255, 0, 0.08) 45%, transparent 70%);
 }
 .kx-page .kx-live-backdrop[data-palette="contact"] .kx-orb-cyan {
   background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.07) 50%, transparent 70%);
@@ -882,14 +882,14 @@
   background: radial-gradient(circle at 45% 45%, rgba(255, 214, 10, 0.22) 0%, rgba(255, 214, 10, 0.07) 45%, transparent 70%);
 }
 .kx-page .kx-live-backdrop[data-palette="terms"] .kx-orb-cyan {
-  background: radial-gradient(circle at 50% 50%, rgba(34, 255, 136, 0.20) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(140, 255, 0, 0.20) 0%, transparent 70%);
 }
 .kx-page .kx-live-backdrop[data-palette="terms"] .kx-orb-violet {
   background: radial-gradient(circle at 45% 55%, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
 }
 
 .kx-page .kx-live-backdrop[data-palette="affiliate"] .kx-orb-emerald {
-  background: radial-gradient(circle at 45% 45%, rgba(34, 255, 136, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle at 45% 45%, rgba(140, 255, 0, 0.22) 0%, transparent 70%);
 }
 .kx-page .kx-live-backdrop[data-palette="affiliate"] .kx-orb-cyan {
   background: radial-gradient(circle at 50% 50%, rgba(255, 214, 10, 0.18) 0%, transparent 70%);
@@ -913,8 +913,8 @@
 
 .kx-page .kx-transform-card.is-active-view {
   transform: translateY(-2px);
-  box-shadow: 0 16px 42px -6px var(--tone-glow, rgba(0, 245, 160, 0.28)),
-              0 0 0 1px var(--tone-from, rgba(0, 245, 160, 0.35));
+  box-shadow: 0 16px 42px -6px var(--tone-glow, rgba(140, 255, 0, 0.28)),
+              0 0 0 1px var(--tone-from, rgba(140, 255, 0, 0.35));
   border-color: transparent;
 }
 

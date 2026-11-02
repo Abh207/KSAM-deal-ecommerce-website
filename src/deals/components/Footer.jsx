@@ -183,10 +183,10 @@ function Stat({ value, suffix, label, icon, run, index }) {
         <Icon name={icon} size={18} />
       </div>
       <p className="text-3xl font-bold tabular-nums text-white sm:text-4xl" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        {n.toLocaleString("en-IN")}<span className="text-[#22FF88]">{suffix}</span>
+        {n.toLocaleString("en-IN")}<span className="text-[#8cff00]">{suffix}</span>
       </p>
       <p className="text-sm text-white/40">{label}</p>
-      <span className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-[#22FF88] to-[#38BDF8] transition-all duration-[1800ms] ease-out"
+      <span className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-[#8cff00] to-[#38BDF8] transition-all duration-[1800ms] ease-out"
         style={{ width: run ? "100%" : "0%" }} />
     </div>
   );
@@ -207,9 +207,9 @@ function TimeBox({ value, label }) {
 
 function LinkGroup({ title, links, shown, order, className = "" }) {
   return (
-    <div className={`ks-group group/col border border-white/10 bg-white/[0.02] transition-all duration-500 hover:border-[#22FF88]/30 hover:bg-[#22FF88]/[0.025] ${className}`}>
+    <div className={`ks-group group/col border border-white/10 bg-white/[0.02] transition-all duration-500 hover:border-[#8cff00]/30 hover:bg-[#8cff00]/[0.025] ${className}`}>
       <h4 className="ks-hgap flex items-center text-base font-bold text-white">
-        <span className="h-4 w-1 rounded-full bg-gradient-to-b from-[#22FF88] to-[#38BDF8] transition-all duration-500 group-hover/col:h-5" />
+        <span className="h-4 w-1 rounded-full bg-gradient-to-b from-[#8cff00] to-[#38BDF8] transition-all duration-500 group-hover/col:h-5" />
         {title}
       </h4>
       <ul className="ks-list">
@@ -221,9 +221,9 @@ function LinkGroup({ title, links, shown, order, className = "" }) {
             <li key={label}
               className={`transition-all duration-700 ${shown ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}`}
               style={{ transitionDelay: shown ? `${order * 120 + i * 70}ms` : "0ms" }}>
-              <a href={href} className="group flex w-fit items-center gap-2 text-[15px] text-white/45 transition-all duration-300 hover:translate-x-1.5 hover:text-[#22FF88]">
+              <a href={href} className="group flex w-fit items-center gap-2 text-[15px] text-white/45 transition-all duration-300 hover:translate-x-1.5 hover:text-[#8cff00]">
                 {label}
-                <span className="h-px w-0 bg-[#22FF88] transition-all duration-300 group-hover:w-5" />
+                <span className="h-px w-0 bg-[#8cff00] transition-all duration-300 group-hover:w-5" />
               </a>
             </li>
           );
@@ -235,7 +235,7 @@ function LinkGroup({ title, links, shown, order, className = "" }) {
 
 function Confetti({ run }) {
   if (!run) return null;
-  const colors = ["#22FF88", "#38BDF8", "#A855F7", "#FFD60A", "#ffffff"];
+  const colors = ["#8cff00", "#38BDF8", "#A855F7", "#FFD60A", "#ffffff"];
   return (
     <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-hidden="true">
       {Array.from({ length: 56 }, (_, i) => (
@@ -374,7 +374,7 @@ function Footer() {
       {/* Ambient glow with mouse parallax */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="ks-par absolute -left-32 top-40" style={{ "--k": 1 }}>
-          <div className="ks-float h-[420px] w-[420px] rounded-full bg-[#22FF88]/[0.06] blur-[130px]" />
+          <div className="ks-float h-[420px] w-[420px] rounded-full bg-[#8cff00]/[0.06] blur-[130px]" />
         </div>
         <div className="ks-par absolute -right-32 bottom-20" style={{ "--k": -1.4 }}>
           <div className="ks-float h-[480px] w-[480px] rounded-full bg-[#38BDF8]/[0.06] blur-[140px]" style={{ animationDelay: "-5s" }} />
@@ -407,11 +407,11 @@ function Footer() {
           <div className="ks-surface ks-news-in relative overflow-hidden bg-[#050505]">
             {/* Cursor spotlight */}
             <div className="pointer-events-none absolute inset-0 opacity-80"
-              style={{ background: "radial-gradient(460px circle at var(--mx,50%) var(--my,50%), rgba(34,255,136,.14), transparent 60%)" }} />
+              style={{ background: "radial-gradient(460px circle at var(--mx,50%) var(--my,50%), rgba(140, 255, 0, .14), transparent 60%)" }} />
 
             {/* Twinkling particles */}
             {Array.from({ length: 22 }, (_, i) => (
-              <span key={i} className="ks-twinkle pointer-events-none absolute h-1 w-1 rounded-full bg-[#22FF88]/60"
+              <span key={i} className="ks-twinkle pointer-events-none absolute h-1 w-1 rounded-full bg-[#8cff00]/60"
                 style={{ left: `${5 + (i * 17) % 90}%`, top: `${8 + (i * 31) % 84}%`, animationDelay: `${i * 260}ms` }} />
             ))}
 
@@ -450,15 +450,15 @@ function Footer() {
                 {/* Live activity */}
                 <div className="h-12" aria-live="polite">
                   <div key={activityIdx} className="ks-slide-in ks-surface-soft inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] py-2 pl-2 pr-5">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#22FF88] to-[#38BDF8] text-xs font-black text-black">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#8cff00] to-[#38BDF8] text-xs font-black text-black">
                       {who[0]}
                     </span>
                     <span className="text-xs text-white/55">
                       <b className="font-semibold text-white">{who}</b> from {city} claimed 10% off · {when}
                     </span>
                     <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22FF88]/70" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[#22FF88]" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#8cff00]/70" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[#8cff00]" />
                     </span>
                   </div>
                 </div>
@@ -466,14 +466,14 @@ function Footer() {
 
               {/* RIGHT — 3D tilt card */}
               <div className="relative [perspective:1200px]">
-                <div className="ks-glow absolute bg-gradient-to-r from-[#22FF88]/10 via-[#38BDF8]/5 to-[#A855F7]/10 opacity-80 blur-2xl" />
+                <div className="ks-glow absolute bg-gradient-to-r from-[#8cff00]/10 via-[#38BDF8]/5 to-[#A855F7]/10 opacity-80 blur-2xl" />
                 <div className="ks-surface-soft ks-tilt ks-card relative border border-white/10 bg-white/[0.03] shadow-2xl backdrop-blur-xl">
                   <div className="ks-card-head flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold text-white/35">Member discount</p>
                       <p className="mt-1.5 text-base font-semibold text-white">Claim your welcome offer</p>
                     </div>
-                    <div className="ks-pulse-ring flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#22FF88] to-[#38BDF8] text-base font-black text-black">
+                    <div className="ks-pulse-ring flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8cff00] to-[#38BDF8] text-base font-black text-black">
                       10%
                     </div>
                   </div>
@@ -481,7 +481,7 @@ function Footer() {
                   {!subscribed ? (
                     <form onSubmit={handleSubscribe} noValidate className="ks-form">
                       <label htmlFor="newsletter-email" className="block text-sm font-semibold text-white/55">Email address</label>
-                      <div className={`ks-input ks-field flex items-center border bg-black/50 transition-all duration-300 ${emailError ? "border-red-500/60" : "border-white/10 focus-within:border-[#22FF88]/60 focus-within:shadow-[0_0_40px_rgba(34,255,136,.12)]"}`}
+                      <div className={`ks-input ks-field flex items-center border bg-black/50 transition-all duration-300 ${emailError ? "border-red-500/60" : "border-white/10 focus-within:border-[#8cff00]/60 focus-within:shadow-[0_0_40px_rgba(140, 255, 0, .12)]"}`}
                         style={{ height: "48px", minHeight: "48px", borderRadius: "14px" }}>
                         <span className="text-white/40"><Icon name="mail" size={20} /></span>
                         <input
@@ -498,7 +498,7 @@ function Footer() {
                         <div className="ks-slide-in ks-chip-gap flex flex-wrap">
                           {["gmail.com", "outlook.com", "yahoo.com"].map((d) => (
                             <button key={d} type="button" onClick={() => setEmail(`${email}@${d}`)}
-                              className="ks-minichip rounded-full border border-white/10 text-xs text-white/50 transition hover:-translate-y-0.5 hover:border-[#22FF88]/40 hover:text-[#22FF88]">
+                              className="ks-minichip rounded-full border border-white/10 text-xs text-white/50 transition hover:-translate-y-0.5 hover:border-[#8cff00]/40 hover:text-[#8cff00]">
                               @{d}
                             </button>
                           ))}
@@ -511,7 +511,7 @@ function Footer() {
                         onMouseMove={magnetMove}
                         onMouseLeave={() => setMagnet({ x: 0, y: 0 })}
                         style={{ transform: `translate(${magnet.x}px, ${magnet.y}px)`, height: "48px", minHeight: "48px", borderRadius: "14px" }}
-                        className="group/button ks-submit relative flex w-full items-center justify-center overflow-hidden bg-gradient-to-r from-[#22FF88] via-[#35e6a0] to-[#38BDF8] text-base font-black text-black transition-[box-shadow,opacity,transform] duration-300 hover:shadow-[0_0_45px_rgba(34,255,136,.4)] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22FF88] active:brightness-95 disabled:cursor-not-allowed disabled:opacity-70">
+                        className="group/button ks-submit relative flex w-full items-center justify-center overflow-hidden bg-gradient-to-r from-[#8cff00] via-[#35e6a0] to-[#38BDF8] text-base font-black text-black transition-[box-shadow,opacity,transform] duration-300 hover:shadow-[0_0_45px_rgba(140, 255, 0, .4)] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8cff00] active:brightness-95 disabled:cursor-not-allowed disabled:opacity-70">
                         <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 group-hover/button:translate-x-full" />
                         {loading ? (
                           <span className="relative z-10 flex items-center gap-2.5">
@@ -532,9 +532,9 @@ function Footer() {
                     </form>
                   ) : (
                     <div className="ks-success flex flex-col items-center justify-center text-center" role="status">
-                      <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#22FF88]/10">
-                        <div className="absolute inset-0 animate-ping rounded-full bg-[#22FF88]/10" />
-                        <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-[#22FF88] text-black shadow-[0_0_40px_rgba(34,255,136,.35)]">
+                      <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#8cff00]/10">
+                        <div className="absolute inset-0 animate-ping rounded-full bg-[#8cff00]/10" />
+                        <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-[#8cff00] text-black shadow-[0_0_40px_rgba(140, 255, 0, .35)]">
                           <Icon name="check" size={30} strokeWidth={3} />
                         </div>
                       </div>
@@ -542,8 +542,8 @@ function Footer() {
                       <p className="text-sm text-white/45">Use this code at checkout:</p>
 
                       <button type="button" onClick={copyCoupon}
-                        className="ks-coupon group flex items-center border border-dashed border-[#22FF88]/50 bg-[#22FF88]/[0.06] transition hover:scale-[1.03] hover:bg-[#22FF88]/10">
-                        <span className="text-xl font-bold tracking-widest text-[#22FF88]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{coupon}</span>
+                        className="ks-coupon group flex items-center border border-dashed border-[#8cff00]/50 bg-[#8cff00]/[0.06] transition hover:scale-[1.03] hover:bg-[#8cff00]/10">
+                        <span className="text-xl font-bold tracking-widest text-[#8cff00]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{coupon}</span>
                         <span className="flex items-center gap-1.5 text-xs text-white/50 group-hover:text-white">
                           <Icon name={copied ? "check" : "copy"} size={14} />
                           {copied ? "Copied" : "Copy"}
@@ -551,7 +551,7 @@ function Footer() {
                       </button>
 
                       <button type="button" onClick={() => setSubscribed(false)}
-                        className="text-xs font-bold text-white/50 underline-offset-4 hover:text-[#22FF88] hover:underline">
+                        className="text-xs font-bold text-white/50 underline-offset-4 hover:text-[#8cff00] hover:underline">
                         Use another email
                       </button>
                     </div>
@@ -576,9 +576,9 @@ function Footer() {
         <div ref={linksRef} className="ks-links">
           <div className={`ks-brand transition-all duration-1000 ${linksShown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <div className="flex items-center gap-4">
-              <span className="ks-logo flex h-12 w-12 items-center justify-center rounded-2xl bg-[#22FF88] text-xl font-black text-black shadow-[0_0_30px_rgba(34,255,136,.25)]">K</span>
+              <span className="ks-logo flex h-12 w-12 items-center justify-center rounded-2xl bg-[#8cff00] text-xl font-black text-black shadow-[0_0_30px_rgba(140, 255, 0, .25)]">K</span>
               <span className="text-2xl font-bold text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                KSAM<span className="text-[#22FF88]">DEAL</span>
+                KSAM<span className="text-[#8cff00]">DEAL</span>
               </span>
             </div>
             <p className="max-w-sm text-[15px] leading-8 text-white/45">
@@ -622,7 +622,7 @@ function Footer() {
             <p className="text-xs font-semibold text-white/30">Secure payments</p>
             <div className="ks-chips flex flex-wrap">
               {["VISA", "Mastercard", "PayPal", "UPI", "Apple Pay", "G Pay"].map((p) => (
-                <div key={p} className="ks-chip flex items-center justify-center border border-white/10 bg-white/[0.025] text-[11px] font-black text-white/50 transition-all duration-300 hover:-translate-y-1 hover:border-[#22FF88]/40 hover:text-white">
+                <div key={p} className="ks-chip flex items-center justify-center border border-white/10 bg-white/[0.025] text-[11px] font-black text-white/50 transition-all duration-300 hover:-translate-y-1 hover:border-[#8cff00]/40 hover:text-white">
                   {p}
                 </div>
               ))}
@@ -631,7 +631,7 @@ function Footer() {
           <div>
             <p className="text-xs font-semibold text-white/30">Get the app</p>
             <div className="ks-chips flex">
-              <a href="#" className="ks-chip ks-chip-btn border border-white/10 bg-white/[0.025] text-xs font-bold text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-[#22FF88]/40 hover:text-white">App Store</a>
+              <a href="#" className="ks-chip ks-chip-btn border border-white/10 bg-white/[0.025] text-xs font-bold text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-[#8cff00]/40 hover:text-white">App Store</a>
               <a href="#" className="ks-chip ks-chip-btn border border-white/10 bg-white/[0.025] text-xs font-bold text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-[#38BDF8]/40 hover:text-white">▶ Google Play</a>
             </div>
           </div>
@@ -646,16 +646,16 @@ function Footer() {
           </p>
           <p>© {new Date().getFullYear()} KSAM Deal. All rights reserved.</p>
           <div className="ks-bottom-links">
-            <a href={`${import.meta.env.BASE_URL}privacy-policy.html`} className="transition hover:text-[#22FF88]">Privacy Policy</a>
-            <a href={`${import.meta.env.BASE_URL}terms.html`} className="transition hover:text-[#22FF88]">Terms</a>
-            <a href={`${import.meta.env.BASE_URL}affiliate-disclosure.html`} className="transition hover:text-[#22FF88]">Affiliate Disclosure</a>
-            <a href="#" className="transition hover:text-[#22FF88]">Cookie Settings</a>
+            <a href={`${import.meta.env.BASE_URL}privacy-policy.html`} className="transition hover:text-[#8cff00]">Privacy Policy</a>
+            <a href={`${import.meta.env.BASE_URL}terms.html`} className="transition hover:text-[#8cff00]">Terms</a>
+            <a href={`${import.meta.env.BASE_URL}affiliate-disclosure.html`} className="transition hover:text-[#8cff00]">Affiliate Disclosure</a>
+            <a href="#" className="transition hover:text-[#8cff00]">Cookie Settings</a>
             <select defaultValue="INR" aria-label="Currency" className="cursor-pointer bg-transparent text-white/45 outline-none">
               <option value="INR" className="bg-black text-white">₹ INR</option>
               <option value="USD" className="bg-black text-white">$ USD</option>
             </select>
             <button type="button" onClick={toggleTheme}
-              className="ks-pill flex items-center rounded-full border border-white/10 transition hover:border-[#22FF88]/40 hover:text-[#22FF88]">
+              className="ks-pill flex items-center rounded-full border border-white/10 transition hover:border-[#8cff00]/40 hover:text-[#8cff00]">
               <Icon name={darkMode ? "sun" : "moon"} size={14} />
               {darkMode ? "Light" : "Dark"}
             </button>
@@ -687,10 +687,10 @@ function Footer() {
 
       {/* BACK TO TOP */}
       <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top"
-        className={`ks-surface fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-[#090909]/90 text-[#22FF88] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(34,255,136,.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#22FF88] ${showTop ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-5 scale-75 opacity-0"}`}>
+        className={`ks-surface fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-[#090909]/90 text-[#8cff00] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(140, 255, 0, .3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#8cff00] ${showTop ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-5 scale-75 opacity-0"}`}>
         <svg className="pointer-events-none absolute inset-[-3px] h-[62px] w-[62px] -rotate-90" viewBox="0 0 62 62">
           <circle cx="31" cy="31" r="28" fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="2" />
-          <circle cx="31" cy="31" r="28" fill="none" stroke="#22FF88" strokeWidth="2" strokeLinecap="round"
+          <circle cx="31" cy="31" r="28" fill="none" stroke="#8cff00" strokeWidth="2" strokeLinecap="round"
             strokeDasharray="175.9" strokeDashoffset={175.9 - (175.9 * progress) / 100} />
         </svg>
         <Icon name="arrowUp" size={19} strokeWidth={2.5} />
@@ -706,8 +706,8 @@ function Footer() {
           100% { transform: translate3d(var(--drift),560px,0) rotate(540deg); opacity: 0; }
         }
         @keyframes ksPulseRing {
-          0% { box-shadow: 0 0 0 0 rgba(34,255,136,.45); }
-          100% { box-shadow: 0 0 0 18px rgba(34,255,136,0); }
+          0% { box-shadow: 0 0 0 0 rgba(140, 255, 0, .45); }
+          100% { box-shadow: 0 0 0 18px rgba(140, 255, 0, 0); }
         }
         @keyframes ksShift { to { background-position: 200% 0; } }
         @keyframes ksTwinkle { 0%,100% { opacity: .1; transform: scale(.6); } 50% { opacity: 1; transform: scale(1.6); } }
@@ -731,16 +731,16 @@ function Footer() {
         .ks-logo { transition: transform .5s ease; }
         .ks-logo:hover { transform: rotate(-12deg) scale(1.1); }
         .ks-spin-border {
-          background: conic-gradient(from 0deg, #22FF88, #38BDF8, #A855F7, #FFD60A, #22FF88);
+          background: conic-gradient(from 0deg, #8cff00, #38BDF8, #A855F7, #FFD60A, #8cff00);
           animation: ksSpin 8s linear infinite; opacity: .55;
         }
         .ks-gradient-text {
-          background: linear-gradient(90deg, #22FF88, #38BDF8, #A855F7, #22FF88);
+          background: linear-gradient(90deg, #8cff00, #38BDF8, #A855F7, #8cff00);
           background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
           color: transparent; animation: ksShift 6s linear infinite;
         }
         .ks-divider {
-          background: linear-gradient(90deg, transparent, rgba(34,255,136,.5), rgba(56,189,248,.5), rgba(168,85,247,.5), transparent);
+          background: linear-gradient(90deg, transparent, rgba(140, 255, 0, .5), rgba(56,189,248,.5), rgba(168,85,247,.5), transparent);
           background-size: 200% 100%; animation: ksDivider 8s linear infinite; opacity: .5;
         }
         .ks-wordmark-wrap { position: relative; width: 100%; max-width: 100vw; overflow: hidden; }
@@ -748,7 +748,7 @@ function Footer() {
         .ks-word-fill {
           position: absolute !important; inset: 0 !important;
           color: transparent;
-          background-image: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), #22FF88, #38BDF8 45%, transparent 70%);
+          background-image: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), #8cff00, #38BDF8 45%, transparent 70%);
           -webkit-background-clip: text; background-clip: text;
         }
         .ks-word-sweep {
@@ -764,8 +764,8 @@ function Footer() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #22FF88;
-          box-shadow: 0 0 8px #22FF88;
+          background: #8cff00;
+          box-shadow: 0 0 8px #8cff00;
         }
 
         .ksam-footer a {
@@ -773,7 +773,7 @@ function Footer() {
           text-decoration: none !important;
         }
         .ksam-footer a:hover {
-          color: #22FF88 !important;
+          color: #8cff00 !important;
         }
         .ksam-footer a:visited {
           color: rgba(255, 255, 255, 0.55);
@@ -993,7 +993,7 @@ function Footer() {
         .ksam-light .ks-fade-l, .ksam-light .ks-fade-r { --tw-gradient-from: #f5f7f6; }
         .ksam-light .ks-outline { -webkit-text-stroke: 1px rgba(0,0,0,.1); }
         .ksam-light input::placeholder { color: rgba(0,0,0,.35); }
-        .ksam-light .text-\\[\\#22FF88\\] { color: #0a9d52; }
+        .ksam-light .text-\\[\\#8cff00\\] { color: #448000; }
 
         @media (prefers-reduced-motion: reduce) {
           .ksam-footer *, .ksam-footer *::before, .ksam-footer *::after {
