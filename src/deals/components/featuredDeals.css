@@ -515,6 +515,300 @@
   color: #ffffff;
 }
 
+/* ==========================================================================
+   REDESIGNED GLASS TOOLBAR CARD (Store | Sort | Refresh)
+   Dark translucent background, backdrop blur, gradient border, soft green glow
+   ========================================================================== */
+.fd-toolbar-glass-card {
+  position: relative;
+  width: 100%;
+  margin-top: 14px;
+  margin-bottom: 22px;
+  padding: 16px 20px;
+  background: rgba(13, 17, 23, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36), 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+@media (hover: hover) {
+  .fd-toolbar-glass-card:hover {
+    border-color: rgba(34, 255, 136, 0.32);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.48), 0 0 24px rgba(34, 255, 136, 0.08);
+  }
+}
+
+/* Grid: Laptop (1fr 1fr auto) | Mobile (2 cols side-by-side) */
+.fd-toolbar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.fd-control-col {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  width: 100%;
+}
+
+.fd-control-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 18px;
+}
+
+.fd-control-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.fd-store-count-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  background: rgba(34, 255, 136, 0.14);
+  border: 1px solid rgba(34, 255, 136, 0.35);
+  color: var(--fd-accent, #22FF88);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: capitalize;
+  line-height: 1.4;
+}
+
+.fd-reset-link {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.15s ease;
+}
+
+.fd-reset-link:hover {
+  color: #ffffff;
+}
+
+/* Custom Select Wrap with Left Icon and Right Chevron Inside */
+.fd-custom-select-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.fd-select-icon-left {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.fd-styled-select {
+  width: 100%;
+  height: 46px;
+  min-height: 44px;
+  padding: 0 36px 0 40px;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(10, 12, 17, 0.88);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 44px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.fd-styled-select:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(16, 20, 28, 0.96);
+}
+
+.fd-styled-select:focus-visible,
+.fd-styled-select:focus {
+  border-color: var(--fd-accent, #22FF88);
+  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.32);
+}
+
+.fd-styled-select option {
+  background: #0d1117;
+  color: #ffffff;
+  padding: 10px 14px;
+  font-size: 13.5px;
+}
+
+/* Custom chevron placed INSIDE select at the right */
+.fd-select-custom-chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.fd-custom-select-wrap:focus-within .fd-select-icon-left,
+.fd-custom-select-wrap:focus-within .fd-select-custom-chevron {
+  color: var(--fd-accent, #22FF88);
+}
+
+/* Refresh Action Button */
+.fd-refresh-col {
+  display: flex;
+  align-items: flex-end;
+}
+
+.fd-action-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 9999px;
+  background: rgba(34, 255, 136, 0.08);
+  border: 1px solid rgba(34, 255, 136, 0.35);
+  color: var(--fd-accent, #22FF88);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .fd-action-refresh-btn:hover:not(:disabled) {
+    background: rgba(34, 255, 136, 0.2);
+    border-color: var(--fd-accent, #22FF88);
+    box-shadow: 0 0 18px rgba(34, 255, 136, 0.35);
+    transform: translateY(-1px);
+  }
+}
+
+.fd-action-refresh-btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(34, 255, 136, 0.5);
+}
+
+.fd-action-refresh-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Info Note under toolbar */
+.fd-toolbar-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 11.5px;
+  color: #8A92A0;
+  line-height: 1.4;
+}
+
+.fd-toolbar-note-icon {
+  color: #8A92A0;
+  flex-shrink: 0;
+}
+
+/* Mobile Layout for Glass Toolbar (Up to 768px) */
+@media (max-width: 768px) {
+  .fd-toolbar-glass-card {
+    padding: 14px;
+    border-radius: 16px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+  }
+
+  .fd-toolbar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .fd-control-col {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .fd-control-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .fd-styled-select {
+    height: 44px;
+    font-size: 12px;
+    padding: 0 28px 0 34px;
+  }
+
+  .fd-select-icon-left {
+    left: 10px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .fd-select-custom-chevron {
+    right: 10px;
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Refresh button takes full-width slim row below Store & Sort */
+  .fd-refresh-col {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .fd-action-refresh-btn {
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+    font-size: 12.5px;
+  }
+
+  .fd-toolbar-note {
+    font-size: 11px;
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+}
+
 /* Right: Refresh Button (40px tall, outlined pill, icon & text separated 8px) */
 .fd-refresh-btn {
   display: inline-flex;

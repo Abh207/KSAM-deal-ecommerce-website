@@ -37,6 +37,9 @@ import {
   logPlatformClick
 } from "../deals/services/productService.js";
 import { getCategoryPage, getCategoryBackLabel } from "../lib/categoryPageMap.js";
+import { ProductCard } from "../deals/components/ProductCard.jsx";
+import { getCategoryProducts } from "./headerFile/categoryDataMap.js";
+import { getCategoryConfigBySlug, mapCategoryDisplayLabel, USD_TO_INR_RATE } from "./headerFile/categoryConfig.js";
 
 import "./productDetail.css";
 
@@ -214,7 +217,119 @@ function getKeyFeatures(product) {
   ];
 }
 
-function ProductDetailPage() {
+function CategoryListingView({ categorySlug }) {
+  const base = import.meta.env.BASE_URL || "/";
+  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+  const homeUrl = normalizedBase;
+  const shopUrl = `${normalizedBase}shop.html`;
+
+  const config = getCategoryConfigBySlug(categorySlug);
+  const categoryLabel = config?.label || mapCategoryDisplayLabel(categorySlug);
+  const searchPlaceholder = config?.searchPlaceholder || `Search ${categoryLabel.toLowerCase()}...`;
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.title = `${categoryLabel} | KSAM Deal`;
+
+    const rawList = getCategoryProducts(categorySlug);
+    const isFashion = String(categorySlug).toLowerCase().trim() === "fashion";
+
+    const normalized = (rawList || []).map((p, idx) => {
+      let price = Number(p.price) || 0;
+      let oldPrice = Number(p.oldPrice || p.originalPrice || p.Actualprice || p.actualPrice || p.mrp || 0);
+
+      if (isFashion) {
+        price = Math.round(price * USD_TO_INR_RATE);
+        oldPrice = Math.round((oldPrice || price * 1.5) * USD_TO_INR_RATE);
+      }
+
+      const discount = p.discount || (oldPrice > price && oldPrice > 0
+        ? Math.round(((oldPrice - price) / oldPrice) * 100)
+        : 0);
+
+      const pUid = p.uid || buildProductUid(p.category || categoryLabel, p.id !== undefined && p.id !== null ? p.id : idx + 1);
+
+      return {
+        ...p,
+        id: p.id !== undefined && p.id !== null ? p.id : idx + 1,
+        uid: pUid,
+        name: p.name || p.title || "Product",
+        category: p.category || categoryLabel,
+        brand: p.brand || (isFashion ? "KSAM Fashion" : "KSAM Certified"),
+        price,
+        oldPrice,
+        originalPrice: oldPrice,
+        discount,
+        stock: p.stock !== undefined ? p.stock : 25,
+        image: p.image || p.image_url || DEFAULT_PLACEHOLDER_IMAGE,
+        description: p.description || p.desc || getProductDescription(p),
+        from: categorySlug
+      };
+    });
+
+    setProducts(normalized);
+    setLoading(false);
+  }, [categorySlug, categoryLabel]);
+
+  return (
+    <div className="product-detail-page product-list-mode-page">
+      <Navbar searchPlaceholder={searchPlaceholder} />
+      <main className="product-list-main">
+        <div className="product-list-container">
+          {/* Breadcrumb Navigation: Home / Shop / Category */}
+          <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
+            <a href={homeUrl}>Home</a>
+            <span className="sep">/</span>
+            <a href={shopUrl}>Shop</a>
+            <span className="sep">/</span>
+            <span className="current">{categoryLabel}</span>
+          </nav>
+
+          {/* Category Header */}
+          <header className="product-list-header">
+            <div className="product-list-header-left">
+              <span className="product-list-badge">{categoryLabel}</span>
+              <h1 className="product-list-title">{categoryLabel} Collection</h1>
+              <p className="product-list-subtitle">
+                {products.length} {products.length === 1 ? "Product" : "Products"} Available
+              </p>
+            </div>
+            <a href={shopUrl} className="product-list-back-btn" aria-label="Back to Shop">
+              <ArrowLeft size={16} />
+              <span>Back to Shop</span>
+            </a>
+          </header>
+
+          {/* Product Grid: 4 per row desktop, 2 per row mobile */}
+          {loading ? (
+            <div className="product-list-loading">Loading {categoryLabel} products...</div>
+          ) : products.length > 0 ? (
+            <div className="product-list-grid">
+              {products.map((item) => (
+                <ProductCard key={item.uid || item.id} product={item} />
+              ))}
+            </div>
+          ) : (
+            <div className="product-list-empty">
+              <AlertCircle size={40} className="product-list-empty-icon" />
+              <h2>No products found in this category</h2>
+              <p>Explore other categories in the KSAM Deal shop.</p>
+              <a href={shopUrl} className="deal-view-btn">
+                <span>Explore Shop</span>
+                <ArrowRight size={16} />
+              </a>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function ProductSingleDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -266,9 +381,19 @@ function ProductDetailPage() {
       }
 
       if (item) {
+        const isFashion = from === "fashion" || (category && category.toLowerCase() === "fashion") || (item.category && item.category.toLowerCase() === "fashion");
+        let itemPrice = Number(item.price) || 0;
+        let itemOldPrice = Number(item.oldPrice || item.originalPrice || item.Actualprice || item.actualPrice || item.mrp || 0);
+        if (isFashion && itemPrice < 3000) {
+          itemPrice = Math.round(itemPrice * USD_TO_INR_RATE);
+          itemOldPrice = Math.round((itemOldPrice || itemPrice * 1.5) * USD_TO_INR_RATE);
+        }
         const resolvedCategory = item.category || category || "General";
         const populatedProduct = {
           ...item,
+          price: itemPrice,
+          oldPrice: itemOldPrice,
+          originalPrice: itemOldPrice,
           category: resolvedCategory,
           uid: item.uid || buildProductUid(resolvedCategory, item.id)
         };
@@ -389,13 +514,16 @@ function ProductDetailPage() {
   let origin = null;
   if (fromParam === "wishlist") origin = "wishlist";
   else if (fromParam === "deals") origin = "deals";
-  else if (fromParam === "audio" || fromParam === "speakers") origin = "audio";
-  else if (fromParam === "electronics" || fromParam === "gadgets") origin = "electronics";
-  else if (fromParam === "clothing" || fromParam === "clothes" || fromParam === "fashion") origin = "clothing";
+  else if (fromParam === "audio" || fromParam === "speakers" || fromParam === "gadgets") origin = "audio";
+  else if (fromParam === "electronics") origin = "electronics";
+  else if (fromParam === "clothing" || fromParam === "clothes") origin = "clothing";
   else if (fromParam === "watches" || fromParam === "watch") origin = "watches";
-  else if (fromParam === "shoes" || fromParam === "shoe") origin = "shoes";
+  else if (fromParam === "shoes" || fromParam === "shoe" || fromParam === "footwear") origin = "shoes";
   else if (fromParam === "beauty") origin = "beauty";
   else if (fromParam === "chairs" || fromParam === "furniture") origin = "chairs";
+  else if (fromParam === "fashion") origin = "fashion";
+  else if (fromParam === "home-appliances" || fromParam === "appliances") origin = "home-appliances";
+  else if (fromParam === "accessories-lifestyle" || fromParam === "accessories" || fromParam === "lifestyle") origin = "accessories-lifestyle";
 
   // 2. Referrer check if no explicit ?from=
   if (!origin && referrer) {
@@ -408,6 +536,9 @@ function ProductDetailPage() {
     else if (referrer.includes("shoes.html")) origin = "shoes";
     else if (referrer.includes("beauty.html")) origin = "beauty";
     else if (referrer.includes("chair")) origin = "chairs";
+    else if (referrer.includes("category=fashion")) origin = "fashion";
+    else if (referrer.includes("category=home-appliances")) origin = "home-appliances";
+    else if (referrer.includes("category=accessories-lifestyle")) origin = "accessories-lifestyle";
   }
 
   // 3. Fallback to product category / query category using getCategoryPage mapping
@@ -422,6 +553,9 @@ function ProductDetailPage() {
       else if (targetPage === "shoes.html") origin = "shoes";
       else if (targetPage === "beauty.html") origin = "beauty";
       else if (targetPage === "moreChairProd.html") origin = "chairs";
+      else if (targetPage.includes("category=fashion")) origin = "fashion";
+      else if (targetPage.includes("category=home-appliances")) origin = "home-appliances";
+      else if (targetPage.includes("category=accessories-lifestyle")) origin = "accessories-lifestyle";
     }
   }
 
@@ -434,6 +568,9 @@ function ProductDetailPage() {
   const isFromShoes = origin === "shoes";
   const isFromBeauty = origin === "beauty";
   const isFromChairs = origin === "chairs";
+  const isFromFashion = origin === "fashion";
+  const isFromHomeAppliances = origin === "home-appliances";
+  const isFromAccessories = origin === "accessories-lifestyle";
 
   const handleToggleWishlist = (e) => {
     e.preventDefault();
@@ -503,6 +640,12 @@ function ProductDetailPage() {
     ? `${normalizedBase}beauty.html`
     : isFromChairs
     ? `${normalizedBase}moreChairProd.html`
+    : isFromFashion
+    ? `${normalizedBase}product.html?view=list&category=fashion`
+    : isFromHomeAppliances
+    ? `${normalizedBase}product.html?view=list&category=home-appliances`
+    : isFromAccessories
+    ? `${normalizedBase}product.html?view=list&category=accessories-lifestyle`
     : isFromWishlist
     ? wishlistUrl
     : fallbackCat
@@ -520,11 +663,17 @@ function ProductDetailPage() {
     : isFromWatches
     ? "Back to Watches"
     : isFromShoes
-    ? "Back to Shoes"
+    ? "Back to Footwear"
     : isFromBeauty
     ? "Back to Beauty"
     : isFromChairs
     ? "Back to Furniture"
+    : isFromFashion
+    ? "Back to Fashion"
+    : isFromHomeAppliances
+    ? "Back to Home Appliances"
+    : isFromAccessories
+    ? "Back to Accessories & Lifestyle"
     : isFromWishlist
     ? "Back to Wishlist"
     : fallbackCat
@@ -1167,6 +1316,20 @@ function ProductDetailPage() {
       </div>
     </div>
   );
+}
+
+function ProductDetailPage() {
+  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const viewParam = (params.get("view") || "").toLowerCase().trim();
+  const uidParam = params.get("uid");
+  const idParam = params.get("id");
+  const categoryParam = params.get("category") || "fashion";
+
+  if (viewParam === "list" && !uidParam && !idParam) {
+    return <CategoryListingView categorySlug={categoryParam} />;
+  }
+
+  return <ProductSingleDetail />;
 }
 
 const rootEl = document.getElementById("product-root");

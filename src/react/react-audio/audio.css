@@ -2116,13 +2116,142 @@ a {
 
 .audio-features {
     padding: 90px 5%;
-
     background: transparent;
-
     color: #ffffff;
-
     position: relative;
     z-index: 1;
+}
+
+/* WHY KSAM AUDIO - Redesigned Heading Block */
+.audio-features-heading-block {
+    max-width: 1250px;
+    margin: 0 auto 42px auto;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    animation: audioHeadingReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes audioHeadingReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Small glass pill eyebrow with pulsing neon dot */
+.audio-features-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(140, 255, 0, 0.10);
+    border: 1px solid rgba(140, 255, 0, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #8cff00;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.audio-features-dot {
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #8cff00;
+    box-shadow: 0 0 10px #8cff00;
+    animation: audioDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes audioDotPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.35);
+        opacity: 0.7;
+    }
+}
+
+/* Large bold title with clamp sizing */
+.audio-features-title {
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.audio-features-title-white {
+    color: #ffffff;
+}
+
+.audio-features-title-neon {
+    background: linear-gradient(135deg, #8cff00 0%, #22c55e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(140, 255, 0, 0.25));
+}
+
+/* Short glowing neon underline */
+.audio-features-underline {
+    width: 64px;
+    height: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #8cff00 0%, rgba(140, 255, 0, 0.2) 100%);
+    box-shadow: 0 0 12px rgba(140, 255, 0, 0.6);
+    margin-top: 2px;
+    animation: audioUnderlineGrow 0.6s ease-out forwards;
+}
+
+@keyframes audioUnderlineGrow {
+    from {
+        width: 0px;
+        opacity: 0;
+    }
+    to {
+        width: 64px;
+        opacity: 1;
+    }
+}
+
+/* One-line grey subtitle */
+.audio-features-subtitle {
+    font-size: 15px;
+    font-weight: 500;
+    color: #9CA3AF;
+    margin: 4px 0 0 0;
+    line-height: 1.5;
+}
+
+/* Mobile: Center heading and 24px space to boxes */
+@media (max-width: 768px) {
+    .audio-features-heading-block {
+        align-items: center;
+        text-align: center;
+        margin-bottom: 24px;
+        gap: 10px;
+    }
+
+    .audio-features-title {
+        font-size: clamp(26px, 7vw, 36px);
+    }
+
+    .audio-features-subtitle {
+        font-size: 13.5px;
+    }
 }
 
 .audio-feature-grid {

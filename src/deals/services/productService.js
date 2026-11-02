@@ -354,32 +354,112 @@ function setCachedDealsList(data) {
   } catch {}
 }
 
+let hasWarnedDealsQuery = false;
+let hasWarnedSingleQuery = false;
+let inFlightDealsPromise = null;
+
 /**
- * Fetch aggregated multi-platform deals from Supabase products + product_offers.
- * Falls back to localStorage cache (with isOffline notice) or high-quality demo data.
+ * Executes a two-step separate query (products then product_offers) as a fallback
+ * when the embedded join is not available in PostgREST schema cache.
  */
-export async function getDeals(options = {}) {
-  const {
-    category = "All",
-    store = "All",
-    sort = "biggest_discount",
-    search = "",
-    page = 1,
-    pageSize = 12
-  } = options;
+async function fetchProductsAndOffersSeparately() {
+  try {
+    const { data: prods, error: prodErr } = await supabase
+      .from("products")
+      .select(`
+        id,
+        uid,
+        title,
+        name,
+        brand,
+        category,
+        description,
+        key_features,
+        specs,
+        images,
+        image_url,
+        rating,
+        review_count,
+        stock,
+        is_active,
+        price,
+        old_price,
+        discount_percent,
+        affiliate_url,
+        created_at,
+        updated_at
+      `)
+      .eq("is_active", true)
+      .order("created_at", { ascending: false });
 
-  let rawList = [];
-  let isOffline = false;
-  const cached = getCachedDealsList();
+    if (prodErr || !Array.isArray(prods) || prods.length === 0) {
+      return null;
+    }
 
-  if (cached && cached.isFresh) {
-    rawList = cached.data;
-  } else {
+    const ids = prods.map((p) => p.id).filter(Boolean);
+    let offersMap = {};
+
+    if (ids.length > 0) {
+      const { data: offers } = await supabase
+        .from("product_offers")
+        .select(`
+          id,
+          product_id,
+          platform,
+          platform_slug,
+          price,
+          mrp,
+          discount_percent,
+          affiliate_url,
+          in_stock,
+          updated_at
+        `)
+        .in("product_id", ids)
+        .eq("in_stock", true);
+
+      if (Array.isArray(offers)) {
+        offers.forEach((o) => {
+          if (!offersMap[o.product_id]) {
+            offersMap[o.product_id] = [];
+          }
+          offersMap[o.product_id].push(o);
+        });
+      }
+    }
+
+    return prods.map((p) => ({
+      ...p,
+      product_offers: offersMap[p.id] || []
+    }));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch raw deals data from Supabase (or fallback/cache).
+ * Debounced / singleton promise so concurrent calls reuse the same network request.
+ */
+async function fetchRawDealsList() {
+  if (inFlightDealsPromise) {
+    return inFlightDealsPromise;
+  }
+
+  inFlightDealsPromise = (async () => {
+    let rawList = [];
+    let isOffline = false;
+    const cached = getCachedDealsList();
+
+    if (cached && cached.isFresh) {
+      return { rawList: cached.data, isOffline: false };
+    }
+
     if (cached?.data) {
       rawList = cached.data;
     }
 
     try {
+      // 1. Try embedded query with explicit relationship hint
       const fetchPromise = supabase
         .from("products")
         .select(`
@@ -404,7 +484,7 @@ export async function getDeals(options = {}) {
           affiliate_url,
           created_at,
           updated_at,
-          product_offers (
+          product_offers!product_offers_product_id_fkey (
             id,
             platform,
             platform_slug,
@@ -430,28 +510,69 @@ export async function getDeals(options = {}) {
         setCachedDealsList(data);
         isOffline = false;
       } else {
-        if (error) {
-          console.warn("[getDeals] Supabase query returned error:", error.message);
+        // Fallback: PostgREST relationship missing or query error
+        if (error && !hasWarnedDealsQuery) {
+          console.warn("[getDeals] Supabase embedded query notice:", error.message || error.code, "— using fallback query");
+          hasWarnedDealsQuery = true;
         }
-        if (cached?.data && cached.data.length > 0) {
+
+        // Attempt separate two-query fetch
+        const separateData = await fetchProductsAndOffersSeparately();
+        if (Array.isArray(separateData) && separateData.length > 0) {
+          rawList = separateData;
+          setCachedDealsList(separateData);
+          isOffline = false;
+        } else if (cached?.data && cached.data.length > 0) {
           rawList = cached.data;
           isOffline = true;
         }
       }
     } catch (err) {
-      console.warn("[getDeals] Supabase unreachable or timed out:", err?.message || err);
-      if (cached?.data && cached.data.length > 0) {
+      if (!hasWarnedDealsQuery) {
+        console.warn("[getDeals] Supabase unreachable or timed out:", err?.message || err);
+        hasWarnedDealsQuery = true;
+      }
+
+      // Try separate query before dropping to cache
+      const separateData = await fetchProductsAndOffersSeparately();
+      if (Array.isArray(separateData) && separateData.length > 0) {
+        rawList = separateData;
+        setCachedDealsList(separateData);
+        isOffline = false;
+      } else if (cached?.data && cached.data.length > 0) {
         rawList = cached.data;
         isOffline = true;
       }
     }
-  }
 
-  // If both live query and cache have no data (e.g. before DB migration is run), use demo dataset
-  if (!rawList || rawList.length === 0) {
-    rawList = demoDeals;
-    isOffline = true;
-  }
+    if (!rawList || rawList.length === 0) {
+      rawList = demoDeals;
+      isOffline = true;
+    }
+
+    return { rawList, isOffline };
+  })().finally(() => {
+    inFlightDealsPromise = null;
+  });
+
+  return inFlightDealsPromise;
+}
+
+/**
+ * Fetch aggregated multi-platform deals from Supabase products + product_offers.
+ * Falls back to localStorage cache (with isOffline notice) or high-quality demo data.
+ */
+export async function getDeals(options = {}) {
+  const {
+    category = "All",
+    store = "All",
+    sort = "biggest_discount",
+    search = "",
+    page = 1,
+    pageSize = 12
+  } = options;
+
+  const { rawList, isOffline } = await fetchRawDealsList();
 
   // Normalize all products with best offer selected
   let allDeals = rawList.map(normalizeDeal).filter((d) => d && d.discount > 0);
@@ -565,7 +686,7 @@ export async function getSupabaseDealByIdOrUid(id, uid) {
         affiliate_url,
         created_at,
         updated_at,
-        product_offers (
+        product_offers!product_offers_product_id_fkey (
           id,
           platform,
           platform_slug,
@@ -594,8 +715,73 @@ export async function getSupabaseDealByIdOrUid(id, uid) {
     if (!error && data) {
       return normalizeDeal(data);
     }
+
+    // Fallback: If embedded join fails, query product then offers separately
+    if (error) {
+      if (!hasWarnedSingleQuery) {
+        console.warn("[getSupabaseDealByIdOrUid] Embedded query failed, trying separate query fallback");
+        hasWarnedSingleQuery = true;
+      }
+
+      let singleProdQuery = supabase
+        .from("products")
+        .select(`
+          id,
+          uid,
+          title,
+          name,
+          brand,
+          category,
+          description,
+          key_features,
+          specs,
+          images,
+          image_url,
+          rating,
+          review_count,
+          stock,
+          is_active,
+          price,
+          old_price,
+          discount_percent,
+          affiliate_url,
+          created_at,
+          updated_at
+        `)
+        .eq("is_active", true);
+
+      if (id) singleProdQuery = singleProdQuery.eq("id", id);
+      else if (uid) singleProdQuery = singleProdQuery.eq("uid", uid);
+
+      const { data: singleProd } = await singleProdQuery.maybeSingle();
+      if (singleProd) {
+        const { data: offers } = await supabase
+          .from("product_offers")
+          .select(`
+            id,
+            platform,
+            platform_slug,
+            price,
+            mrp,
+            discount_percent,
+            affiliate_url,
+            in_stock,
+            updated_at
+          `)
+          .eq("product_id", singleProd.id)
+          .eq("in_stock", true);
+
+        return normalizeDeal({
+          ...singleProd,
+          product_offers: Array.isArray(offers) ? offers : []
+        });
+      }
+    }
   } catch (err) {
-    console.warn("[getSupabaseDealByIdOrUid] Error fetching deal:", err?.message || err);
+    if (!hasWarnedSingleQuery) {
+      console.warn("[getSupabaseDealByIdOrUid] Error fetching deal:", err?.message || err);
+      hasWarnedSingleQuery = true;
+    }
   }
 
   // 3. Fallback to demo dataset

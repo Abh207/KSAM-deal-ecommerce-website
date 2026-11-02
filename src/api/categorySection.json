@@ -7,7 +7,6 @@
         "showArrow": true,
         "showViewAll": true
     },
-
     "categories": [
         {
             "id": "watches",
@@ -47,47 +46,9 @@
             "scale": 1
         },
         {
-            "id": "Shoes",
-            "name": "Shoes",
-            "description": "Stylish footwear for every occasion",
-            "productIds": [],
-            "icon": "👟",
-            "color": "#f0f8ff",
-            "link": "./shoes.html",
-            "bannerImage": "",
-            "video": [
-                { "src": "assets/videos/shoes-banner_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
-                { "src": "assets/videos/shoes-banner.webm", "type": "video/webm" },
-                { "src": "assets/videos/shoes-banner.mp4", "type": "video/mp4" }
-            ],
-            "poster": "assets/videos/shoes-banner-poster.webp",
-            "objectPosition": "72% 50%",
-            "fit": "cover",
-            "scale": 1
-        },
-        {
-            "id": "chairs",
-            "name": "Chairs",
-            "description": "Comfortable & stylish chairs",
-            "productIds": [],
-            "icon": "🪑",
-            "color": "#f3edff",
-            "link": "./moreChairProd.html",
-            "bannerImage": "",
-            "video": [
-                { "src": "assets/videos/chairs-bed_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
-                { "src": "assets/videos/chairs-bed.mp4", "type": "video/mp4" }
-            ],
-            "poster": "assets/videos/chairs-bed-poster.webp",
-            "objectPosition": "70% 55%",
-            "fit": "cover",
-            "scale": 1,
-            "fadeLoop": true
-        },
-        {
-            "id": "Speakers",
-            "name": "Speakers",
-            "description": "High-quality sound systems",
+            "id": "gadgets",
+            "name": "Gadgets",
+            "description": "High-quality sound systems & audio gear",
             "productIds": [],
             "icon": "🔊",
             "color": "#f0f8ff",
@@ -105,7 +66,7 @@
             "scale": 1
         },
         {
-            "id": "cloths",
+            "id": "clothing",
             "name": "Clothing",
             "description": "Stylish clothing for every occasion",
             "productIds": [],
@@ -115,6 +76,25 @@
             "bannerImage": "",
             "video": null,
             "poster": "",
+            "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
+        },
+        {
+            "id": "footwear",
+            "name": "Footwear",
+            "description": "Stylish footwear for every occasion",
+            "productIds": [],
+            "icon": "👟",
+            "color": "#f0f8ff",
+            "link": "./shoes.html",
+            "bannerImage": "",
+            "video": [
+                { "src": "assets/videos/shoes-banner_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
+                { "src": "assets/videos/shoes-banner.webm", "type": "video/webm" },
+                { "src": "assets/videos/shoes-banner.mp4", "type": "video/mp4" }
+            ],
+            "poster": "assets/videos/shoes-banner-poster.webp",
             "objectPosition": "72% 50%",
             "fit": "cover",
             "scale": 1
@@ -138,17 +118,66 @@
             "scale": 1
         },
         {
+            "id": "chairs",
+            "name": "Chairs",
+            "description": "Comfortable & stylish chairs",
+            "productIds": [],
+            "icon": "🪑",
+            "color": "#f3edff",
+            "link": "./moreChairProd.html",
+            "bannerImage": "",
+            "video": [
+                { "src": "assets/videos/chairs-bed_mobile.mp4", "type": "video/mp4", "media": "(max-width: 768px)" },
+                { "src": "assets/videos/chairs-bed.mp4", "type": "video/mp4" }
+            ],
+            "poster": "assets/videos/chairs-bed-poster.webp",
+            "objectPosition": "70% 55%",
+            "fit": "cover",
+            "scale": 1,
+            "fadeLoop": true
+        },
+        {
             "id": "fashion",
             "name": "Fashion",
-            "description": "Trending styles & clothing",
+            "description": "Trending styles & top products",
             "productIds": [],
-            "icon": "👕",
+            "icon": "✨",
             "color": "#fff0f5",
-            "link": "./clothes.html",
+            "link": "./product.html?view=list&category=fashion",
             "bannerImage": "",
             "video": null,
             "poster": "",
             "objectPosition": "72% 50%",
+            "fit": "cover",
+            "scale": 1
+        },
+        {
+            "id": "home-appliances",
+            "name": "Home Appliances",
+            "description": "Smart kitchen & home essentials",
+            "productIds": [],
+            "icon": "🍳",
+            "color": "#f0faf5",
+            "link": "./product.html?view=list&category=home-appliances",
+            "bannerImage": "images/categories/home-appliances-hero.webp",
+            "video": null,
+            "poster": "",
+            "objectPosition": "center",
+            "fit": "cover",
+            "scale": 1
+        },
+        {
+            "id": "accessories-lifestyle",
+            "name": "Accessories & Lifestyle",
+            "description": "Everyday carry & premium accessories",
+            "productIds": [],
+            "icon": "🕶️",
+            "color": "#fbf6ec",
+            "link": "./product.html?view=list&category=accessories-lifestyle",
+            "bannerImage": "images/categories/accessories-lifestyle-hero.webp",
+            "video": null,
+            "poster": "",
+            "objectPosition": "center",
             "fit": "cover",
             "scale": 1
         }

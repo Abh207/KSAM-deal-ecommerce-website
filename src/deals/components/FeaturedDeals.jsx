@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Search, SlidersHorizontal, RefreshCw, ChevronDown, X, Info, WifiOff } from "lucide-react";
+import { Search, SlidersHorizontal, RefreshCw, ChevronDown, X, Info, WifiOff, Store as StoreIcon, ArrowUpDown } from "lucide-react";
 import ProductCard from "./ProductCard.jsx";
 import { getDeals, subscribeDealsRealtime } from "../services/productService.js";
 import "./featuredDeals.css";
@@ -106,13 +106,19 @@ function FeaturedDeals() {
     loadDeals(true);
   }, [category, store, sort]);
 
+  // Stable ref for loadDeals to prevent subscription churn
+  const loadDealsRef = useRef(loadDeals);
+  useEffect(() => {
+    loadDealsRef.current = loadDeals;
+  }, [loadDeals]);
+
   // Realtime subscription to price drops
   useEffect(() => {
     const unsub = subscribeDealsRealtime(() => {
-      loadDeals(true);
+      loadDealsRef.current?.(true);
     });
     return unsub;
-  }, [loadDeals]);
+  }, []);
 
   // Client-side search filtering on current loaded products or full term
   const filteredProducts = useMemo(() => {
@@ -254,84 +260,100 @@ function FeaturedDeals() {
           </div>
         </div>
 
-        {/* ROW 3: Secondary Filters & Meta Bar */}
-        <div className="fd-filter-meta-bar">
-          <div className="fd-filter-controls">
-            {/* Store Dropdown */}
-            <div className="fd-select-wrap">
-              <label htmlFor="store-select" className="sr-only">
-                Filter by Store
-              </label>
-              <select
-                id="store-select"
-                value={store}
-                onChange={(e) => setStore(e.target.value)}
-                className="fd-select"
-              >
-                {STORES.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown size={14} className="fd-select-arrow" />
+        {/* ROW 3: Redesigned Glass Toolbar Card (Store | Sort | Refresh) */}
+        <div className="fd-toolbar-glass-card">
+          <div className="fd-toolbar-grid">
+            {/* 1. Store Select Column */}
+            <div className="fd-control-col">
+              <div className="fd-control-label-row">
+                <label htmlFor="store-select" className="fd-control-label">
+                  FILTER BY STORE
+                </label>
+                {store !== "All" && (
+                  <span className="fd-store-count-chip">
+                    {STORES.find((s) => s.id === store)?.label || store}
+                  </span>
+                )}
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="fd-reset-link"
+                    aria-label="Reset all filters"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+              <div className="fd-custom-select-wrap">
+                <StoreIcon size={16} className="fd-select-icon-left" aria-hidden="true" />
+                <select
+                  id="store-select"
+                  value={store}
+                  onChange={(e) => setStore(e.target.value)}
+                  className="fd-styled-select"
+                  aria-label="Filter by store"
+                >
+                  {STORES.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={15} className="fd-select-custom-chevron" aria-hidden="true" />
+              </div>
             </div>
 
-            {/* Sort Dropdown */}
-            <div className="fd-select-wrap">
-              <label htmlFor="sort-select" className="sr-only">
-                Sort Deals
-              </label>
-              <select
-                id="sort-select"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="fd-select"
-              >
-                {SORTS.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown size={14} className="fd-select-arrow" />
+            {/* 2. Sort Select Column */}
+            <div className="fd-control-col">
+              <div className="fd-control-label-row">
+                <label htmlFor="sort-select" className="fd-control-label">
+                  SORT DEALS
+                </label>
+              </div>
+              <div className="fd-custom-select-wrap">
+                <ArrowUpDown size={16} className="fd-select-icon-left" aria-hidden="true" />
+                <select
+                  id="sort-select"
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="fd-styled-select"
+                  aria-label="Sort deals"
+                >
+                  {SORTS.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={15} className="fd-select-custom-chevron" aria-hidden="true" />
+              </div>
             </div>
 
-            {/* Active Filters Clear Button */}
-            {hasActiveFilters && (
+            {/* 3. Refresh Action Column */}
+            <div className="fd-refresh-col">
               <button
                 type="button"
-                onClick={resetFilters}
-                className="fd-clear-btn"
-                aria-label="Clear active filters"
+                onClick={() => loadDeals(true)}
+                disabled={loading}
+                aria-label="Refresh live deals"
+                className="fd-action-refresh-btn"
               >
-                <X size={14} />
-                <span>Reset</span>
+                <RefreshCw
+                  size={15}
+                  strokeWidth={2.4}
+                  className={`fd-refresh-icon ${loading ? "animate-spin text-[#22FF88]" : ""}`}
+                />
+                <span>Refresh</span>
               </button>
-            )}
+            </div>
           </div>
 
-          {/* Right: Refresh Button */}
-          <button
-            type="button"
-            onClick={() => loadDeals(true)}
-            disabled={loading}
-            aria-label="Refresh deals"
-            className="fd-refresh-btn"
-          >
-            <RefreshCw
-              size={14}
-              strokeWidth={2.2}
-              className={`fd-refresh-icon ${loading ? "animate-spin text-[#22FF88]" : ""}`}
-            />
-            <span>Refresh</span>
-          </button>
-        </div>
-
-        {/* Note / Disclaimer */}
-        <div className="fd-note-row">
-          <Info size={14} strokeWidth={2.2} className="fd-note-icon shrink-0" />
-          <span>Prices and availability can change on official stores. Click any product to view details.</span>
+          {/* Info / Disclaimer Note Inside Glass Card */}
+          <div className="fd-toolbar-note">
+            <Info size={13} strokeWidth={2.2} className="fd-toolbar-note-icon shrink-0" aria-hidden="true" />
+            <span>Prices and availability can change on official stores. Click any product to view details.</span>
+          </div>
         </div>
 
         {/* Error State with Retry Button */}

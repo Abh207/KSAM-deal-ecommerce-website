@@ -109,7 +109,7 @@ const resolvePromoImg = (src) => {
   return `${base}/${clean}`;
 };
 
-function PromoCard({ card, festival, bank }) {
+function PromoCard({ card, festival, bank, isEager = false }) {
   const Art = card.art ? ART[card.art] : null;
   const lines = (t) => (t || "").split("\n").map((l, k) => <span key={k}>{l}<br /></span>);
 
@@ -137,7 +137,7 @@ function PromoCard({ card, festival, bank }) {
       <div className={`pc__visual ${card.frame ? "pc__visual--frame" : ""}`}>
         <div className="pc__float">
           {card.image?.src
-            ? <img src={resolvePromoImg(card.image.src)} alt={card.image.alt || ""} loading="eager" draggable="false" />
+            ? <img src={resolvePromoImg(card.image.src)} alt={card.image.alt || ""} loading={isEager ? "eager" : "lazy"} draggable="false" />
             : Art && <Art />}
         </div>
       </div>
@@ -242,7 +242,7 @@ export default function PromoCarousel() {
           >
             {list.map((c, k) => (
               <div key={`${c.id}-${k}`} className={`promo__slide ${k === i ? "is-active" : ""}`} onClick={() => k !== i && setI(k)}>
-                <PromoCard card={c} festival={festival} bank={bankOffer} />
+                <PromoCard card={c} festival={festival} bank={bankOffer} isEager={k === i} />
               </div>
             ))}
           </div>

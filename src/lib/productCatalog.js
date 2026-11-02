@@ -10,6 +10,8 @@ import watchProducts from "../api/watch-products.json" with { type: "json" };
 import defaultProducts from "../api/products.json" with { type: "json" };
 import productsBox2 from "../api/productsBox2.json" with { type: "json" };
 import horizScrollProd from "../api/horizScrollProd.json" with { type: "json" };
+import homeAppliancesProducts from "../api/home-appliances-products.json" with { type: "json" };
+import accessoriesLifestyleProducts from "../api/accessories-lifestyle-products.json" with { type: "json" };
 
 const greenBeautyProducts = [
   { id: 201, name: "Green Glow Cleanser", category: "Skin Care", price: 399, oldPrice: 599, image: "images/remote/unsplash_1556228720-195a672e8a03.webp" },
@@ -139,6 +141,14 @@ function registerRawItem(item, defaultCategory = "General", options = {}) {
   const idStr = String(item.id).trim();
   const uid = item.uid || buildProductUid(rawCat, idStr);
 
+  const isFashionUsd = options.aliasCategory === "fashion" || categorySlug === "fashion";
+  const rate = isFashionUsd ? 83 : 1;
+  const rawPrice = Number(item.price) || 0;
+  const rawOldPrice = Number(item.oldPrice || item.originalPrice || item.Actualprice || item.actualPrice || item.mrp || 0);
+  const price = isFashionUsd ? Math.round(rawPrice * rate) : rawPrice;
+  const oldPrice = isFashionUsd ? Math.round((rawOldPrice || rawPrice * 1.5) * rate) : rawOldPrice;
+  const discount = Number(item.discount) || (oldPrice > price && oldPrice > 0 ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
+
   const normalized = {
     ...item,
     id: item.id,
@@ -146,12 +156,13 @@ function registerRawItem(item, defaultCategory = "General", options = {}) {
     category: rawCat,
     categorySlug,
     name: item.name || item.title || "Product",
-    price: Number(item.price) || 0,
-    oldPrice: Number(item.oldPrice || item.originalPrice || item.Actualprice || item.actualPrice || item.mrp || 0),
+    price,
+    oldPrice,
+    originalPrice: oldPrice,
     image: item.image || item.image_url || item.thumbnail || "",
     rating: Number(item.rating) || 4.5,
     reviews: item.reviews || 64,
-    discount: Number(item.discount) || 0,
+    discount,
     badge: item.badge || ""
   };
 
@@ -217,8 +228,10 @@ registerRawList(chairProducts, "Furniture");
 registerRawList(productsBox2, "Furniture");
 registerRawList(horizScrollProd, "Furniture");
 registerRawList(shopProducts, "Electronics", { aliasCategory: "electronics" });
-registerRawList(defaultProducts, "General");
-registerRawList(promoProducts, "Gadgets");
+registerRawList(defaultProducts, "Fashion", { aliasCategory: "fashion" });
+registerRawList(promoProducts, "Gadgets", { aliasCategory: "gadgets" });
+registerRawList(homeAppliancesProducts, "Home Appliances", { aliasCategory: "home-appliances" });
+registerRawList(accessoriesLifestyleProducts, "Accessories & Lifestyle", { aliasCategory: "accessories-lifestyle" });
 
 /**
  * Returns all registered catalog products.

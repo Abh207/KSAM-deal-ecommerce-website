@@ -6,52 +6,69 @@ import beautyProducts from "../../api/beautyProducts.json";
 import clothesData from "../../api/clothesproducts.json";
 import chairsData from "../../api/moreChairProdjn.json";
 import audioData from "../../api/audio-products.json";
+import homeAppliancesProducts from "../../api/home-appliances-products.json";
+import accessoriesLifestyleProducts from "../../api/accessories-lifestyle-products.json";
+
+export { CATEGORIES_CONFIG, USD_TO_INR_RATE, mapCategoryDisplayLabel, getCategoryConfigBySlug, formatCategoryPriceINR } from "./categoryConfig.js";
 
 /**
  * Category Data Map
  * ─────────────────────────────────────────────────────────────
  * Central mapping configuration linking each category ID to its
  * corresponding dataset as used on that category's "View All" page.
- *
- * To point a category to a different data file or override its
- * banner image later:
- *  1. Import the new JSON file above.
- *  2. Update the `products` property for the desired category key.
- *  3. (Optional) Set `bannerImage` to a relative path (e.g. "products/watch1.png")
- *     or a full URL. If left null, the category's first product image is used.
  */
 export const CATEGORY_DATA_MAP = {
   watches: {
     products: watchProducts,
     bannerImage: null,
   },
-  electronics: {
-    products: shopProducts,
-    bannerImage: null,
-  },
-  shoes: {
-    products: Array.isArray(shoesData.products) ? shoesData.products : shoesData,
-    bannerImage: null,
-  },
-  fashion: {
-    products: generalProducts,
-    bannerImage: null,
-  },
   beauty: {
     products: beautyProducts,
+    bannerImage: null,
+  },
+  gadgets: {
+    products: Array.isArray(audioData.products) ? audioData.products : audioData,
+    bannerImage: null,
+  },
+  speakers: {
+    products: Array.isArray(audioData.products) ? audioData.products : audioData,
+    bannerImage: null,
+  },
+  clothing: {
+    products: Array.isArray(clothesData.products) ? clothesData.products : clothesData,
     bannerImage: null,
   },
   cloths: {
     products: Array.isArray(clothesData.products) ? clothesData.products : clothesData,
     bannerImage: null,
   },
+  footwear: {
+    products: Array.isArray(shoesData.products) ? shoesData.products : shoesData,
+    bannerImage: null,
+  },
+  shoes: {
+    products: Array.isArray(shoesData.products) ? shoesData.products : shoesData,
+    bannerImage: null,
+  },
+  electronics: {
+    products: shopProducts,
+    bannerImage: null,
+  },
   chairs: {
     products: chairsData,
     bannerImage: null,
   },
-  speakers: {
-    products: Array.isArray(audioData.products) ? audioData.products : audioData,
+  fashion: {
+    products: generalProducts,
     bannerImage: null,
+  },
+  "home-appliances": {
+    products: homeAppliancesProducts,
+    bannerImage: "images/categories/home-appliances-hero.webp",
+  },
+  "accessories-lifestyle": {
+    products: accessoriesLifestyleProducts,
+    bannerImage: "images/categories/accessories-lifestyle-hero.webp",
   },
 };
 
@@ -81,7 +98,7 @@ export function resolveProductImage(imagePath) {
  */
 export function getCategoryProducts(catId) {
   if (!catId) return [];
-  const key = String(catId).toLowerCase();
+  const key = String(catId).toLowerCase().trim();
   const entry = CATEGORY_DATA_MAP[key];
   if (!entry || !entry.products) return [];
   return Array.isArray(entry.products) ? entry.products : [];
@@ -92,7 +109,7 @@ export function getCategoryProducts(catId) {
  */
 export function getCategoryBannerOverride(catId) {
   if (!catId) return null;
-  const key = String(catId).toLowerCase();
+  const key = String(catId).toLowerCase().trim();
   const entry = CATEGORY_DATA_MAP[key];
   return entry?.bannerImage || null;
 }

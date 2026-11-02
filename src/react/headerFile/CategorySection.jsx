@@ -36,6 +36,11 @@ const CATEGORY_ICONS = {
       <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" />
     </svg>
   ),
+  footwear: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+      <path d="M3 18h18v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1Z" /><path d="M3 18c0-4 1-7 4-9l2-1.5c1-.7 2-2 2-3.5V3a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v1c0 1 .5 2 1.5 2.5L17 8c2 1.2 4 4 4 10" />
+    </svg>
+  ),
   shoes: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
       <path d="M3 18h18v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1Z" /><path d="M3 18c0-4 1-7 4-9l2-1.5c1-.7 2-2 2-3.5V3a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v1c0 1 .5 2 1.5 2.5L17 8c2 1.2 4 4 4 10" />
@@ -51,6 +56,11 @@ const CATEGORY_ICONS = {
       <path d="M12 2a5 5 0 0 1 5 5v4a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5Z" /><path d="M10 22h4" /><path d="M12 16v6" />
     </svg>
   ),
+  clothing: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+      <path d="M15 2H9l-4 4 3 3 1-1v12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V8l1 1 3-3-4-4Z" />
+    </svg>
+  ),
   cloths: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
       <path d="M15 2H9l-4 4 3 3 1-1v12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V8l1 1 3-3-4-4Z" />
@@ -61,15 +71,33 @@ const CATEGORY_ICONS = {
       <path d="M5 11a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /><path d="M6 17v4" /><path d="M18 17v4" />
     </svg>
   ),
+  gadgets: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+      <rect x="4" y="2" width="16" height="20" rx="2" /><circle cx="12" cy="14" r="4" /><circle cx="12" cy="14" r="1" /><line x1="12" y1="6" x2="12.01" y2="6" />
+    </svg>
+  ),
   speakers: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
       <rect x="4" y="2" width="16" height="20" rx="2" /><circle cx="12" cy="14" r="4" /><circle cx="12" cy="14" r="1" /><line x1="12" y1="6" x2="12.01" y2="6" />
     </svg>
   ),
+  "home-appliances": (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+      <rect x="4" y="2" width="16" height="20" rx="2" /><path d="M4 10h16" /><circle cx="12" cy="6" r="1" /><circle cx="12" cy="15" r="3" />
+    </svg>
+  ),
+  "accessories-lifestyle": (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  )
 };
 
 function getIconForCategory(id) {
-  const key = String(id).toLowerCase();
+  const key = String(id).toLowerCase().trim();
+  if (key === "gadgets") return CATEGORY_ICONS.gadgets || CATEGORY_ICONS.speakers;
+  if (key === "footwear") return CATEGORY_ICONS.footwear || CATEGORY_ICONS.shoes;
+  if (key === "clothing") return CATEGORY_ICONS.clothing || CATEGORY_ICONS.cloths;
   return CATEGORY_ICONS[key] || (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
       <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 3v18" />
@@ -180,8 +208,9 @@ function CategoryProductCard({ product, category }) {
         ? product.price
         : parseFloat(String(product.price).replace(/[^0-9.]/g, ""));
       if (!isNaN(num)) {
-        const isRupee = ["shoes", "cloths", "beauty", "speakers"].includes(String(category.id).toLowerCase());
-        return `${isRupee ? "₹" : "$"}${num.toLocaleString("en-IN")}`;
+        const isFashionUsd = String(category.id || category.name || "").toLowerCase() === "fashion";
+        const finalPrice = isFashionUsd ? Math.round(num * 83) : Math.round(num);
+        return `₹${finalPrice.toLocaleString("en-IN")}`;
       }
       return String(product.price);
     }

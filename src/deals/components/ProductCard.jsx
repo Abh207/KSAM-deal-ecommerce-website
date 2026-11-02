@@ -38,7 +38,8 @@ export function ProductCard({ product, onOpenDetails }) {
   const base = import.meta.env.BASE_URL || "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
   const uid = product.uid || buildProductUid(product.category, product.id);
-  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "General")}&uid=${encodeURIComponent(uid)}&from=deals`;
+  const fromParam = product.from || "deals";
+  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "General")}&uid=${encodeURIComponent(uid)}&from=${encodeURIComponent(fromParam)}`;
 
   const isSaved = isInWishlist(product.uid || product.id);
 

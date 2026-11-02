@@ -130,6 +130,8 @@ function HomeProducts() {
     const [wishlist, setWishlist] =
         useState([]);
 
+    const [addedCartId, setAddedCartId] = useState(null);
+
     const [cartMessage, setCartMessage] =
         useState("");
 
@@ -591,6 +593,15 @@ function HomeProducts() {
     /* =====================================================
        OPEN PRODUCT
     ===================================================== */
+
+        const handleQuickAddToCart = (event, product) => {
+        event.stopPropagation();
+        addProductToCart(product, 1);
+        setAddedCartId(product.id);
+        setTimeout(() => {
+            setAddedCartId((prev) => (prev === product.id ? null : prev));
+        }, 1500);
+    };
 
     const openProduct =
         (product) => {
@@ -1248,18 +1259,41 @@ function HomeProducts() {
                                                 : "Out of stock"}
                                         </div>
 
-                                        {/* VIEW BUTTON */}
-                                        <button
-                                            type="button"
-                                            className="home-product-view"
-                                            onClick={(event) => {
-                                                event.stopPropagation();
-                                                openProduct(product);
-                                            }}
-                                        >
-                                            <span>VIEW PRODUCT</span>
-                                            <strong>→</strong>
-                                        </button>
+                                        {/* VIEW BUTTON & CART BUTTON ROW */}
+                                        <div className="home-product-actions-row">
+                                            <button
+                                                type="button"
+                                                className="home-product-view"
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    openProduct(product);
+                                                }}
+                                                aria-label={`View details for ${product.name}`}
+                                            >
+                                                <span className="home-product-view-text">VIEW PRODUCT</span>
+                                                <span className="home-product-view-short">VIEW</span>
+                                                <strong className="home-product-view-arrow">→</strong>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`home-product-cart-btn ${addedCartId === product.id ? "is-added" : ""}`}
+                                                aria-label={addedCartId === product.id ? "Added to cart" : "Add to cart"}
+                                                title={addedCartId === product.id ? "Added to cart" : "Add to cart"}
+                                                onClick={(event) => handleQuickAddToCart(event, product)}
+                                            >
+                                                {addedCartId === product.id ? (
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                                    </svg>
+                                                ) : (
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                                    </svg>
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
                                 </article>
 

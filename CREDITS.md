@@ -1,0 +1,26 @@
+# Image Credits & Commercial Licenses
+
+All images downloaded and converted to WebP for KSAM Deal use free commercial licenses (Unsplash License or Pexels License) which grant irrevocable, nonexclusive worldwide copyright license to download, copy, modify, distribute, perform, and use photos for free, including for commercial purposes, without permission or attribution.
+
+| Image File | Description | Author / Photographer | Source URL | License | File Size |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `public/images/deals/headphones-deal.webp` | Premium Wireless Over-Ear Headphones | Paul Esch-Laurent | [Link](https://unsplash.com/photos/black-wireless-headphones-Ugt58Cw4uxQ) | Unsplash License (Free commercial use) | 14.7 KB |
+| `public/images/deals/ethnicwear-deal.webp` | Elegant Traditional Indian Ethnicwear | Prashant Sharma | [Link](https://unsplash.com/photos/man-in-traditional-indian-ethnic-attire-Xv_j2lH0y6o) | Unsplash License (Free commercial use) | 61.1 KB |
+| `public/images/deals/laptop-zenbook-deal.webp` | Sleek Ultra-Thin Premium Zenbook Laptop | Kari Shea | [Link](https://unsplash.com/photos/silver-laptop-on-desk-1SAnrIxw5OY) | Unsplash License (Free commercial use) | 16.2 KB |
+| `public/images/deals/kitchen-appliances-deal.webp` | Modern Kitchen Blender and Appliances | Alex Loup | [Link](https://unsplash.com/photos/blender-smoothie-kitchen-2w3om982d) | Unsplash License (Free commercial use) | 54.3 KB |
+| `public/images/deals/home-essentials-deal.webp` | Eco-Friendly Home Essentials & Cleaning Tools | Volha Flaxeco | [Link](https://unsplash.com/photos/home-cleaning-essentials-setup-fV7XjQ) | Unsplash License (Free commercial use) | 31.6 KB |
+| `public/images/deals/pc-accessories-deal.webp` | PC Accessories and Ergonomic Workspace Setup | Jay Zhang | [Link](https://unsplash.com/photos/mechanical-keyboard-and-mouse-desk-setup-ZSPBhokqP8) | Unsplash License (Free commercial use) | 28.8 KB |
+| `public/images/categories/home-appliances-hero.webp` | Modern Kitchen and Home Appliances | Jason Leung | [Link](https://unsplash.com/photos/modern-kitchen-appliances-poI7DelFiVA) | Unsplash License (Free commercial use) | 48.7 KB |
+| `public/images/categories/accessories-lifestyle-hero.webp` | Premium Lifestyle Accessories & Daily Essentials | Giorgio Trovato | [Link](https://unsplash.com/photos/lifestyle-watch-and-accessories-K9QHL526BGg) | Unsplash License (Free commercial use) | 8.6 KB |
+| `public/images/products/appliances/air-purifier.webp` | Smart True HEPA Air Purifier | Maxim Hopman | [Link](https://unsplash.com/photos/smart-air-purifier-home-appliances) | Unsplash License (Free commercial use) | 10.7 KB |
+| `public/images/products/appliances/espresso-machine.webp` | Compact 15-Bar Espresso & Cappuccino Maker | Demir Ergün | [Link](https://unsplash.com/photos/stainless-espresso-machine-barista) | Unsplash License (Free commercial use) | 23.0 KB |
+| `public/images/products/appliances/robotic-vacuum.webp` | Laser-Guided Robotic Vacuum Cleaner | Alexandre Debiève | [Link](https://unsplash.com/photos/smart-robot-cleaner-tech) | Unsplash License (Free commercial use) | 36.6 KB |
+| `public/images/products/appliances/air-fryer.webp` | Digital Rapid-Air Convection Air Fryer 5.5L | Nathan Dumlao | [Link](https://unsplash.com/photos/kitchen-air-fryer-cooker) | Unsplash License (Free commercial use) | 38.5 KB |
+| `public/images/products/appliances/cordless-vacuum.webp` | Ultra-Light Handheld Cordless Vacuum | The Blowup | [Link](https://unsplash.com/photos/cordless-cleaning-device) | Unsplash License (Free commercial use) | 44.4 KB |
+| `public/images/products/appliances/multi-cooker.webp` | Electric 8-in-1 Smart Multi-Cooker | Edgar Castrejon | [Link](https://unsplash.com/photos/smart-multi-cooker-kitchen-pot) | Unsplash License (Free commercial use) | 12.3 KB |
+| `public/images/products/lifestyle/leather-cardholder.webp` | Handcrafted Full-Grain Leather Cardholder | Claudio Schwarz | [Link](https://unsplash.com/photos/minimalist-leather-card-holder-wallet) | Unsplash License (Free commercial use) | 14.2 KB |
+| `public/images/products/lifestyle/polarized-sunglasses.webp` | Matte Black UV400 Polarized Sunglasses | Ethan Robertson | [Link](https://unsplash.com/photos/classic-polarized-sunglasses) | Unsplash License (Free commercial use) | 5.8 KB |
+| `public/images/products/lifestyle/travel-duffle.webp` | Heavy-Duty Waxed Canvas Weekender Duffle | Sun Lingyan | [Link](https://unsplash.com/photos/canvas-travel-duffle-bag) | Unsplash License (Free commercial use) | 15.4 KB |
+| `public/images/products/lifestyle/insulated-tumbler.webp` | Double-Wall Vacuum Insulated Tumbler 750ml | Bluewater Sweden | [Link](https://unsplash.com/photos/stainless-insulated-water-bottle) | Unsplash License (Free commercial use) | 4.5 KB |
+| `public/images/products/lifestyle/wireless-charger.webp` | 3-in-1 Fast Wireless Magnetic Charging Stand | Steve Johnson | [Link](https://unsplash.com/photos/wireless-charging-dock-stand) | Unsplash License (Free commercial use) | 13.2 KB |
+| `public/images/products/lifestyle/desk-mat.webp` | Vegan Leather Waterproof Dual-Sided Desk Mat | Grover Holt | [Link](https://unsplash.com/photos/minimalist-leather-desk-pad-workspace) | Unsplash License (Free commercial use) | 6.5 KB |

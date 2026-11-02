@@ -20,17 +20,19 @@ export const CATEGORY_PAGE_MAP = {
   skincare: "beauty.html",
   "skin-care": "beauty.html",
 
-  // Shoes & Footwear
+  // Shoes & Footwear (renamed Footwear, alias shoes)
+  footwear: "shoes.html",
   shoes: "shoes.html",
   shoe: "shoes.html",
-  footwear: "shoes.html",
 
   // Chairs & Furniture
   chairs: "moreChairProd.html",
   chair: "moreChairProd.html",
   furniture: "moreChairProd.html",
 
-  // Audio & Speakers
+  // Audio & Gadgets (renamed Gadgets, alias speakers)
+  gadgets: "audio.html",
+  gadget: "audio.html",
   speakers: "audio.html",
   speaker: "audio.html",
   audio: "audio.html",
@@ -41,22 +43,33 @@ export const CATEGORY_PAGE_MAP = {
   neckbands: "audio.html",
   neckband: "audio.html",
 
-  // Clothing & Fashion
-  cloths: "clothes.html",
+  // Clothing & Apparel
   clothing: "clothes.html",
+  cloths: "clothes.html",
   clothes: "clothes.html",
   apparel: "clothes.html",
-  fashion: "clothes.html",
   tops: "clothes.html",
   dresses: "clothes.html",
   bottoms: "clothes.html",
   jackets: "clothes.html",
 
-  // Electronics & Gadgets
+  // Fashion (View All opens product.html list mode)
+  fashion: "product.html?view=list&category=fashion",
+
+  // Home Appliances (NEW - opens product.html list mode)
+  "home-appliances": "product.html?view=list&category=home-appliances",
+  "home-appliance": "product.html?view=list&category=home-appliances",
+  appliances: "product.html?view=list&category=home-appliances",
+  appliance: "product.html?view=list&category=home-appliances",
+
+  // Accessories & Lifestyle (NEW - opens product.html list mode)
+  "accessories-lifestyle": "product.html?view=list&category=accessories-lifestyle",
+  accessories: "product.html?view=list&category=accessories-lifestyle",
+  lifestyle: "product.html?view=list&category=accessories-lifestyle",
+
+  // Electronics & Devices
   electronics: "electronics.html",
   electronic: "electronics.html",
-  gadgets: "electronics.html",
-  gadget: "electronics.html",
   smartphones: "electronics.html",
   smartphone: "electronics.html",
   mobiles: "electronics.html",
@@ -98,8 +111,14 @@ export function getCategoryPage(category) {
 export function getCategoryBackLabel(category) {
   if (!category) return "Back to Deals";
   const slug = String(category).trim().toLowerCase();
-  if (slug === "cloths" || slug === "clothing" || slug === "clothes" || slug === "fashion") {
+  if (slug === "cloths" || slug === "clothing" || slug === "clothes") {
     return "Back to Clothing";
+  }
+  if (slug === "fashion") {
+    return "Back to Fashion";
+  }
+  if (slug === "gadgets") {
+    return "Back to Gadgets";
   }
   if (slug === "speakers" || slug === "audio") {
     return "Back to Audio";
@@ -107,7 +126,10 @@ export function getCategoryBackLabel(category) {
   if (slug === "watches" || slug === "watch") {
     return "Back to Watches";
   }
-  if (slug === "shoes" || slug === "footwear") {
+  if (slug === "footwear") {
+    return "Back to Footwear";
+  }
+  if (slug === "shoes") {
     return "Back to Shoes";
   }
   if (slug === "beauty") {
@@ -116,9 +138,14 @@ export function getCategoryBackLabel(category) {
   if (slug === "chairs" || slug === "furniture") {
     return "Back to Furniture";
   }
+  if (slug === "home-appliances" || slug === "appliances") {
+    return "Back to Home Appliances";
+  }
+  if (slug === "accessories-lifestyle" || slug === "accessories" || slug === "lifestyle") {
+    return "Back to Accessories & Lifestyle";
+  }
   if (
     slug === "electronics" ||
-    slug === "gadgets" ||
     slug === "smartphones" ||
     slug === "laptops" ||
     slug === "cameras" ||
