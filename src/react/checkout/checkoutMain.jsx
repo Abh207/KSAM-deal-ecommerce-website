@@ -1,6 +1,7 @@
 import React, {
     useMemo,
-    useState
+    useState,
+    useEffect
 } from "react";
 
 import {
@@ -9,12 +10,11 @@ import {
 
 import "./checkout.css";
 
-
 import paymentData from "../../api/paymentMethods.json";
 import { requireAuth, getStoredSessionSync } from "../../auth/auth.js";
 import { createOrder } from "../../lib/orderService.js";
-
-
+import { supabase } from "../../lib/supabase.js";
+import { resolveImagePath, DEFAULT_PLACEHOLDER_IMAGE } from "../../lib/cartHelper.js";
 
 /* =========================================================
    CONSTANTS
@@ -22,14 +22,19 @@ import { createOrder } from "../../lib/orderService.js";
 
 const CART_KEY = "cartProductLS";
 
+const INDIAN_STATES = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+    "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+    "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+    "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+    "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+];
+
 const getImagePath = (image) => {
-    if (!image) return "";
-    if (image.startsWith("http://") || image.startsWith("https://") || image.startsWith("data:")) return image;
-    const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
-    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-    const clean = image.replace(/^\/+/, "");
-    if (image.startsWith(normalizedBase)) return image;
-    return `${normalizedBase}${clean}`;
+    if (!image) return DEFAULT_PLACEHOLDER_IMAGE;
+    return resolveImagePath(image);
 };
 
 
@@ -119,6 +124,8 @@ const [orderId, setOrderId] =
 
             country: "India",
 
+            email: "",
+
             addressType: "Home",
 
             instructions: "",
@@ -129,11 +136,56 @@ const [orderId, setOrderId] =
 
 
     /* =====================================================
-       LOCATION STATUS
+       LOCATION STATUS & CHECKBOXES
     ===================================================== */
 
     const [locationStatus, setLocationStatus] =
         useState("");
+
+    const [isLocating, setIsLocating] =
+        useState(false);
+
+    const [locationToast, setLocationToast] =
+        useState("");
+
+    const [billingSameAsShipping, setBillingSameAsShipping] =
+        useState(true);
+
+    const [saveAddress, setSaveAddress] =
+        useState(true);
+
+    const [defaultAddress, setDefaultAddress] =
+        useState(true);
+
+    useEffect(() => {
+        try {
+            const session = getStoredSessionSync();
+            if (session && session.user) {
+                const u = session.user;
+                const meta = u.user_metadata || {};
+                setAddress((prev) => ({
+                    ...prev,
+                    name: prev.name || meta.full_name || meta.name || "",
+                    phone: prev.phone || meta.phone || u.phone || "",
+                    email: prev.email || u.email || ""
+                }));
+            }
+            if (supabase && typeof supabase.auth?.getUser === "function") {
+                supabase.auth.getUser().then(({ data }) => {
+                    if (data?.user) {
+                        const u = data.user;
+                        const meta = u.user_metadata || {};
+                        setAddress((prev) => ({
+                            ...prev,
+                            name: prev.name || meta.full_name || meta.name || "",
+                            phone: prev.phone || meta.phone || u.phone || "",
+                            email: prev.email || u.email || ""
+                        }));
+                    }
+                }).catch(() => {});
+            }
+        } catch (_) {}
+    }, []);
 
 
     /* =====================================================
@@ -283,15 +335,120 @@ const [orderId, setOrderId] =
 
 
     /* =====================================================
-       LOCATION UI
+       LOCATION UI & REVERSE GEOCODING
     ===================================================== */
 
     const handleUseLocation = () => {
+        if (!navigator.geolocation) {
+            setLocationStatus("Geolocation is not supported by your browser.");
+            return;
+        }
 
-        setLocationStatus(
-            "Location permission can be connected here."
+        setIsLocating(true);
+        setLocationStatus("Detecting your location...");
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const { latitude, longitude } = position.coords;
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+                        {
+                            headers: {
+                                Accept: "application/json"
+                            }
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error("Unable to fetch address details");
+                    }
+
+                    const data = await response.json();
+                    const addr = data.address || {};
+
+                    // Match state from Indian states list
+                    const detectedState = addr.state || "";
+                    let matchedState = detectedState;
+                    const match = INDIAN_STATES.find(
+                        (s) =>
+                            s.toLowerCase() === detectedState.toLowerCase() ||
+                            detectedState.toLowerCase().includes(s.toLowerCase()) ||
+                            s.toLowerCase().includes(detectedState.toLowerCase())
+                    );
+                    if (match) {
+                        matchedState = match;
+                    }
+
+                    const houseNo =
+                        addr.house_number ||
+                        addr.building ||
+                        addr.house ||
+                        addr.flats ||
+                        addr.flat ||
+                        addr.apartment ||
+                        addr.office ||
+                        "";
+                    const streetName =
+                        addr.road ||
+                        addr.street ||
+                        addr.suburb ||
+                        addr.residential ||
+                        addr.neighbourhood ||
+                        "";
+                    const landmarkName =
+                        addr.landmark ||
+                        addr.suburb ||
+                        addr.neighbourhood ||
+                        addr.amenity ||
+                        "";
+                    const cityName =
+                        addr.city ||
+                        addr.town ||
+                        addr.municipality ||
+                        addr.village ||
+                        addr.county ||
+                        addr.state_district ||
+                        "";
+                    const pin = (addr.postcode || "").replace(/[^0-9]/g, "").slice(0, 6);
+
+                    setAddress((prev) => ({
+                        ...prev,
+                        house: houseNo || prev.house || "House / Flat",
+                        street: streetName || prev.street || data.name || "",
+                        landmark: landmarkName || prev.landmark || "",
+                        city: cityName || prev.city || "",
+                        state: matchedState || prev.state || "",
+                        pincode: pin || prev.pincode || "",
+                        country: "India"
+                    }));
+
+                    setBillingSameAsShipping(true);
+                    setSaveAddress(true);
+                    setDefaultAddress(true);
+
+                    setLocationStatus("Location detected 📍");
+                    setLocationToast("Location detected 📍");
+                    setTimeout(() => setLocationToast(""), 3500);
+                } catch (err) {
+                    console.error("Geocoding error:", err);
+                    setLocationStatus("Could not decode address. Please fill in details manually.");
+                } finally {
+                    setIsLocating(false);
+                }
+            },
+            (error) => {
+                setIsLocating(false);
+                let msg = "Location access denied. Please enter address manually.";
+                if (error.code === error.TIMEOUT) {
+                    msg = "Location request timed out. Please enter address manually.";
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    msg = "Location information unavailable.";
+                }
+                setLocationStatus(msg);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
         );
-
     };
 
 
@@ -1050,15 +1207,24 @@ const handleProcessPayment = async () => {
 
                             <button
                                 type="button"
-                                onClick={
-                                    handleUseLocation
-                                }
+                                onClick={handleUseLocation}
+                                disabled={isLocating}
+                                className={isLocating ? "locating-active" : ""}
                             >
-                                Use My Location
+                                {isLocating ? (
+                                    <span className="location-btn-spinner">⌛ Detecting...</span>
+                                ) : (
+                                    "📍 Use My Location"
+                                )}
                             </button>
 
-
                         </div>
+
+                        {locationToast && (
+                            <div className="location-toast-pill" role="status">
+                                {locationToast}
+                            </div>
+                        )}
 
 
 
@@ -1290,17 +1456,19 @@ const handleProcessPayment = async () => {
                                         <span>*</span>
                                     </label>
 
-                                    <input
-                                        type="text"
+                                    <select
                                         name="state"
-                                        value={
-                                            address.state
-                                        }
-                                        onChange={
-                                            handleAddressChange
-                                        }
-                                        placeholder="State"
-                                    />
+                                        value={address.state}
+                                        onChange={handleAddressChange}
+                                        className="state-select-dropdown"
+                                    >
+                                        <option value="">Select State / UT</option>
+                                        {INDIAN_STATES.map((st) => (
+                                            <option key={st} value={st}>
+                                                {st}
+                                            </option>
+                                        ))}
+                                    </select>
 
                                 </div>
 
@@ -1547,6 +1715,34 @@ const handleProcessPayment = async () => {
                                     placeholder="Example: Leave the package at the security desk."
                                 />
 
+                            </div>
+
+                            {/* PREFERENCE CHECKBOXES */}
+                            <div className="checkout-checkboxes-group">
+                                <label className="checkout-checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={billingSameAsShipping}
+                                        onChange={(e) => setBillingSameAsShipping(e.target.checked)}
+                                    />
+                                    <span>Use as billing address</span>
+                                </label>
+                                <label className="checkout-checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={saveAddress}
+                                        onChange={(e) => setSaveAddress(e.target.checked)}
+                                    />
+                                    <span>Save this address for future orders</span>
+                                </label>
+                                <label className="checkout-checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={defaultAddress}
+                                        onChange={(e) => setDefaultAddress(e.target.checked)}
+                                    />
+                                    <span>Set as default delivery address</span>
+                                </label>
                             </div>
 
 
@@ -1955,16 +2151,9 @@ const handleProcessPayment = async () => {
                                                     src={getImagePath(product.image)}
                                                     alt={product.name || "Product"}
                                                     onError={(e) => {
-                                                        e.currentTarget.style.display = "none";
-                                                        if (e.currentTarget.parentElement) {
-                                                            e.currentTarget.parentElement.style.background = "#18181b";
-                                                            e.currentTarget.parentElement.style.display = "flex";
-                                                            e.currentTarget.parentElement.style.alignItems = "center";
-                                                            e.currentTarget.parentElement.style.justifyContent = "center";
-                                                            e.currentTarget.parentElement.style.color = "#a1a1aa";
-                                                            e.currentTarget.parentElement.style.fontSize = "10px";
-                                                            e.currentTarget.parentElement.style.fontWeight = "bold";
-                                                        }
+                                                        e.currentTarget.onerror = null;
+                                                        e.currentTarget.src = DEFAULT_PLACEHOLDER_IMAGE;
+                                                        e.currentTarget.style.display = "block";
                                                     }}
                                                 />
 

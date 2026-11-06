@@ -11,7 +11,7 @@
   --ks-surface-card: #0D1420;
   --ks-surface-elevated: #111827;
   --ks-surface-input: #080D15;
-  --ks-primary-green: #2DFFB2;
+  --ks-primary-green: var(--accent-lime, #84FF00);
   --ks-secondary-green: #25C9F7;
   --ks-cyan-accent: #26D9F8;
   --ks-purple-accent: #8B7CFF;
@@ -30,30 +30,31 @@
   
   --ks-border: rgba(148, 163, 184, 0.14);
   --ks-border-subtle: rgba(148, 163, 184, 0.08);
-  --ks-border-green: rgba(45, 255, 178, 0.22);
-  --ks-border-glow: rgba(45, 255, 178, 0.32);
+  --ks-border-green: rgba(132, 255, 0, 0.28);
+  --ks-border-glow: rgba(132, 255, 0, 0.38);
 
   /* Signature Gradients */
-  --ks-gradient-primary: linear-gradient(135deg, #2DFFB2, #25C9F7);
-  --ks-gradient-card: radial-gradient(circle at top right, rgba(0, 255, 170, 0.08), transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%);
+  --ks-gradient-primary: linear-gradient(135deg, #84FF00, #25C9F7);
+  --ks-gradient-card: radial-gradient(circle at top right, rgba(132, 255, 0, 0.08), transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%);
   --ks-gradient-elevated: linear-gradient(135deg, #111827, #0D1420);
-  --ks-gradient-heading: linear-gradient(90deg, #2DFFB2 0%, #26D9F8 50%, #8B7CFF 100%);
-  --ks-glow-radial: radial-gradient(circle, rgba(45, 255, 178, 0.12), transparent 70%);
+  --ks-gradient-heading: linear-gradient(90deg, #84FF00 0%, #26D9F8 50%, #8B7CFF 100%);
+  --ks-glow-radial: radial-gradient(circle, rgba(132, 255, 0, 0.12), transparent 70%);
 
   --ks-shadow-card: 0 12px 35px rgba(0, 0, 0, 0.45);
   --ks-shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.55);
-  --ks-shadow-green-glow: 0 12px 40px rgba(45, 255, 178, 0.12);
+  --ks-shadow-green-glow: 0 12px 40px rgba(132, 255, 0, 0.16);
 
   /* Seamless token aliases */
-  --ks-neon-green: #2DFFB2;
-  --ks-emerald: #2DFFB2;
+  --accent-lime: #84FF00;
+  --ks-neon-green: var(--accent-lime, #84FF00);
+  --ks-emerald: var(--accent-lime, #84FF00);
   --ks-cyan: #26D9F8;
-  --ks-brand-green: #2DFFB2;
+  --ks-brand-green: var(--accent-lime, #84FF00);
   --ks-brand-blue: #26D9F8;
   --ks-bg-deep: #05070B;
   --ks-surface: #0A0F17;
   --ks-surface-hover: #111827;
-  --kx-accent: #2DFFB2;
+  --kx-accent: var(--accent-lime, #84FF00);
   --kx-cyan: #26D9F8;
 }
 

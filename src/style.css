@@ -1,9 +1,10 @@
 :root {
-  --accent: #8cff00;
+  --accent-lime: #84FF00;
+  --accent: var(--accent-lime, #84FF00);
   --accent-strong: #9dff1a;
-  --accent-soft: rgba(140, 255, 0, 0.14);
-  --accent-glow: rgba(140, 255, 0, 0.40);
-  --accent-on-light: #448000;
+  --accent-soft: rgba(132, 255, 0, 0.14);
+  --accent-glow: rgba(132, 255, 0, 0.40);
+  --accent-on-light: #387a00;
   --on-accent: #050a02;
 }
 

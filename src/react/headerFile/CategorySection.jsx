@@ -571,9 +571,10 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
 
 
   /* ======================================================
-     THUMBNAIL CAROUSEL SCROLL
+     THUMBNAIL CAROUSEL SCROLL & AUTO-MOVE
   ====================================================== */
   const thumbRef = useRef(null);
+  const isThumbPausedRef = useRef(false);
   const [canThumbLeft, setCanThumbLeft] = useState(false);
   const [canThumbRight, setCanThumbRight] = useState(false);
 
@@ -599,6 +600,36 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
       window.removeEventListener("resize", updateThumbScroll);
     };
   }, [fadeKey, updateThumbScroll]);
+
+  // Continuous seamless auto-move: LEFT -> RIGHT, pause on hover/touch
+  useEffect(() => {
+    const el = thumbRef.current;
+    if (!el || !activeCategory.products || activeCategory.products.length <= 1) return;
+
+    let animId = null;
+    let lastTime = performance.now();
+    const speed = 0.5; // smooth crawl
+
+    const step = (time) => {
+      const dt = time - lastTime;
+      lastTime = time;
+
+      if (!isThumbPausedRef.current && el) {
+        el.scrollLeft += speed * (dt / 16);
+        // Seamless loop halfway through the duplicate track
+        if (el.scrollWidth > el.clientWidth && el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft -= el.scrollWidth / 2;
+        }
+      }
+      animId = requestAnimationFrame(step);
+    };
+
+    animId = requestAnimationFrame(step);
+
+    return () => {
+      if (animId) cancelAnimationFrame(animId);
+    };
+  }, [fadeKey, activeCategory.products]);
 
   const scrollThumbs = (dir) => {
     const el = thumbRef.current;
@@ -882,10 +913,17 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                 <ChevronLeft size={20} />
               </button>
 
-              <div className="cs-thumb-row" ref={thumbRef}>
-                {activeCategory.products.map((p, idx) => (
+              <div
+                className="cs-thumb-row"
+                ref={thumbRef}
+                onMouseEnter={() => { isThumbPausedRef.current = true; }}
+                onMouseLeave={() => { isThumbPausedRef.current = false; }}
+                onTouchStart={() => { isThumbPausedRef.current = true; }}
+                onTouchEnd={() => { setTimeout(() => { isThumbPausedRef.current = false; }, 1200); }}
+              >
+                {[...activeCategory.products, ...activeCategory.products].map((p, idx) => (
                   <CategoryProductCard
-                    key={p.id || idx}
+                    key={`${p.id || 'p'}-${idx}`}
                     product={p}
                     category={activeCategory}
                   />

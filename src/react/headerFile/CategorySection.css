@@ -965,9 +965,9 @@
 
 @media (max-width: 767px) {
   .cs-thumb-wrap {
-    --card-w: 175px;
-    --img-h: 110px;
-    --card-gap: 10px;
+    --card-w: 78vw;
+    --img-h: 120px;
+    --card-gap: 12px;
   }
   .cs-thumb-row {
     padding: 6px 2px 10px 2px;

@@ -145,11 +145,12 @@
   --kx-text-important: #E5FFF5;
   --kx-text-inverse: #05070B;
 
-  --kx-accent: #2DFFB2;
-  --kx-accent-highlight: #26D9F8;
-  --kx-accent-glow: rgba(45, 255, 178, 0.28);
-  --kx-accent-soft: rgba(45, 255, 178, 0.10);
-  --kx-accent-border: rgba(45, 255, 178, 0.22);
+  --accent-lime: #84FF00;
+  --kx-accent: var(--accent-lime, #84FF00);
+  --kx-accent-highlight: #9dff1a;
+  --kx-accent-glow: rgba(132, 255, 0, 0.35);
+  --kx-accent-soft: rgba(132, 255, 0, 0.12);
+  --kx-accent-border: rgba(132, 255, 0, 0.28);
   --kx-accent-text: #05070B;
 
   --kx-cyan: #26D9F8;

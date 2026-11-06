@@ -49,6 +49,8 @@ import ProductListFeedback from "./ProductListFeedback.jsx";
 import CategoryTilesSection, { deriveProductSubCategory } from "./common/CategoryTilesSection.jsx";
 import FlashSaleBanner from "./common/FlashSaleBanner.jsx";
 import ProductReviewsSection from "./common/ProductReviewsSection.jsx";
+import AccessoriesFullscreenHero from "./components/AccessoriesFullscreenHero.jsx";
+import DualMarqueeShowcase from "./components/DualMarqueeShowcase.jsx";
 
 import "./productDetail.css";
 
@@ -404,42 +406,50 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
     return result;
   }, [products, selectedSubCategory, searchQuery, sortBy, currentCategory]);
 
+  const isAccessoriesPage = currentCategory === "accessories-lifestyle";
+  const isMarqueeCategory = currentCategory === "accessories-lifestyle" || currentCategory === "home-appliances";
+
   return (
-    <div className="product-detail-page product-list-mode-page">
-      {/* TASK 6: Fixed Full-Page Background Video behind list mode */}
-      <div className="product-list-page-video-wrap" aria-hidden="true">
-        {!prefersReducedMotion ? (
-          <video
-            ref={pageBgVideoRef}
-            className="product-list-page-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster={listBgPoster}
-          >
-            <source media="(max-width: 768px)" src={listBgMobileWebm} type="video/webm" />
-            <source media="(max-width: 768px)" src={listBgMobileMp4} type="video/mp4" />
-            <source src={listBgWebm} type="video/webm" />
-            <source src={listBgMp4} type="video/mp4" />
-          </video>
-        ) : (
-          <img
-            src={listBgPoster}
-            alt=""
-            className="product-list-page-poster"
-            loading="eager"
-            decoding="async"
-          />
-        )}
-        {/* Dark Video Overlay */}
-        <div className="product-list-page-video-overlay" />
-      </div>
+    <div className={`product-detail-page product-list-mode-page ${isAccessoriesPage ? "is-accessories-view" : ""}`}>
+      {/* Background Video behind list mode (suppressed on accessories-lifestyle to allow clean full-screen hero) */}
+      {!isAccessoriesPage && (
+        <div className="product-list-page-video-wrap" aria-hidden="true">
+          {!prefersReducedMotion ? (
+            <video
+              ref={pageBgVideoRef}
+              className="product-list-page-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={listBgPoster}
+            >
+              <source media="(max-width: 768px)" src={listBgMobileWebm} type="video/webm" />
+              <source media="(max-width: 768px)" src={listBgMobileMp4} type="video/mp4" />
+              <source src={listBgWebm} type="video/webm" />
+              <source src={listBgMp4} type="video/mp4" />
+            </video>
+          ) : (
+            <img
+              src={listBgPoster}
+              alt=""
+              className="product-list-page-poster"
+              loading="eager"
+              decoding="async"
+            />
+          )}
+          {/* Dark Video Overlay */}
+          <div className="product-list-page-video-overlay" />
+        </div>
+      )}
 
       <Navbar searchPlaceholder={searchPlaceholder} />
 
-      {/* Video Header Hero Band */}
+      {/* TASK 5: Fullscreen Hero with Parallax & Video for Accessories & Lifestyle */}
+      {isAccessoriesPage && <AccessoriesFullscreenHero />}
+
+      {/* Video Header Hero Band & Category Switcher */}
       <ProductListVideoHeader
         categorySlug={currentCategory}
         categoryLabel={categoryLabel}
@@ -455,6 +465,11 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
         setViewLayout={setViewLayout}
         filteredCount={displayProducts.length}
       />
+
+      {/* TASK 6: TWO auto-moving horizontal marquee rows for Accessories & Home Appliances */}
+      {isMarqueeCategory && (
+        <DualMarqueeShowcase products={products} categoryLabel={categoryLabel} />
+      )}
 
       {/* TASK 2: Category Tiles Section (Data-Driven Sub-Categories) */}
       <CategoryTilesSection

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   Star,
   CheckCircle2,
@@ -25,7 +25,7 @@ function getFallbackReviews(productId, category = "General") {
       review_title: "Exceptional build quality and performance!",
       review_text:
         "Far exceeded my expectations. The finish is premium, packaging was top-notch, and delivery was completed within 24 hours. Highly recommended for daily use.",
-      created_at: new Date(Date.now() - 3 * 86400000).toISOString(),
+      created_at: new Date(Date.now() - 2 * 86400000).toISOString(),
       verified_purchase: true
     },
     {
@@ -35,7 +35,7 @@ function getFallbackReviews(productId, category = "General") {
       review_title: "Authentic product at an unbeatable deal",
       review_text:
         "Verified authentic KSAM Deal product. Exactly matches the specifications listed. The build and tactile feel are superb.",
-      created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
+      created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
       verified_purchase: true
     },
     {
@@ -45,7 +45,37 @@ function getFallbackReviews(productId, category = "General") {
       review_title: "Very pleased with the purchase",
       review_text:
         "Solid product. Arrived on time with intact seals and invoice. Works flawlessly. Would definitely purchase again.",
+      created_at: new Date(Date.now() - 9 * 86400000).toISOString(),
+      verified_purchase: true
+    },
+    {
+      id: `seed-4-${productId}`,
+      user_display_name: "Neha Sundaram",
+      rating: 5,
+      review_title: "Sleek aesthetic & high durability",
+      review_text:
+        "I was slightly hesitant at first, but this turned out to be one of my favorite purchases. Build ergonomics are spotless.",
       created_at: new Date(Date.now() - 14 * 86400000).toISOString(),
+      verified_purchase: true
+    },
+    {
+      id: `seed-5-${productId}`,
+      user_display_name: "Vikram Malhotra",
+      rating: 5,
+      review_title: "Value for money in every aspect",
+      review_text:
+        "Compared across three major marketplaces and KSAM Deal offered the best price with lightning quick dispatch.",
+      created_at: new Date(Date.now() - 21 * 86400000).toISOString(),
+      verified_purchase: true
+    },
+    {
+      id: `seed-6-${productId}`,
+      user_display_name: "Ananya Roy",
+      rating: 4,
+      review_title: "Great customer support & genuine item",
+      review_text:
+        "The package arrived safely in multi-layer bubble wrap. Everything corresponds precisely to the descriptions and photos.",
+      created_at: new Date(Date.now() - 28 * 86400000).toISOString(),
       verified_purchase: true
     }
   ];
@@ -54,14 +84,24 @@ function getFallbackReviews(productId, category = "General") {
     baseReviews[0].review_title = "Crisp acoustic definition & punchy bass";
     baseReviews[0].review_text =
       "The clarity across high, mid, and low frequencies is astonishing. Noise isolation is very effective on daily commutes. Battery endurance lasts as advertised.";
+    baseReviews[3].review_title = "Audiophile grade soundstage";
+    baseReviews[3].review_text =
+      "Superb instrumental separation and zero distortion even at peak volumes. Synced with my phone in under 2 seconds.";
   } else if (cat.includes("watch")) {
     baseReviews[0].review_title = "Immaculate horology craftsmanship";
     baseReviews[0].review_text =
       "Case finishing and dial legibility are outstanding. Feels substantial on the wrist and looks significantly more expensive than the price paid.";
+    baseReviews[3].review_title = "Timeless minimal silhouette";
+    baseReviews[3].review_text =
+      "The strap comfort is unmatched and the dial crystal has zero reflections. Goes effortlessly with casual and formal attire.";
   } else if (cat.includes("shoe") || cat.includes("footwear")) {
     baseReviews[0].review_title = "Supreme cushioning and ergonomic comfort";
     baseReviews[0].review_text =
       "Incredible arch support and shock absorption. The breathable mesh keeps feet cool during long walks. Sizing is true to fit.";
+  } else if (cat.includes("appliance") || cat.includes("home")) {
+    baseReviews[0].review_title = "Silent operation & energy efficient";
+    baseReviews[0].review_text =
+      "Extremely quiet motor, elegant modern design, and remarkably quick task completion. Has elevated our home routine completely.";
   }
 
   return baseReviews;
@@ -76,11 +116,16 @@ export default function ProductReviewsSection({
   const [data, setData] = useState({
     productId,
     averageRating: 4.8,
-    totalReviews: 3,
-    distribution: { 5: 2, 4: 1, 3: 0, 2: 0, 1: 0 },
+    totalReviews: 6,
+    distribution: { 5: 4, 4: 2, 3: 0, 2: 0, 1: 0 },
     reviews: []
   });
   const [loading, setLoading] = useState(true);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const rowRef = useRef(null);
+  const isPausedRef = useRef(false);
 
   const fallbackSeeds = useMemo(() => {
     return getFallbackReviews(productId, category);
@@ -105,7 +150,7 @@ export default function ProductReviewsSection({
     loadReviews();
   }, [loadReviews]);
 
-  // Subscribe to live review updates (e.g. when user submits a review in profile)
+  // Subscribe to live review updates
   useEffect(() => {
     const unsubscribe = subscribeReviews((updatedProductId) => {
       if (!updatedProductId || String(updatedProductId) === String(productId)) {
@@ -114,6 +159,56 @@ export default function ProductReviewsSection({
     });
     return () => unsubscribe();
   }, [productId, loadReviews]);
+
+  // Check scroll bounds
+  const updateScrollBounds = useCallback(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+  }, []);
+
+  useEffect(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    updateScrollBounds();
+    el.addEventListener("scroll", updateScrollBounds, { passive: true });
+    window.addEventListener("resize", updateScrollBounds);
+    return () => {
+      el.removeEventListener("scroll", updateScrollBounds);
+      window.removeEventListener("resize", updateScrollBounds);
+    };
+  }, [data.reviews, updateScrollBounds]);
+
+  // Step scroll
+  const scrollStep = useCallback((direction = 1) => {
+    const el = rowRef.current;
+    if (!el) return;
+    const cardWidth = el.querySelector(".review-item-card")?.offsetWidth || 380;
+    const step = (cardWidth + 20) * direction;
+    el.scrollBy({ left: step, behavior: "smooth" });
+  }, []);
+
+  // Auto-scroll logic: steps every 3.5s, loops to start when reaching end
+  useEffect(() => {
+    const el = rowRef.current;
+    if (!el || data.reviews.length <= 1) return;
+
+    const interval = setInterval(() => {
+      if (isPausedRef.current) return;
+      const { scrollLeft, scrollWidth, clientWidth } = el;
+      if (scrollLeft + clientWidth >= scrollWidth - 25) {
+        // Loop back to start
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        const cardWidth = el.querySelector(".review-item-card")?.offsetWidth || 380;
+        el.scrollBy({ left: cardWidth + 20, behavior: "smooth" });
+      }
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [data.reviews.length]);
 
   const { averageRating, totalReviews, distribution, reviews } = data;
 
@@ -139,18 +234,44 @@ export default function ProductReviewsSection({
           <p>Real feedback from customers who purchased and received this product</p>
         </div>
 
-        <a
-          href="./profile.html?tab=orders"
-          className="write-review-prompt-btn"
-          title="Review products from your delivered orders"
-        >
-          <ShieldCheck size={16} />
-          <span>Rate from Order History</span>
-          <ArrowRight size={14} />
-        </a>
+        <div className="reviews-header-actions">
+          {/* Arrow Buttons (Rounded-square ~16px, dark #0b0f14, animated rainbow border, white ‹ and ›) */}
+          <div className="reviews-arrow-controls" aria-label="Review navigation">
+            <button
+              type="button"
+              className={`review-nav-btn prev-btn ${!canScrollLeft ? "is-disabled" : ""}`}
+              onClick={() => scrollStep(-1)}
+              aria-label="Previous review"
+              disabled={!canScrollLeft}
+            >
+              <span className="nav-rainbow-border" />
+              <span className="nav-btn-core">‹</span>
+            </button>
+            <button
+              type="button"
+              className={`review-nav-btn next-btn ${!canScrollRight ? "is-disabled" : ""}`}
+              onClick={() => scrollStep(1)}
+              aria-label="Next review"
+              disabled={!canScrollRight}
+            >
+              <span className="nav-rainbow-border" />
+              <span className="nav-btn-core">›</span>
+            </button>
+          </div>
+
+          <a
+            href="./profile.html?tab=orders"
+            className="write-review-prompt-btn"
+            title="Review products from your delivered orders"
+          >
+            <ShieldCheck size={16} />
+            <span>Rate from Order History</span>
+            <ArrowRight size={14} />
+          </a>
+        </div>
       </div>
 
-      {/* Summary Card with Big Score & 5-Star Distribution Bars */}
+      {/* Summary Card with Big Score & 5-Star Distribution Bars (Always above row) */}
       <div className="reviews-summary-card">
         {/* Left: Score */}
         <div className="rating-overview-col">
@@ -201,8 +322,26 @@ export default function ProductReviewsSection({
         </div>
       </div>
 
-      {/* Reviews List */}
-      <div className="reviews-list-container">
+      {/* Reviews Row: ONE horizontal row, auto-scroll, pause on hover/touch */}
+      <div
+        className="reviews-list-container"
+        ref={rowRef}
+        onMouseEnter={() => {
+          isPausedRef.current = true;
+        }}
+        onMouseLeave={() => {
+          isPausedRef.current = false;
+        }}
+        onTouchStart={() => {
+          isPausedRef.current = true;
+        }}
+        onTouchEnd={() => {
+          // slight delay before resuming
+          setTimeout(() => {
+            isPausedRef.current = false;
+          }, 1200);
+        }}
+      >
         {reviews.length === 0 ? (
           <div className="no-reviews-state">
             <MessageSquare size={32} />
@@ -261,4 +400,3 @@ export default function ProductReviewsSection({
     </section>
   );
 }
-

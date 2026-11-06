@@ -2880,3 +2880,78 @@ body {
     transform: none;
 
 }
+
+/* =========================================================
+   LOCATION AUTOFILL & PREFERENCE CHECKBOXES
+========================================================= */
+
+.location-banner button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.location-btn-spinner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.location-toast-pill {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: rgba(22, 201, 101, 0.15);
+    border: 1px solid var(--green);
+    color: var(--green-dark);
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 9999px;
+    animation: fadeIn 0.3s ease;
+}
+
+.state-select-dropdown {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.state-select-dropdown:focus {
+    border-color: var(--green);
+}
+
+.checkout-checkboxes-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 14px 0 18px 0;
+    padding: 14px 16px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.checkout-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkout-checkbox-label input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+    cursor: pointer;
+}

@@ -3,10 +3,11 @@
    ========================================================= */
 
 :root {
-    --accent: #1de9b6;
-    --accent-dark: #0f9d76;
-    --accent-soft: rgba(29, 233, 182, 0.15);
-    --accent-glow: rgba(29, 233, 182, 0.45);
+    --accent-lime: #84FF00;
+    --accent: var(--accent-lime, #84FF00);
+    --accent-dark: #387a00;
+    --accent-soft: rgba(132, 255, 0, 0.15);
+    --accent-glow: rgba(132, 255, 0, 0.45);
 }
 
 @keyframes electronicsCardFadeIn {

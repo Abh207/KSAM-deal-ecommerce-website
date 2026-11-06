@@ -354,43 +354,61 @@ function setCachedDealsList(data) {
   } catch {}
 }
 
+const PRODUCTS_SELECT_COLUMNS = `
+  id,
+  name,
+  title,
+  brand,
+  category,
+  description,
+  image_url,
+  additional_images,
+  rating,
+  reviews,
+  price,
+  old_price,
+  discount,
+  discount_percent,
+  currency,
+  affiliate_url,
+  product_url,
+  availability,
+  is_active,
+  is_featured,
+  tags,
+  created_at,
+  updated_at
+`;
+
 let hasWarnedDealsQuery = false;
 let hasWarnedSingleQuery = false;
 let inFlightDealsPromise = null;
 
 /**
- * Executes a two-step separate query (products then product_offers) as a fallback
- * when the embedded join is not available in PostgREST schema cache.
+ * Executes a two-step query (products then product_offers separately)
+ * avoiding schema cache relationship requirements.
  */
 async function fetchProductsAndOffersSeparately() {
   try {
-    const { data: prods, error: prodErr } = await supabase
+    let { data: prods, error: prodErr } = await supabase
       .from("products")
-      .select(`
-        id,
-        uid,
-        title,
-        name,
-        brand,
-        category,
-        description,
-        key_features,
-        specs,
-        images,
-        image_url,
-        rating,
-        review_count,
-        stock,
-        is_active,
-        price,
-        old_price,
-        discount_percent,
-        affiliate_url,
-        created_at,
-        updated_at
-      `)
+      .select(PRODUCTS_SELECT_COLUMNS)
       .eq("is_active", true)
       .order("created_at", { ascending: false });
+
+    if (prodErr || !Array.isArray(prods) || prods.length === 0) {
+      // If no active rows, fetch without filter
+      const { data: allProds, error: allErr } = await supabase
+        .from("products")
+        .select(PRODUCTS_SELECT_COLUMNS)
+        .order("created_at", { ascending: false })
+        .limit(20);
+
+      if (!allErr && Array.isArray(allProds) && allProds.length > 0) {
+        prods = allProds;
+        prodErr = null;
+      }
+    }
 
     if (prodErr || !Array.isArray(prods) || prods.length === 0) {
       return null;
@@ -400,30 +418,34 @@ async function fetchProductsAndOffersSeparately() {
     let offersMap = {};
 
     if (ids.length > 0) {
-      const { data: offers } = await supabase
-        .from("product_offers")
-        .select(`
-          id,
-          product_id,
-          platform,
-          platform_slug,
-          price,
-          mrp,
-          discount_percent,
-          affiliate_url,
-          in_stock,
-          updated_at
-        `)
-        .in("product_id", ids)
-        .eq("in_stock", true);
+      try {
+        const { data: offers, error: offersErr } = await supabase
+          .from("product_offers")
+          .select(`
+            id,
+            product_id,
+            platform,
+            platform_slug,
+            price,
+            mrp,
+            discount_percent,
+            affiliate_url,
+            in_stock,
+            updated_at
+          `)
+          .in("product_id", ids)
+          .eq("in_stock", true);
 
-      if (Array.isArray(offers)) {
-        offers.forEach((o) => {
-          if (!offersMap[o.product_id]) {
-            offersMap[o.product_id] = [];
-          }
-          offersMap[o.product_id].push(o);
-        });
+        if (!offersErr && Array.isArray(offers)) {
+          offers.forEach((o) => {
+            if (!offersMap[o.product_id]) {
+              offersMap[o.product_id] = [];
+            }
+            offersMap[o.product_id].push(o);
+          });
+        }
+      } catch {
+        // Safe if product_offers table doesn't exist
       }
     }
 
@@ -459,87 +481,23 @@ async function fetchRawDealsList() {
     }
 
     try {
-      // 1. Try embedded query with explicit relationship hint
-      const fetchPromise = supabase
-        .from("products")
-        .select(`
-          id,
-          uid,
-          title,
-          name,
-          brand,
-          category,
-          description,
-          key_features,
-          specs,
-          images,
-          image_url,
-          rating,
-          review_count,
-          stock,
-          is_active,
-          price,
-          old_price,
-          discount_percent,
-          affiliate_url,
-          created_at,
-          updated_at,
-          product_offers!product_offers_product_id_fkey (
-            id,
-            platform,
-            platform_slug,
-            price,
-            mrp,
-            discount_percent,
-            affiliate_url,
-            in_stock,
-            updated_at
-          )
-        `)
-        .eq("is_active", true)
-        .order("created_at", { ascending: false });
-
+      const fetchPromise = fetchProductsAndOffersSeparately();
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Supabase request timed out after 5s")), 5000)
       );
 
-      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+      const separateData = await Promise.race([fetchPromise, timeoutPromise]);
 
-      if (!error && Array.isArray(data) && data.length > 0) {
-        rawList = data;
-        setCachedDealsList(data);
-        isOffline = false;
-      } else {
-        // Fallback: PostgREST relationship missing or query error
-        if (error && !hasWarnedDealsQuery) {
-          console.warn("[getDeals] Supabase embedded query notice:", error.message || error.code, "— using fallback query");
-          hasWarnedDealsQuery = true;
-        }
-
-        // Attempt separate two-query fetch
-        const separateData = await fetchProductsAndOffersSeparately();
-        if (Array.isArray(separateData) && separateData.length > 0) {
-          rawList = separateData;
-          setCachedDealsList(separateData);
-          isOffline = false;
-        } else if (cached?.data && cached.data.length > 0) {
-          rawList = cached.data;
-          isOffline = true;
-        }
-      }
-    } catch (err) {
-      if (!hasWarnedDealsQuery) {
-        console.warn("[getDeals] Supabase unreachable or timed out:", err?.message || err);
-        hasWarnedDealsQuery = true;
-      }
-
-      // Try separate query before dropping to cache
-      const separateData = await fetchProductsAndOffersSeparately();
       if (Array.isArray(separateData) && separateData.length > 0) {
         rawList = separateData;
         setCachedDealsList(separateData);
         isOffline = false;
       } else if (cached?.data && cached.data.length > 0) {
+        rawList = cached.data;
+        isOffline = true;
+      }
+    } catch (err) {
+      if (cached?.data && cached.data.length > 0) {
         rawList = cached.data;
         isOffline = true;
       }
@@ -664,98 +622,22 @@ export async function getSupabaseDealByIdOrUid(id, uid) {
   try {
     let query = supabase
       .from("products")
-      .select(`
-        id,
-        uid,
-        title,
-        name,
-        brand,
-        category,
-        description,
-        key_features,
-        specs,
-        images,
-        image_url,
-        rating,
-        review_count,
-        stock,
-        is_active,
-        price,
-        old_price,
-        discount_percent,
-        affiliate_url,
-        created_at,
-        updated_at,
-        product_offers!product_offers_product_id_fkey (
-          id,
-          platform,
-          platform_slug,
-          price,
-          mrp,
-          discount_percent,
-          affiliate_url,
-          in_stock,
-          updated_at
-        )
-      `)
-      .eq("is_active", true);
+      .select(PRODUCTS_SELECT_COLUMNS);
 
     if (id) {
       query = query.eq("id", id);
-    } else if (uid) {
-      query = query.eq("uid", uid);
     }
 
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Supabase deal query timed out")), 5000)
     );
 
-    const { data, error } = await Promise.race([query.maybeSingle(), timeoutPromise]);
+    const { data: singleProd, error } = await Promise.race([query.maybeSingle(), timeoutPromise]);
 
-    if (!error && data) {
-      return normalizeDeal(data);
-    }
-
-    // Fallback: If embedded join fails, query product then offers separately
-    if (error) {
-      if (!hasWarnedSingleQuery) {
-        console.warn("[getSupabaseDealByIdOrUid] Embedded query failed, trying separate query fallback");
-        hasWarnedSingleQuery = true;
-      }
-
-      let singleProdQuery = supabase
-        .from("products")
-        .select(`
-          id,
-          uid,
-          title,
-          name,
-          brand,
-          category,
-          description,
-          key_features,
-          specs,
-          images,
-          image_url,
-          rating,
-          review_count,
-          stock,
-          is_active,
-          price,
-          old_price,
-          discount_percent,
-          affiliate_url,
-          created_at,
-          updated_at
-        `)
-        .eq("is_active", true);
-
-      if (id) singleProdQuery = singleProdQuery.eq("id", id);
-      else if (uid) singleProdQuery = singleProdQuery.eq("uid", uid);
-
-      const { data: singleProd } = await singleProdQuery.maybeSingle();
-      if (singleProd) {
-        const { data: offers } = await supabase
+    if (!error && singleProd) {
+      let offers = [];
+      try {
+        const { data: offersData } = await supabase
           .from("product_offers")
           .select(`
             id,
@@ -771,17 +653,20 @@ export async function getSupabaseDealByIdOrUid(id, uid) {
           .eq("product_id", singleProd.id)
           .eq("in_stock", true);
 
-        return normalizeDeal({
-          ...singleProd,
-          product_offers: Array.isArray(offers) ? offers : []
-        });
+        if (Array.isArray(offersData)) {
+          offers = offersData;
+        }
+      } catch {
+        // Safe if product_offers table doesn't exist
       }
+
+      return normalizeDeal({
+        ...singleProd,
+        product_offers: offers
+      });
     }
   } catch (err) {
-    if (!hasWarnedSingleQuery) {
-      console.warn("[getSupabaseDealByIdOrUid] Error fetching deal:", err?.message || err);
-      hasWarnedSingleQuery = true;
-    }
+    // Graceful fallback to demo dataset
   }
 
   // 3. Fallback to demo dataset

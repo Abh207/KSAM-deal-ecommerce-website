@@ -7,6 +7,7 @@ import React, {
 import horizontalProductsData
     from "../../api/horizontalProducts.json";
 import { isInWishlist, toggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
+import { addProductToCart } from "../../lib/cartHelper.js";
 import "./HorizontalProducts.css";
 
 
@@ -26,6 +27,9 @@ function HorizontalProducts({
 
     const [isPaused, setIsPaused] =
         useState(false);
+
+    const [addedMap, setAddedMap] =
+        useState({});
 
     const [, setWishlistVersion] = useState(0);
 
@@ -646,6 +650,11 @@ function HorizontalProducts({
 
                                                     event.stopPropagation();
 
+                                                    const pid = product.id;
+                                                    setAddedMap((prev) => ({ ...prev, [pid]: true }));
+                                                    setTimeout(() => {
+                                                        setAddedMap((prev) => ({ ...prev, [pid]: false }));
+                                                    }, 1500);
 
                                                     if (
                                                         onAddToCart
@@ -656,6 +665,8 @@ function HorizontalProducts({
                                                             1
                                                         );
 
+                                                    } else {
+                                                        addProductToCart(product, 1);
                                                     }
 
                                                 }}
@@ -668,7 +679,9 @@ function HorizontalProducts({
                                                         product.stock
                                                     ) <= 0
                                                         ? "OUT OF STOCK"
-                                                        : "ADD TO CART"
+                                                        : addedMap[product.id]
+                                                        ? "✓ ADDED"
+                                                        : "+ ADD TO CART"
                                                 }
 
                                             </button>

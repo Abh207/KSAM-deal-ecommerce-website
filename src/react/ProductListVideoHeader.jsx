@@ -112,48 +112,52 @@ export default function ProductListVideoHeader({
     };
   }, [isReducedMotion]);
 
+  const isAccessories = categorySlug === "accessories-lifestyle";
+
   return (
-    <div className="product-list-hero-band" ref={containerRef}>
-      {/* Background Video Wrap */}
-      <div className="product-list-hero-video-wrap" aria-hidden="true">
-        {!isReducedMotion ? (
-          <video
-            ref={videoRef}
-            className="product-list-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster={posterSrc}
-          >
-            <source
-              media="(max-width: 768px)"
-              src={mobileWebm}
-              type="video/webm"
+    <div className={`product-list-hero-band ${isAccessories ? "is-accessories-band" : ""}`} ref={containerRef}>
+      {/* Background Video Wrap (Suppressed on accessories-lifestyle to allow clean full-screen hero) */}
+      {!isAccessories && (
+        <div className="product-list-hero-video-wrap" aria-hidden="true">
+          {!isReducedMotion ? (
+            <video
+              ref={videoRef}
+              className="product-list-hero-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={posterSrc}
+            >
+              <source
+                media="(max-width: 768px)"
+                src={mobileWebm}
+                type="video/webm"
+              />
+              <source
+                media="(max-width: 768px)"
+                src={mobileMp4}
+                type="video/mp4"
+              />
+              <source src={desktopWebm} type="video/webm" />
+              <source src={desktopMp4} type="video/mp4" />
+            </video>
+          ) : (
+            <img
+              src={posterSrc}
+              alt=""
+              className="product-list-hero-poster"
+              loading="eager"
+              decoding="async"
             />
-            <source
-              media="(max-width: 768px)"
-              src={mobileMp4}
-              type="video/mp4"
-            />
-            <source src={desktopWebm} type="video/webm" />
-            <source src={desktopMp4} type="video/mp4" />
-          </video>
-        ) : (
-          <img
-            src={posterSrc}
-            alt=""
-            className="product-list-hero-poster"
-            loading="eager"
-            decoding="async"
-          />
-        )}
-        {/* Dark Gradient Overlay */}
-        <div className="product-list-hero-overlay" />
-        {/* Soft Bottom Fade */}
-        <div className="product-list-hero-bottom-fade" />
-      </div>
+          )}
+          {/* Dark Gradient Overlay */}
+          <div className="product-list-hero-overlay" />
+          {/* Soft Bottom Fade */}
+          <div className="product-list-hero-bottom-fade" />
+        </div>
+      )}
 
       {/* Content Container */}
       <div className="product-list-hero-inner">

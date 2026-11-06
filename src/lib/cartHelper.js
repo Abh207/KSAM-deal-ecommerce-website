@@ -8,6 +8,7 @@ import beautyProducts from "../api/beautyProducts.json" with { type: "json" };
 import watchProducts from "../api/watch-products.json" with { type: "json" };
 import horizontalData from "../api/horizontalProducts.json" with { type: "json" };
 import defaultProducts from "../api/products.json" with { type: "json" };
+import { supabase } from "./supabase.js";
 
 const greenBeautyProducts = [
   { id: 201, name: "Green Glow Cleanser", category: "Skin Care", price: 399, oldPrice: 599, image: "images/remote/unsplash_1556228720-195a672e8a03.webp" },
@@ -32,10 +33,7 @@ export const CURRENCY_SYMBOL = "₹";
 export const FREE_DELIVERY_THRESHOLD = 999;
 
 export const DEFAULT_PLACEHOLDER_IMAGE =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#1f2937'/><stop offset='1' stop-color='#111827'/></linearGradient></defs><rect width='200' height='200' rx='16' fill='url(#bg)'/><text x='100' y='120' font-size='64' text-anchor='middle'>🛍️</text></svg>`
-  );
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMWYyOTM3Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTExODI3Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxNiIgZmlsbD0idXJsKCNiZykiLz48dGV4dCB4PSIxMDAiIHk9IjEyMCIgZm9udC1zaXplPSI2NCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+bje+4jzwvdGV4dD48L3N2Zz4=";
 
 export function parsePrice(val) {
   if (typeof val === "number") return val;
@@ -82,6 +80,9 @@ export function resolveImagePath(path) {
 
   // Strip leading ./ and /
   let clean = trimmed.replace(/^\.\//, "").replace(/^\/+/, "");
+
+  // Strip old repository base if previously baked into localStorage items
+  clean = clean.replace(/^KSAM-deal-ecommerce-website\//i, "");
 
   // Strip public/ if present
   clean = clean.replace(/^public\//, "");
@@ -299,9 +300,52 @@ export function getNormalizedCart() {
 }
 
 /**
+ * Displays a lightweight animated cart feedback toast.
+ */
+export function showCartToast(message = "Added to cart") {
+  if (typeof document === "undefined") return;
+  let toast = document.getElementById("ksam-global-cart-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "ksam-global-cart-toast";
+    toast.style.cssText =
+      "position:fixed;bottom:28px;right:28px;z-index:99999;background:#0d1420;border:1px solid #84FF00;color:#ffffff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 12px 32px rgba(0,0,0,0.6),0 0 16px rgba(132,255,0,0.3);transform:translateY(80px);opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;";
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#84FF00;color:#05070b;font-size:13px;font-weight:900;">✓</span><span>${message}</span>`;
+  toast.style.transform = "translateY(0)";
+  toast.style.opacity = "1";
+
+  if (toast._timer) clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.transform = "translateY(80px)";
+    toast.style.opacity = "0";
+  }, 2500);
+}
+
+async function syncItemToSupabaseCart(item) {
+  try {
+    if (!supabase || typeof supabase.auth?.getSession !== "function") return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user?.id) return;
+    await supabase.from("user_carts").upsert({
+      user_id: session.user.id,
+      product_id: String(item.id),
+      name: item.name || "Product",
+      image: item.image || "",
+      price: Number(item.price || 0),
+      old_price: Number(item.oldPrice || item.old_price || 0),
+      category: item.category || "General",
+      quantity: Number(item.quantity || item.qty || 1),
+      updated_at: new Date().toISOString()
+    }, { onConflict: "user_id,product_id" });
+  } catch (_) {}
+}
+
+/**
  * Universal Add-to-Cart function used across all pages.
  */
-export function addProductToCart(product, qty = 1) {
+export function addProductToCart(product, qty = 1, options = {}) {
   if (!product) return [];
 
   const cart = getNormalizedCart();
@@ -329,6 +373,11 @@ export function addProductToCart(product, qty = 1) {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
       window.dispatchEvent(new Event("cartUpdated"));
+      window.dispatchEvent(new CustomEvent("cartItemAdded", { detail: normalized }));
+      if (!options.silent) {
+        showCartToast(`Added "${(normalized.name || "Product").slice(0, 24)}" to cart 🛍️`);
+      }
+      syncItemToSupabaseCart(normalized);
     } catch (e) {
       console.error("Error writing cart to localStorage:", e);
     }

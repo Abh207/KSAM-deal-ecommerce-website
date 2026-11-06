@@ -6,7 +6,8 @@ import {
   parsePrice,
   formatPrice,
   normalizeCartItem,
-  getNormalizedCart
+  getNormalizedCart,
+  showCartToast
 } from "../../lib/cartHelper.js";
 
 export const CART_KEY = CART_STORAGE_KEY;
@@ -112,6 +113,7 @@ export const cartStore = {
       memoryCart = [normalized, ...memoryCart];
     }
     emitChange();
+    showCartToast(`Added "${(normalized.name || "Product").slice(0, 24)}" to cart 🛍️`);
   },
 
   setQty(id, qty) {
