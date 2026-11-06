@@ -575,12 +575,19 @@ function Footer() {
         {/* MAIN LINKS */}
         <div ref={linksRef} className="ks-links">
           <div className={`ks-brand transition-all duration-1000 ${linksShown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
-            <div className="flex items-center gap-4">
-              <span className="ks-logo flex h-12 w-12 items-center justify-center rounded-2xl bg-[#8cff00] text-xl font-black text-black shadow-[0_0_30px_rgba(140, 255, 0, .25)]">K</span>
-              <span className="text-2xl font-bold text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                KSAM<span className="text-[#8cff00]">DEAL</span>
-              </span>
-            </div>
+            <a
+              href={`${(import.meta.env.BASE_URL || "/").replace(/\/*$/, "")}/index.html`}
+              className="ks-footer-brand-link flex items-center transition-opacity hover:opacity-90 mb-4"
+              aria-label="KSAM Deal Home"
+            >
+              <img
+                src={`${(import.meta.env.BASE_URL || "/").replace(/\/*$/, "")}/ksamhead/assets/brand/ksamdeal-logo-original.png`}
+                alt="KSAM Deal"
+                className="ks-footer-brand-logo h-[64px] sm:h-[68px] w-auto max-w-[280px] object-contain block"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
             <p className="max-w-sm text-[15px] leading-8 text-white/45">
               Discover interesting deals, compare offers, and find products worth buying, all in one place.
             </p>
@@ -728,8 +735,10 @@ function Footer() {
         .ks-slide-in { animation: ksSlideIn .5s ease-out both; }
         .ks-tick { animation: ksTick .35s ease-out both; }
         .ks-tilt { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out; transform-style: preserve-3d; }
-        .ks-logo { transition: transform .5s ease; }
-        .ks-logo:hover { transform: rotate(-12deg) scale(1.1); }
+        .ks-footer-brand-logo { height: 68px; width: auto; max-width: 280px; object-fit: contain; display: block; }
+        @media (max-width: 768px) {
+          .ks-footer-brand-logo { height: 54px; max-width: 220px; }
+        }
         .ks-spin-border {
           background: conic-gradient(from 0deg, #8cff00, #38BDF8, #A855F7, #FFD60A, #8cff00);
           animation: ksSpin 8s linear infinite; opacity: .55;
@@ -802,8 +811,8 @@ function Footer() {
           display: flex;
           align-items: center;
           gap: 16px;
-          background: linear-gradient(145deg, rgba(20, 241, 178, 0.08), rgba(255, 255, 255, 0.02));
-          border: 1px solid rgba(20, 241, 178, 0.22);
+          background: linear-gradient(145deg, rgba(132, 255, 0, 0.08), rgba(255, 255, 255, 0.02));
+          border: 1px solid rgba(132, 255, 0, 0.22);
           border-radius: 20px;
           padding: 18px 20px;
           backdrop-filter: blur(8px);
@@ -825,8 +834,8 @@ function Footer() {
 
         .ks-feature-card:hover {
           transform: translateY(-5px);
-          border-color: #14f1b2;
-          box-shadow: 0 12px 30px rgba(20, 241, 178, 0.35), 0 0 20px rgba(20, 241, 178, 0.25);
+          border-color: #84FF00;
+          box-shadow: 0 12px 30px rgba(132, 255, 0, 0.35), 0 0 20px rgba(132, 255, 0, 0.25);
         }
 
         .ks-feature-icon-box {
@@ -835,12 +844,12 @@ function Footer() {
           min-width: 54px;
           min-height: 54px;
           border-radius: 16px;
-          background: linear-gradient(135deg, #14f1b2, #0fb98a);
+          background: linear-gradient(135deg, #84FF00, #0fb98a);
           color: #050b12;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 6px 20px rgba(20, 241, 178, 0.35);
+          box-shadow: 0 6px 20px rgba(132, 255, 0, 0.35);
           transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           flex-shrink: 0;
         }

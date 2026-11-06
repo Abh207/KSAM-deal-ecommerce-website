@@ -8,13 +8,13 @@
    1. Brand Tone Custom Properties (Dark Theme Default)
    -------------------------------------------------------------------------- */
 .kx-page {
-  --spot-green: #2DFFB2;
+  --spot-green: #84FF00;
   --spot-green-alt: #25C9F7;
-  --spot-green-glow: rgba(45, 255, 178, 0.22);
-  --spot-green-shadow: rgba(45, 255, 178, 0.16);
+  --spot-green-glow: rgba(132, 255, 0, 0.22);
+  --spot-green-shadow: rgba(132, 255, 0, 0.16);
 
   --spot-yellow: #FFD60A;
-  --spot-yellow-alt: #2DFFB2;
+  --spot-yellow-alt: #84FF00;
   --spot-yellow-glow: rgba(255, 214, 10, 0.22);
   --spot-yellow-shadow: rgba(255, 214, 10, 0.16);
 
@@ -41,13 +41,13 @@
 .kx-page[data-theme="light"],
 [data-theme="light"] .kx-page,
 html[data-theme="light"] body {
-  --spot-green: #2DFFB2;
+  --spot-green: #84FF00;
   --spot-green-alt: #25C9F7;
-  --spot-green-glow: rgba(45, 255, 178, 0.22);
-  --spot-green-shadow: rgba(45, 255, 178, 0.16);
+  --spot-green-glow: rgba(132, 255, 0, 0.22);
+  --spot-green-shadow: rgba(132, 255, 0, 0.16);
 
   --spot-yellow: #FFD60A;
-  --spot-yellow-alt: #2DFFB2;
+  --spot-yellow-alt: #84FF00;
   --spot-yellow-glow: rgba(255, 214, 10, 0.22);
   --spot-yellow-shadow: rgba(255, 214, 10, 0.16);
 
@@ -1081,7 +1081,7 @@ html[data-theme="light"] body {
   gap: 8px;
   font-size: 12px;
   font-weight: 700;
-  color: #2DFFB2;
+  color: #84FF00;
   letter-spacing: 0.06em;
   margin-bottom: 6px;
   text-transform: uppercase;
@@ -1474,8 +1474,8 @@ html[data-theme="light"] body {
 
 .kx-page[data-theme="light"] .kx-help-featured-banner,
 [data-theme="light"] .kx-page .kx-help-featured-banner {
-  background: radial-gradient(circle at top right, rgba(45, 255, 178, 0.08) 0%, transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%) !important;
-  border-color: rgba(45, 255, 178, 0.22) !important;
+  background: radial-gradient(circle at top right, rgba(132, 255, 0, 0.08) 0%, transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%) !important;
+  border-color: rgba(132, 255, 0, 0.22) !important;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
 }
 
@@ -1493,20 +1493,20 @@ html[data-theme="light"] body {
 
 .kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-pill-btn:hover,
 [data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-pill-btn:hover {
-  background: rgba(45, 255, 178, 0.05) !important;
+  background: rgba(132, 255, 0, 0.05) !important;
   color: #F1F5F9 !important;
 }
 
 .kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-pill-btn.is-active,
 [data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-pill-btn.is-active {
-  color: #2DFFB2 !important;
+  color: #84FF00 !important;
 }
 
 .kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-active-pill,
 [data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-active-pill {
-  background: linear-gradient(135deg, rgba(45, 255, 178, 0.14) 0%, rgba(38, 217, 248, 0.08) 100%) !important;
-  border-color: rgba(45, 255, 178, 0.35) !important;
-  box-shadow: 0 0 16px rgba(45, 255, 178, 0.15) !important;
+  background: linear-gradient(135deg, rgba(132, 255, 0, 0.14) 0%, rgba(38, 217, 248, 0.08) 100%) !important;
+  border-color: rgba(132, 255, 0, 0.35) !important;
+  box-shadow: 0 0 16px rgba(132, 255, 0, 0.15) !important;
 }
 
 

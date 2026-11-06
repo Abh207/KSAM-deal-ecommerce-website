@@ -10,6 +10,7 @@ import {
 import gsap from "gsap";
 import { BASE_URL } from "../auth/auth.js";
 import Navbar from "../deals/components/Navbar.jsx";
+import HowItWorks from "../deals/components/HowItWorks.jsx";
 import LiveBackdrop from "../profile/components/LiveBackdrop.jsx";
 import KxFaq from "../components/KxFaq.jsx";
 import { ReadingProgressBar, Aurora, useThemeSync } from "../lib/pageEffects.jsx";
@@ -242,6 +243,9 @@ export function TermsPage() {
             effectiveDate="[EFFECTIVE DATE]"
             backUrl={`${BASE_URL}profile.html`}
           />
+
+          {/* Three Steps. That's It. Process Section */}
+          <HowItWorks />
 
           {/* Single Centered Column: Legal FAQ Accordion */}
           <KxFaq items={faqItems} defaultOpen="platform-nature" allowMultiple />

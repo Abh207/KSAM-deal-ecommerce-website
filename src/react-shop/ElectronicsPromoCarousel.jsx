@@ -12,7 +12,7 @@ const PROMO_CARDS = [
         title: "Flat 40% OFF Headphones",
         description: "Deep bass acoustic drivers, memory foam cushioning and 30-hour wireless playtime.",
         image: "images/remote/unsplash_1505740420928-5e560c06d30e.webp",
-        accent: "#1de9b6"
+        accent: "#84FF00"
     },
     {
         id: "promo-2",
@@ -60,7 +60,7 @@ const PROMO_CARDS = [
         title: "Next-Gen Gaming Consoles",
         description: "Ultra-high frame rates, hardware-accelerated ray tracing and lightning-fast custom SSD.",
         image: "images/remote/unsplash_1606813907291-d86efa9b94db.webp",
-        accent: "#1de9b6"
+        accent: "#84FF00"
     },
     {
         id: "promo-6",
@@ -72,7 +72,7 @@ const PROMO_CARDS = [
         title: "Pro 4K Digital Cameras",
         description: "Versatile optical zoom lens, high-definition video capture and rapid intelligent tracking.",
         image: "images/remote/unsplash_1516035069371-29a1b244cc32.webp",
-        accent: "#0f9d76"
+        accent: "#4d9900"
     },
     {
         id: "promo-7",

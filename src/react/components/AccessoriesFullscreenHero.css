@@ -1,19 +1,22 @@
 /* ==========================================================================
    KSAM DEAL - ACCESSORIES & LIFESTYLE FULLSCREEN HERO STYLES
    100vw x 100vh with parallax scroll, dark overlay, lime accents
+   Left-aligned content & buttons over Video 1
    ========================================================================== */
 
 .accessories-fullscreen-hero {
   position: relative;
   width: 100%;
   height: 100vh;
-  min-height: 600px;
+  min-height: 100svh;
   overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: #05070B;
+  justify-content: flex-start;
+  padding: 0 max(24px, 7vw);
+  background: #05070B; /* Opaque background so video2 is not visible through hero */
+  z-index: 10;
+  box-sizing: border-box;
 }
 
 .accessories-hero-video-wrap {
@@ -22,44 +25,58 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 
-.accessories-hero-video {
+.accessories-hero-video,
+.accessories-hero-poster {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.05);
+  object-position: center;
 }
 
+/* Dark gradient overlay: Strong on left where text sits, lighter on right to let video shine */
 .accessories-hero-dark-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    180deg,
-    rgba(5, 7, 11, 0.65) 0%,
-    rgba(5, 7, 11, 0.45) 45%,
-    rgba(5, 7, 11, 0.85) 85%,
-    #05070B 100%
+    90deg,
+    rgba(5, 7, 11, 0.88) 0%,
+    rgba(5, 7, 11, 0.72) 42%,
+    rgba(5, 7, 11, 0.35) 75%,
+    rgba(5, 7, 11, 0.6) 100%
   );
+  z-index: 1;
 }
 
-.accessories-hero-vignette {
+/* Smooth fade at bottom to connect seamlessly with page below */
+.accessories-hero-bottom-fade {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, transparent 35%, rgba(5, 7, 11, 0.75) 100%);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 140px;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 7, 11, 0.95) 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
+/* Left-aligned content container */
 .accessories-hero-content {
   position: relative;
   z-index: 2;
-  max-width: 860px;
-  padding: 0 24px;
-  margin: 0 auto;
+  max-width: 640px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
   will-change: transform, opacity;
   transition: transform 0.08s linear, opacity 0.08s linear;
 }
@@ -87,13 +104,18 @@
 }
 
 .accessories-hero-heading {
-  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  font-size: clamp(2.3rem, 5.2vw, 4.2rem);
   font-weight: 900;
-  line-height: 1.1;
+  line-height: 1.12;
   color: #ffffff;
   margin: 0 0 20px 0;
   letter-spacing: -0.03em;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75);
+  text-align: left;
+}
+
+.hero-break {
+  display: block;
 }
 
 .hero-highlight {
@@ -104,27 +126,30 @@
 }
 
 .accessories-hero-subtitle {
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(0.98rem, 1.8vw, 1.2rem);
   color: #cbd5e1;
   line-height: 1.6;
-  max-width: 660px;
+  max-width: 580px;
   margin: 0 0 34px 0;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  text-align: left;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
 }
 
 .accessories-hero-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 16px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .accessories-btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 14px 32px;
+  padding: 14px 34px;
   background: var(--accent-lime, #84FF00);
   color: #0b0f14;
   border: none;
@@ -144,6 +169,7 @@
 .accessories-btn-outline {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 14px 30px;
   background: rgba(11, 15, 20, 0.6);
@@ -164,19 +190,17 @@
   background: rgba(11, 15, 20, 0.85);
 }
 
-/* Scroll down indicator */
+/* Scroll down indicator - Left-aligned */
 .accessories-hero-scroll-indicator {
   position: absolute;
   bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: max(24px, 7vw);
   z-index: 3;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
-  opacity: 0.8;
+  opacity: 0.85;
   transition: opacity 0.2s ease;
 }
 
@@ -185,18 +209,18 @@
 }
 
 .scroll-indicator-mouse {
-  width: 24px;
-  height: 38px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 14px;
+  width: 22px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   padding-top: 6px;
 }
 
 .scroll-indicator-wheel {
-  width: 4px;
-  height: 8px;
+  width: 3.5px;
+  height: 7px;
   background: var(--accent-lime, #84FF00);
   border-radius: 2px;
   animation: scrollWheel 2s infinite ease-in-out;
@@ -219,25 +243,59 @@
 
 .scroll-indicator-text {
   font-size: 0.68rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.15em;
-  color: #94a3b8;
+  color: #cbd5e1;
 }
 
-@media (max-width: 640px) {
+/* ==========================================================================
+   Mobile & Responsive Adjustments (375px - 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
   .accessories-fullscreen-hero {
-    height: 90vh;
-    min-height: 540px;
+    height: 100vh;
+    min-height: 100svh;
+    padding: 0 20px;
   }
+
+  .accessories-hero-content {
+    max-width: 100%;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .accessories-hero-heading {
+    font-size: clamp(2rem, 8.5vw, 2.75rem);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .accessories-hero-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 26px;
+    max-width: 100%;
+  }
+
   .accessories-hero-actions {
     flex-direction: column;
     width: 100%;
+    align-items: flex-start;
     gap: 12px;
   }
+
   .accessories-btn-primary,
   .accessories-btn-outline {
     width: 100%;
+    max-width: 320px;
     justify-content: center;
+    padding: 13px 24px;
+    font-size: 0.95rem;
+  }
+
+  .accessories-hero-scroll-indicator {
+    left: 20px;
+    bottom: 24px;
+    display: none; /* Hide on small mobile to avoid clutter */
   }
 }
-

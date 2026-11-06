@@ -1,3 +1,10 @@
+:root {
+    --accent-lime: #84FF00;
+    --accent-lime-rgb: 132, 255, 0;
+    --accent: var(--accent-lime, #84FF00);
+    --accent-on-light: #4D9900;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -351,8 +358,8 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    background: linear-gradient(145deg, rgba(20, 241, 178, 0.08), rgba(255, 255, 255, 0.02));
-    border: 1px solid rgba(20, 241, 178, 0.22);
+    background: linear-gradient(145deg, rgba(132, 255, 0, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(132, 255, 0, 0.22);
     border-radius: 20px;
     padding: 18px 20px;
     backdrop-filter: blur(8px);
@@ -374,8 +381,8 @@ body {
 
 .ks-feature-card:hover {
     transform: translateY(-5px);
-    border-color: #14f1b2;
-    box-shadow: 0 12px 30px rgba(20, 241, 178, 0.35), 0 0 20px rgba(20, 241, 178, 0.25);
+    border-color: #84FF00;
+    box-shadow: 0 12px 30px rgba(132, 255, 0, 0.35), 0 0 20px rgba(132, 255, 0, 0.25);
 }
 
 .ks-feature-icon-box {
@@ -384,12 +391,12 @@ body {
     min-width: 54px;
     min-height: 54px;
     border-radius: 16px;
-    background: linear-gradient(135deg, #14f1b2, #0fb98a);
+    background: linear-gradient(135deg, #84FF00, #0fb98a);
     color: #050b12;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 20px rgba(20, 241, 178, 0.35);
+    box-shadow: 0 6px 20px rgba(132, 255, 0, 0.35);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     flex-shrink: 0;
 }

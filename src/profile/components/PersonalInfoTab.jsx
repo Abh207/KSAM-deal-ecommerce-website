@@ -429,7 +429,7 @@ export default function PersonalInfoTab({
                   <button
                     type="submit"
                     disabled={emailLoading}
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#2DFFB2] to-[#25C9F7] text-xs font-black text-[#05070B] hover:opacity-95 disabled:opacity-50 transition cursor-pointer shadow-md"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#84FF00] to-[#25C9F7] text-xs font-black text-[#05070B] hover:opacity-95 disabled:opacity-50 transition cursor-pointer shadow-md"
                   >
                     {emailLoading ? "Sending Link..." : "Send Confirmation Link"}
                   </button>

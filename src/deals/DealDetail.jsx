@@ -388,7 +388,7 @@ export function DealDetail() {
                   aria-label={isSaved ? "Saved" : "Save deal"}
                   className={`kx-btn px-6 py-4 text-sm font-bold flex items-center justify-center gap-2 ${
                     isSaved
-                      ? "border-[#14f1b2]/60 bg-[#14f1b2]/10 text-[#14f1b2]"
+                      ? "border-[#84FF00]/60 bg-[#84FF00]/10 text-[#84FF00]"
                       : "kx-btn--secondary"
                   }`}
                 >

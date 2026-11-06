@@ -59,10 +59,10 @@
 
 .electronics-promo-carousel-wrap .beauty-reviews-side-arrow:hover {
     background: #111816;
-    border-color: var(--accent, #1de9b6);
-    color: var(--accent, #1de9b6);
+    border-color: var(--accent, #84FF00);
+    color: var(--accent, #84FF00);
     transform: translateY(-50%) scale(1.08);
-    box-shadow: 0 0 16px rgba(29, 233, 182, 0.4);
+    box-shadow: 0 0 16px rgba(132, 255, 0, 0.4);
 }
 
 /* Viewport & Track */
@@ -164,7 +164,7 @@
     background: rgba(0, 0, 0, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(8px);
-    color: var(--accent, #1de9b6);
+    color: var(--accent, #84FF00);
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 1px;
@@ -222,21 +222,21 @@
     align-self: flex-start;
     padding: 11px 22px;
     border-radius: 25px;
-    background: linear-gradient(135deg, #1de9b6, #0f9d76);
+    background: linear-gradient(135deg, #84FF00, #4d9900);
     color: #05130e;
     font-size: 13px;
     font-weight: 800;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 4px 14px rgba(29, 233, 182, 0.35);
+    box-shadow: 0 4px 14px rgba(132, 255, 0, 0.35);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     pointer-events: none;
 }
 
 .electronics-promo-card:hover .electronics-promo-btn {
     transform: translateX(4px);
-    box-shadow: 0 6px 20px rgba(29, 233, 182, 0.55);
+    box-shadow: 0 6px 20px rgba(132, 255, 0, 0.55);
 }
 
 /* Progress Bar */
@@ -253,7 +253,7 @@
 
 .electronics-promo-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #1de9b6, #0f9d76);
+    background: linear-gradient(90deg, #84FF00, #4d9900);
     transition: width 0.05s linear;
     pointer-events: none;
 }

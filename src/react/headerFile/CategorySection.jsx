@@ -575,15 +575,27 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
   ====================================================== */
   const thumbRef = useRef(null);
   const isThumbPausedRef = useRef(false);
-  const [canThumbLeft, setCanThumbLeft] = useState(false);
-  const [canThumbRight, setCanThumbRight] = useState(false);
+  const arrowResumeTimerRef = useRef(null);
+  const [canThumbLeft, setCanThumbLeft] = useState(true);
+  const [canThumbRight, setCanThumbRight] = useState(true);
+
+  // Prepare a sufficiently duplicated product list for seamless infinite loop (at least 8 items, duplicated once)
+  const displayThumbProducts = useMemo(() => {
+    const list = activeCategory.products || [];
+    if (list.length === 0) return [];
+    let repeated = [...list];
+    while (repeated.length < 8) {
+      repeated = [...repeated, ...list];
+    }
+    return [...repeated, ...repeated];
+  }, [activeCategory.products]);
 
   const updateThumbScroll = useCallback(() => {
     const el = thumbRef.current;
-    if (!el) { setCanThumbLeft(false); setCanThumbRight(false); return; }
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanThumbLeft(scrollLeft > 5);
-    setCanThumbRight(scrollLeft < scrollWidth - clientWidth - 5);
+    if (!el) { setCanThumbLeft(true); setCanThumbRight(true); return; }
+    // Infinite loop always allows scrolling in either direction
+    setCanThumbLeft(true);
+    setCanThumbRight(true);
   }, []);
 
   useEffect(() => {
@@ -601,24 +613,37 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
     };
   }, [fadeKey, updateThumbScroll]);
 
-  // Continuous seamless auto-move: LEFT -> RIGHT, pause on hover/touch
+  // Continuous seamless auto-move: LEFT -> RIGHT, pause on hover/touch, 40-60px/s configurable via --cs-carousel-speed
   useEffect(() => {
     const el = thumbRef.current;
     if (!el || !activeCategory.products || activeCategory.products.length <= 1) return;
+    if (prefersReducedMotion) return;
 
     let animId = null;
     let lastTime = performance.now();
-    const speed = 0.5; // smooth crawl
+
+    // Read speed from CSS variable or default to 50px/sec (within 40-60px/s range)
+    let speedPxPerSec = 50;
+    try {
+      const styleVal = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--cs-carousel-speed")
+      );
+      if (!isNaN(styleVal) && styleVal > 0) speedPxPerSec = styleVal;
+    } catch (e) {}
+    const speedPxPerMs = speedPxPerSec / 1000;
 
     const step = (time) => {
-      const dt = time - lastTime;
+      const dt = Math.min(time - lastTime, 64);
       lastTime = time;
 
       if (!isThumbPausedRef.current && el) {
-        el.scrollLeft += speed * (dt / 16);
+        el.scrollLeft += speedPxPerMs * dt;
         // Seamless loop halfway through the duplicate track
-        if (el.scrollWidth > el.clientWidth && el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft -= el.scrollWidth / 2;
+        const halfWidth = el.scrollWidth / 2;
+        if (halfWidth > 0 && el.scrollLeft >= halfWidth) {
+          el.scrollLeft -= halfWidth;
+        } else if (el.scrollLeft < 0) {
+          el.scrollLeft += halfWidth;
         }
       }
       animId = requestAnimationFrame(step);
@@ -628,15 +653,31 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
 
     return () => {
       if (animId) cancelAnimationFrame(animId);
+      if (arrowResumeTimerRef.current) clearTimeout(arrowResumeTimerRef.current);
     };
-  }, [fadeKey, activeCategory.products]);
+  }, [fadeKey, activeCategory.products, prefersReducedMotion]);
 
   const scrollThumbs = (dir) => {
     const el = thumbRef.current;
     if (!el) return;
+    isThumbPausedRef.current = true;
     const card = el.querySelector(".cs-product-card");
     const step = card ? card.offsetWidth + 12 : 217;
     el.scrollBy({ left: dir * step, behavior: "smooth" });
+
+    // Resume auto-move after smooth scroll settles
+    if (arrowResumeTimerRef.current) clearTimeout(arrowResumeTimerRef.current);
+    arrowResumeTimerRef.current = setTimeout(() => {
+      if (el) {
+        const halfWidth = el.scrollWidth / 2;
+        if (halfWidth > 0 && el.scrollLeft >= halfWidth) {
+          el.scrollLeft -= halfWidth;
+        } else if (el.scrollLeft < 0) {
+          el.scrollLeft += halfWidth;
+        }
+      }
+      isThumbPausedRef.current = false;
+    }, 1200);
   };
 
 
@@ -921,7 +962,7 @@ function CategorySection({ onViewAllClick, onCategorySelect }) {
                 onTouchStart={() => { isThumbPausedRef.current = true; }}
                 onTouchEnd={() => { setTimeout(() => { isThumbPausedRef.current = false; }, 1200); }}
               >
-                {[...activeCategory.products, ...activeCategory.products].map((p, idx) => (
+                {displayThumbProducts.map((p, idx) => (
                   <CategoryProductCard
                     key={`${p.id || 'p'}-${idx}`}
                     product={p}

@@ -2,36 +2,23 @@
    FLASH DEALS SECTION
 ========================================================= */
 
+:root {
+    --card-bg: #FFFFFF;
+    --card-image-bg: #F6F8F4;
+    --card-border: rgba(132, 255, 0, 0.35);
+}
+
 .flash-deals-section {
-
-    width: min(
-        1450px,
-        94%
-    );
-
+    width: min(1450px, 94%);
     margin: 70px auto;
-
     padding: 45px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #111827,
-            #1f2937
-        );
-
+    background: linear-gradient(135deg, #111827, #1f2937);
     border-radius: 28px;
-
     color: #ffffff;
-
     overflow: hidden;
-
     position: relative;
-
-    box-shadow:
-        0 25px 70px
-        rgba(0, 0, 0, 0.18);
-
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+    box-sizing: border-box;
 }
 
 
@@ -40,28 +27,15 @@
 ========================================================= */
 
 .flash-deals-section::before {
-
     content: "";
-
     position: absolute;
-
     width: 350px;
     height: 350px;
-
     border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255, 193, 7, 0.18),
-            transparent 70%
-        );
-
+    background: radial-gradient(circle, rgba(255, 193, 7, 0.18), transparent 70%);
     top: -180px;
     right: -100px;
-
     pointer-events: none;
-
 }
 
 
@@ -70,74 +44,39 @@
 ========================================================= */
 
 .flash-deals-header {
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 30px;
-
     margin-bottom: 35px;
-
     position: relative;
-
     z-index: 1;
-
 }
-
 
 .flash-deals-small-title {
-
     display: block;
-
     font-size: 10px;
-
     font-weight: 900;
-
     letter-spacing: 3px;
-
     opacity: 0.65;
-
     margin-bottom: 7px;
-
 }
-
 
 .flash-deals-title h2 {
-
     margin: 0;
-
     font-size: 38px;
-
     font-weight: 950;
-
     letter-spacing: -1px;
-
 }
-
 
 .flash-deals-title h2 span {
-
     margin-right: 8px;
-
 }
 
-
 .flash-deals-title p {
-
     margin: 8px 0 0;
-
-    color: rgba(
-        255,
-        255,
-        255,
-        0.65
-    );
-
+    color: rgba(255, 255, 255, 0.65);
     font-size: 14px;
-
 }
 
 
@@ -146,358 +85,196 @@
 ========================================================= */
 
 .flash-timer-wrapper {
-
     display: flex;
-
     flex-direction: column;
-
     align-items: flex-end;
-
 }
-
 
 .flash-timer-label {
-
     font-size: 10px;
-
     font-weight: 800;
-
     letter-spacing: 2px;
-
     opacity: 0.65;
-
     margin-bottom: 8px;
-
 }
-
 
 .flash-timer {
-
     display: flex;
-
     align-items: center;
-
     gap: 7px;
-
 }
-
 
 .flash-time-box {
-
     width: 58px;
     height: 58px;
-
     border-radius: 12px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.1
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
-
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
-    backdrop-filter:
-        blur(10px);
-
+    backdrop-filter: blur(10px);
 }
-
 
 .flash-time-box strong {
-
     font-size: 20px;
-
     line-height: 1;
-
 }
-
 
 .flash-time-box small {
-
     margin-top: 4px;
-
     font-size: 8px;
-
     font-weight: 800;
-
     opacity: 0.55;
-
 }
 
-
 .flash-time-separator {
-
     font-size: 20px;
-
     font-weight: 900;
-
     opacity: 0.5;
-
 }
 
 
 /* =========================================================
-   PRODUCTS
+   PRODUCTS GRID (DESKTOP: 4 COLUMNS)
 ========================================================= */
 
 .flash-deals-products {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
+    grid-template-columns: repeat(4, 1fr);
     gap: 18px;
-
     position: relative;
-
     z-index: 1;
-
+    width: 100%;
+    box-sizing: border-box;
 }
 
 
 /* =========================================================
-   CARD
+   CARD (WHITE THEME WITH LIME BORDER & ACCENTS)
 ========================================================= */
 
 .flash-deal-card {
-
-    background:
-        #ffffff;
-
-    color: #111827;
-
+    background: var(--card-bg, #FFFFFF);
+    color: #0F1A0F;
+    border: 1px solid var(--card-border, rgba(132, 255, 0, 0.35));
     border-radius: 18px;
-
     overflow: hidden;
-
     cursor: pointer;
-
-    transform:
-        translateY(25px);
-
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transform: translateY(25px);
     opacity: 0;
-
-    animation:
-        flashCardIn
-        0.6s
-        ease
-        forwards;
-
-    animation-delay:
-        calc(
-            var(--flash-index) *
-            0.08s
-        );
-
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-
+    animation: flashCardIn 0.6s ease forwards;
+    animation-delay: calc(var(--flash-index) * 0.08s);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-
 .flash-deal-card:hover {
-
-    transform:
-        translateY(-8px);
-
+    transform: translateY(-8px);
+    border-color: var(--hover-lightgreen, #A8F56B);
     box-shadow:
-        0 18px 40px
-        rgba(0, 0, 0, 0.25);
-
+        0 0 0 1px #A8F56B,
+        0 12px 40px rgba(168, 245, 107, 0.3);
 }
 
 
 /* =========================================================
-   CARD IMAGE
+   CARD IMAGE (LIGHT NEUTRAL BACKGROUND)
 ========================================================= */
 
 .flash-deal-image {
-
     height: 210px;
-
-    background:
-        #f8fafc;
-
+    background: var(--card-image-bg, #F6F8F4);
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     position: relative;
-
     overflow: hidden;
-
+    border-bottom: 1px solid rgba(15, 26, 15, 0.08);
 }
 
-
 .flash-deal-image img {
-
     width: 100%;
     height: 100%;
-
     object-fit: contain;
-
     padding: 20px;
-
-    transition:
-        transform 0.4s ease;
-
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.08));
+    transition: transform 0.4s ease;
 }
 
-
-.flash-deal-card:hover
-.flash-deal-image img {
-
-    transform:
-        scale(1.08);
-
+.flash-deal-card:hover .flash-deal-image img {
+    transform: scale(1.08);
 }
 
 
 /* =========================================================
-   DEAL TAG
+   DEAL TAG & DISCOUNT CHIPS
 ========================================================= */
 
 .flash-deal-tag {
-
     position: absolute;
-
     top: 12px;
     left: 12px;
-
     z-index: 2;
-
-    background:
-        #111827;
-
-    color:
-        #ffffff;
-
-    padding:
-        6px 9px;
-
-    border-radius:
-        6px;
-
-    font-size:
-        9px;
-
-    font-weight:
-        900;
-
+    background: #0B5A12;
+    color: #ffffff;
+    padding: 6px 9px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 900;
+    box-shadow: 0 2px 8px rgba(11, 90, 18, 0.25);
 }
-
-
-/* =========================================================
-   DISCOUNT
-========================================================= */
 
 .flash-deal-discount {
-
     position: absolute;
-
     top: 12px;
     right: 12px;
-
     z-index: 2;
-
-    background:
-        #ffffff;
-
-    color:
-        #111827;
-
-    padding:
-        6px 8px;
-
-    border-radius:
-        6px;
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-
-    box-shadow:
-        0 4px 12px
-        rgba(0, 0, 0, 0.12);
-
+    background: #0B5A12;
+    color: #ffffff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 900;
+    box-shadow: 0 2px 8px rgba(11, 90, 18, 0.3);
 }
 
 
 /* =========================================================
-   INFO
+   INFO (DARK READABLE TEXT ON WHITE CARD)
 ========================================================= */
 
 .flash-deal-info {
-
-    padding:
-        17px;
-
+    padding: 17px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: var(--card-bg, #FFFFFF);
 }
-
 
 .flash-deal-category {
-
-    font-size:
-        9px;
-
-    text-transform:
-        uppercase;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        1px;
-
-    color:
-        #6b7280;
-
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    color: #2E7D12;
 }
 
-
 .flash-deal-info h3 {
-
-    margin:
-        7px 0;
-
-    font-size:
-        15px;
-
-    line-height:
-        1.35;
-
-    white-space:
-        nowrap;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-
+    margin: 7px 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #0F1A0F;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -506,32 +283,22 @@
 ========================================================= */
 
 .flash-deal-rating {
-
-    font-size:
-        11px;
-
-    color:
-        #4b5563;
-
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #4B5563;
+    font-weight: 700;
 }
-
 
 .flash-deal-rating span {
-
-    margin-right:
-        4px;
-
+    color: #f59e0b;
+    font-size: 13px;
 }
 
-
 .flash-deal-rating small {
-
-    margin-left:
-        4px;
-
-    color:
-        #9ca3af;
-
+    color: #4B5563;
+    font-weight: 600;
 }
 
 
@@ -540,222 +307,294 @@
 ========================================================= */
 
 .flash-deal-price {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    margin-top:
-        10px;
-
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
 }
-
 
 .flash-deal-price strong {
-
-    font-size:
-        19px;
-
+    font-size: 19px;
+    font-weight: 900;
+    color: #0F1A0F;
 }
 
-
 .flash-deal-price del {
-
-    font-size:
-        11px;
-
-    color:
-        #9ca3af;
-
+    font-size: 11px;
+    color: #7A8577;
+    opacity: 0.9;
+    font-weight: 600;
 }
 
 
 /* =========================================================
-   BOTTOM
+   BOTTOM & ACTION BUTTON
 ========================================================= */
 
 .flash-deal-bottom {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    margin-top:
-        13px;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 13px;
 }
-
 
 .flash-stock {
-
-    font-size:
-        9px;
-
-    font-weight:
-        800;
-
-    color:
-        #6b7280;
-
+    font-size: 9px;
+    font-weight: 800;
+    color: #B45309;
 }
-
 
 .flash-deal-bottom button {
-
-    border:
-        none;
-
-    background:
-        #111827;
-
-    color:
-        #ffffff;
-
-    border-radius:
-        8px;
-
-    padding:
-        8px 12px;
-
-    font-size:
-        9px;
-
-    font-weight:
-        900;
-
-    cursor:
-        pointer;
-
-    transition:
-        transform 0.2s ease;
-
+    border: none;
+    background: #0B5A12;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(11, 90, 18, 0.28);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
-
-.flash-deal-bottom button:hover {
-
-    transform:
-        scale(1.05);
-
+.flash-deal-bottom button:hover:not(:disabled) {
+    background: var(--hover-lightgreen, #A8F56B);
+    color: #0F1A0F;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(168, 245, 107, 0.4);
 }
-
 
 .flash-deal-bottom button:disabled {
-
-    opacity:
-        0.4;
-
-    cursor:
-        not-allowed;
-
+    background: #9ca3af;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 
 /* =========================================================
-   FOOTER
+   FOOTER WRAPPER
 ========================================================= */
 
 .flash-deals-footer {
-
-    display:
-        flex;
-
-    justify-content:
-        center;
-
-    margin-top:
-        32px;
-
-    position:
-        relative;
-
-    z-index:
-        1;
-
+    display: flex;
+    justify-content: center;
+    margin-top: 36px;
+    position: relative;
+    z-index: 2;
 }
 
 
-.flash-deals-footer button {
+/* =========================================================
+   TASK 3: DYNAMIC COLORFUL BUTTON (.btn-colorful)
+========================================================= */
 
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.25
-        );
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.08
-        );
-
-    color:
-        #ffffff;
-
-    padding:
-        13px 22px;
-
-    border-radius:
-        10px;
-
-    font-size:
-        11px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        0.5px;
-
-    cursor:
-        pointer;
-
+.btn-colorful {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 54px;
+    padding: 16px 34px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: linear-gradient(
+        110deg,
+        #84FF00,
+        #2EE6A6,
+        #29B6F6,
+        #B26BFF,
+        #FF4FD8,
+        #FFB020,
+        #84FF00
+    );
+    background-size: 300% 100%;
+    animation: gradientShift 6s linear infinite;
+    box-shadow:
+        0 0 24px rgba(132, 255, 0, 0.45),
+        0 8px 30px rgba(178, 107, 255, 0.35);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    outline: none;
+    text-decoration: none;
     transition:
-        background 0.25s ease,
+        transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
+}
+
+/* Inner protective contrast layer */
+.btn-colorful::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 9999px;
+    background: rgba(10, 16, 12, 0.48);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 0;
+    pointer-events: none;
+    transition: background 0.25s ease;
+}
+
+/* Diagonal white glossy shine sweep */
+.btn-colorful::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -120%;
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.42),
+        transparent
+    );
+    transform: rotate(25deg);
+    z-index: 1;
+    pointer-events: none;
+    animation: shineSweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.btn-colorful > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Pulsing flame icon on left */
+.btn-colorful-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #84FF00;
+    line-height: 1;
+    animation: flamePulse 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 6px rgba(132, 255, 0, 0.85));
+}
+
+.btn-colorful-icon svg {
+    display: block;
+}
+
+.btn-colorful-text {
+    display: inline-block;
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+/* Circular badge on right containing arrow */
+.btn-colorful-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
         transform 0.25s ease;
-
 }
 
-
-.flash-deals-footer button:hover {
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.16
-        );
-
-    transform:
-        translateY(-2px);
-
+.btn-colorful-arrow {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Hover State */
+.btn-colorful:hover {
+    transform: translateY(-3px) scale(1.04);
+    animation-duration: 3s;
+    box-shadow:
+        0 0 35px rgba(132, 255, 0, 0.7),
+        0 12px 40px rgba(178, 107, 255, 0.55),
+        0 0 15px rgba(255, 79, 216, 0.5);
+}
 
-.flash-deals-footer button span {
+.btn-colorful:hover::before {
+    background: rgba(10, 16, 12, 0.32);
+}
 
-    margin-left:
-        8px;
+.btn-colorful:hover .btn-colorful-badge {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.7);
+}
 
+.btn-colorful:hover .btn-colorful-arrow {
+    transform: translateX(6px);
+}
+
+/* Active State */
+.btn-colorful:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 18px rgba(132, 255, 0, 0.45);
+}
+
+/* Focus Visible */
+.btn-colorful:focus-visible {
+    outline: 3px solid #84FF00;
+    outline-offset: 3px;
+}
+
+/* Animations */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 300% 50%;
+    }
+}
+
+@keyframes flamePulse {
+    0%, 100% {
+        transform: scale(1);
+        color: #84FF00;
+        filter: drop-shadow(0 0 6px rgba(132, 255, 0, 0.85));
+    }
+    50% {
+        transform: scale(1.22);
+        color: #FFB020;
+        filter: drop-shadow(0 0 12px rgba(255, 176, 32, 0.95));
+    }
+}
+
+@keyframes shineSweep {
+    0% {
+        left: -120%;
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    45% {
+        left: 200%;
+        opacity: 0;
+    }
+    100% {
+        left: 200%;
+        opacity: 0;
+    }
 }
 
 
@@ -764,170 +603,321 @@
 ========================================================= */
 
 @keyframes flashCardIn {
-
     from {
-
         opacity: 0;
-
-        transform:
-            translateY(25px);
-
+        transform: translateY(25px);
     }
-
     to {
-
         opacity: 1;
-
-        transform:
-            translateY(0);
-
+        transform: translateY(0);
     }
-
 }
 
 
 /* =========================================================
-   TABLET
+   TABLET (769px - 1050px)
 ========================================================= */
 
-@media (max-width: 1050px) {
-
+@media (min-width: 769px) and (max-width: 1050px) {
     .flash-deals-section {
-
-        padding:
-            30px;
-
+        padding: 30px;
     }
-
 
     .flash-deals-products {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
-
 
     .flash-deals-header {
-
-        align-items:
-            flex-start;
-
+        align-items: flex-start;
     }
-
 }
 
 
 /* =========================================================
-   MOBILE
+   MOBILE (<= 768px) - 2 PRODUCTS PER ROW GRID, NO HORIZONTAL SCROLL
 ========================================================= */
 
-@media (max-width: 650px) {
-
+@media (max-width: 768px) {
     .flash-deals-section {
-
-        width:
-            94%;
-
-        margin:
-            45px auto;
-
-        padding:
-            24px 16px;
-
-        border-radius:
-            20px;
-
+        width: 94%;
+        margin: 40px auto;
+        padding: 22px 14px;
+        border-radius: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
     }
-
 
     .flash-deals-header {
-
-        flex-direction:
-            column;
-
-        align-items:
-            flex-start;
-
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
     }
-
 
     .flash-deals-title h2 {
-
-        font-size:
-            29px;
-
+        font-size: 26px;
+        letter-spacing: -0.5px;
     }
 
+    .flash-deals-title p {
+        font-size: 13px;
+        margin-top: 6px;
+    }
 
     .flash-timer-wrapper {
-
-        align-items:
-            flex-start;
-
+        align-items: flex-start;
+        width: 100%;
     }
 
+    .flash-timer {
+        gap: 6px;
+    }
 
+    .flash-time-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+    }
+
+    .flash-time-box strong {
+        font-size: 17px;
+    }
+
+    .flash-time-box small {
+        font-size: 7.5px;
+    }
+
+    .flash-time-separator {
+        font-size: 16px;
+    }
+
+    /* 2 products per row CSS Grid, zero horizontal scroll */
     .flash-deals-products {
-
-        display:
-            flex;
-
-        overflow-x:
-            auto;
-
-        scroll-snap-type:
-            x mandatory;
-
-        padding-bottom:
-            8px;
-
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        overflow: visible !important;
+        overflow-x: visible !important;
+        scroll-snap-type: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
-
 
     .flash-deal-card {
-
-        min-width:
-            235px;
-
-        scroll-snap-align:
-            start;
-
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+        scroll-snap-align: none !important;
+        border-radius: 18px !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        background: var(--card-bg, #FFFFFF) !important;
+        border: 1px solid var(--card-border, rgba(132, 255, 0, 0.35)) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+        display: flex;
+        flex-direction: column;
     }
 
-
+    /* Compact 1:1 image area */
     .flash-deal-image {
-
-        height:
-            180px;
-
+        width: 100% !important;
+        aspect-ratio: 1 / 1 !important;
+        height: auto !important;
+        min-height: unset !important;
+        padding: 8px !important;
+        box-sizing: border-box !important;
+        background: var(--card-image-bg, #F6F8F4) !important;
+        border-bottom: 1px solid rgba(15, 26, 15, 0.08) !important;
     }
 
+    .flash-deal-image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        padding: 6px !important;
+    }
+
+    .flash-deal-tag {
+        top: 8px !important;
+        left: 8px !important;
+        font-size: 9.5px !important;
+        padding: 3px 6px !important;
+        border-radius: 5px !important;
+    }
+
+    .flash-deal-discount {
+        top: 8px !important;
+        right: 8px !important;
+        font-size: 9.5px !important;
+        padding: 3px 6px !important;
+        border-radius: 5px !important;
+    }
+
+    .flash-deal-info {
+        padding: 10px 10px 12px !important;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        box-sizing: border-box;
+        background: var(--card-bg, #FFFFFF) !important;
+    }
+
+    .flash-deal-category {
+        font-size: 9.5px !important;
+        letter-spacing: 0.8px !important;
+    }
+
+    .flash-deal-info h3 {
+        font-size: 13.5px !important;
+        margin: 5px 0 6px !important;
+        white-space: normal !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        line-height: 1.3 !important;
+        height: 2.6em;
+        color: #0F1A0F !important;
+    }
+
+    .flash-deal-rating {
+        font-size: 11px !important;
+        gap: 3px !important;
+        color: #4B5563 !important;
+    }
+
+    .flash-deal-price {
+        margin-top: 6px !important;
+        gap: 6px !important;
+        align-items: baseline !important;
+    }
+
+    .flash-deal-price strong {
+        font-size: 14.5px !important;
+        color: #0F1A0F !important;
+    }
+
+    .flash-deal-price del {
+        font-size: 10px !important;
+        color: #7A8577 !important;
+    }
+
+    .flash-deal-bottom {
+        margin-top: auto !important;
+        padding-top: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+    }
+
+    .flash-stock {
+        font-size: 10px !important;
+        white-space: nowrap !important;
+        color: #B45309 !important;
+    }
+
+    .flash-deal-bottom button {
+        min-height: 36px !important;
+        padding: 6px 12px !important;
+        font-size: 11px !important;
+        border-radius: 8px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Task 3 Button Mobile: full width up to 360px */
+    .flash-deals-footer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 26px;
+    }
+
+    .flash-deals-footer .btn-colorful {
+        width: 100%;
+        max-width: 360px;
+        padding: 14px 20px;
+        font-size: 13px;
+        gap: 10px;
+    }
+
+    .btn-colorful-badge {
+        width: 28px;
+        height: 28px;
+    }
+
+    .btn-colorful-arrow {
+        font-size: 14px;
+    }
 }
 
 
 /* =========================================================
-   SMALL MOBILE
+   EXTRA SMALL MOBILE (<= 400px)
 ========================================================= */
 
 @media (max-width: 400px) {
+    .flash-deals-section {
+        padding: 18px 10px;
+    }
+
+    .flash-deals-products {
+        gap: 8px !important;
+    }
 
     .flash-time-box {
-
-        width:
-            50px;
-
-        height:
-            50px;
-
+        width: 42px;
+        height: 42px;
     }
-
 
     .flash-time-box strong {
-
-        font-size:
-            17px;
-
+        font-size: 15px;
     }
 
+    .flash-deal-info {
+        padding: 8px 8px 10px !important;
+    }
+
+    .flash-deal-info h3 {
+        font-size: 12.5px !important;
+    }
+
+    .flash-deal-price strong {
+        font-size: 13.5px !important;
+    }
+
+    .flash-deal-bottom button {
+        padding: 5px 10px !important;
+        font-size: 10px !important;
+    }
+}
+
+
+/* =========================================================
+   PREFERS REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .flash-deal-card {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+    .btn-colorful {
+        animation: none !important;
+        transition: none !important;
+    }
+    .btn-colorful::after {
+        animation: none !important;
+        display: none !important;
+    }
+    .btn-colorful-icon {
+        animation: none !important;
+    }
+    .btn-colorful-arrow {
+        transition: none !important;
+    }
 }

@@ -455,7 +455,7 @@ if (moreProductContainer) {
                         button.textContent = isSaved ? "♥" : "♡";
                         if (isSaved) {
                             button.classList.add("active");
-                            button.style.color = "#14f1b2";
+                            button.style.color = "#84FF00";
                         } else {
                             button.classList.remove("active");
                             button.style.color = "";

@@ -6,10 +6,11 @@
 
 .dual-marquee-showcase-section {
   width: 100%;
-  padding: 48px 0 36px 0;
+  padding: 36px 2rem 28px;
   overflow: hidden;
   position: relative;
   z-index: 5;
+  box-sizing: border-box;
 }
 
 .dual-marquee-header {
@@ -59,18 +60,19 @@
   display: flex;
   margin-bottom: 24px;
   position: relative;
+  border-radius: 16px;
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 6%,
-    black 94%,
+    black 1.5rem,
+    black calc(100% - 1.5rem),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 6%,
-    black 94%,
+    black 1.5rem,
+    black calc(100% - 1.5rem),
     transparent 100%
   );
 }

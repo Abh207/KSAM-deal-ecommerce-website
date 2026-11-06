@@ -224,10 +224,12 @@ export default function CategoryTilesSection({
   categoryLabel = "Audio",
   products = [],
   selectedSubCategory = "All",
-  onSelectSubCategory
+  onSelectSubCategory,
+  tilesSpeed = "18s"
 }) {
   const sectionRef = useRef(null);
   const [inView, setInView] = useState(false);
+  const [isTilesPaused, setIsTilesPaused] = useState(false);
 
   // IntersectionObserver for staggered reveal and count-up trigger
   useEffect(() => {
@@ -327,68 +329,125 @@ export default function CategoryTilesSection({
         <p className="audio-cat-subtitle">{headerConfig.subtitle}</p>
       </div>
 
-      {/* Horizontal Scroll with edge fade & scroll snap */}
-      <div className="audio-cat-scroll-wrap">
+      {/* Horizontal Scroll with edge fade & seamless fast auto-move on mobile */}
+      <div
+        className={`audio-cat-scroll-wrap ${isTilesPaused ? "is-paused" : ""}`}
+        onTouchStart={() => setIsTilesPaused(true)}
+        onTouchEnd={() => setIsTilesPaused(false)}
+        onTouchCancel={() => setIsTilesPaused(false)}
+        style={{ "--tiles-speed": tilesSpeed }}
+      >
         <div
           className="audio-cat-grid"
           role="tablist"
           aria-label={`${categoryLabel} sub-categories`}
-          style={{
-            gridTemplateColumns:
-              tiles.length <= 4
-                ? `repeat(${tiles.length}, minmax(130px, 1fr))`
-                : undefined
-          }}
         >
-          {tiles.map((tile, index) => {
-            const isActive =
-              tile.name === "All"
-                ? selectedSubCategory === "All"
-                : selectedSubCategory === tile.name;
+          {/* Primary Track Group */}
+          <div className="audio-cat-track-group">
+            {tiles.map((tile, index) => {
+              const isActive =
+                tile.name === "All"
+                  ? selectedSubCategory === "All"
+                  : selectedSubCategory === tile.name;
 
-            return (
-              <button
-                key={tile.id || tile.name}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-pressed={isActive}
-                className={`audio-cat-card ${isActive ? "is-active" : ""}`}
-                style={{ "--stagger-idx": index }}
-                onClick={() => onSelectSubCategory(tile.name)}
-                onMouseMove={handleTileMouseMove}
-                onMouseLeave={handleTileMouseLeave}
-              >
-                {/* Mouse spotlight gradient */}
-                <span className="audio-cat-spotlight" aria-hidden="true" />
-
-                {/* Subcategory Icon */}
-                <span className="audio-cat-icon-wrap" aria-hidden="true">
-                  {tile.name === "All" ? <Layers size={20} /> : getSubCategoryIcon(tile.name)}
-                </span>
-
-                {/* Subcategory Title */}
-                <span className="audio-cat-name">{tile.displayName}</span>
-
-                {/* Live product count badge with animated count-up */}
-                <span
-                  className="audio-cat-pill"
-                  aria-label={`${tile.count} products`}
-                  aria-live="polite"
+              return (
+                <button
+                  key={tile.id || tile.name}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-pressed={isActive}
+                  className={`audio-cat-card ${isActive ? "is-active" : ""}`}
+                  style={{ "--stagger-idx": index }}
+                  onClick={() => onSelectSubCategory(tile.name)}
+                  onMouseMove={handleTileMouseMove}
+                  onMouseLeave={handleTileMouseLeave}
                 >
-                  <AnimatedCount target={tile.count} trigger={inView} />
-                </span>
+                  {/* Mouse spotlight gradient */}
+                  <span className="audio-cat-spotlight" aria-hidden="true" />
 
-                {/* Sliding active neon indicator */}
-                {isActive && (
+                  {/* Subcategory Icon */}
+                  <span className="audio-cat-icon-wrap" aria-hidden="true">
+                    {tile.name === "All" ? <Layers size={20} /> : getSubCategoryIcon(tile.name)}
+                  </span>
+
+                  {/* Subcategory Title */}
+                  <span className="audio-cat-name">{tile.displayName}</span>
+
+                  {/* Live product count badge with animated count-up */}
                   <span
-                    className="audio-cat-active-indicator"
-                    aria-hidden="true"
-                  />
-                )}
-              </button>
-            );
-          })}
+                    className="audio-cat-pill"
+                    aria-label={`${tile.count} products`}
+                    aria-live="polite"
+                  >
+                    <AnimatedCount target={tile.count} trigger={inView} />
+                  </span>
+
+                  {/* Sliding active neon indicator */}
+                  {isActive && (
+                    <span
+                      className="audio-cat-active-indicator"
+                      aria-hidden="true"
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Cloned Track Group for Seamless Infinite Marquee on Mobile */}
+          <div className="audio-cat-track-group is-clone" aria-hidden="true">
+            {tiles.map((tile, index) => {
+              const isActive =
+                tile.name === "All"
+                  ? selectedSubCategory === "All"
+                  : selectedSubCategory === tile.name;
+
+              return (
+                <button
+                  key={`${tile.id || tile.name}-clone`}
+                  type="button"
+                  role="tab"
+                  tabIndex={-1}
+                  aria-selected={isActive}
+                  aria-pressed={isActive}
+                  className={`audio-cat-card ${isActive ? "is-active" : ""}`}
+                  style={{ "--stagger-idx": index }}
+                  onClick={() => onSelectSubCategory(tile.name)}
+                  onMouseMove={handleTileMouseMove}
+                  onMouseLeave={handleTileMouseLeave}
+                >
+                  {/* Mouse spotlight gradient */}
+                  <span className="audio-cat-spotlight" aria-hidden="true" />
+
+                  {/* Subcategory Icon */}
+                  <span className="audio-cat-icon-wrap" aria-hidden="true">
+                    {tile.name === "All" ? <Layers size={20} /> : getSubCategoryIcon(tile.name)}
+                  </span>
+
+                  {/* Subcategory Title */}
+                  <span className="audio-cat-name">{tile.displayName}</span>
+
+                  {/* Live product count badge with animated count-up */}
+                  <span
+                    className="audio-cat-pill"
+                    aria-label={`${tile.count} products`}
+                    aria-live="polite"
+                  >
+                    <AnimatedCount target={tile.count} trigger={inView} />
+                  </span>
+
+                  {/* Sliding active neon indicator */}
+                  {isActive && (
+                    <span
+                      className="audio-cat-active-indicator"
+                      aria-hidden="true"
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

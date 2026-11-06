@@ -972,13 +972,19 @@ const handleProcessPayment = async () => {
 
 
                 <div className="checkout-brand">
-
-
-                    <div className="checkout-logo">
-                        K
-                    </div>
-
-
+                    <a
+                        href={`${(import.meta.env.BASE_URL || "/").replace(/\/*$/, "")}/index.html`}
+                        className="checkout-brand-link"
+                        aria-label="KSAM Deal Home"
+                        style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}
+                    >
+                        <img
+                            src={`${(import.meta.env.BASE_URL || "/").replace(/\/*$/, "")}/ksamhead/assets/brand/ksamdeal-logo-original.png`}
+                            alt="KSAM Deal"
+                            className="checkout-brand-logo"
+                            style={{ height: "66px", width: "auto", objectFit: "contain" }}
+                        />
+                    </a>
                     <div>
 
                         <h1>

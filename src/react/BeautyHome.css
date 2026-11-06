@@ -6,9 +6,9 @@
     --navbar-height: 72px;
     --accent-lime: #84FF00;
     --accent: var(--accent-lime, #84FF00);
-    --accent-dark: #0f9d76;
-    --accent-soft: rgba(29, 233, 182, 0.15);
-    --accent-glow: rgba(29, 233, 182, 0.35);
+    --accent-dark: #4d9900;
+    --accent-soft: rgba(132, 255, 0, 0.15);
+    --accent-glow: rgba(132, 255, 0, 0.35);
 }
 
 html, body {
@@ -103,10 +103,10 @@ html, body {
 
 .beauty-category-button:hover {
     transform: translateY(-1px);
-    border-color: var(--accent, #1de9b6);
-    background: rgba(29, 233, 182, 0.15);
+    border-color: var(--accent, #84FF00);
+    background: rgba(132, 255, 0, 0.15);
     color: #ffffff;
-    box-shadow: 0 0 12px rgba(29, 233, 182, 0.25);
+    box-shadow: 0 0 12px rgba(132, 255, 0, 0.25);
 }
 
 .beauty-category-button.active {
@@ -114,7 +114,7 @@ html, body {
     background: #ffffff;
     color: #111827;
     font-weight: 800;
-    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25), 0 0 0 2px var(--accent, #1de9b6);
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25), 0 0 0 2px var(--accent, #84FF00);
 }
 
 /* =========================================
@@ -146,7 +146,7 @@ html, body {
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 2px;
-    color: var(--accent, #1de9b6);
+    color: var(--accent, #84FF00);
 }
 
 .beauty-section-heading h2 {
@@ -254,7 +254,7 @@ html, body {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--accent-dark, #0f9d76);
+    background: var(--accent-dark, #4d9900);
     color: #ffffff;
     font-size: 17px;
     font-weight: 800;

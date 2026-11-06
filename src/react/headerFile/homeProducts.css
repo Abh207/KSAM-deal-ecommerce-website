@@ -20,9 +20,12 @@
 
     --products-muted: #969696;
 
-    --products-gold: #d7ad5a;
+    --products-gold: #84FF00;
 
-    --products-gold-light: #f0cf80;
+    --products-gold-light: #a6ff33;
+
+    --hover-lightgreen: #A8F56B;
+    --hover-lightgreen-rgb: 168, 245, 107;
 
     --products-border:
         rgba(255, 255, 255, 0.09);
@@ -747,14 +750,18 @@
 .home-product-card.product-visible {
     opacity: 1;
     transform: translateY(0) scale(1);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.22s ease,
+                box-shadow 0.22s ease;
 }
 
-.home-product-card.product-visible:hover {
+.home-product-card.product-visible:hover,
+.home-product-card.product-visible:focus-within {
     transform: translateY(-6px);
-    border-color: rgba(212, 168, 83, 0.5);
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.6),
-        0 0 20px rgba(212, 168, 83, 0.3);
+    border: 1px solid var(--hover-lightgreen);
+    border-color: var(--hover-lightgreen);
+    box-shadow: 0 0 0 1px rgba(var(--hover-lightgreen-rgb), 0.55),
+                0 12px 40px rgba(var(--hover-lightgreen-rgb), 0.25);
 }
 
 
@@ -786,7 +793,7 @@
     border-radius: 50%;
     background: radial-gradient(
         circle,
-        rgba(212, 168, 83, 0.12),
+        rgba(var(--hover-lightgreen-rgb), 0.16),
         transparent 70%
     );
     transition: transform 0.6s ease;
@@ -827,7 +834,7 @@
     height: var(--card-badge-height, 34px);
     padding: var(--card-badge-padding, 8px 14px);
     border-radius: 8px;
-    background: #d4a853;
+    background: #84FF00;
     color: #111111;
     font-size: var(--card-badge-font, 12px);
     font-weight: 800;
@@ -842,12 +849,12 @@
 }
 
 .badge-best-seller {
-    background: #d4a853;
+    background: #84FF00;
     color: #111111;
 }
 
 .badge-popular {
-    background: #d7ad5a;
+    background: #84FF00;
     color: #111111;
 }
 
@@ -901,9 +908,10 @@
 
 .home-product-wishlist:hover {
     transform: scale(1.08);
-    border-color: #d4a853;
-    box-shadow: 0 0 16px rgba(212, 168, 83, 0.4);
-    color: #ffffff;
+    border-color: var(--hover-lightgreen);
+    box-shadow: 0 0 16px rgba(var(--hover-lightgreen-rgb), 0.45);
+    background: rgba(var(--hover-lightgreen-rgb), 0.12);
+    color: var(--hover-lightgreen);
 }
 
 .home-product-wishlist.wishlisted {
@@ -947,9 +955,10 @@
 }
 
 .quick-view-button:hover {
-    background: #d4a853;
-    color: #111111;
-    border-color: #d4a853;
+    background: var(--hover-lightgreen);
+    color: #050a03;
+    border-color: var(--hover-lightgreen);
+    box-shadow: 0 4px 16px rgba(var(--hover-lightgreen-rgb), 0.45);
 }
 
 @media (hover: none) {
@@ -977,11 +986,16 @@
 }
 
 .product-category-row span {
-    color: #d4a853;
+    color: #84FF00;
     font-size: var(--card-category-font, 13px);
     font-weight: 800;
     letter-spacing: 0.2em;
     text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+.home-product-card:hover .product-category-row span {
+    color: var(--hover-lightgreen);
 }
 
 .home-product-info h2 {
@@ -995,6 +1009,12 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.home-product-card:hover .home-product-info h2 {
+    color: #ffffff;
+    text-shadow: 0 0 14px rgba(var(--hover-lightgreen-rgb), 0.28);
 }
 
 
@@ -1096,10 +1116,10 @@
     align-items: center;
     padding: 0 18px;
     box-sizing: border-box;
-    border: 1.5px solid #d4a853;
+    border: 1.5px solid #84FF00;
     border-radius: var(--card-btn-radius, 14px);
     background: transparent;
-    color: #d4a853;
+    color: #84FF00;
     cursor: pointer;
     font-size: var(--card-btn-font, 14px);
     font-weight: 800;
@@ -1121,8 +1141,10 @@
 }
 
 .home-product-view:hover {
-    background: #d4a853;
-    color: #0c0c0c;
+    background: var(--hover-lightgreen);
+    color: #050a03;
+    border-color: var(--hover-lightgreen);
+    box-shadow: 0 4px 16px rgba(var(--hover-lightgreen-rgb), 0.35);
 }
 
 .home-product-view:hover strong,
@@ -1137,10 +1159,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid #d4a853;
+    border: 1.5px solid #84FF00;
     border-radius: var(--card-btn-radius, 14px);
     background: transparent;
-    color: #d4a853;
+    color: #84FF00;
     cursor: pointer;
     transition: all 0.25s ease;
     box-sizing: border-box;
@@ -1149,10 +1171,11 @@
 }
 
 .home-product-cart-btn:hover {
-    background: #d4a853;
-    color: #0c0c0c;
+    background: var(--hover-lightgreen);
+    border-color: var(--hover-lightgreen);
+    color: #050a03;
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(212, 168, 83, 0.35);
+    box-shadow: 0 4px 16px rgba(var(--hover-lightgreen-rgb), 0.45);
 }
 
 .home-product-cart-btn.is-added {
@@ -2179,7 +2202,7 @@
 
     letter-spacing: 0.1em;
 
-    color: #d4a853;
+    color: #84FF00;
 
     font-weight: 600;
 
@@ -2205,11 +2228,11 @@
 
     border-radius: 50%;
 
-    border: 1px solid #d4a853;
+    border: 1px solid #84FF00;
 
     background: transparent;
 
-    color: #d4a853;
+    color: #84FF00;
 
     font-size: 16px;
 
@@ -2230,7 +2253,7 @@
 
 .popup-related-arrow:hover {
 
-    background: #d4a853;
+    background: #84FF00;
 
     color: #0e0e0e;
 
@@ -2298,7 +2321,7 @@
 
     transform: translateY(-4px);
 
-    border-color: #d4a853;
+    border-color: #84FF00;
 
     box-shadow: 0 8px 24px rgba(212, 168, 83, 0.25);
 
@@ -2358,7 +2381,7 @@
 
     left: 6px;
 
-    background: #d4a853;
+    background: #84FF00;
 
     color: #0e0e0e;
 
@@ -2459,7 +2482,7 @@
 
 .popup-related-card-price strong {
 
-    color: #d4a853;
+    color: #84FF00;
 
     font-size: 16px;
 
@@ -2485,13 +2508,13 @@
 
     height: 40px;
 
-    border: 1px solid #d4a853;
+    border: 1px solid #84FF00;
 
     border-radius: 8px;
 
     background: transparent;
 
-    color: #d4a853;
+    color: #84FF00;
 
     font-size: 12px;
 
@@ -2517,7 +2540,7 @@
 .popup-related-card:hover .popup-related-view-btn,
 .popup-related-view-btn:hover {
 
-    background: #d4a853;
+    background: #84FF00;
 
     color: #0e0e0e;
 

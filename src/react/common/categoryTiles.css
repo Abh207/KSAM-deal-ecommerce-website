@@ -60,6 +60,9 @@
   max-width: 1320px;
   margin: 0 auto;
   position: relative;
+  padding-inline: 2rem;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .audio-cat-grid {
@@ -68,6 +71,16 @@
   justify-content: center;
   gap: 14px;
   width: 100%;
+}
+
+.audio-cat-track-group {
+  display: contents;
+}
+
+@media (min-width: 769px) {
+  .audio-cat-track-group.is-clone {
+    display: none !important;
+  }
 }
 
 .audio-cat-card {
@@ -211,14 +224,12 @@
   }
 
   .audio-cat-scroll-wrap {
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 6px 16px;
-    scroll-snap-type: x mandatory;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+    overflow: hidden;
+    position: relative;
+    padding: 6px 2rem;
+    box-sizing: border-box;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
   }
 
   .audio-cat-scroll-wrap::-webkit-scrollbar {
@@ -229,8 +240,26 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 12px;
     width: max-content;
+    will-change: transform;
+    animation: tilesMarqueeLeftToRight var(--tiles-speed, 18s) linear infinite;
+  }
+
+  .audio-cat-track-group {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+
+  .audio-cat-track-group.is-clone {
+    display: flex !important;
+  }
+
+  .audio-cat-grid:hover,
+  .audio-cat-grid:active,
+  .audio-cat-scroll-wrap.is-paused .audio-cat-grid {
+    animation-play-state: paused !important;
   }
 
   .audio-cat-card {
@@ -238,7 +267,15 @@
     width: 125px;
     min-height: 105px;
     padding: 12px 8px;
-    scroll-snap-align: start;
+  }
+}
+
+@keyframes tilesMarqueeLeftToRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
   }
 }
 

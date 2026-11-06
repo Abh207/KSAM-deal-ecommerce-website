@@ -93,7 +93,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                         borderRadius: "50%",
                         background: "rgba(0, 0, 0, 0.65)",
                         border: isInWishlist(product.id)
-                            ? "1.5px solid var(--accent, #1de9b6)"
+                            ? "1.5px solid var(--accent, #84FF00)"
                             : "1px solid rgba(255, 255, 255, 0.35)",
                         backdropFilter: "blur(8px)",
                         WebkitBackdropFilter: "blur(8px)",
@@ -101,26 +101,26 @@ const ProductCard = ({ product, onAddToCart }) => {
                         alignItems: "center",
                         justifyContent: "center",
                         cursor: "pointer",
-                        color: isInWishlist(product.id) ? "var(--accent, #1de9b6)" : "#ffffff",
+                        color: isInWishlist(product.id) ? "var(--accent, #84FF00)" : "#ffffff",
                         fontSize: "16px",
                         lineHeight: 1,
                         boxShadow: isInWishlist(product.id)
-                            ? "0 0 14px rgba(29, 233, 182, 0.45)"
+                            ? "0 0 14px rgba(132, 255, 0, 0.45)"
                             : "0 4px 14px rgba(0, 0, 0, 0.4)",
                         transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease"
                     }}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = isInWishlist(product.id) ? "var(--accent, #1de9b6)" : "#ffffff";
+                        e.currentTarget.style.borderColor = isInWishlist(product.id) ? "var(--accent, #84FF00)" : "#ffffff";
                         e.currentTarget.style.boxShadow = isInWishlist(product.id)
-                            ? "0 0 16px rgba(29, 233, 182, 0.6)"
+                            ? "0 0 16px rgba(132, 255, 0, 0.6)"
                             : "0 0 12px rgba(255, 255, 255, 0.45)";
                     }}
                     onMouseLeave={(e) => {
                         e.currentTarget.style.borderColor = isInWishlist(product.id)
-                            ? "var(--accent, #1de9b6)"
+                            ? "var(--accent, #84FF00)"
                             : "rgba(255, 255, 255, 0.35)";
                         e.currentTarget.style.boxShadow = isInWishlist(product.id)
-                            ? "0 0 14px rgba(29, 233, 182, 0.45)"
+                            ? "0 0 14px rgba(132, 255, 0, 0.45)"
                             : "0 4px 14px rgba(0, 0, 0, 0.4)";
                     }}
                 >

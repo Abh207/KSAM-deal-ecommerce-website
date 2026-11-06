@@ -30,12 +30,24 @@ body.product-details-body {
   min-height: 100vh;
 }
 
+body.product-details-body.product-list-mode-active,
+body.product-details-body:has(.product-list-mode-page),
+body.product-details-body:has(.is-home-appliances-view) {
+  background-color: #070a0f !important;
+  color: #ffffff !important;
+}
+
 .product-detail-page {
   min-height: 100vh;
   background-color: #ffffff;
   color: #0f172a;
   display: flex;
   flex-direction: column;
+}
+
+.product-detail-page.product-list-mode-page {
+  background-color: #070a0f !important;
+  color: #ffffff !important;
 }
 
 .product-detail-main {
@@ -1458,6 +1470,7 @@ body.product-details-body {
   width: 100%;
   overflow: hidden;
   margin-top: 4px;
+  position: relative;
 }
 
 .product-list-hero-switcher {
@@ -1475,6 +1488,67 @@ body.product-details-body {
   display: none;
 }
 
+.hero-switcher-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.hero-switcher-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Desktop: hide clone group, regular static layout */
+@media (min-width: 769px) {
+  .hero-switcher-group.is-clone {
+    display: none !important;
+  }
+  .hero-switcher-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Mobile <= 768px: continuous LEFT to RIGHT auto-move marquee */
+@media (max-width: 768px) {
+  .product-list-hero-switcher-wrap {
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+  }
+
+  .product-list-hero-switcher {
+    overflow: visible;
+    width: 100%;
+    padding: 6px 0;
+  }
+
+  .hero-switcher-track {
+    width: max-content;
+    will-change: transform;
+    animation: chipsMarqueeLeftToRight var(--chips-speed, 35s) linear infinite;
+  }
+
+  .hero-switcher-track:hover,
+  .hero-switcher-track:active,
+  .product-list-hero-switcher-wrap.is-paused .hero-switcher-track {
+    animation-play-state: paused !important;
+  }
+}
+
+@keyframes chipsMarqueeLeftToRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
 .hero-cat-chip {
   display: inline-flex;
   align-items: center;
@@ -1490,6 +1564,7 @@ body.product-details-body {
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
+  text-decoration: none;
 }
 
 .hero-cat-chip:hover {
@@ -1499,10 +1574,11 @@ body.product-details-body {
 }
 
 .hero-cat-chip.is-active {
-  background: linear-gradient(135deg, #448000, #8cff00);
-  border-color: #8cff00;
-  color: #050a02;
-  box-shadow: 0 4px 14px rgba(140, 255, 0, 0.4);
+  background: var(--accent-lime, #84FF00);
+  border-color: var(--accent-lime, #84FF00);
+  color: #050e04;
+  font-weight: 800;
+  box-shadow: 0 0 16px rgba(132, 255, 0, 0.45);
 }
 
 .hero-cat-chip-icon {
@@ -2438,3 +2514,222 @@ body.product-details-body {
     padding: 0 28px;
   }
 }
+
+/* ==========================================================================
+   TASK 4: Fixed Page Background Video (video2) for Accessories & Lifestyle
+   ========================================================================== */
+
+.accessories-page-fixed-bg-wrap {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.accessories-page-fixed-bg-video,
+.accessories-page-fixed-bg-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.accessories-page-fixed-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 8, 12, 0.74);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 1;
+}
+
+/* Ensure sections below the hero are transparent or semi-transparent with blur */
+.is-accessories-view {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.is-accessories-view .product-list-hero-band {
+  margin-top: 0 !important;
+  min-height: auto !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.is-accessories-view .product-list-hero-inner {
+  padding-top: 24px !important;
+}
+
+.is-accessories-view .product-list-hero-toolbar {
+  background: rgba(11, 17, 24, 0.55) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.is-accessories-view .hero-cat-chip {
+  background: rgba(11, 17, 24, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.is-accessories-view .hero-cat-chip.is-active {
+  background: rgba(132, 255, 0, 0.18) !important;
+  border-color: var(--accent-lime, #84FF00) !important;
+  color: var(--accent-lime, #84FF00) !important;
+}
+
+.is-accessories-view .product-list-main {
+  background: transparent !important;
+}
+
+.is-accessories-view .dual-marquee-showcase-section {
+  background: transparent !important;
+}
+
+.is-accessories-view .trending-deals-section {
+  background: rgba(11, 17, 24, 0.65) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.is-accessories-view .product-feedback-section {
+  background: rgba(11, 17, 24, 0.65) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* Home Appliances Dark Theme View Styles */
+.is-home-appliances-view {
+  background-color: #080c09 !important;
+  background: #080c09 !important;
+  color: #ffffff !important;
+}
+
+.is-home-appliances-view .product-list-hero-band {
+  margin-top: 0 !important;
+  min-height: auto !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.is-home-appliances-view .product-list-hero-inner {
+  padding-top: 24px !important;
+}
+
+.is-home-appliances-view .product-list-hero-toolbar {
+  background: rgba(14, 20, 16, 0.75) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.is-home-appliances-view .hero-cat-chip {
+  background: rgba(14, 20, 16, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.is-home-appliances-view .hero-cat-chip:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.is-home-appliances-view .hero-cat-chip.is-active {
+  background: var(--accent-lime, #84FF00) !important;
+  border-color: var(--accent-lime, #84FF00) !important;
+  color: #050e04 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 16px rgba(132, 255, 0, 0.45) !important;
+}
+
+.is-home-appliances-view .product-list-main {
+  background: transparent !important;
+}
+
+.is-home-appliances-view .dual-marquee-showcase-section {
+  background: transparent !important;
+  padding-top: 28px !important;
+  margin-top: 0 !important;
+}
+
+.is-home-appliances-view .category-tiles-section {
+  background: transparent !important;
+  padding-top: 28px !important;
+  margin-top: 0 !important;
+}
+
+.is-home-appliances-view .trending-deals-section {
+  background: rgba(14, 20, 16, 0.75) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.is-home-appliances-view .product-feedback-section {
+  background: rgba(14, 20, 16, 0.75) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* ==========================================================================
+   TASK 3: Moved Filter & Search Bar Unit (Breadcrumbs + Chips + Toolbar)
+   Positioned directly AFTER Deal Banner and immediately BEFORE Product Grid
+   ========================================================================== */
+
+#category-filter-toolbar-section {
+  width: 100%;
+  position: relative;
+  z-index: 5;
+  margin: 12px 0 0 0;
+  padding: 0;
+  scroll-margin-top: 80px;
+}
+
+#category-filter-toolbar-section .product-list-hero-band {
+  margin-top: 0 !important;
+  min-height: auto !important;
+  padding: 10px 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+#category-filter-toolbar-section .product-list-hero-inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+#category-filter-toolbar-section .product-list-hero-top-row {
+  margin-bottom: 14px;
+}
+
+#category-filter-toolbar-section .product-list-hero-switcher-wrap {
+  margin-bottom: 16px;
+}
+
+#category-filter-toolbar-section .product-list-hero-toolbar {
+  margin-bottom: 8px;
+}
+
+.is-accessories-view .product-list-main,
+#category-filter-toolbar-section + .product-list-main {
+  padding-top: 14px !important;
+}
+
+@media (max-width: 768px) {
+  #category-filter-toolbar-section .product-list-hero-inner {
+    padding: 0 16px;
+  }
+}
+
+

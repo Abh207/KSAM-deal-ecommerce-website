@@ -384,6 +384,9 @@ let hasWarnedDealsQuery = false;
 let hasWarnedSingleQuery = false;
 let inFlightDealsPromise = null;
 
+// Set to true once the remote Supabase database has executed migration 008_create_product_offers.sql
+const SUPABASE_PRODUCT_OFFERS_ENABLED = false;
+
 /**
  * Executes a two-step query (products then product_offers separately)
  * avoiding schema cache relationship requirements.
@@ -417,7 +420,7 @@ async function fetchProductsAndOffersSeparately() {
     const ids = prods.map((p) => p.id).filter(Boolean);
     let offersMap = {};
 
-    if (ids.length > 0) {
+    if (SUPABASE_PRODUCT_OFFERS_ENABLED && ids.length > 0) {
       try {
         const { data: offers, error: offersErr } = await supabase
           .from("product_offers")
@@ -636,28 +639,30 @@ export async function getSupabaseDealByIdOrUid(id, uid) {
 
     if (!error && singleProd) {
       let offers = [];
-      try {
-        const { data: offersData } = await supabase
-          .from("product_offers")
-          .select(`
-            id,
-            platform,
-            platform_slug,
-            price,
-            mrp,
-            discount_percent,
-            affiliate_url,
-            in_stock,
-            updated_at
-          `)
-          .eq("product_id", singleProd.id)
-          .eq("in_stock", true);
+      if (SUPABASE_PRODUCT_OFFERS_ENABLED) {
+        try {
+          const { data: offersData } = await supabase
+            .from("product_offers")
+            .select(`
+              id,
+              platform,
+              platform_slug,
+              price,
+              mrp,
+              discount_percent,
+              affiliate_url,
+              in_stock,
+              updated_at
+            `)
+            .eq("product_id", singleProd.id)
+            .eq("in_stock", true);
 
-        if (Array.isArray(offersData)) {
-          offers = offersData;
+          if (Array.isArray(offersData)) {
+            offers = offersData;
+          }
+        } catch {
+          // Safe if product_offers table doesn't exist
         }
-      } catch {
-        // Safe if product_offers table doesn't exist
       }
 
       return normalizeDeal({

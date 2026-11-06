@@ -11,7 +11,7 @@ const PROMO_DATA = [
         badge: "LIMITED TIME DEAL",
         discount: "-40% OFF",
         image: "assets/images/beauty/promo-1.jpg",
-        accent: "#1de9b6"
+        accent: "#84FF00"
     },
     {
         id: "promo-2",
@@ -66,7 +66,7 @@ const PROMO_DATA = [
         badge: "FESTIVE EDIT",
         discount: "EXTRA 25% OFF",
         image: "assets/images/beauty/promo-6.jpg",
-        accent: "#0f9d76"
+        accent: "#4d9900"
     }
 ];
 

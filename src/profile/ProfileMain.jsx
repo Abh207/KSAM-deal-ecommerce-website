@@ -69,10 +69,10 @@ function SectionArt({ sectionId }) {
     case "orders":
       return (
         <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
-          <rect x="18" y="24" width="48" height="42" rx="8" stroke="rgba(45, 255, 178, 0.3)" strokeWidth="2" />
-          <path d="M18 36H66" stroke="#2DFFB2" strokeWidth="2.5" />
+          <rect x="18" y="24" width="48" height="42" rx="8" stroke="rgba(132, 255, 0, 0.3)" strokeWidth="2" />
+          <path d="M18 36H66" stroke="#84FF00" strokeWidth="2.5" />
           <circle cx="34" cy="50" r="4" fill="#38BDF8" />
-          <path d="M44 50H54" stroke="#2DFFB2" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M44 50H54" stroke="#84FF00" strokeWidth="2.5" strokeLinecap="round" />
         </svg>
       );
     case "profile":

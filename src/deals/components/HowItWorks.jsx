@@ -37,8 +37,8 @@ function HowItWorks() {
     return (
 
         <section
-            id="how"
-            className="bg-black py-28"
+            id="how-it-works"
+            className="py-20 sm:py-24 relative z-10"
         >
 
             <div
@@ -57,7 +57,7 @@ function HowItWorks() {
                             font-bold
                             uppercase
                             tracking-[.3em]
-                            text-[#FFD60A]
+                            text-[#84FF00]
                         "
                     >
                         SIMPLE PROCESS
@@ -73,7 +73,7 @@ function HowItWorks() {
                         "
                     >
                         Three steps.
-                        <span className="text-[#8cff00]">
+                        <span className="text-[#84FF00]">
                             {" "}That's it.
                         </span>
                     </h2>
@@ -81,7 +81,7 @@ function HowItWorks() {
                 </div>
 
 
-                <div className="mt-20">
+                <div className="mt-16 sm:mt-20">
 
                     {steps.map(
                         (step, index) => {
@@ -97,7 +97,7 @@ function HowItWorks() {
                                         relative
                                         flex
                                         gap-6
-                                        pb-16
+                                        pb-14 sm:pb-16
                                     "
                                 >
 
@@ -113,9 +113,10 @@ function HowItWorks() {
                                             justify-center
                                             rounded-2xl
                                             border
-                                            border-[#8cff00]/30
+                                            border-[#84FF00]/30
                                             bg-[#0a0a0a]
-                                            text-[#8cff00]
+                                            text-[#84FF00]
+                                            shadow-[0_0_20px_rgba(132,255,0,0.15)]
                                         "
                                     >
 
@@ -135,7 +136,7 @@ function HowItWorks() {
                                                 h-full
                                                 w-px
                                                 bg-gradient-to-b
-                                                from-[#8cff00]
+                                                from-[#84FF00]
                                                 to-transparent
                                             "
                                         />

@@ -148,9 +148,9 @@
 }
 
 .watch-wishlist-btn.is-active {
-    color: #1de9b6 !important;
-    border-color: #1de9b6 !important;
-    box-shadow: 0 0 14px rgba(29, 233, 182, 0.45) !important;
+    color: #84FF00 !important;
+    border-color: #84FF00 !important;
+    box-shadow: 0 0 14px rgba(132, 255, 0, 0.45) !important;
 }
 
 /* =========================================================

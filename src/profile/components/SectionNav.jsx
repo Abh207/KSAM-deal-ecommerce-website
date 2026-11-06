@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -11,7 +11,8 @@ import {
   Palette,
   HelpCircle,
   AlertTriangle,
-  ChevronRight
+  ChevronRight,
+  X
 } from "lucide-react";
 
 export const SECTIONS = [
@@ -124,6 +125,7 @@ export const SECTIONS = [
 export default function SectionNav({ activeSection, onNavigate, counts = {} }) {
   const navContainerRef = useRef(null);
   const trackRef = useRef(null);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({
     left: 0,
     top: 0,
@@ -131,6 +133,34 @@ export default function SectionNav({ activeSection, onNavigate, counts = {} }) {
     height: 0,
     opacity: 0
   });
+
+  // Body scroll lock and escape handling for mobile drawer
+  useEffect(() => {
+    if (isMobileDrawerOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      const handleEsc = (e) => {
+        if (e.key === "Escape") setIsMobileDrawerOpen(false);
+      };
+      window.addEventListener("keydown", handleEsc);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleEsc);
+      };
+    }
+  }, [isMobileDrawerOpen]);
+
+  // Compute primary 3 mobile tabs (Overview, Orders, Profile - or current active swapped in)
+  const primaryMobileTabs = useMemo(() => {
+    const first3 = SECTIONS.slice(0, 3); // Overview, Orders, Profile
+    const isFirst3 = first3.some((s) => s.id === activeSection);
+    if (isFirst3) return first3;
+    const current = SECTIONS.find((s) => s.id === activeSection);
+    if (current) {
+      return [first3[0], first3[1], current];
+    }
+    return first3;
+  }, [activeSection]);
 
   // Update sliding indicator position
   const updateIndicator = useCallback(() => {
@@ -216,65 +246,177 @@ export default function SectionNav({ activeSection, onNavigate, counts = {} }) {
 
   return (
     <aside className="ks-hub-sidebar" aria-label="Profile navigation">
-      <nav
-        className="ks-sticky-nav"
-        role="tablist"
-        aria-label="Account Sections"
+      {/* MOBILE COMPACT TAB BAR (<= 768px): First 3 Tabs + Hamburger Button */}
+      <div className="ks-profile-mobile-nav">
+        <div className="ks-profile-mobile-tabs" role="tablist" aria-label="Quick Account Tabs">
+          {primaryMobileTabs.map((sec) => {
+            const Icon = sec.icon;
+            const isActive = activeSection === sec.id;
+            const count = sec.countKey && counts[sec.countKey] !== undefined ? counts[sec.countKey] : null;
+
+            return (
+              <button
+                key={sec.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => handleSelect(sec.id)}
+                className={`ks-profile-mobile-tab-btn ${isActive ? "is-active" : ""}`}
+              >
+                <Icon size={15} />
+                <span>{sec.label}</span>
+                {count !== null && count > 0 && (
+                  <span className="ks-profile-mobile-badge">{count}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Mobile Hamburger Button (Dark rounded-square + 3 lime lines) */}
+        <button
+          type="button"
+          onClick={() => setIsMobileDrawerOpen(true)}
+          className="ks-profile-mobile-hamburger"
+          aria-label="Open all 11 account sections"
+          aria-expanded={isMobileDrawerOpen}
+        >
+          <span className="ks-pm-line line-1" />
+          <span className="ks-pm-line line-2" />
+          <span className="ks-pm-line line-3" />
+        </button>
+      </div>
+
+      {/* MOBILE BOTTOM SHEET DRAWER (Lists all 11 sections) */}
+      <div
+        className={`ks-profile-sheet-backdrop ${isMobileDrawerOpen ? "is-open" : ""}`}
+        onClick={() => setIsMobileDrawerOpen(false)}
+        aria-hidden="true"
+      />
+      <div
+        className={`ks-profile-bottom-sheet ${isMobileDrawerOpen ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="All Account Sections"
       >
-        <div className="ks-sticky-nav-inner">
-          <div ref={navContainerRef} className="ks-sticky-nav-scroll">
-            <div ref={trackRef} className="ks-sticky-nav-track">
-              {/* Sliding Active Indicator */}
-              <div
-                className={`ks-nav-active-pill ${activeSection === "danger" ? "is-danger-pill" : ""}`}
-                style={{
-                  transform: `translate3d(${indicatorStyle.left}px, ${indicatorStyle.top}px, 0)`,
-                  width: `${indicatorStyle.width}px`,
-                  height: `${indicatorStyle.height}px`,
-                  opacity: indicatorStyle.opacity
+        <div className="ks-profile-sheet-handle" aria-hidden="true" />
+        <div className="ks-profile-sheet-header">
+          <div className="flex items-center gap-2">
+            <span className="ks-profile-sheet-title">Account Sections</span>
+            <span className="ks-profile-sheet-count">11 Sections</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsMobileDrawerOpen(false)}
+            className="ks-profile-sheet-close"
+            aria-label="Close sections menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="ks-profile-sheet-list">
+          {SECTIONS.map((sec) => {
+            const Icon = sec.icon;
+            const isActive = activeSection === sec.id;
+            const count = sec.countKey && counts[sec.countKey] !== undefined ? counts[sec.countKey] : null;
+
+            return (
+              <button
+                key={sec.id}
+                type="button"
+                onClick={() => {
+                  handleSelect(sec.id);
+                  setIsMobileDrawerOpen(false);
                 }}
-                aria-hidden="true"
-              />
+                className={`ks-profile-sheet-item ${isActive ? "is-active" : ""} ${sec.isDanger ? "is-danger" : ""}`}
+              >
+                <div className="ks-profile-sheet-item-left">
+                  <div className="ks-profile-sheet-item-icon">
+                    <Icon size={18} />
+                  </div>
+                  <div className="ks-profile-sheet-item-text">
+                    <span className="ks-profile-sheet-item-name">{sec.fullLabel || sec.label}</span>
+                    <span className="ks-profile-sheet-item-desc">{sec.eyebrow || sec.title}</span>
+                  </div>
+                </div>
 
-              {SECTIONS.map((sec, idx) => {
-                const Icon = sec.icon;
-                const isActive = activeSection === sec.id;
-                const count = sec.countKey && counts[sec.countKey] !== undefined ? counts[sec.countKey] : null;
+                <div className="ks-profile-sheet-item-right">
+                  {sec.id === "addresses" && (count === null || count === 0) ? (
+                    <span className="ks-profile-sheet-chip-add">+ Add New</span>
+                  ) : count !== null && count > 0 ? (
+                    <span className="ks-profile-sheet-badge">{count}</span>
+                  ) : null}
+                  <ChevronRight size={16} className="opacity-40" />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-                return (
-                  <button
-                    key={sec.id}
-                    id={`tab-${sec.id}`}
-                    role="tab"
-                    type="button"
-                    data-section-id={sec.id}
-                    aria-selected={isActive}
-                    aria-controls={`panel-${sec.id}`}
-                    tabIndex={isActive ? 0 : -1}
-                    onClick={() => handleSelect(sec.id)}
-                    onKeyDown={(e) => handleKeyDown(e, idx)}
-                    className={`ks-nav-pill-btn ${isActive ? "is-active" : ""} ${sec.isDanger ? "is-danger" : ""}`}
-                  >
-                    <Icon size={20} className="ks-nav-tab-icon shrink-0" />
-                    <span className="ks-nav-tab-text">
-                      <span className="hidden sm:inline">{sec.fullLabel || sec.label}</span>
-                      <span className="sm:hidden">{sec.label}</span>
-                    </span>
+      {/* DESKTOP SIDEBAR (> 768px) */}
+      <div className="ks-desktop-nav-wrap">
+        <nav
+          className="ks-sticky-nav"
+          role="tablist"
+          aria-label="Account Sections"
+        >
+          <div className="ks-sticky-nav-inner">
+            <div ref={navContainerRef} className="ks-sticky-nav-scroll">
+              <div ref={trackRef} className="ks-sticky-nav-track">
+                {/* Sliding Active Indicator */}
+                <div
+                  className={`ks-nav-active-pill ${activeSection === "danger" ? "is-danger-pill" : ""}`}
+                  style={{
+                    transform: `translate3d(${indicatorStyle.left}px, ${indicatorStyle.top}px, 0)`,
+                    width: `${indicatorStyle.width}px`,
+                    height: `${indicatorStyle.height}px`,
+                    opacity: indicatorStyle.opacity
+                  }}
+                  aria-hidden="true"
+                />
 
-                    {count !== null && count > 0 && (
-                      <span className="ks-nav-count-badge shrink-0" aria-label={`${count} items`}>
-                        {count}
+                {SECTIONS.map((sec, idx) => {
+                  const Icon = sec.icon;
+                  const isActive = activeSection === sec.id;
+                  const count = sec.countKey && counts[sec.countKey] !== undefined ? counts[sec.countKey] : null;
+
+                  return (
+                    <button
+                      key={sec.id}
+                      id={`tab-${sec.id}`}
+                      role="tab"
+                      type="button"
+                      data-section-id={sec.id}
+                      aria-selected={isActive}
+                      aria-controls={`panel-${sec.id}`}
+                      tabIndex={isActive ? 0 : -1}
+                      onClick={() => handleSelect(sec.id)}
+                      onKeyDown={(e) => handleKeyDown(e, idx)}
+                      className={`ks-nav-pill-btn ${isActive ? "is-active" : ""} ${sec.isDanger ? "is-danger" : ""}`}
+                    >
+                      <Icon size={20} className="ks-nav-tab-icon shrink-0" />
+                      <span className="ks-nav-tab-text">
+                        <span className="hidden sm:inline">{sec.fullLabel || sec.label}</span>
+                        <span className="sm:hidden">{sec.label}</span>
                       </span>
-                    )}
 
-                    <ChevronRight size={14} className="ks-nav-desktop-chevron shrink-0 ml-auto hidden lg:block opacity-0 group-hover:opacity-60 transition" />
-                  </button>
-                );
-              })}
+                      {count !== null && count > 0 && (
+                        <span className="ks-nav-count-badge shrink-0" aria-label={`${count} items`}>
+                          {count}
+                        </span>
+                      )}
+
+                      <ChevronRight size={14} className="ks-nav-desktop-chevron shrink-0 ml-auto hidden lg:block opacity-0 group-hover:opacity-60 transition" />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
     </aside>
   );
 }

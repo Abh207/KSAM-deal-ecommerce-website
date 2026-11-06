@@ -78,7 +78,7 @@ body.has-bg-video .ksam-wishlist-empty-filter p {
 /* Translucent frosted glass banner on Wishlist page for clean contrast */
 body.has-bg-video .ksam-wishlist-banner-card {
   background: rgba(11, 31, 26, 0.65) !important;
-  border: 1px solid rgba(29, 233, 182, 0.22) !important;
+  border: 1px solid rgba(132, 255, 0, 0.22) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
@@ -104,17 +104,17 @@ body.has-bg-video .ksam-wishlist-chip {
 
 body.has-bg-video .ksam-wishlist-chip:hover {
   background: rgba(20, 35, 28, 0.85) !important;
-  border-color: rgba(29, 233, 182, 0.5) !important;
+  border-color: rgba(132, 255, 0, 0.5) !important;
   color: #ffffff !important;
 }
 
-/* Active tab/chip highlighted using site green accent (#1de9b6) */
+/* Active tab/chip highlighted using site green accent (#84FF00) */
 body.has-bg-video .ksam-wishlist-chip.is-active,
 body.has-bg-video .ksam-wishlist-chip[aria-selected="true"] {
-  background: rgba(29, 233, 182, 0.18) !important;
-  border: 1px solid #1de9b6 !important;
-  color: #1de9b6 !important;
-  box-shadow: 0 0 14px rgba(29, 233, 182, 0.25) !important;
+  background: rgba(132, 255, 0, 0.18) !important;
+  border: 1px solid #84FF00 !important;
+  color: #84FF00 !important;
+  box-shadow: 0 0 14px rgba(132, 255, 0, 0.25) !important;
 }
 
 body.has-bg-video .ksam-wishlist-chip .ksam-wishlist-chip-count {
@@ -124,15 +124,15 @@ body.has-bg-video .ksam-wishlist-chip .ksam-wishlist-chip-count {
 
 body.has-bg-video .ksam-wishlist-chip.is-active .ksam-wishlist-chip-count,
 body.has-bg-video .ksam-wishlist-chip[aria-selected="true"] .ksam-wishlist-chip-count {
-  background: #1de9b6 !important;
+  background: #84FF00 !important;
   color: #050b09 !important;
 }
 
-/* Green highlight accent (#1de9b6) */
+/* Green highlight accent (#84FF00) */
 body.has-bg-video .ksam-wishlist-title-highlight {
-  color: #1de9b6 !important;
+  color: #84FF00 !important;
   background: none !important;
-  -webkit-text-fill-color: #1de9b6 !important;
+  -webkit-text-fill-color: #84FF00 !important;
 }
 
 /* Clear button on Wishlist */
@@ -144,18 +144,18 @@ body.has-bg-video .ksam-wishlist-clear-btn {
 }
 
 body.has-bg-video .ksam-wishlist-clear-btn:hover {
-  border-color: #1de9b6 !important;
-  color: #1de9b6 !important;
+  border-color: #84FF00 !important;
+  color: #84FF00 !important;
 }
 
 /* Empty State CTAs */
 body.has-bg-video .ksam-wishlist-cta-btn,
 body.has-bg-video .ksam-wishlist-reset-btn {
-  background: #1de9b6 !important;
+  background: #84FF00 !important;
   color: #050b09 !important;
   font-weight: 700 !important;
   border: none !important;
-  box-shadow: 0 8px 24px rgba(29, 233, 182, 0.35) !important;
+  box-shadow: 0 8px 24px rgba(132, 255, 0, 0.35) !important;
 }
 
 /* Deals page adjustments */
@@ -171,7 +171,7 @@ body.has-bg-video .kx-noise-overlay {
 body.has-bg-video .kx-page a[href*="deal"]:hover,
 body.has-bg-video .kx-page a[href*="index"]:hover,
 body.has-bg-video .kx-page a:hover {
-  color: #1de9b6 !important;
+  color: #84FF00 !important;
 }
 
 /* Accessibility: reduce motion fallback */

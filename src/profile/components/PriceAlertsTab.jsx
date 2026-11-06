@@ -276,7 +276,7 @@ export default function PriceAlertsTab({
                   required
                   value={newTarget}
                   onChange={(e) => setNewTarget(e.target.value)}
-                  className="w-full rounded-xl border border-[rgba(148,163,184,0.20)] bg-[#080D15] px-3.5 py-2.5 text-sm font-bold text-[#E2E8F0] focus:border-[#2DFFB2] focus:outline-none"
+                  className="w-full rounded-xl border border-[rgba(148,163,184,0.20)] bg-[#080D15] px-3.5 py-2.5 text-sm font-bold text-[#E2E8F0] focus:border-[#84FF00] focus:outline-none"
                 />
               </div>
 
@@ -291,7 +291,7 @@ export default function PriceAlertsTab({
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#2DFFB2] to-[#25C9F7] text-xs font-black text-[#05070B] hover:opacity-95 disabled:opacity-50 cursor-pointer shadow-md transition"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#84FF00] to-[#25C9F7] text-xs font-black text-[#05070B] hover:opacity-95 disabled:opacity-50 cursor-pointer shadow-md transition"
                 >
                   {actionLoading ? "Saving..." : "Save Target"}
                 </button>

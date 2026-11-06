@@ -6,6 +6,7 @@ import { useCart, formatPrice, FREE_DELIVERY_THRESHOLD } from "../store/cartStor
 import { resolveImagePath } from "../../lib/cartHelper.js";
 import { getWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL, getStoredSessionSync } from "../../auth/auth.js";
+import FloatingActions from "../../components/FloatingActions.jsx";
 import "./Navbar.css";
 
 /* =====================================================
@@ -15,7 +16,7 @@ const LINKS = [
   ["Home", "products.html"],
   ["Shop", "shop.html"],
   ["Deals", "#deals"],
-  ["How It Works", "terms.html"],
+  ["How It Works", "terms.html#how-it-works"],
   ["Features", "#features"],
   ["Wishlist", "watchwishlist.html"]
 ];
@@ -242,7 +243,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   })();
 
   const getLinkHref = (href) => {
-    if (href === "products.html" || href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
+    if (href === "products.html" || href === "shop.html" || href === "terms.html" || href === "terms.html#how-it-works" || href === "watchwishlist.html") {
       const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
       return `${base}/${href}`;
     }
@@ -253,6 +254,20 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   };
 
   const handleNavLinkClick = (e, href) => {
+    if (href.includes("#how-it-works")) {
+      const isTerms = window.location.pathname.endsWith("terms.html") || window.location.pathname.endsWith("terms");
+      if (isTerms) {
+        e.preventDefault();
+        const el = document.getElementById("how-it-works");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+          try {
+            window.history.pushState(null, "", "#how-it-works");
+          } catch {}
+        }
+        return;
+      }
+    }
     if (href === "products.html" || href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
       return;
     }
@@ -1817,6 +1832,9 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
 
       {/* Supabase Search Overlay Portal */}
       {searchOverlayPortal}
+
+      {/* Floating Actions: Improved Scroll to Top + AI Chatbot (All Pages) */}
+      <FloatingActions />
     </>
   );
 }

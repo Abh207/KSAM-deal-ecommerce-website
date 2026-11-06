@@ -35,8 +35,10 @@ export default function ProductListVideoHeader({
 
   const base = import.meta.env.BASE_URL || "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-  const homeUrl = normalizedBase;
+  const homeUrl = `${normalizedBase}index.html`;
   const shopUrl = `${normalizedBase}shop.html`;
+
+  const [isChipsPaused, setIsChipsPaused] = useState(false);
 
   const desktopMp4 = `${normalizedBase}assets/videos/product-header.mp4`;
   const mobileMp4 = `${normalizedBase}assets/videos/product-header_mobile.mp4`;
@@ -113,11 +115,12 @@ export default function ProductListVideoHeader({
   }, [isReducedMotion]);
 
   const isAccessories = categorySlug === "accessories-lifestyle";
+  const isMovedToolbar = categorySlug === "accessories-lifestyle" || categorySlug === "home-appliances";
 
   return (
-    <div className={`product-list-hero-band ${isAccessories ? "is-accessories-band" : ""}`} ref={containerRef}>
-      {/* Background Video Wrap (Suppressed on accessories-lifestyle to allow clean full-screen hero) */}
-      {!isAccessories && (
+    <div className={`product-list-hero-band ${isMovedToolbar ? "is-accessories-band is-filter-toolbar-band" : ""}`} ref={containerRef}>
+      {/* Background Video Wrap (Suppressed on categories where toolbar is moved below deals) */}
+      {!isMovedToolbar && (
         <div className="product-list-hero-video-wrap" aria-hidden="true">
           {!isReducedMotion ? (
             <video
@@ -181,66 +184,109 @@ export default function ProductListVideoHeader({
           </a>
         </div>
 
-        {/* Hero Title Block */}
-        <div className="product-list-hero-title-block">
-          <div className="product-list-hero-pill">
-            <span className="hero-pill-icon">
-              {categoryConfig?.iconEmoji || "✨"}
-            </span>
-            <span>{categoryLabel}</span>
-          </div>
-
-          <h1 className="product-list-hero-title">
-            <span className="hero-title-gradient">{categoryLabel}</span> Collection
-          </h1>
-
-          <p className="product-list-hero-sub">
-            {categoryConfig?.description ||
-              "Handpicked deals from top stores, updated daily."}
-          </p>
-
-          {/* Stats Chips */}
-          <div className="product-list-hero-stats">
-            <div className="hero-stat-chip">
-              <Sparkles size={14} className="hero-chip-icon text-green" />
-              <span>{totalProductsCount} Products</span>
+        {/* Hero Title Block (Suppressed on categories where toolbar is moved below deals) */}
+        {!isMovedToolbar && (
+          <div className="product-list-hero-title-block">
+            <div className="product-list-hero-pill">
+              <span className="hero-pill-icon">
+                {categoryConfig?.iconEmoji || "✨"}
+              </span>
+              <span>{categoryLabel}</span>
             </div>
-            {maxDiscount > 0 && (
+
+            <h1 className="product-list-hero-title">
+              <span className="hero-title-gradient">{categoryLabel}</span> Collection
+            </h1>
+
+            <p className="product-list-hero-sub">
+              {categoryConfig?.description ||
+                "Handpicked deals from top stores, updated daily."}
+            </p>
+
+            {/* Stats Chips */}
+            <div className="product-list-hero-stats">
               <div className="hero-stat-chip">
-                <Tag size={14} className="hero-chip-icon text-amber" />
-                <span>Up to {maxDiscount}% Off</span>
+                <Sparkles size={14} className="hero-chip-icon text-green" />
+                <span>{totalProductsCount} Products</span>
               </div>
-            )}
-            <div className="hero-stat-chip">
-              <Truck size={14} className="hero-chip-icon text-blue" />
-              <span>Free delivery above ₹999</span>
+              {maxDiscount > 0 && (
+                <div className="hero-stat-chip">
+                  <Tag size={14} className="hero-chip-icon text-amber" />
+                  <span>Up to {maxDiscount}% Off</span>
+                </div>
+              )}
+              <div className="hero-stat-chip">
+                <Truck size={14} className="hero-chip-icon text-blue" />
+                <span>Free delivery above ₹999</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Quick Category Switcher */}
-        <div className="product-list-hero-switcher-wrap">
+        <div
+          className={`product-list-hero-switcher-wrap ${isChipsPaused ? "is-paused" : ""}`}
+          onTouchStart={() => setIsChipsPaused(true)}
+          onTouchEnd={() => setIsChipsPaused(false)}
+          onTouchCancel={() => setIsChipsPaused(false)}
+        >
           <div
             className="product-list-hero-switcher"
             role="tablist"
             aria-label="Category switcher"
           >
-            {CATEGORIES_CONFIG.map((cat) => {
-              const isActive = cat.slug === categorySlug;
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  className={`hero-cat-chip ${isActive ? "is-active" : ""}`}
-                  onClick={() => onSelectCategory(cat.slug)}
-                >
-                  <span className="hero-cat-chip-icon">{cat.iconEmoji}</span>
-                  <span className="hero-cat-chip-label">{cat.label}</span>
-                </button>
-              );
-            })}
+            <div className="hero-switcher-track">
+              {/* Set 1: Standard Chips */}
+              <div className="hero-switcher-group">
+                {CATEGORIES_CONFIG.map((cat) => {
+                  const isActive = cat.slug === categorySlug;
+                  const chipHref = `${normalizedBase}product.html?view=list&category=${encodeURIComponent(cat.slug)}`;
+                  return (
+                    <a
+                      key={cat.key}
+                      href={chipHref}
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`hero-cat-chip ${isActive ? "is-active" : ""}`}
+                      onClick={(e) => {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                        e.preventDefault();
+                        onSelectCategory(cat.slug);
+                      }}
+                    >
+                      <span className="hero-cat-chip-icon">{cat.iconEmoji}</span>
+                      <span className="hero-cat-chip-label">{cat.label}</span>
+                    </a>
+                  );
+                })}
+              </div>
+
+              {/* Set 2: Duplicate Chips for Seamless Mobile Infinite Marquee */}
+              <div className="hero-switcher-group is-clone" aria-hidden="true">
+                {CATEGORIES_CONFIG.map((cat) => {
+                  const isActive = cat.slug === categorySlug;
+                  const chipHref = `${normalizedBase}product.html?view=list&category=${encodeURIComponent(cat.slug)}`;
+                  return (
+                    <a
+                      key={`${cat.key}-clone`}
+                      href={chipHref}
+                      role="tab"
+                      tabIndex={-1}
+                      aria-selected={isActive}
+                      className={`hero-cat-chip ${isActive ? "is-active" : ""}`}
+                      onClick={(e) => {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                        e.preventDefault();
+                        onSelectCategory(cat.slug);
+                      }}
+                    >
+                      <span className="hero-cat-chip-icon">{cat.iconEmoji}</span>
+                      <span className="hero-cat-chip-label">{cat.label}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 

@@ -21,9 +21,6 @@ import PromoCarousel
 import Features
     from "./components/Features.jsx";
 
-import HowItWorks
-    from "./components/HowItWorks.jsx";
-
 import FeaturedDeals
     from "./components/FeaturedDeals.jsx";
 
@@ -376,8 +373,6 @@ function Deals() {
 
     {/* <Features /> */}
 
-    {/* <HowItWorks /> */}
-
     <FeaturedDeals
         onAdd={handleAdd}
     />
@@ -388,7 +383,6 @@ function Deals() {
 
 
     <FAQ />
-    <HowItWorks />
 
     <Newsletter />
 

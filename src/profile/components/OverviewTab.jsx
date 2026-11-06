@@ -270,9 +270,9 @@ export default function OverviewTab({
       </section>
 
       {/* Orders & Live Tracking Quick Bar */}
-      <section className="ks-card ks-overview-lower-card mb-5 border border-[rgba(45,255,178,0.2)] bg-[#0A0F17]/80">
+      <section className="ks-card ks-overview-lower-card mb-5 border border-[rgba(132, 255, 0,0.2)] bg-[#0A0F17]/80">
         <div className="ks-overview-card-header">
-          <div className="ks-overview-header-icon bg-[#2DFFB2]/10 text-[#2DFFB2]">
+          <div className="ks-overview-header-icon bg-[#84FF00]/10 text-[#84FF00]">
             <Package size={18} />
           </div>
 
@@ -284,7 +284,7 @@ export default function OverviewTab({
           <button
             type="button"
             onClick={() => onNavigateTab("orders")}
-            className="ks-overview-view-all-link text-[#2DFFB2] hover:text-[#4efec1]"
+            className="ks-overview-view-all-link text-[#84FF00] hover:text-[#4efec1]"
             aria-label="View Order History"
           >
             <span>Track Orders</span>

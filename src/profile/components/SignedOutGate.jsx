@@ -55,7 +55,7 @@ export default function SignedOutGate() {
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
             Unlock Your Personal <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2DFFB2] via-[#26D9F8] to-[#8B7CFF]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#84FF00] via-[#26D9F8] to-[#8B7CFF]">
               Shopping & Alert Center
             </span>
           </h1>
@@ -67,7 +67,7 @@ export default function SignedOutGate() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href={loginUrl}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#2DFFB2] to-[#25C9F7] text-[#05070B] font-extrabold text-sm hover:shadow-[0_0_30px_rgba(45,255,178,0.4)] hover:scale-[1.02] transition"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#84FF00] to-[#25C9F7] text-[#05070B] font-extrabold text-sm hover:shadow-[0_0_30px_rgba(132, 255, 0,0.4)] hover:scale-[1.02] transition"
             >
               <LogIn size={18} />
               <span>Sign In to Account</span>

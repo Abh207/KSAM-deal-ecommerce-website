@@ -5,13 +5,13 @@
 
 :root {
   --ct-bg: linear-gradient(135deg, #060913 0%, #0b1230 40%, #1a1146 70%, #0a2a3a 100%);
-  --ct-grad-text: linear-gradient(90deg, #34f5a1 0%, #22d3ee 50%, #a78bfa 100%);
+  --ct-grad-text: linear-gradient(90deg, #84FF00 0%, #22d3ee 50%, #a78bfa 100%);
   --ct-grad-btn: linear-gradient(135deg, #22e6a0, #22b8f0);
   --ct-card: rgba(255, 255, 255, 0.05);
   --ct-card-hover: rgba(255, 255, 255, 0.09);
   --ct-border: rgba(255, 255, 255, 0.12);
   --ct-border-glow: rgba(52, 245, 161, 0.35);
-  --ct-green: #34f5a1;
+  --ct-green: #84FF00;
   --ct-cyan: #22d3ee;
   --ct-violet: #a78bfa;
   --ct-text-main: #ffffff;
@@ -121,7 +121,7 @@
 
 /* Typography Helpers */
 .ct-heading-gradient {
-  color: #34f5a1; /* solid fallback */
+  color: #84FF00; /* solid fallback */
   background: var(--ct-grad-text);
   -webkit-background-clip: text;
   background-clip: text;
@@ -137,7 +137,7 @@
   border-radius: 9999px;
   background: rgba(34, 230, 160, 0.1);
   border: 1px solid rgba(52, 245, 161, 0.3);
-  color: #34f5a1;
+  color: #84FF00;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -147,8 +147,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #34f5a1;
-  box-shadow: 0 0 10px #34f5a1;
+  background: #84FF00;
+  box-shadow: 0 0 10px #84FF00;
   animation: ctPulse 2s infinite ease-in-out;
 }
 
@@ -488,7 +488,7 @@
 }
 
 .ct-trust-chip svg {
-  color: #34f5a1;
+  color: #84FF00;
 }
 
 /* ==========================================================================
@@ -499,7 +499,7 @@
    ========================================================================== */
 .ct-stats-section {
   --st-bg: linear-gradient(135deg, #060913 0%, #0b1230 45%, #1a1146 100%);
-  --st-grad-text: linear-gradient(90deg, #34f5a1, #22d3ee, #a78bfa);
+  --st-grad-text: linear-gradient(90deg, #84FF00, #22d3ee, #a78bfa);
   --st-card: rgba(255, 255, 255, 0.06);
   --st-border: rgba(255, 255, 255, 0.14);
   position: relative;
@@ -589,7 +589,7 @@
   border-radius: 9999px;
   background: rgba(34, 230, 160, 0.1);
   border: 1px solid rgba(52, 245, 161, 0.3);
-  color: #34f5a1;
+  color: #84FF00;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -706,7 +706,7 @@
 }
 
 .ct-stats-card[data-tone="green"] .ct-stats-icon-tile {
-  background: linear-gradient(135deg, #34f5a1 0%, #00d4ff 100%);
+  background: linear-gradient(135deg, #84FF00 0%, #00d4ff 100%);
 }
 .ct-stats-card[data-tone="cyan"] .ct-stats-icon-tile {
   background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
@@ -715,7 +715,7 @@
   background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
 }
 .ct-stats-card[data-tone="blue"] .ct-stats-icon-tile {
-  background: linear-gradient(135deg, #3b82f6 0%, #34f5a1 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #84FF00 100%);
 }
 
 /* Card Body (Compact Number, Label & Caption) */
@@ -734,8 +734,8 @@
 }
 
 .ct-stats-card[data-tone="green"] .ct-stats-number-grad {
-  color: #34f5a1;
-  background: linear-gradient(90deg, #ffffff 10%, #34f5a1 90%);
+  color: #84FF00;
+  background: linear-gradient(90deg, #ffffff 10%, #84FF00 90%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -804,7 +804,7 @@
 }
 
 .st-dot-active {
-  background: #34f5a1;
+  background: #84FF00;
   box-shadow: 0 0 8px rgba(52, 245, 161, 0.7);
   animation: stDotPulse 2s ease-in-out infinite;
 }
@@ -1253,7 +1253,7 @@
 .ct-topic-chip:hover {
   background: rgba(52, 245, 161, 0.15);
   border-color: rgba(52, 245, 161, 0.45);
-  color: #34f5a1;
+  color: #84FF00;
   transform: translateY(-2px);
 }
 
@@ -1342,7 +1342,7 @@
   flex-shrink: 0;
   background: linear-gradient(135deg, rgba(52, 245, 161, 0.2), rgba(34, 211, 238, 0.15));
   border: 1px solid rgba(52, 245, 161, 0.3);
-  color: #34f5a1;
+  color: #84FF00;
 }
 
 .ct-channel-badge {
@@ -1382,7 +1382,7 @@
 .ct-channel-value {
   font-size: 13px;
   font-weight: 700;
-  color: #34f5a1;
+  color: #84FF00;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1405,7 +1405,7 @@
 
 .ct-copy-btn:hover {
   background: rgba(52, 245, 161, 0.2);
-  color: #34f5a1;
+  color: #84FF00;
 }
 
 /* ==========================================================================
@@ -2163,7 +2163,7 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #34f5a1, #22d3ee);
+  background: linear-gradient(135deg, #84FF00, #22d3ee);
   color: #04210f;
   display: flex;
   align-items: center;
@@ -2389,7 +2389,7 @@
   height: 36px;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(52, 245, 161, 0.25), rgba(34, 211, 238, 0.2));
-  color: #34f5a1;
+  color: #84FF00;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2806,8 +2806,8 @@
   padding: 12px 20px;
   border-radius: 12px;
   background: #04210f;
-  border: 1px solid #34f5a1;
-  color: #34f5a1;
+  border: 1px solid #84FF00;
+  color: #84FF00;
   font-size: 14px;
   font-weight: 700;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);

@@ -180,7 +180,7 @@ export default function ProfileHero({
               >
                 <defs>
                   <linearGradient id="ksHeroCompletenessGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#2DFFB2" />
+                    <stop offset="0%" stopColor="#84FF00" />
                     <stop offset="50%" stopColor="#26D9F8" />
                     <stop offset="100%" stopColor="#8B7CFF" />
                   </linearGradient>
@@ -241,7 +241,7 @@ export default function ProfileHero({
                 className="ks-avatar-badge-pct"
                 title={`${completeness}% profile completeness`}
               >
-                <Sparkles size={11} className="text-[#2DFFB2] inline mr-1" />
+                <Sparkles size={11} className="text-[#84FF00] inline mr-1" />
                 {animatedCompleteness}%
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function ProfileHero({
           {/* Center Column: Greeting, Name, Meta & Quick Action Buttons */}
           <div className="ks-hero-meta-col">
             <div className="kx-eyebrow">
-              <Zap size={12} className="text-[#2DFFB2]" />
+              <Zap size={12} className="text-[#84FF00]" />
               <span>Personal Account Hub</span>
             </div>
 

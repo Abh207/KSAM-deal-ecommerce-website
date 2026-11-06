@@ -50,6 +50,7 @@ import CategoryTilesSection, { deriveProductSubCategory } from "./common/Categor
 import FlashSaleBanner from "./common/FlashSaleBanner.jsx";
 import ProductReviewsSection from "./common/ProductReviewsSection.jsx";
 import AccessoriesFullscreenHero from "./components/AccessoriesFullscreenHero.jsx";
+import HomeAppliancesPlaylistHero from "./components/HomeAppliancesPlaylistHero.jsx";
 import DualMarqueeShowcase from "./components/DualMarqueeShowcase.jsx";
 
 import "./productDetail.css";
@@ -245,6 +246,10 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const pageBgVideoRef = useRef(null);
+  const accessoriesHeroContainerRef = useRef(null);
+  const accessoriesHeroVideoRef = useRef(null);
+  const accessoriesBgVideoRef = useRef(null);
+  const homeAppliancesHeroContainerRef = useRef(null);
 
   const config = getCategoryConfigBySlug(currentCategory);
   const categoryLabel = config?.label || mapCategoryDisplayLabel(currentCategory);
@@ -257,13 +262,25 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
   const listBgMobileWebm = `${normalizedBase}assets/videos/list-bg_mobile.webm`;
   const listBgPoster = `${normalizedBase}assets/videos/list-bg-poster.webp`;
 
+  // Accessories & Lifestyle Video 1 (Hero) & Video 2 (Page Bg)
+  const accessoriesBgMp4 = `${normalizedBase}videos/accessories-bg.mp4`;
+  const accessoriesBgPoster = `${normalizedBase}videos/accessories-bg-poster.webp`;
+
+  const isAccessoriesPage = currentCategory === "accessories-lifestyle";
+  const isHomeAppliancesPage = currentCategory === "home-appliances";
+  const isMarqueeCategory = currentCategory === "accessories-lifestyle" || currentCategory === "home-appliances";
+
   // Check prefers-reduced-motion & slow connection
   useEffect(() => {
     if (typeof window === "undefined") return;
+    document.body.classList.add("product-list-mode-active");
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const saveData = Boolean(navigator.connection?.saveData);
     const slowConn = ["slow-2g", "2g", "3g"].includes(navigator.connection?.effectiveType);
     setPrefersReducedMotion(mq.matches || saveData || slowConn);
+    return () => {
+      document.body.classList.remove("product-list-mode-active");
+    };
   }, []);
 
   // Background video playback lifecycle
@@ -283,6 +300,71 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
     document.addEventListener("visibilitychange", handleVis);
     return () => document.removeEventListener("visibilitychange", handleVis);
   }, [prefersReducedMotion]);
+
+  // Dual Video Coordination for Accessories & Lifestyle (Hero video1 vs Page Bg video2)
+  useEffect(() => {
+    if (!isAccessoriesPage || prefersReducedMotion) return;
+
+    const heroEl = accessoriesHeroContainerRef.current;
+    if (!heroEl) return;
+
+    // Start with hero video playing, bg video paused
+    if (accessoriesHeroVideoRef.current) {
+      accessoriesHeroVideoRef.current.play().catch(() => {});
+    }
+    if (accessoriesBgVideoRef.current) {
+      accessoriesBgVideoRef.current.pause();
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Hero in view: play video1, pause video2
+          if (accessoriesHeroVideoRef.current) {
+            accessoriesHeroVideoRef.current.play().catch(() => {});
+          }
+          if (accessoriesBgVideoRef.current) {
+            accessoriesBgVideoRef.current.pause();
+          }
+        } else {
+          // Scrolled past hero: pause video1, play video2
+          if (accessoriesHeroVideoRef.current) {
+            accessoriesHeroVideoRef.current.pause();
+          }
+          if (accessoriesBgVideoRef.current) {
+            accessoriesBgVideoRef.current.play().catch(() => {});
+          }
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(heroEl);
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (accessoriesHeroVideoRef.current) accessoriesHeroVideoRef.current.pause();
+        if (accessoriesBgVideoRef.current) accessoriesBgVideoRef.current.pause();
+      } else {
+        const rect = heroEl.getBoundingClientRect();
+        const inView = rect.bottom > 60 && rect.top < window.innerHeight;
+        if (inView) {
+          if (accessoriesHeroVideoRef.current) accessoriesHeroVideoRef.current.play().catch(() => {});
+          if (accessoriesBgVideoRef.current) accessoriesBgVideoRef.current.pause();
+        } else {
+          if (accessoriesHeroVideoRef.current) accessoriesHeroVideoRef.current.pause();
+          if (accessoriesBgVideoRef.current) accessoriesBgVideoRef.current.play().catch(() => {});
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [isAccessoriesPage, prefersReducedMotion]);
 
   // Listen to popstate (browser back/forward)
   useEffect(() => {
@@ -373,8 +455,8 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
   const displayProducts = React.useMemo(() => {
     let result = [...products];
 
-    // Sub-category filter
-    if (selectedSubCategory && selectedSubCategory !== "All") {
+    // Sub-category filter (suppressed on accessories-lifestyle where category tiles section is removed)
+    if (!isAccessoriesPage && selectedSubCategory && selectedSubCategory !== "All") {
       result = result.filter(
         (p) => deriveProductSubCategory(p, currentCategory) === selectedSubCategory
       );
@@ -394,7 +476,7 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
 
     // Sort
     if (sortBy === "price-asc") {
-      result.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+      result.sort((a, b) => (Number(a.price) || 0) - (Number(a.price) || 0));
     } else if (sortBy === "price-desc") {
       result.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     } else if (sortBy === "discount-desc") {
@@ -404,15 +486,12 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
     }
 
     return result;
-  }, [products, selectedSubCategory, searchQuery, sortBy, currentCategory]);
-
-  const isAccessoriesPage = currentCategory === "accessories-lifestyle";
-  const isMarqueeCategory = currentCategory === "accessories-lifestyle" || currentCategory === "home-appliances";
+  }, [products, selectedSubCategory, searchQuery, sortBy, currentCategory, isAccessoriesPage]);
 
   return (
-    <div className={`product-detail-page product-list-mode-page ${isAccessoriesPage ? "is-accessories-view" : ""}`}>
-      {/* Background Video behind list mode (suppressed on accessories-lifestyle to allow clean full-screen hero) */}
-      {!isAccessoriesPage && (
+    <div className={`product-detail-page product-list-mode-page ${isAccessoriesPage ? "is-accessories-view" : ""} ${isHomeAppliancesPage ? "is-home-appliances-view" : ""}`}>
+      {/* Background Video behind regular list mode (suppressed on accessories-lifestyle & home-appliances which have custom hero experiences) */}
+      {!isAccessoriesPage && !isHomeAppliancesPage && (
         <div className="product-list-page-video-wrap" aria-hidden="true">
           {!prefersReducedMotion ? (
             <video
@@ -444,41 +523,78 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
         </div>
       )}
 
+      {/* TASK 4: Fixed Page Background Video (video2) for Accessories & Lifestyle (below the hero) */}
+      {isAccessoriesPage && (
+        <div className="accessories-page-fixed-bg-wrap" aria-hidden="true">
+          {!prefersReducedMotion ? (
+            <video
+              ref={accessoriesBgVideoRef}
+              className="accessories-page-fixed-bg-video"
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={accessoriesBgPoster}
+              src={accessoriesBgMp4}
+            />
+          ) : (
+            <img
+              src={accessoriesBgPoster}
+              alt=""
+              className="accessories-page-fixed-bg-poster"
+              loading="eager"
+              decoding="async"
+            />
+          )}
+          <div className="accessories-page-fixed-bg-overlay" />
+        </div>
+      )}
+
       <Navbar searchPlaceholder={searchPlaceholder} />
 
-      {/* TASK 5: Fullscreen Hero with Parallax & Video for Accessories & Lifestyle */}
-      {isAccessoriesPage && <AccessoriesFullscreenHero />}
+      {/* Fullscreen Hero with Video 1 & Left-Aligned Content for Accessories & Lifestyle */}
+      {isAccessoriesPage && (
+        <AccessoriesFullscreenHero
+          containerRef={accessoriesHeroContainerRef}
+          videoRef={accessoriesHeroVideoRef}
+          prefersReducedMotion={prefersReducedMotion}
+        />
+      )}
 
-      {/* Video Header Hero Band & Category Switcher */}
-      <ProductListVideoHeader
-        categorySlug={currentCategory}
-        categoryLabel={categoryLabel}
-        categoryConfig={config}
-        totalProductsCount={products.length}
-        maxDiscount={maxDiscount}
-        onSelectCategory={handleSelectCategory}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        viewLayout={viewLayout}
-        setViewLayout={setViewLayout}
-        filteredCount={displayProducts.length}
-      />
+      {/* TASK 1 & 2: Hero Video Playlist (3 Videos) with Left-Aligned Dynamic Content for Home Appliances */}
+      {isHomeAppliancesPage && (
+        <HomeAppliancesPlaylistHero
+          containerRef={homeAppliancesHeroContainerRef}
+          prefersReducedMotion={prefersReducedMotion}
+        />
+      )}
+
+      {/* Category Tiles Section for Home Appliances starts directly below Hero with normal padding */}
+      {isHomeAppliancesPage && (
+        <CategoryTilesSection
+          categorySlug={currentCategory}
+          categoryLabel={categoryLabel}
+          products={products}
+          selectedSubCategory={selectedSubCategory}
+          onSelectSubCategory={setSelectedSubCategory}
+        />
+      )}
 
       {/* TASK 6: TWO auto-moving horizontal marquee rows for Accessories & Home Appliances */}
       {isMarqueeCategory && (
         <DualMarqueeShowcase products={products} categoryLabel={categoryLabel} />
       )}
 
-      {/* TASK 2: Category Tiles Section (Data-Driven Sub-Categories) */}
-      <CategoryTilesSection
-        categorySlug={currentCategory}
-        categoryLabel={categoryLabel}
-        products={products}
-        selectedSubCategory={selectedSubCategory}
-        onSelectSubCategory={setSelectedSubCategory}
-      />
+      {/* Category Tiles Section for other categories (suppressed on Accessories & Lifestyle; Home Appliances rendered above) */}
+      {!isAccessoriesPage && !isHomeAppliancesPage && (
+        <CategoryTilesSection
+          categorySlug={currentCategory}
+          categoryLabel={categoryLabel}
+          products={products}
+          selectedSubCategory={selectedSubCategory}
+          onSelectSubCategory={setSelectedSubCategory}
+        />
+      )}
 
       {/* TASK 1: Flash-Sale Drop Banner (with rotating clock-hand green sweep) */}
       <FlashSaleBanner
@@ -486,6 +602,26 @@ function CategoryListingView({ categorySlug: initialCategorySlug }) {
         categoryLabel={categoryLabel}
         products={products}
       />
+
+      {/* TASK 3: Filter & Search Bar Unit (Breadcrumb + Category Chips + Toolbar)
+          Placed directly AFTER the Deal/Banner section and immediately BEFORE the main product cards grid */}
+      <div id="category-filter-toolbar-section">
+        <ProductListVideoHeader
+          categorySlug={currentCategory}
+          categoryLabel={categoryLabel}
+          categoryConfig={config}
+          totalProductsCount={products.length}
+          maxDiscount={maxDiscount}
+          onSelectCategory={handleSelectCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          viewLayout={viewLayout}
+          setViewLayout={setViewLayout}
+          filteredCount={displayProducts.length}
+        />
+      </div>
 
       <main className="product-list-main" id="products-grid">
         <div className="product-list-container">

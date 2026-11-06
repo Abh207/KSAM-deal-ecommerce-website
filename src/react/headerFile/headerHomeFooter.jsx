@@ -43,7 +43,12 @@ function HomeFooter() {
                 <div className="home-footer-brand">
 
                     <div className="home-footer-logo">
-                        {footerData.brand.name}
+                        <img
+                            src={`${(import.meta.env.BASE_URL || "/").replace(/\/*$/, "")}/ksamhead/assets/brand/ksamdeal-logo-original.png`}
+                            alt={footerData.brand.name || "KSAM Deal"}
+                            style={{ height: "68px", width: "auto", objectFit: "contain", marginBottom: "12px", display: "block" }}
+                            loading="lazy"
+                        />
                     </div>
 
                     <p>

@@ -929,7 +929,7 @@ export function ContactUsPage() {
                         <defs>
                           <linearGradient id={`st-spark-grad-${st.id}`} x1="0" y1="0" x2="1" y2="0">
                             <stop offset="0%" stopColor="#3b82f6" />
-                            <stop offset="100%" stopColor="#34f5a1" />
+                            <stop offset="100%" stopColor="#84FF00" />
                           </linearGradient>
                         </defs>
                         <path
@@ -971,7 +971,7 @@ export function ContactUsPage() {
 
                 <div className="ct-stats-banner-content">
                   <div className="ct-stats-banner-chip">
-                    <Sparkles size={14} className="text-[#34f5a1]" />
+                    <Sparkles size={14} className="text-[#84FF00]" />
                     <span>{STATS_SECTION_CONFIG.bannerImage.chip}</span>
                   </div>
                   <div className="ct-stats-banner-panel">
@@ -1005,7 +1005,7 @@ export function ContactUsPage() {
                     title={`Click to pre-fill: ${topic}`}
                   >
                     <span>{topic}</span>
-                    <ArrowRight size={13} className="text-[#34f5a1] opacity-70" />
+                    <ArrowRight size={13} className="text-[#84FF00] opacity-70" />
                   </button>
                 ))}
               </div>
@@ -1701,7 +1701,7 @@ export function ContactUsPage() {
             <div className="space-y-3 p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-xs">
               <div>
                 <strong className="text-white block mb-0.5">Contact Point:</strong>
-                <span className="text-[#34f5a1] font-bold text-sm">{selectedChannel.details.contact}</span>
+                <span className="text-[#84FF00] font-bold text-sm">{selectedChannel.details.contact}</span>
               </div>
               <div>
                 <strong className="text-white block mb-0.5">Operating Hours:</strong>

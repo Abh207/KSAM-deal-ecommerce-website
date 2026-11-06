@@ -205,8 +205,8 @@ export default function AvatarModal({
               height: 150,
               borderRadius: "50%",
               overflow: "hidden",
-              border: "3px solid #2DFFB2",
-              boxShadow: "0 0 25px rgba(45, 255, 178, 0.25)",
+              border: "3px solid #84FF00",
+              boxShadow: "0 0 25px rgba(132, 255, 0, 0.25)",
               background: "#080D15",
               position: "relative"
             }}

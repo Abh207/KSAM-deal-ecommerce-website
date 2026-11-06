@@ -442,12 +442,12 @@ class AudioErrorBoundary extends React.Component {
                             padding: "12px 30px",
                             borderRadius: "9999px",
                             border: "none",
-                            background: "linear-gradient(135deg, #1de9b6 0%, #16c79a 100%)",
+                            background: "linear-gradient(135deg, #84FF00 0%, #4d9900 100%)",
                             color: "#05130e",
                             fontWeight: "800",
                             fontSize: "15px",
                             cursor: "pointer",
-                            boxShadow: "0 4px 18px rgba(29, 233, 182, 0.4)"
+                            boxShadow: "0 4px 18px rgba(132, 255, 0, 0.4)"
                         }}
                     >
                         Reload page

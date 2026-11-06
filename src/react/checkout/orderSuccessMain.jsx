@@ -131,7 +131,7 @@ function OrderSuccess() {
                 <div className="success-actions-row" style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "24px", flexWrap: "wrap" }}>
                     <button
                         className="success-button"
-                        style={{ background: "linear-gradient(135deg, #2DFFB2, #26D9F8)", color: "#05070B", fontWeight: 700 }}
+                        style={{ background: "linear-gradient(135deg, #84FF00, #26D9F8)", color: "#05070B", fontWeight: 700 }}
                         onClick={() => {
                             window.location.href =
                                 "./profile.html?tab=orders";

@@ -1,1034 +1,506 @@
 /* =========================================================
-   DISCOUNT BANNER
+   PROMO BANNER SLIDER - "GREEN HOME & LIVING ESSENTIALS"
+   Matching Reference Design Exactly
 ========================================================= */
 
-.discount-banner-section {
-
-    width:
-        min(1450px, 94%);
-
-    margin:
-        80px auto;
-
+.promo-banner-section {
+  width: min(1440px, 94%);
+  margin: 60px auto 80px;
+  position: relative;
+  outline: none;
 }
 
+.promo-banner-section:focus-visible {
+  outline: 2px solid var(--hover-lightgreen, #A8F56B);
+  outline-offset: 4px;
+  border-radius: 34px;
+}
 
 /* =========================================================
-   MAIN BANNER
+   CARD CONTAINER
 ========================================================= */
 
-.discount-banner {
-
-    min-height:
-        370px;
-
-    position:
-        relative;
-
-    overflow:
-        hidden;
-
-    border-radius:
-        28px;
-
-    background:
-        linear-gradient(
-            115deg,
-            #111827 0%,
-            #1f2937 55%,
-            #374151 100%
-        );
-
-    color:
-        #ffffff;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    padding:
-        55px 70px;
-
-    box-shadow:
-        0 25px 70px
-        rgba(
-            0,
-            0,
-            0,
-            0.18
-        );
-
+.promo-banner-card {
+  position: relative;
+  min-height: 460px;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.28),
+    0 4px 20px rgba(11, 90, 18, 0.18);
+  background: #E5FDBA;
+  user-select: none;
 }
-
 
 /* =========================================================
-   BACKGROUND DECORATION
+   LAYERED ORGANIC WAVE SVG BACKGROUND
 ========================================================= */
 
-.discount-decoration {
-
-    position:
-        absolute;
-
-    border-radius:
-        50%;
-
-    pointer-events:
-        none;
-
+.promo-banner-waves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
 }
 
-
-.discount-decoration-one {
-
-    width:
-        420px;
-
-    height:
-        420px;
-
-    right:
-        -170px;
-
-    top:
-        -180px;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.08
-        );
-
+.promo-banner-waves-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
 }
-
-
-.discount-decoration-two {
-
-    width:
-        280px;
-
-    height:
-        280px;
-
-    right:
-        70px;
-
-    bottom:
-        -210px;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.07
-        );
-
-}
-
 
 /* =========================================================
-   CONTENT
+   SLIDES WRAPPER & SLIDE ITEM
 ========================================================= */
 
-.discount-banner-content {
-
-    width:
-        55%;
-
-    position:
-        relative;
-
-    z-index:
-        5;
-
-    animation:
-        discountContentIn
-        0.6s
-        ease;
-
+.promo-slides-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 460px;
+  z-index: 2;
 }
 
-
-.discount-banner-eyebrow {
-
-    display:
-        inline-block;
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        3px;
-
-    opacity:
-        0.65;
-
-    margin-bottom:
-        12px;
-
+.promo-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 36px 64px 44px;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 450ms ease, visibility 450ms ease;
 }
 
-
-.discount-banner-content h2 {
-
-    margin:
-        0;
-
-    font-size:
-        clamp(
-            42px,
-            5vw,
-            72px
-        );
-
-    line-height:
-        0.95;
-
-    font-weight:
-        950;
-
-    letter-spacing:
-        -3px;
-
+.promo-slide.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
-
-
-.discount-banner-content h3 {
-
-    margin:
-        14px 0 0;
-
-    font-size:
-        23px;
-
-    font-weight:
-        800;
-
-}
-
-
-.discount-banner-content p {
-
-    max-width:
-        480px;
-
-    margin:
-        10px 0 25px;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.65
-        );
-
-    font-size:
-        14px;
-
-    line-height:
-        1.6;
-
-}
-
 
 /* =========================================================
-   BUTTON
+   LEFT SIDE - TEXT & ACTIONS
 ========================================================= */
 
-.discount-banner-button {
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    gap:
-        10px;
-
-    border:
-        none;
-
-    background:
-        #ffffff;
-
-    color:
-        #111827;
-
-    padding:
-        14px 20px;
-
-    border-radius:
-        10px;
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        0.5px;
-
-    cursor:
-        pointer;
-
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-
+.promo-slide-text {
+  width: 52%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 5;
+  transform: translateX(-16px);
+  opacity: 0;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease;
 }
 
-
-.discount-banner-button:hover {
-
-    transform:
-        translateY(-3px);
-
-    box-shadow:
-        0 10px 25px
-        rgba(
-            0,
-            0,
-            0,
-            0.2
-        );
-
+.promo-slide.active .promo-slide-text {
+  transform: translateX(0);
+  opacity: 1;
 }
 
-
-.discount-banner-button span {
-
-    font-size:
-        17px;
-
+/* Small Benefit Row - Plain Row with No Pill Border, Dark Green #0B5A12 */
+.promo-benefit-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
 }
 
+.promo-benefit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  background: transparent;
+}
+
+.promo-benefit-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: #0B5A12;
+}
+
+.promo-benefit-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.promo-benefit-main {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #0B5A12;
+  text-transform: uppercase;
+}
+
+.promo-benefit-sub {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #14631C;
+}
+
+/* Main Heading - Two Balanced Lines */
+.promo-slide-heading {
+  margin: 0 0 14px 0;
+  font-size: clamp(2.3rem, 4.6vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: #075010;
+  text-wrap: balance;
+  display: flex;
+  flex-direction: column;
+}
+
+.promo-slide-heading span {
+  display: block;
+}
+
+/* Subtitle */
+.promo-slide-subtitle {
+  margin: 0 0 26px 0;
+  font-size: clamp(1rem, 1.35vw, 1.22rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: #14631C;
+  max-width: 440px;
+}
+
+/* CTA Pill Button */
+.promo-slide-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 36px;
+  border-radius: 9999px;
+  background: #0B6A12;
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(11, 106, 18, 0.35);
+  transition: transform 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+
+.promo-slide-btn:hover {
+  background: #075010;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 28px rgba(11, 90, 18, 0.45),
+    0 0 24px rgba(132, 255, 0, 0.4);
+}
+
+.promo-slide-btn:active {
+  transform: translateY(-1px);
+}
 
 /* =========================================================
-   VISUAL
+   RIGHT SIDE - VISUAL & CUTOUT PRODUCT COMPOSITE
 ========================================================= */
 
-.discount-banner-visual {
-
-    width:
-        45%;
-
-    height:
-        330px;
-
-    position:
-        relative;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
+.promo-slide-visual {
+  width: 48%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 4;
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease;
 }
 
+.promo-slide.active .promo-slide-visual {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Product Cutout Image with gentle floating animation (85-95% banner height) */
+.promo-product-image {
+  max-height: 92%;
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 28px rgba(7, 80, 16, 0.22));
+  animation: promoFloat 6s ease-in-out infinite alternate;
+  position: relative;
+  z-index: 3;
+}
+
+@keyframes promoFloat {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Soft Floor Shadow */
+.promo-floor-shadow {
+  position: absolute;
+  bottom: 6px;
+  left: 10%;
+  right: 10%;
+  height: 24px;
+  background: radial-gradient(ellipse at center, rgba(7, 80, 16, 0.32) 0%, rgba(7, 80, 16, 0) 72%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Starburst Badge (Slides 1 & 3) */
+.promo-starburst-badge {
+  position: absolute;
+  top: 14px;
+  right: 28px;
+  width: 105px;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  animation: starburstWobble 6s ease-in-out infinite alternate;
+  filter: drop-shadow(0 6px 14px rgba(7, 80, 16, 0.35));
+}
+
+.promo-starburst-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.promo-starburst-text {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-align: center;
+  line-height: 1;
+}
+
+.promo-starburst-text .starburst-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  opacity: 0.95;
+}
+
+.promo-starburst-text .starburst-val {
+  font-size: 1.55rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 1px 0;
+}
+
+.promo-starburst-text .starburst-off {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+@keyframes starburstWobble {
+  0% {
+    transform: rotate(-6deg) scale(1);
+  }
+  50% {
+    transform: rotate(4deg) scale(1.04);
+  }
+  100% {
+    transform: rotate(-6deg) scale(1);
+  }
+}
 
 /* =========================================================
-   CIRCLES
+   BOTTOM-LEFT PAGINATION / PROGRESS PILL DOTS
 ========================================================= */
 
-.discount-circle {
-
-    position:
-        absolute;
-
-    border-radius:
-        50%;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
-
-    animation:
-        discountFloat
-        5s
-        ease-in-out
-        infinite;
-
+.promo-pagination-dots {
+  position: absolute;
+  bottom: 24px;
+  left: 64px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
 }
 
-
-.discount-circle-one {
-
-    width:
-        280px;
-
-    height:
-        280px;
-
+.promo-dot {
+  display: block;
+  height: 10px;
+  width: 12px;
+  border-radius: 9999px;
+  background: #8EEA46;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: width 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease, opacity 300ms ease;
+  opacity: 0.75;
 }
 
-
-.discount-circle-two {
-
-    width:
-        210px;
-
-    height:
-        210px;
-
-    animation-delay:
-        -1.5s;
-
+.promo-dot:hover {
+  opacity: 1;
+  background: #0B5A12;
 }
 
+.promo-dot.active {
+  width: 38px;
+  background: #075010;
+  opacity: 1;
+}
 
 /* =========================================================
-   MAIN SHAPE
+   RESPONSIVE DESIGN (<= 768px Mobile & Tablet)
 ========================================================= */
 
-.discount-main-shape {
+@media (max-width: 768px) {
+  .promo-banner-section {
+    margin: 40px auto 60px;
+    width: 92%;
+  }
 
-    width:
-        180px;
+  .promo-banner-card {
+    min-height: 520px;
+    border-radius: 26px;
+  }
 
-    height:
-        180px;
+  .promo-slides-wrapper {
+    min-height: 520px;
+  }
 
-    border-radius:
-        45px;
+  .promo-slide {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 28px 22px 64px;
+    height: 100%;
+  }
 
-    transform:
-        rotate(
-            -10deg
-        );
+  .promo-slide-text {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 12px;
+  }
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.09
-        );
+  .promo-benefit-row {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
 
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.15
-        );
+  .promo-benefit-icon svg {
+    width: 20px;
+    height: 20px;
+  }
 
-    display:
-        flex;
+  .promo-slide-heading {
+    font-size: clamp(1.85rem, 6.8vw, 2.3rem);
+    margin-bottom: 10px;
+  }
 
-    align-items:
-        center;
+  .promo-slide-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+  }
 
-    justify-content:
-        center;
+  .promo-slide-btn {
+    padding: 12px 28px;
+    font-size: 0.88rem;
+  }
 
-    box-shadow:
-        0 25px 60px
-        rgba(
-            0,
-            0,
-            0,
-            0.2
-        );
+  .promo-slide-visual {
+    width: 100%;
+    height: auto;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
 
-    backdrop-filter:
-        blur(8px);
+  .promo-product-image {
+    max-height: 220px;
+    width: 80%;
+    max-width: 310px;
+  }
 
-    position:
-        relative;
+  .promo-floor-shadow {
+    bottom: 2px;
+    height: 18px;
+    left: 8%;
+    right: 8%;
+  }
 
-    z-index:
-        3;
+  .promo-starburst-badge {
+    top: 0;
+    right: 12px;
+    width: 82px;
+    height: 82px;
+  }
 
-    animation:
-        mainShapeFloat
-        4s
-        ease-in-out
-        infinite;
+  .promo-starburst-text .starburst-tag {
+    font-size: 0.55rem;
+  }
 
+  .promo-starburst-text .starburst-val {
+    font-size: 1.25rem;
+  }
+
+  .promo-starburst-text .starburst-off {
+    font-size: 0.6rem;
+  }
+
+  .promo-pagination-dots {
+    bottom: 18px;
+    left: 22px;
+  }
+
+  .promo-dot {
+    height: 8px;
+    width: 10px;
+  }
+
+  .promo-dot.active {
+    width: 32px;
+  }
 }
-
-
-.discount-main-shape span {
-
-    font-size:
-        70px;
-
-    font-weight:
-        950;
-
-    letter-spacing:
-        -5px;
-
-    transform:
-        rotate(
-            10deg
-        );
-
-}
-
 
 /* =========================================================
-   FLOATING CARDS
+   ACCESSIBILITY: PREFERS REDUCED MOTION
 ========================================================= */
 
-.discount-floating-card {
-
-    position:
-        absolute;
-
-    z-index:
-        6;
-
-    background:
-        #ffffff;
-
-    color:
-        #111827;
-
-    border-radius:
-        12px;
-
-    padding:
-        11px 15px;
-
-    font-size:
-        13px;
-
-    font-weight:
-        950;
-
-    box-shadow:
-        0 15px 35px
-        rgba(
-            0,
-            0,
-            0,
-            0.2
-        );
-
-}
-
-
-.discount-card-one {
-
-    top:
-        48px;
-
-    right:
-        35px;
-
-    transform:
-        rotate(
-            8deg
-        );
-
-    animation:
-        floatingCardOne
-        3.5s
-        ease-in-out
-        infinite;
-
-}
-
-
-.discount-card-two {
-
-    bottom:
-        42px;
-
-    left:
-        35px;
-
-    transform:
-        rotate(
-            -8deg
-        );
-
-    animation:
-        floatingCardTwo
-        4s
-        ease-in-out
-        infinite;
-
-}
-
-
-/* =========================================================
-   INDICATORS
-========================================================= */
-
-.discount-indicators {
-
-    position:
-        absolute;
-
-    bottom:
-        25px;
-
-    left:
-        70px;
-
-    display:
-        flex;
-
-    gap:
-        6px;
-
-    z-index:
-        10;
-
-}
-
-
-.discount-indicators button {
-
-    width:
-        24px;
-
-    height:
-        3px;
-
-    padding:
-        0;
-
-    border:
-        none;
-
-    border-radius:
-        10px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.25
-        );
-
-    cursor:
-        pointer;
-
-    transition:
-        width 0.3s ease,
-        background 0.3s ease;
-
-}
-
-
-.discount-indicators button.active {
-
-    width:
-        42px;
-
-    background:
-        #ffffff;
-
-}
-
-
-/* =========================================================
-   ANIMATIONS
-========================================================= */
-
-@keyframes discountContentIn {
-
-    from {
-
-        opacity:
-            0;
-
-        transform:
-            translateX(
-                -25px
-            );
-
-    }
-
-    to {
-
-        opacity:
-            1;
-
-        transform:
-            translateX(
-                0
-            );
-
-    }
-
-}
-
-
-@keyframes discountFloat {
-
-    0%,
-    100% {
-
-        transform:
-            translateY(
-                0
-            );
-
-    }
-
-    50% {
-
-        transform:
-            translateY(
-                -12px
-            );
-
-    }
-
-}
-
-
-@keyframes mainShapeFloat {
-
-    0%,
-    100% {
-
-        transform:
-            rotate(-10deg)
-            translateY(0);
-
-    }
-
-    50% {
-
-        transform:
-            rotate(-6deg)
-            translateY(-10px);
-
-    }
-
-}
-
-
-@keyframes floatingCardOne {
-
-    0%,
-    100% {
-
-        transform:
-            rotate(8deg)
-            translateY(0);
-
-    }
-
-    50% {
-
-        transform:
-            rotate(5deg)
-            translateY(-10px);
-
-    }
-
-}
-
-
-@keyframes floatingCardTwo {
-
-    0%,
-    100% {
-
-        transform:
-            rotate(-8deg)
-            translateY(0);
-
-    }
-
-    50% {
-
-        transform:
-            rotate(-5deg)
-            translateY(9px);
-
-    }
-
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 900px) {
-
-    .discount-banner {
-
-        padding:
-            45px;
-
-    }
-
-
-    .discount-banner-content {
-
-        width:
-            60%;
-
-    }
-
-
-    .discount-banner-visual {
-
-        width:
-            40%;
-
-    }
-
-
-    .discount-main-shape {
-
-        width:
-            145px;
-
-        height:
-            145px;
-
-    }
-
-
-    .discount-main-shape span {
-
-        font-size:
-            55px;
-
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 700px) {
-
-    .discount-banner-section {
-
-        width:
-            94%;
-
-        margin:
-            55px auto;
-
-    }
-
-
-    .discount-banner {
-
-        min-height:
-            560px;
-
-        padding:
-            35px 25px;
-
-        display:
-            flex;
-
-        flex-direction:
-            column;
-
-        align-items:
-            flex-start;
-
-        border-radius:
-            22px;
-
-    }
-
-
-    .discount-banner-content {
-
-        width:
-            100%;
-
-    }
-
-
-    .discount-banner-content h2 {
-
-        font-size:
-            43px;
-
-        letter-spacing:
-            -2px;
-
-    }
-
-
-    .discount-banner-content h3 {
-
-        font-size:
-            19px;
-
-    }
-
-
-    .discount-banner-content p {
-
-        font-size:
-            12px;
-
-    }
-
-
-    .discount-banner-visual {
-
-        width:
-            100%;
-
-        height:
-            230px;
-
-        margin-top:
-            10px;
-
-    }
-
-
-    .discount-circle-one {
-
-        width:
-            210px;
-
-        height:
-            210px;
-
-    }
-
-
-    .discount-circle-two {
-
-        width:
-            160px;
-
-        height:
-            160px;
-
-    }
-
-
-    .discount-main-shape {
-
-        width:
-            125px;
-
-        height:
-            125px;
-
-        border-radius:
-            30px;
-
-    }
-
-
-    .discount-main-shape span {
-
-        font-size:
-            42px;
-
-    }
-
-
-    .discount-card-one {
-
-        top:
-            15px;
-
-        right:
-            12px;
-
-    }
-
-
-    .discount-card-two {
-
-        bottom:
-            15px;
-
-        left:
-            12px;
-
-    }
-
-
-    .discount-indicators {
-
-        left:
-            25px;
-
-        bottom:
-            20px;
-
-    }
-
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 400px) {
-
-    .discount-banner {
-
-        min-height:
-            530px;
-
-        padding:
-            30px 20px;
-
-    }
-
-
-    .discount-banner-content h2 {
-
-        font-size:
-            37px;
-
-    }
-
-
-    .discount-banner-content h3 {
-
-        font-size:
-            17px;
-
-    }
-
-
-    .discount-banner-visual {
-
-        height:
-            210px;
-
-    }
-
+@media (prefers-reduced-motion: reduce) {
+  .promo-product-image,
+  .promo-starburst-badge {
+    animation: none !important;
+  }
+
+  .promo-slide,
+  .promo-slide-text,
+  .promo-slide-visual,
+  .promo-dot,
+  .promo-slide-btn {
+    transition: none !important;
+  }
 }
