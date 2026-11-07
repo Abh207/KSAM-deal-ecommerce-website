@@ -172,6 +172,8 @@ function FlashDeals({
 
         }, [timeLeft]);
 
+    const isUnderOneHour = timeLeft < 3600000;
+
 
     /* =====================================================
        SELECT DEAL PRODUCTS
@@ -310,20 +312,34 @@ function FlashDeals({
 
 
             {/* =================================================
-               HEADER
+               HEADER (TASK 1: NEW BLACK DESIGN)
             ================================================= */}
 
             <div className="flash-deals-header">
 
                 <div className="flash-deals-title">
 
-                    <span className="flash-deals-small-title">
+                    <div className="flash-deals-badge">
+                        <span className="flash-badge-dot"></span>
                         LIMITED TIME OFFER
-                    </span>
+                    </div>
 
                     <h2>
-                        <span>⚡</span>
-                        FLASH DEALS
+                        <span className="flash-bolt-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="38" height="38" fill="none">
+                                <defs>
+                                    <linearGradient id="flashBoltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#84FF00" />
+                                        <stop offset="100%" stopColor="#FF8800" />
+                                    </linearGradient>
+                                </defs>
+                                <path
+                                    d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
+                                    fill="url(#flashBoltGrad)"
+                                />
+                            </svg>
+                        </span>
+                        FLASH <span className="flash-deals-gradient-text">DEALS</span>
                     </h2>
 
                     <p>
@@ -335,7 +351,7 @@ function FlashDeals({
 
 
                 {/* =================================================
-                   TIMER
+                   COUNTDOWN (REDESIGNED BLACK GLASS BOXES)
                 ================================================= */}
 
                 <div className="flash-timer-wrapper">
@@ -348,10 +364,8 @@ function FlashDeals({
 
                         <div className="flash-time-box">
 
-                            <strong>
-                                {
-                                    timerValues.hours
-                                }
+                            <strong key={timerValues.hours} className="flash-time-digit">
+                                {timerValues.hours}
                             </strong>
 
                             <small>
@@ -368,10 +382,8 @@ function FlashDeals({
 
                         <div className="flash-time-box">
 
-                            <strong>
-                                {
-                                    timerValues.minutes
-                                }
+                            <strong key={timerValues.minutes} className="flash-time-digit">
+                                {timerValues.minutes}
                             </strong>
 
                             <small>
@@ -386,12 +398,10 @@ function FlashDeals({
                         </span>
 
 
-                        <div className="flash-time-box">
+                        <div className={`flash-time-box ${isUnderOneHour ? "is-urgent-pulse" : ""}`}>
 
-                            <strong>
-                                {
-                                    timerValues.seconds
-                                }
+                            <strong key={timerValues.seconds} className="flash-time-digit">
+                                {timerValues.seconds}
                             </strong>
 
                             <small>
@@ -406,9 +416,12 @@ function FlashDeals({
 
             </div>
 
+            {/* Thin animated lime gradient sweep line under header */}
+            <div className="flash-header-line" aria-hidden="true"></div>
+
 
             {/* =================================================
-               PRODUCTS
+               PRODUCTS (WHITE CARDS)
             ================================================= */}
 
             <div className="flash-deals-products">
@@ -591,7 +604,7 @@ function FlashDeals({
 
 
             {/* =================================================
-               TASK 3: DYNAMIC, COLORFUL "VIEW ALL DEALS →" BUTTON
+               VIEW ALL DEALS BUTTON
             ================================================= */}
 
             <div className="flash-deals-footer">

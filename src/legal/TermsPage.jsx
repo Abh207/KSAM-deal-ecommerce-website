@@ -231,7 +231,7 @@ export function TermsPage() {
       <Navbar />
 
       <div className="kx-main-wrapper relative z-10">
-        <main className="kx-legal-single-col py-10 sm:py-14 lg:py-16">
+        <main className="kx-legal-single-col pt-10 sm:pt-14 lg:pt-16 pb-0">
           <LegalHero
             tone="terms"
             icon={FileText}
@@ -243,10 +243,12 @@ export function TermsPage() {
             effectiveDate="[EFFECTIVE DATE]"
             backUrl={`${BASE_URL}profile.html`}
           />
+        </main>
 
-          {/* Three Steps. That's It. Process Section */}
-          <HowItWorks />
+        {/* Three Steps. That's It. Process Section */}
+        <HowItWorks />
 
+        <div className="kx-legal-single-col pb-10 sm:pb-14 lg:pb-16">
           {/* Single Centered Column: Legal FAQ Accordion */}
           <KxFaq items={faqItems} defaultOpen="platform-nature" allowMultiple />
 
@@ -267,7 +269,7 @@ export function TermsPage() {
               <span>Contact Us</span>
             </a>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );
