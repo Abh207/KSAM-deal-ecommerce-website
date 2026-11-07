@@ -6,7 +6,9 @@ import {
   MessageSquare,
   ShieldCheck,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import {
   fetchProductReviews,
@@ -230,32 +232,52 @@ export default function ProductReviewsSection({
       {/* Header */}
       <div className="reviews-section-header">
         <div className="reviews-section-title-wrap">
-          <h3>Customer Ratings & Verified Reviews</h3>
-          <p>Real feedback from customers who purchased and received this product</p>
+          <div className="reviews-header-top-row">
+            <span className="reviews-verified-pill">
+              <ShieldCheck size={13} strokeWidth={2.4} />
+              <span>VERIFIED REVIEWS</span>
+            </span>
+            <div
+              className="reviews-rating-chip"
+              aria-label={`Average rating ${averageRating.toFixed(1)} based on ${totalReviews} verified reviews`}
+            >
+              <span className="chip-score">{averageRating.toFixed(1)}</span>
+              <Star size={13} fill="#fbbf24" stroke="#fbbf24" />
+              <span className="chip-sep">•</span>
+              <span className="chip-count">Based on {totalReviews} verified reviews</span>
+            </div>
+          </div>
+
+          <div className="reviews-title-heading-row">
+            <span className="reviews-title-bar" aria-hidden="true" />
+            <h3 className="reviews-title-heading">Customer Ratings & Verified Reviews</h3>
+          </div>
+
+          <p className="reviews-subtitle">
+            Real feedback from customers who purchased and received this product
+          </p>
         </div>
 
         <div className="reviews-header-actions">
-          {/* Arrow Buttons (Rounded-square ~16px, dark #0b0f14, animated rainbow border, white ‹ and ›) */}
+          {/* Arrow Buttons: 48px rounded squares, radius 14px, dark green-black #0B1A0B bg, 1px lime border, lime chevrons */}
           <div className="reviews-arrow-controls" aria-label="Review navigation">
             <button
               type="button"
               className={`review-nav-btn prev-btn ${!canScrollLeft ? "is-disabled" : ""}`}
               onClick={() => scrollStep(-1)}
-              aria-label="Previous review"
+              aria-label="Previous reviews"
               disabled={!canScrollLeft}
             >
-              <span className="nav-rainbow-border" />
-              <span className="nav-btn-core">‹</span>
+              <ChevronLeft size={22} strokeWidth={2.4} />
             </button>
             <button
               type="button"
               className={`review-nav-btn next-btn ${!canScrollRight ? "is-disabled" : ""}`}
               onClick={() => scrollStep(1)}
-              aria-label="Next review"
+              aria-label="Next reviews"
               disabled={!canScrollRight}
             >
-              <span className="nav-rainbow-border" />
-              <span className="nav-btn-core">›</span>
+              <ChevronRight size={22} strokeWidth={2.4} />
             </button>
           </div>
 
@@ -264,9 +286,8 @@ export default function ProductReviewsSection({
             className="write-review-prompt-btn"
             title="Review products from your delivered orders"
           >
-            <ShieldCheck size={16} />
+            <ShieldCheck size={18} strokeWidth={2.2} />
             <span>Rate from Order History</span>
-            <ArrowRight size={14} />
           </a>
         </div>
       </div>

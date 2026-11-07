@@ -7,7 +7,10 @@ import {
   X,
   ArrowUp,
   ShoppingBag,
-  Check
+  Check,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 import Navbar from "../deals/components/Navbar.jsx";
@@ -366,9 +369,49 @@ function WishlistPage() {
   }, [categories.length]);
 
   const recMarqueeDuration = useMemo(() => {
-    // 16 cards * ~296px width / 45px/sec ≈ 105s
-    const totalPx = recommendedProducts.length * 296;
+    // 16 cards * ~244px width (230px card + 14px gap) / 45px/sec ≈ 87s
+    const totalPx = recommendedProducts.length * 244;
     return `${Math.round(totalPx / 45)}s`;
+  }, [recommendedProducts.length]);
+
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const recHeaderRef = useRef(null);
+
+  const [manualShift, setManualShift] = useState(0);
+  const [isRecPaused, setIsRecPaused] = useState(false);
+  const pauseTimerRef = useRef(null);
+
+  const handleRecScroll = useCallback((dir) => {
+    // Card width 230px + 14px gap = 244px
+    setManualShift((prev) => prev + dir * 244);
+    setIsRecPaused(true);
+    if (pauseTimerRef.current) {
+      clearTimeout(pauseTimerRef.current);
+    }
+    pauseTimerRef.current = setTimeout(() => {
+      setIsRecPaused(false);
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    const el = recHeaderRef.current;
+    if (!el) return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mediaQuery.matches) {
+      setHeaderVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHeaderVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [recommendedProducts.length]);
 
   // Helper to render individual chips
@@ -526,47 +569,99 @@ function WishlistPage() {
             style={{ "--rec-speed": recMarqueeDuration }}
           >
             <div className="kx-rec-container">
-              {/* Header: Lime label DISCOVER, white heading */}
-              <div className="kx-rec-header">
-                <span className="kx-rec-tag">DISCOVER</span>
-                <h2 className="kx-rec-title">You may also like</h2>
-              </div>
-
-              {/* Auto-moving Row: Continuous LEFT to RIGHT marquee */}
-              <div className="kx-rec-marquee-viewport">
-                <div className="kx-rec-marquee-track">
-                  {/* Original row of 16 cards */}
-                  <div className="kx-rec-marquee-group">
-                    {recommendedProducts.map((prod) => (
-                      <div key={`orig-rec-${prod.uid || prod.id}`} className="kx-rec-card-wrap">
-                        <WishlistProductCard
-                          product={prod}
-                          isRemoving={false}
-                          onRemove={handleToggleRecWishlist}
-                          onOpen={handleOpenProduct}
-                          onAddToCart={handleAddToCart}
-                          isSaved={wishlistUidSet.has(prod.uid || String(prod.id))}
-                          tabIndex={0}
-                        />
-                      </div>
-                    ))}
+              {/* Header: Proper block with DISCOVER pill + sparkle + blinking dot, gradient title, subtitle, line sweep, and desktop arrows */}
+              <div
+                className={`kx-rec-header ${headerVisible ? "is-visible" : ""}`}
+                ref={recHeaderRef}
+              >
+                <div className="kx-rec-header-text-block">
+                  <div className="kx-rec-tag-pill">
+                    <Sparkles size={14} className="kx-rec-sparkle-icon" />
+                    <span className="kx-rec-dot" aria-hidden="true" />
+                    <span className="kx-rec-tag-text">DISCOVER</span>
                   </div>
 
-                  {/* Cloned row for seamless infinite marquee */}
-                  <div className="kx-rec-marquee-group kx-rec-marquee-clone" aria-hidden="true">
-                    {recommendedProducts.map((prod) => (
-                      <div key={`clone-rec-${prod.uid || prod.id}`} className="kx-rec-card-wrap">
-                        <WishlistProductCard
-                          product={prod}
-                          isRemoving={false}
-                          onRemove={handleToggleRecWishlist}
-                          onOpen={handleOpenProduct}
-                          onAddToCart={handleAddToCart}
-                          isSaved={wishlistUidSet.has(prod.uid || String(prod.id))}
-                          tabIndex={-1}
-                        />
-                      </div>
-                    ))}
+                  <h2 className="kx-rec-title">
+                    You may <span className="kx-rec-title-gradient">also like</span>
+                  </h2>
+
+                  <p className="kx-rec-subtitle">
+                    Hand-picked products from every category, just for you.
+                  </p>
+
+                  <div className="kx-rec-accent-line" aria-hidden="true">
+                    <div className="kx-rec-line-sweep" />
+                  </div>
+                </div>
+
+                {/* Right side arrow buttons (desktop only, hidden on mobile) */}
+                <div className="kx-rec-arrow-controls" aria-label="Recommendation navigation">
+                  <button
+                    type="button"
+                    className="kx-rec-nav-btn prev-btn"
+                    onClick={() => handleRecScroll(1)}
+                    aria-label="Previous recommendations"
+                    title="Previous recommendations"
+                  >
+                    <ChevronLeft size={22} strokeWidth={2.4} />
+                  </button>
+                  <button
+                    type="button"
+                    className="kx-rec-nav-btn next-btn"
+                    onClick={() => handleRecScroll(-1)}
+                    aria-label="Next recommendations"
+                    title="Next recommendations"
+                  >
+                    <ChevronRight size={22} strokeWidth={2.4} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Auto-moving Row: Continuous LEFT to RIGHT marquee with manual scroll shift support */}
+              <div className="kx-rec-marquee-viewport">
+                <div
+                  className="kx-rec-marquee-shift-wrapper"
+                  style={{
+                    transform: `translateX(${manualShift}px)`,
+                    transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
+                  }}
+                >
+                  <div
+                    className={`kx-rec-marquee-track ${isRecPaused ? "is-manual-paused" : ""}`}
+                  >
+                    {/* Original row of 16 cards */}
+                    <div className="kx-rec-marquee-group">
+                      {recommendedProducts.map((prod) => (
+                        <div key={`orig-rec-${prod.uid || prod.id}`} className="kx-rec-card-wrap">
+                          <WishlistProductCard
+                            product={prod}
+                            isRemoving={false}
+                            onRemove={handleToggleRecWishlist}
+                            onOpen={handleOpenProduct}
+                            onAddToCart={handleAddToCart}
+                            isSaved={wishlistUidSet.has(prod.uid || String(prod.id))}
+                            tabIndex={0}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Cloned row for seamless infinite marquee */}
+                    <div className="kx-rec-marquee-group kx-rec-marquee-clone" aria-hidden="true">
+                      {recommendedProducts.map((prod) => (
+                        <div key={`clone-rec-${prod.uid || prod.id}`} className="kx-rec-card-wrap">
+                          <WishlistProductCard
+                            product={prod}
+                            isRemoving={false}
+                            onRemove={handleToggleRecWishlist}
+                            onOpen={handleOpenProduct}
+                            onAddToCart={handleAddToCart}
+                            isSaved={wishlistUidSet.has(prod.uid || String(prod.id))}
+                            tabIndex={-1}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
