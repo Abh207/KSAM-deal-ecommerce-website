@@ -95,6 +95,7 @@
   flex-direction: column;
   align-items: flex-start;
   z-index: 5;
+  padding-bottom: 56px; /* clearance so slider dots sit clearly below CTA button */
   transform: translateX(-16px);
   opacity: 0;
   transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease;
@@ -152,12 +153,12 @@
   color: #14631C;
 }
 
-/* Main Heading - Two Balanced Lines */
+/* Main Heading - Two Balanced Lines (Task 6: fits cleanly on two lines) */
 .promo-slide-heading {
   margin: 0 0 14px 0;
-  font-size: clamp(2.3rem, 4.6vw, 4.2rem);
+  font-size: clamp(2rem, 3.8vw, 3.4rem);
   font-weight: 900;
-  line-height: 1.04;
+  line-height: 1.05;
   letter-spacing: -0.025em;
   color: #075010;
   text-wrap: balance;
@@ -232,13 +233,14 @@
   opacity: 1;
 }
 
-/* Product Cutout Image with gentle floating animation (85-95% banner height) */
+/* Product Cutout Image with gentle floating animation (about 90% banner height) */
 .promo-product-image {
-  max-height: 92%;
-  height: auto;
+  max-height: 90%;
+  height: 90%;
   width: auto;
   max-width: 100%;
   object-fit: contain;
+  object-position: bottom center;
   filter: drop-shadow(0 14px 28px rgba(7, 80, 16, 0.22));
   animation: promoFloat 6s ease-in-out infinite alternate;
   position: relative;

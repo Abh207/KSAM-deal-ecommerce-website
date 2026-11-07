@@ -536,7 +536,7 @@
 
 
 /* =========================================================
-   TASK 3: DYNAMIC COLORFUL BUTTON (.btn-colorful)
+   TASK 1: SIMPLE "VIEW ALL DEALS" BUTTON (.btn-colorful)
 ========================================================= */
 
 .btn-colorful {
@@ -544,205 +544,59 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    min-height: 54px;
-    padding: 16px 34px;
-    border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    background: linear-gradient(
-        110deg,
-        #84FF00,
-        #2EE6A6,
-        #29B6F6,
-        #B26BFF,
-        #FF4FD8,
-        #FFB020,
-        #84FF00
-    );
-    background-size: 300% 100%;
-    animation: gradientShift 6s linear infinite;
-    box-shadow:
-        0 0 24px rgba(132, 255, 0, 0.45),
-        0 8px 30px rgba(178, 107, 255, 0.35);
-    color: #ffffff;
-    font-size: 14px;
+    gap: 10px;
+    background: #84FF00;
+    color: #0A0A0A;
+    font-size: 15px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
-    cursor: pointer;
-    overflow: hidden;
-    isolation: isolate;
-    outline: none;
-    text-decoration: none;
-    transition:
-        transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
-        box-shadow 0.25s ease,
-        filter 0.25s ease;
-}
-
-/* Inner protective contrast layer */
-.btn-colorful::before {
-    content: "";
-    position: absolute;
-    inset: 2px;
+    letter-spacing: 0.05em;
     border-radius: 9999px;
-    background: rgba(10, 16, 12, 0.48);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 0;
-    pointer-events: none;
-    transition: background 0.25s ease;
-}
-
-/* Diagonal white glossy shine sweep */
-.btn-colorful::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -120%;
-    width: 60%;
-    height: 200%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.42),
-        transparent
-    );
-    transform: rotate(25deg);
-    z-index: 1;
-    pointer-events: none;
-    animation: shineSweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.btn-colorful > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* Pulsing flame icon on left */
-.btn-colorful-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #84FF00;
-    line-height: 1;
-    animation: flamePulse 1.8s ease-in-out infinite;
-    filter: drop-shadow(0 0 6px rgba(132, 255, 0, 0.85));
-}
-
-.btn-colorful-icon svg {
-    display: block;
+    padding: 14px 30px;
+    min-height: 50px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn-colorful-text {
     display: inline-block;
-    color: #ffffff;
+    color: #0A0A0A;
     font-weight: 800;
-    letter-spacing: 0.06em;
-}
-
-/* Circular badge on right containing arrow */
-.btn-colorful-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    transition:
-        background-color 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease;
+    letter-spacing: 0.05em;
 }
 
 .btn-colorful-arrow {
     display: inline-block;
-    font-size: 16px;
-    font-weight: 900;
+    font-size: 18px;
+    font-weight: 800;
     line-height: 1;
-    color: #ffffff;
-    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    color: #0A0A0A;
+    transition: transform 0.2s ease;
 }
 
 /* Hover State */
 .btn-colorful:hover {
-    transform: translateY(-3px) scale(1.04);
-    animation-duration: 3s;
-    box-shadow:
-        0 0 35px rgba(132, 255, 0, 0.7),
-        0 12px 40px rgba(178, 107, 255, 0.55),
-        0 0 15px rgba(255, 79, 216, 0.5);
-}
-
-.btn-colorful:hover::before {
-    background: rgba(10, 16, 12, 0.32);
-}
-
-.btn-colorful:hover .btn-colorful-badge {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.7);
+    background: #A8F56B;
+    transform: translateY(-2px);
 }
 
 .btn-colorful:hover .btn-colorful-arrow {
-    transform: translateX(6px);
+    transform: translateX(4px);
 }
 
 /* Active State */
 .btn-colorful:active {
-    transform: scale(0.97);
-    box-shadow: 0 0 18px rgba(132, 255, 0, 0.45);
+    transform: scale(0.98);
 }
 
 /* Focus Visible */
 .btn-colorful:focus-visible {
     outline: 3px solid #84FF00;
     outline-offset: 3px;
-}
-
-/* Animations */
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 300% 50%;
-    }
-}
-
-@keyframes flamePulse {
-    0%, 100% {
-        transform: scale(1);
-        color: #84FF00;
-        filter: drop-shadow(0 0 6px rgba(132, 255, 0, 0.85));
-    }
-    50% {
-        transform: scale(1.22);
-        color: #FFB020;
-        filter: drop-shadow(0 0 12px rgba(255, 176, 32, 0.95));
-    }
-}
-
-@keyframes shineSweep {
-    0% {
-        left: -120%;
-        opacity: 0;
-    }
-    15% {
-        opacity: 1;
-    }
-    45% {
-        left: 200%;
-        opacity: 0;
-    }
-    100% {
-        left: 200%;
-        opacity: 0;
-    }
 }
 
 
@@ -985,7 +839,7 @@
         flex-shrink: 0 !important;
     }
 
-    /* Task 3 Button Mobile: full width up to 360px */
+    /* Task 1 Button Mobile: full width up to 360px */
     .flash-deals-footer {
         width: 100%;
         display: flex;
@@ -997,17 +851,8 @@
         width: 100%;
         max-width: 360px;
         padding: 14px 20px;
-        font-size: 13px;
-        gap: 10px;
-    }
-
-    .btn-colorful-badge {
-        width: 28px;
-        height: 28px;
-    }
-
-    .btn-colorful-arrow {
         font-size: 14px;
+        gap: 8px;
     }
 }
 
@@ -1072,15 +917,7 @@
         opacity: 1 !important;
     }
     .btn-colorful {
-        animation: none !important;
         transition: none !important;
-    }
-    .btn-colorful::after {
-        animation: none !important;
-        display: none !important;
-    }
-    .btn-colorful-icon {
-        animation: none !important;
     }
     .btn-colorful-arrow {
         transition: none !important;

@@ -61,9 +61,9 @@ body.has-bg-video {
    ========================================================= */
 
 /* Headings and direct text on background */
-body.has-bg-video h1:not(.ksam-wishlist-card-title),
-body.has-bg-video h2:not(.ksam-wishlist-card-title),
-body.has-bg-video h3:not(.ksam-wishlist-card-title),
+body.has-bg-video h1:not(.ksam-wishlist-card-title):not(.kx-wish-title),
+body.has-bg-video h2:not(.ksam-wishlist-card-title):not(.kx-wish-title),
+body.has-bg-video h3:not(.ksam-wishlist-card-title):not(.kx-wish-title),
 body.has-bg-video .ksam-wishlist-banner-title,
 body.has-bg-video .ksam-wishlist-empty h2 {
   color: #ffffff !important;

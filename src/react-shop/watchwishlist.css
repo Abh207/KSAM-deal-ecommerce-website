@@ -1,158 +1,20 @@
 /* ==========================================================================
-   KSAM DEAL - WISHLIST PAGE STYLES
-   Color System: Black (#000000 / #050505), Near-black card (#0a0a0a),
-   Light Green (#8cff00), White (#ffffff).
-   NO RED.
+   KSAM DEAL - WISHLIST PAGE STYLES (watchwishlist.css)
+   Color System: Black background, Lime Accent (#84FF00), White Cards (#FFFFFF)
+   Clean, modern, high-contrast e-commerce styling.
    ========================================================================== */
 
 :root {
-  --card-bg: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
-  --accent: #8cff00;
-  --accent-light: #8cff00;
-  --price: #3f7800;
-
-  /* ========================================================================
-     WISHLIST GRID & CARD RESPONSIVE TOKENS
-     - Laptop/Desktop (1100px+): 4 cols, gap 24px, min-height 570px
-     - Tablet (700px - 1099px): 3 cols, gap 20px, min-height 540px
-     - Phone (<700px): 2 cols, gap 12px, min-height 360px
-     ======================================================================== */
-  --wishlist-container-max: 1560px;
-  --wishlist-container-padding: 24px;
-  --wishlist-grid-columns: repeat(4, minmax(0, 1fr));
-  --wishlist-grid-gap: 24px;
-
-  --wishlist-card-min-height: 567px;
-  --wishlist-card-padding: 18px;
-  --wishlist-card-radius: 28px;
-
-  --wishlist-pill-font: 13px;
-  --wishlist-pill-pad: 4px 12px;
-  --wishlist-heart-size: 44px;
-  --wishlist-heart-icon-size: 20px;
-
-  --wishlist-image-height: 258px;
-  --wishlist-image-padding: 8px;
-
-  --wishlist-title-size: 22px;
-  --wishlist-title-min-height: 2.6em;
-  --wishlist-title-margin-top: 9px;
-
-  --wishlist-rating-margin-top: 8px;
-  --wishlist-star-size: 16px;
-  --wishlist-rating-val-size: 14px;
-
-  --wishlist-price-margin-top: 10px;
-  --wishlist-price-size: 26px;
-  --wishlist-oldprice-size: 17px;
-
-  --wishlist-swatch-margin-top: 12px;
-  --wishlist-swatch-size: 24px;
-  --wishlist-swatch-gap: 10px;
-
-  --wishlist-actions-margin-top: 12px;
-  --wishlist-actions-height: 52px;
-  --wishlist-actions-gap: 10px;
-  --wishlist-cart-btn-size: 52px;
-  --wishlist-cart-icon-size: 22px;
-  --wishlist-view-btn-font: 16px;
-  --wishlist-view-btn-pad: 0 16px;
-  --wishlist-arrow-size: 18px;
-}
-
-/* Tablet: 700px to 1099px (3 columns, gap 20px, min-height 537px) */
-@media (max-width: 1099px) and (min-width: 700px) {
-  :root {
-    --wishlist-grid-columns: repeat(3, minmax(0, 1fr));
-    --wishlist-grid-gap: 20px;
-    --wishlist-card-min-height: 537px;
-    --wishlist-card-padding: 16px;
-    --wishlist-image-height: 228px;
-    --wishlist-image-padding: 6px;
-    --wishlist-heart-size: 40px;
-    --wishlist-heart-icon-size: 18px;
-    --wishlist-title-size: 20px;
-    --wishlist-title-min-height: 2.6em;
-    --wishlist-title-margin-top: 7px;
-    --wishlist-rating-margin-top: 6px;
-    --wishlist-star-size: 15px;
-    --wishlist-rating-val-size: 14px;
-    --wishlist-price-margin-top: 8px;
-    --wishlist-price-size: 24px;
-    --wishlist-oldprice-size: 16px;
-    --wishlist-swatch-margin-top: 10px;
-    --wishlist-swatch-size: 22px;
-    --wishlist-swatch-gap: 8px;
-    --wishlist-actions-margin-top: 10px;
-    --wishlist-actions-height: 48px;
-    --wishlist-actions-gap: 8px;
-    --wishlist-cart-btn-size: 48px;
-    --wishlist-cart-icon-size: 20px;
-    --wishlist-view-btn-font: 15px;
-    --wishlist-view-btn-pad: 0 12px;
-    --wishlist-arrow-size: 16px;
-  }
-}
-
-/* Phone: Below 700px (2 columns, gap 12px, min-height 357px, 0 overflow) */
-@media (max-width: 699px) {
-  :root {
-    --wishlist-container-padding: 12px;
-    --wishlist-grid-columns: repeat(2, minmax(0, 1fr));
-    --wishlist-grid-gap: 12px;
-    --wishlist-card-min-height: 357px;
-    --wishlist-card-padding: 10px;
-    --wishlist-card-radius: 20px;
-
-    --wishlist-pill-font: 11px;
-    --wishlist-pill-pad: 3px 8px;
-    --wishlist-heart-size: 34px;
-    --wishlist-heart-icon-size: 16px;
-
-    --wishlist-image-height: 148px;
-    --wishlist-image-padding: 4px;
-
-    --wishlist-title-size: 15px;
-    --wishlist-title-min-height: 2.5em;
-    --wishlist-title-margin-top: 5px;
-
-    --wishlist-rating-margin-top: 4px;
-    --wishlist-star-size: 12px;
-    --wishlist-rating-val-size: 12px;
-
-    --wishlist-price-margin-top: 6px;
-    --wishlist-price-size: 18px;
-    --wishlist-oldprice-size: 12px;
-
-    --wishlist-swatch-margin-top: 6px;
-    --wishlist-swatch-size: 18px;
-    --wishlist-swatch-gap: 6px;
-
-    --wishlist-actions-margin-top: 8px;
-    --wishlist-actions-height: 40px;
-    --wishlist-actions-gap: 8px;
-    --wishlist-cart-btn-size: 40px;
-    --wishlist-cart-icon-size: 18px;
-    --wishlist-view-btn-font: 13px;
-    --wishlist-view-btn-pad: 0 6px;
-    --wishlist-arrow-size: 14px;
-  }
-}
-
-/* Small phone: 360px and below (hide arrow icon to keep View Product on one line) */
-@media (max-width: 360px) {
-  :root {
-    --wishlist-container-padding: 8px;
-    --wishlist-grid-gap: 8px;
-    --wishlist-card-padding: 8px;
-    --wishlist-actions-gap: 6px;
-    --wishlist-cart-btn-size: 38px;
-    --wishlist-view-btn-font: 12px;
-    --wishlist-view-btn-pad: 0 4px;
-  }
-  .ksam-wishlist-view-arrow {
-    display: none !important;
-  }
+  --accent-lime: #84FF00;
+  --accent-lime-hover: #A8F56B;
+  --color-dark-green: #0B5A12;
+  --color-light-green-bg: #F0FFF0;
+  --color-light-green-border: #B8F2B8;
+  --color-card-bg: #FFFFFF;
+  --color-media-bg: #F8FAFC;
+  --color-slate: #64748B;
+  --color-text-dark: #0A0A0A;
+  --color-text-muted: #6B7280;
 }
 
 *, *::before, *::after {
@@ -180,33 +42,33 @@ body {
 .ksam-wishlist-main {
   flex: 1;
   padding-top: 86px;
-  padding-bottom: 60px;
+  padding-bottom: 80px;
   position: relative;
   background: transparent;
 }
 
-/* --------------------------------------------------------------------------
-   PART A: HEADER BANNER CARD (EXACT MATCH OF IMAGE 1)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   PART A: HEADER BANNER CARD
+   ========================================================================== */
 .ksam-wishlist-banner-wrapper {
   max-width: 1280px;
-  margin: 32px auto 0;
+  margin: 28px auto 0;
   padding: 0 24px;
   position: relative;
   z-index: 2;
+  width: 100%;
 }
 
 .ksam-wishlist-banner-card {
   background: linear-gradient(135deg, #ffffff 0%, #f1f5f2 100%);
   border-radius: 28px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   padding: 36px 40px;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-/* Two Column Top Section: Left text, Right illustration */
 .ksam-wishlist-banner-top {
   display: flex;
   align-items: center;
@@ -222,7 +84,7 @@ body {
 
 .ksam-wishlist-banner-title {
   margin: 0 0 12px;
-  font-size: clamp(36px, 4.5vw, 56px);
+  font-size: clamp(34px, 4.2vw, 54px);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -230,7 +92,7 @@ body {
 }
 
 .ksam-wishlist-title-highlight {
-  background: linear-gradient(90deg, #448000, #8cff00);
+  background: linear-gradient(90deg, #0B5A12, #84FF00);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -239,16 +101,15 @@ body {
 
 .ksam-wishlist-banner-subtitle {
   margin: 0;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.5;
   color: #475569;
   font-weight: 500;
 }
 
-/* Right Illustration (~45% width, ~220px desktop height) */
 .ksam-wishlist-banner-illustration {
   width: 45%;
-  max-width: 500px;
+  max-width: 480px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -257,7 +118,7 @@ body {
 
 .ksam-wishlist-hero-ill-wrap {
   width: 100%;
-  height: 220px;
+  height: 200px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -266,533 +127,701 @@ body {
 .ksam-wishlist-hero-svg {
   width: 100%;
   height: 100%;
-  max-height: 220px;
+  max-height: 200px;
   object-fit: contain;
   object-position: right bottom;
   overflow: visible;
 }
 
-/* Illustration Micro-Animations */
-.ksam-wishlist-hero-badge-float {
-  animation: heroBadgeFloat 4s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.ksam-wishlist-sparkle-1 {
-  animation: heroSparkleFloat 3.5s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.ksam-wishlist-sparkle-2 {
-  animation: heroSparkleFloat 4.2s ease-in-out infinite 0.6s;
-  transform-origin: center;
-}
-
-@keyframes heroBadgeFloat {
-  0%, 100% {
-    transform: translate(136px, 42px);
-  }
-  50% {
-    transform: translate(136px, 34px);
-  }
-}
-
-@keyframes heroSparkleFloat {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-6px) scale(1.15);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   FILTER BAR (Inside banner at bottom, like Image 1)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   TASK 2: FILTER BAR & AUTO-MOVING CHIPS ON MOBILE (<=768px)
+   ========================================================================== */
 .ksam-wishlist-filter-bar {
-  margin-top: 32px;
+  margin-top: 28px;
   background: #ffffff;
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   border: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-.ksam-wishlist-chips {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.ksam-wishlist-chips-viewport {
+  flex: 1;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  flex: 1;
+  position: relative;
 }
 
-.ksam-wishlist-chips::-webkit-scrollbar {
+.ksam-wishlist-chips-viewport::-webkit-scrollbar {
   display: none;
+}
+
+.ksam-wishlist-chips-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+}
+
+.ksam-wishlist-chips-set {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+}
+
+.ksam-wishlist-chips-clone {
+  display: none; /* Only visible on mobile <=768px for the marquee */
 }
 
 .ksam-wishlist-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 9px 18px;
   border-radius: 999px;
   background: transparent;
   border: none;
   color: #111111;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.25s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
   outline: none;
   font-family: inherit;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .ksam-wishlist-chip:hover:not(.is-active) {
-  background: #ecfdf3;
-  color: #111111;
+  background: #f0fdf4;
+  color: #0B5A12;
 }
 
 .ksam-wishlist-chip.is-active {
-  background: linear-gradient(135deg, #8cff00, #8cff00);
+  background: #84FF00;
   color: #052e16;
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(140, 255, 0, 0.35);
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(132, 255, 0, 0.45);
 }
 
 .ksam-wishlist-chip-count {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
   background: #eef2f0;
   color: #111111;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 .ksam-wishlist-chip.is-active .ksam-wishlist-chip-count {
-  background: #3f7800;
+  background: #0B5A12;
   color: #ffffff;
 }
 
-/* Clear All Button: WHITE box, NO RED */
+/* Fixed / Pinned Clear All Button at the Right End */
 .ksam-wishlist-clear-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
+  gap: 6px;
+  padding: 9px 16px;
   border-radius: 999px;
   background: #ffffff;
   border: 1px solid #d1d5db;
   color: #111111;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 700;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   white-space: nowrap;
   font-family: inherit;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
 }
 
 .ksam-wishlist-clear-btn:hover {
-  background: #f3f4f6;
+  background: #f9fafb;
   border-color: #9ca3af;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 .ksam-wishlist-trash-icon {
   color: #111111;
 }
 
-/* --------------------------------------------------------------------------
-   PRODUCTS CONTAINER & GRID (RESPONSIVE COLUMNS)
-   - Laptop/Desktop (1100px+): 4 columns (repeat(4, minmax(0, 1fr)), gap 24px)
-   - Tablet (700px - 1099px): 3 columns (repeat(3, minmax(0, 1fr)), gap 20px)
-   - Phone (<700px): 2 columns (repeat(2, minmax(0, 1fr)), gap 12px)
-   -------------------------------------------------------------------------- */
+/* Mobile & Tablet Auto-Move Marquee (<= 768px) */
+@media (max-width: 768px) {
+  .ksam-wishlist-filter-bar {
+    border-radius: 20px;
+    padding: 6px 8px;
+    gap: 8px;
+  }
+
+  .ksam-wishlist-chips-viewport {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 12px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 12px), transparent);
+  }
+
+  .ksam-wishlist-chips-clone {
+    display: inline-flex;
+  }
+
+  .ksam-wishlist-chips-track {
+    animation: chipsMarqueeLtoR var(--chips-speed, 22s) linear infinite;
+  }
+
+  /* Pause on touch or hover, resume on release */
+  .ksam-wishlist-chips-viewport:hover .ksam-wishlist-chips-track,
+  .ksam-wishlist-chips-viewport:active .ksam-wishlist-chips-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes chipsMarqueeLtoR {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+  .ksam-wishlist-chip {
+    padding: 7px 14px;
+    font-size: 13.5px;
+  }
+
+  .ksam-wishlist-clear-btn {
+    padding: 7px 12px;
+    font-size: 12.5px;
+  }
+}
+
+/* ==========================================================================
+   TASK 3: NEW WISHLIST PRODUCT CARD DESIGN (White card, image 5)
+   ========================================================================== */
 .ksam-wishlist-container {
-  max-width: var(--wishlist-container-max, 1560px);
-  margin: 36px auto 0;
-  padding: 0 var(--wishlist-container-padding, 24px);
+  max-width: 1280px;
+  margin: 40px auto 0;
+  padding: 0 24px;
   width: 100%;
   box-sizing: border-box;
 }
 
-@media (max-width: 699px) {
-  .ksam-wishlist-container {
-    margin-top: 24px;
-  }
-}
-
-.ksam-wishlist-grid {
+.kx-wishlist-grid {
   display: grid;
-  grid-template-columns: var(--wishlist-grid-columns, repeat(4, minmax(0, 1fr)));
-  gap: var(--wishlist-grid-gap, 24px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
   align-items: stretch;
 }
 
-/* --------------------------------------------------------------------------
-   PRODUCT CARD (TALLER & NARROWER: min-height 570px, 4/row DESKTOP, 2/row PHONE)
-   -------------------------------------------------------------------------- */
-.ksam-wishlist-card {
+/* Card Root: White card, radius 24px, soft shadow */
+.kx-wish-card {
   position: relative;
-  background: var(--card-bg, linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%));
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--wishlist-card-radius, 28px);
-  padding: var(--wishlist-card-padding, 18px);
   display: flex;
   flex-direction: column;
-  min-height: var(--wishlist-card-min-height, 570px);
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
-  animation: cardFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  user-select: none;
 }
 
-.ksam-wishlist-card:hover {
+/* Hover: Lift 6px, light-green glow border */
+.kx-wish-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 18px 45px rgba(140, 255, 0, 0.28);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 0 0 2px #84FF00;
+  border-color: #84FF00;
 }
 
-.ksam-wishlist-card.is-removing {
+.kx-wish-card.is-removing {
   opacity: 0 !important;
-  transform: scale(0.85) !important;
+  transform: scale(0.88) !important;
   transition: all 0.28s ease !important;
   pointer-events: none;
 }
 
-/* Staggered card fade up */
-@keyframes cardFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.ksam-wishlist-card:nth-child(1) { animation-delay: 0.04s; }
-.ksam-wishlist-card:nth-child(2) { animation-delay: 0.12s; }
-.ksam-wishlist-card:nth-child(3) { animation-delay: 0.20s; }
-.ksam-wishlist-card:nth-child(4) { animation-delay: 0.28s; }
-.ksam-wishlist-card:nth-child(5) { animation-delay: 0.36s; }
-.ksam-wishlist-card:nth-child(6) { animation-delay: 0.44s; }
-.ksam-wishlist-card:nth-child(7) { animation-delay: 0.52s; }
-.ksam-wishlist-card:nth-child(8) { animation-delay: 0.60s; }
-.ksam-wishlist-card:nth-child(9) { animation-delay: 0.68s; }
-.ksam-wishlist-card:nth-child(10) { animation-delay: 0.76s; }
-.ksam-wishlist-card:nth-child(11) { animation-delay: 0.84s; }
-.ksam-wishlist-card:nth-child(12) { animation-delay: 0.92s; }
-
-/* Top Row: Discount Pill (Left) & Heart Button (Right) */
-.ksam-wishlist-card-top {
+/* 1. Top Image Area (#F8FAFC, height ~240px, centered image contain) */
+.kx-wish-media {
+  position: relative;
+  background: #F8FAFC;
+  border-radius: 18px;
+  height: 240px;
+  padding: 14px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 4px;
-  z-index: 5;
-}
-
-.ksam-wishlist-pill-spacer {
-  visibility: hidden;
-  height: 1px;
-  width: 1px;
-}
-
-/* 2. DISCOUNT PILL (top-left) */
-.ksam-wishlist-discount-pill {
-  background: linear-gradient(135deg, #8cff00, #8cff00);
-  color: #050a02;
-  font-size: var(--wishlist-pill-font, 13px);
-  font-weight: 800;
-  padding: var(--wishlist-pill-pad, 4px 12px);
-  border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(140, 255, 0, 0.4);
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  pointer-events: auto;
-  letter-spacing: -0.01em;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-/* 3. HEART BUTTON (top-right, 44px on desktop, 34px on phone) */
-.ksam-wishlist-heart-btn {
-  width: var(--wishlist-heart-size, 44px);
-  height: var(--wishlist-heart-size, 44px);
+/* Top-Left Chip: Black pill with white text "50% OFF" */
+.kx-wish-discount-chip {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #000000;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  z-index: 3;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Top-Right: Round dark-grey translucent heart button */
+.kx-wish-heart-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #6b7280;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #111111;
-  margin-left: auto;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-  pointer-events: auto;
-  flex-shrink: 0;
+  z-index: 3;
+  padding: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.ksam-wishlist-heart-btn svg {
-  width: var(--wishlist-heart-icon-size, 20px);
-  height: var(--wishlist-heart-icon-size, 20px);
-  transition: transform 0.2s ease;
+.kx-wish-heart-btn:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.85);
 }
 
-.ksam-wishlist-heart-btn:hover {
-  border-color: var(--accent, #8cff00);
-  transform: scale(1.08);
-}
-
-/* 4. IMAGE AREA: taller (~260px desktop, ~150px phone, contain, centered) */
-.ksam-wishlist-card-image {
-  position: relative;
+.kx-wish-img-wrap {
   width: 100%;
-  height: var(--wishlist-image-height, 260px);
-  padding: var(--wishlist-image-padding, 8px);
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  overflow: visible;
-  flex-shrink: 0;
 }
 
-.ksam-wishlist-card-image img {
+.kx-wish-img-wrap img {
   width: 100%;
   height: 100%;
-  max-height: var(--wishlist-image-height, 260px);
+  max-height: 210px;
   object-fit: contain;
   object-position: center;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.14));
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s ease;
   display: block;
 }
 
-.ksam-wishlist-card:hover .ksam-wishlist-card-image img {
-  transform: scale(1.06);
+.kx-wish-card:hover .kx-wish-img-wrap img {
+  transform: scale(1.05);
 }
 
-/* 5. TEXT AREA */
-.ksam-wishlist-card-body {
+/* 2. Text Block */
+.kx-wish-body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding-top: 2px;
+  padding-top: 14px;
   min-height: 0;
 }
 
-.ksam-wishlist-card-title {
-  margin: var(--wishlist-title-margin-top, 10px) 0 0;
-  font-size: var(--wishlist-title-size, 22px);
+.kx-wish-category {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0B5A12;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.kx-wish-card .kx-wish-title,
+.kx-wish-title {
+  margin: 0 0 4px;
+  font-size: 1.35rem;
   font-weight: 800;
-  color: #111827;
+  color: #0A0A0A !important;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
   letter-spacing: -0.01em;
-  line-height: 1.3;
-  min-height: var(--wishlist-title-min-height, 2.6em);
+}
+
+.kx-wish-brand {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  margin-bottom: 6px;
+}
+
+.kx-wish-desc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #6B7280;
+  margin: 0 0 10px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  transition: color 0.2s ease;
+  min-height: 2.9em;
 }
 
-.ksam-wishlist-card-title:hover {
-  color: var(--price, #3f7800);
-}
-
-/* Rating Row: stars 16px (phone 12px), text 14px (phone 12px), 8px space above */
-.ksam-wishlist-card-rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: var(--wishlist-rating-margin-top, 8px);
-  margin-bottom: 0;
-}
-
-.ksam-wishlist-stars {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.ksam-wishlist-star {
-  width: var(--wishlist-star-size, 16px);
-  height: var(--wishlist-star-size, 16px);
-  flex-shrink: 0;
-}
-
-.ksam-wishlist-rating-val {
-  color: #374151;
-  font-size: var(--wishlist-rating-val-size, 14px);
-  font-weight: 600;
-  line-height: 1;
-}
-
-/* Price Row: price 26px (phone 18px), old price 17px (phone 12px), 10px space above */
-.ksam-wishlist-card-prices {
+.kx-wish-price-row {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-top: var(--wishlist-price-margin-top, 10px);
-  margin-bottom: 0;
+  margin-bottom: 4px;
 }
 
-.ksam-wishlist-card-price {
-  font-size: var(--wishlist-price-size, 26px);
-  font-weight: 800;
-  color: var(--price, #3f7800);
+.kx-wish-price {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0A0A0A;
   line-height: 1;
 }
 
-.ksam-wishlist-card-oldprice {
-  font-size: var(--wishlist-oldprice-size, 17px);
-  color: #6b7280;
-  text-decoration: line-through;
+.kx-wish-oldprice {
+  font-size: 14px;
   font-weight: 500;
+  color: #9CA3AF;
+  text-decoration: line-through;
   line-height: 1;
 }
 
-/* 6. COLOR SWATCHES ROW: 24px (phone 18px), gap 10px (phone 6px), 12px space above */
-.ksam-wishlist-swatches {
-  display: flex;
+.kx-wish-stock {
+  display: inline-flex;
   align-items: center;
-  gap: var(--wishlist-swatch-gap, 10px);
-  margin-top: var(--wishlist-swatch-margin-top, 12px);
-  margin-bottom: 0;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #16A34A;
+  margin-bottom: 14px;
 }
 
-.ksam-wishlist-swatch {
-  width: var(--wishlist-swatch-size, 24px);
-  height: var(--wishlist-swatch-size, 24px);
+.kx-wish-stock-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  background: #16A34A;
 }
 
-.ksam-wishlist-swatch:hover {
-  transform: scale(1.1);
-}
-
-.ksam-wishlist-swatch.is-selected {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--accent-light, #8cff00);
-}
-
-/* 7. BUTTON ROW (52px high desktop, 40px phone, sticks to bottom, cart icon square, view product flex 1 on ONE line) */
-.ksam-wishlist-card-actions {
+/* 3. Bottom Row: Square black cart button + wide light-green button */
+.kx-wish-actions {
   display: flex;
   align-items: center;
-  gap: var(--wishlist-actions-gap, 10px);
-  width: 100%;
-  height: var(--wishlist-actions-height, 52px);
+  gap: 10px;
   margin-top: auto;
-  padding-top: var(--wishlist-actions-margin-top, 12px);
-  white-space: nowrap;
+  width: 100%;
 }
 
-/* Left: Cart Icon Button (52px square desktop, 40px phone) */
-.ksam-wishlist-cart-btn {
-  width: var(--wishlist-cart-btn-size, 52px);
-  height: var(--wishlist-cart-btn-size, 52px);
-  min-width: var(--wishlist-cart-btn-size, 52px);
-  flex-shrink: 0;
-  border-radius: 14px;
-  background: rgba(140, 255, 0, 0.35);
+.kx-wish-cart-btn {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 12px;
+  background: #000000;
+  color: #ffffff;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  flex-shrink: 0;
   padding: 0;
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.ksam-wishlist-cart-btn svg {
-  width: var(--wishlist-cart-icon-size, 22px);
-  height: var(--wishlist-cart-icon-size, 22px);
-}
-
-.ksam-wishlist-cart-btn:hover {
-  background: #a8ff3e;
+.kx-wish-cart-btn:hover {
+  background: #222222;
   transform: translateY(-2px);
 }
 
-/* Right: View Product Button (52px high desktop, 40px phone, 16px text, one line) */
-.ksam-wishlist-view-btn {
+.kx-wish-cart-btn:active {
+  transform: scale(0.95);
+}
+
+.kx-wish-cart-btn.is-added {
+  background: #0B5A12;
+}
+
+.kx-wish-view-btn {
   flex: 1;
-  height: var(--wishlist-actions-height, 52px);
-  border-radius: 999px;
-  background: linear-gradient(135deg, #34f5b0, #8cff00);
-  border: none;
-  color: #0b0f0e;
-  font-size: var(--wishlist-view-btn-font, 16px);
+  height: 48px;
+  border-radius: 12px;
+  background: #F0FFF0;
+  border: 1px solid #B8F2B8;
+  color: #0B5A12;
+  font-size: 14px;
   font-weight: 700;
-  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(140, 255, 0, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  padding: var(--wishlist-view-btn-pad, 0 16px);
+  text-decoration: none;
+  padding: 0 14px;
   white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  font-family: inherit;
 }
 
-.ksam-wishlist-view-btn:hover {
-  filter: brightness(1.05);
-  box-shadow: 0 12px 28px rgba(140, 255, 0, 0.5);
+.kx-wish-view-btn:hover {
+  background: #E2FBE2;
+  border-color: #84FF00;
+  transform: translateY(-2px);
 }
 
-.ksam-wishlist-view-arrow {
-  width: var(--wishlist-arrow-size, 18px);
-  height: var(--wishlist-arrow-size, 18px);
+.kx-wish-view-btn:active {
+  transform: scale(0.98);
+}
+
+.kx-wish-view-arrow {
+  font-size: 15px;
+  line-height: 1;
   transition: transform 0.2s ease;
-  flex-shrink: 0;
 }
 
-.ksam-wishlist-view-btn:hover .ksam-wishlist-view-arrow {
+.kx-wish-view-btn:hover .kx-wish-view-arrow {
   transform: translateX(4px);
 }
 
-/* Prefers reduced motion */
+/* ==========================================================================
+   TASK 4: AUTO-MOVING PRODUCTS ROW ("You may also like")
+   ========================================================================== */
+.kx-rec-section {
+  margin-top: 64px;
+  width: 100%;
+  position: relative;
+}
+
+.kx-rec-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.kx-rec-header {
+  max-width: 1280px;
+  margin: 0 auto 20px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.kx-rec-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #84FF00;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.kx-rec-title {
+  margin: 0;
+  font-size: clamp(24px, 3.2vw, 36px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.kx-rec-marquee-viewport {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: relative;
+  padding: 12px 0 24px;
+}
+
+.kx-rec-marquee-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.kx-rec-marquee-track {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  animation: recMarqueeLtoR var(--rec-speed, 105s) linear infinite;
+}
+
+/* Pause on hover/touch */
+.kx-rec-marquee-viewport:hover .kx-rec-marquee-track,
+.kx-rec-marquee-viewport:active .kx-rec-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes recMarqueeLtoR {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.kx-rec-marquee-group {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  padding: 0 8px;
+}
+
+.kx-rec-card-wrap {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  flex-shrink: 0;
+  display: flex;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Desktop, Tablet, Mobile)
+   ========================================================================== */
+
+/* Tablet: 601px to 1024px (2 columns grid) */
+@media (max-width: 1024px) and (min-width: 601px) {
+  .kx-wishlist-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .ksam-wishlist-banner-top {
+    gap: 20px;
+  }
+
+  .ksam-wishlist-banner-illustration {
+    width: 40%;
+  }
+}
+
+/* Mobile: <= 600px */
+@media (max-width: 600px) {
+  .ksam-wishlist-main {
+    padding-top: 76px;
+    padding-bottom: 50px;
+  }
+
+  .ksam-wishlist-banner-wrapper {
+    margin-top: 16px;
+    padding: 0 16px;
+  }
+
+  .ksam-wishlist-banner-card {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+
+  .ksam-wishlist-banner-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .ksam-wishlist-banner-illustration {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+  }
+
+  .ksam-wishlist-hero-ill-wrap {
+    height: 160px;
+    justify-content: center;
+  }
+
+  .ksam-wishlist-banner-title {
+    font-size: 30px;
+  }
+
+  .ksam-wishlist-banner-subtitle {
+    font-size: 14.5px;
+  }
+
+  .ksam-wishlist-container {
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+
+  /* Single column or 2 compact on mobile - 1 column for generous card breathing room */
+  .kx-wishlist-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .kx-wish-media {
+    height: 220px;
+  }
+
+  .kx-wish-title {
+    font-size: 1.25rem;
+  }
+
+  .kx-rec-card-wrap {
+    width: 75vw;
+    min-width: 75vw;
+    max-width: 75vw;
+  }
+
+  .kx-rec-header {
+    padding: 0 16px;
+  }
+}
+
+/* Prefers Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .ksam-wishlist-card {
+  .ksam-wishlist-chips-track,
+  .kx-rec-marquee-track {
     animation: none !important;
-    transition: none !important;
+    transform: none !important;
   }
-  .ksam-wishlist-card.is-removing {
-    opacity: 0 !important;
-    transition: opacity 0.1s ease !important;
+
+  .ksam-wishlist-chips-clone,
+  .kx-rec-marquee-clone {
+    display: none !important;
   }
-  .ksam-wishlist-view-arrow {
+
+  .ksam-wishlist-chips-viewport,
+  .kx-rec-marquee-viewport {
+    overflow-x: auto !important;
+  }
+
+  .kx-wish-card,
+  .kx-wish-card:hover,
+  .kx-wish-img-wrap img {
+    transform: none !important;
     transition: none !important;
   }
 }
 
-/* --------------------------------------------------------------------------
-   EMPTY STATES
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   EMPTY STATES & MODALS
+   ========================================================================== */
 .ksam-wishlist-empty {
   text-align: center;
   padding: 80px 20px;
@@ -832,19 +861,19 @@ body {
   gap: 8px;
   padding: 12px 28px;
   border-radius: 999px;
-  background: #8cff00;
+  background: #84FF00;
   color: #000000;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(140, 255, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(132, 255, 0, 0.35);
   transition: all 0.2s ease;
 }
 
 .ksam-wishlist-cta-btn:hover {
-  background: #a8ff3e;
+  background: #A8F56B;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(140, 255, 0, 0.45);
+  box-shadow: 0 6px 20px rgba(132, 255, 0, 0.45);
 }
 
 .ksam-wishlist-empty-filter {
@@ -864,9 +893,7 @@ body {
   cursor: pointer;
 }
 
-/* --------------------------------------------------------------------------
-   CONFIRMATION MODAL (NO RED)
-   -------------------------------------------------------------------------- */
+/* Modal */
 .ksam-wishlist-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -878,7 +905,6 @@ body {
   justify-content: center;
   padding: 20px;
   z-index: 1000;
-  animation: fadeIn 0.2s ease;
 }
 
 .ksam-wishlist-modal {
@@ -902,7 +928,6 @@ body {
   color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
   padding: 4px;
-  border-radius: 6px;
 }
 
 .ksam-wishlist-modal-close:hover {
@@ -975,9 +1000,7 @@ body {
   background: #f1f5f9;
 }
 
-/* --------------------------------------------------------------------------
-   FLOATING SCROLL TO TOP
-   -------------------------------------------------------------------------- */
+/* Floating Scroll to Top */
 .ksam-wishlist-scrolltop-btn {
   position: fixed;
   bottom: 28px;
@@ -1010,89 +1033,4 @@ body {
   background: #ffffff;
   color: #000000;
   border-color: #ffffff;
-}
-
-/* --------------------------------------------------------------------------
-   RESPONSIVE DESIGN (Phone <640px)
-   -------------------------------------------------------------------------- */
-@media (max-width: 860px) {
-  .ksam-wishlist-banner-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-  }
-
-  .ksam-wishlist-banner-illustration {
-    width: 100%;
-    max-width: 100%;
-    justify-content: center;
-  }
-
-  .ksam-wishlist-hero-ill-wrap {
-    height: 180px;
-    justify-content: center;
-  }
-
-  .ksam-wishlist-banner-card {
-    padding: 28px 24px;
-  }
-}
-
-@media (max-width: 640px) {
-  .ksam-wishlist-main {
-    padding-top: 76px;
-    padding-bottom: 50px;
-  }
-
-  .ksam-wishlist-banner-wrapper {
-    margin-top: 20px;
-    padding: 0 16px;
-  }
-
-  .ksam-wishlist-banner-card {
-    padding: 24px 18px;
-    border-radius: 20px;
-  }
-
-  .ksam-wishlist-banner-title {
-    font-size: 32px;
-  }
-
-  .ksam-wishlist-banner-subtitle {
-    font-size: 15px;
-  }
-
-  /* Filter bar: Chips row scrollable + Clear all moves below full width */
-  .ksam-wishlist-filter-bar {
-    flex-direction: column;
-    border-radius: 20px;
-    padding: 8px;
-    gap: 10px;
-  }
-
-  .ksam-wishlist-chips {
-    width: 100%;
-    padding-bottom: 4px;
-  }
-
-  .ksam-wishlist-chip {
-    padding: 8px 14px;
-    font-size: 14px;
-  }
-
-  .ksam-wishlist-clear-btn {
-    width: 100%;
-    justify-content: center;
-    border-radius: 12px;
-    padding: 10px;
-  }
-
-
-
-  .ksam-wishlist-scrolltop-btn {
-    bottom: 20px;
-    right: 20px;
-    width: 38px;
-    height: 38px;
-  }
 }

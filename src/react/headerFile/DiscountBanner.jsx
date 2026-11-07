@@ -16,9 +16,9 @@ const SLIDES = [
     subLine2: "Premium Wardrobe Picks",
     buttonText: "SHOP NOW →",
     buttonLink: `${BASE_URL}product.html?view=list&category=fashion`,
-    imageSrc: getAssetUrl("images/banners/fashion-hero.png"),
-    imageAlt: "Trendy fashion apparel and footwear",
-    hasCustomBadge: true,
+    imageSrc: getAssetUrl("e-commerce_sitr.webp"),
+    imageAlt: "Online shopping scene with cart, laptop, phone and gift boxes - Trending Fashion Collections",
+    hasCustomBadge: false, // Image already contains "SALE UP TO 50% OFF" tag
     badgeDiscount: "50%",
   },
   {
@@ -32,7 +32,8 @@ const SLIDES = [
     subLine2: "Top Quality Products",
     buttonText: "SHOP NOW →",
     buttonLink: `${BASE_URL}product.html?view=list&category=home-appliances`,
-    imageSrc: getAssetUrl("Bright_Armchair_Living_Room_Sale.png"),
+    imageSrc: getAssetUrl("Bright_Armchair_Living_Room_Sale.webp"),
+    imageFallback: getAssetUrl("Bright_Armchair_Living_Room_Sale.png"),
     imageAlt: "Yellow armchair with lamp and plants - Home & Living Essentials",
     hasCustomBadge: false, // Image already contains the dark-green scalloped "UP TO 50% OFF" badge
     badgeDiscount: "50%",
@@ -48,9 +49,10 @@ const SLIDES = [
     subLine2: "Smarter Living",
     buttonText: "SHOP NOW →",
     buttonLink: `${BASE_URL}product.html?view=list&category=electronics`,
-    imageSrc: getAssetUrl("images/banners/tech-hero.png"),
-    imageAlt: "Modern laptop, wireless headphones, and smartwatch - Gadgets & Tech Savings",
-    hasCustomBadge: true,
+    imageSrc: getAssetUrl("Gadget_Deals_on_Green_Podium.webp"),
+    imageFallback: getAssetUrl("Gadget_Deals_on_Green_Podium.png"),
+    imageAlt: "Smartwatch, laptop, headphones and plant on a green podium - Gadgets & Tech Savings",
+    hasCustomBadge: false, // Image already contains the green "UP TO 45% OFF" starburst badge
     badgeDiscount: "45%",
   },
 ];
@@ -300,15 +302,18 @@ function DiscountBanner() {
                     </div>
                   )}
 
-                  <img
-                    src={slide.imageSrc}
-                    alt={slide.imageAlt}
-                    className="promo-product-image"
-                    width="1200"
-                    height="950"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                  />
+                  <picture>
+                    <source srcSet={slide.imageSrc} type="image/webp" />
+                    <img
+                      src={slide.imageFallback || slide.imageSrc}
+                      alt={slide.imageAlt}
+                      className="promo-product-image"
+                      width="1200"
+                      height="950"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
+                  </picture>
                 </div>
               </article>
             );

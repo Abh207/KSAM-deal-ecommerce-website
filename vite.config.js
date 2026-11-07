@@ -36,6 +36,17 @@ export default defineConfig(({ command, mode }) => {
             })
         ],
 
+        server: {
+            port: 5173,
+            strictPort: true
+        },
+        preview: {
+            port: 4173,
+            headers: {
+                "Cache-Control": "public, max-age=31536000, immutable"
+            }
+        },
+
         build: {
             target: "es2020",
             cssCodeSplit: true,

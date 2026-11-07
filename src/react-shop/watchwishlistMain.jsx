@@ -1,6 +1,14 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
-import { Heart, Trash2, ArrowRight, X, ArrowUp, ShoppingCart, Star } from "lucide-react";
+import {
+  Heart,
+  Trash2,
+  ArrowRight,
+  X,
+  ArrowUp,
+  ShoppingBag,
+  Check
+} from "lucide-react";
 
 import Navbar from "../deals/components/Navbar.jsx";
 import WishlistHeroIllustration from "./WishlistHeroIllustration.jsx";
@@ -9,7 +17,9 @@ import {
   removeFromWishlist,
   clearWishlist,
   subscribeWishlist,
-  showWishlistToast
+  showWishlistToast,
+  toggleWishlist,
+  isInWishlist
 } from "../lib/wishlist.js";
 import {
   formatPrice,
@@ -18,42 +28,34 @@ import {
   addProductToCart,
   buildProductUid
 } from "../lib/cartHelper.js";
+import {
+  getAllMasterProducts,
+  CATEGORY_PARENT_MAP
+} from "../lib/productCatalog.js";
 
 import "./watchwishlist.css";
 
+/**
+ * Task 3: New Wishlist Product Card Design (matching image 5)
+ * - White card, radius 24px, soft shadow
+ * - Top image area: #F8FAFC, height ~240px, centered image contain
+ * - Top-left: black pill with white text "50% OFF"
+ * - Top-right: round dark-grey translucent heart button
+ * - Category in dark green caps, bold black title, slate-grey brand, 2-line grey description
+ * - Black weight 900 price, grey struck-through old price, green stock text
+ * - Square black cart button + wide light-green "View Product →" button
+ */
 function WishlistProductCard({
   product,
   isRemoving,
   onRemove,
   onOpen,
-  onAddToCart
+  onAddToCart,
+  isSaved = true,
+  tabIndex = 0
 }) {
-  const [selectedColorIdx, setSelectedColorIdx] = useState(0);
-  const [cardImage, setCardImage] = useState(() => resolveImagePath(product.image));
-
-  // Determine colors: product.colors if available (up to 4), else fallback [#448000, #111111, #a3a3a3]
-  const colors = useMemo(() => {
-    if (Array.isArray(product.colors) && product.colors.length > 0) {
-      return product.colors.slice(0, 4).map((c) => {
-        if (typeof c === "string") return { hex: c };
-        return { hex: c.hex || c.color || "#448000", image: c.image };
-      });
-    }
-    return [
-      { hex: "#448000" },
-      { hex: "#111111" },
-      { hex: "#a3a3a3" }
-    ];
-  }, [product]);
-
-  const handleColorClick = (e, idx, colorObj) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedColorIdx(idx);
-    if (colorObj.image) {
-      setCardImage(resolveImagePath(colorObj.image));
-    }
-  };
+  const [added, setAdded] = useState(false);
+  const cardImage = resolveImagePath(product.image);
 
   const rawOldPrice =
     product.originalPrice ||
@@ -62,129 +64,147 @@ function WishlistProductCard({
     product.mrp ||
     0;
   const hasDiscount = Boolean(rawOldPrice && rawOldPrice > product.price);
-  const discountPct = hasDiscount
+  const discountPct = product.discount
+    ? Number(product.discount)
+    : hasDiscount
     ? Math.round(((rawOldPrice - product.price) / rawOldPrice) * 100)
     : 0;
 
-  const ratingVal = product.rating ? Number(product.rating) : 4.5;
+  // Category fallback
+  const categoryLabel = (product.category || "GENERAL").toUpperCase();
+
+  // Brand fallback
+  const brandName =
+    product.brand ||
+    product.company ||
+    (product.category ? `${product.category} Edition` : "KSAM Exclusive");
+
+  // Description fallback
+  const descriptionText =
+    product.description ||
+    product.shortDesc ||
+    product.desc ||
+    `Crafted with premium materials for timeless design, supreme durability, and daily comfort.`;
+
+  // Stock fallback
+  const stockCount =
+    typeof product.stock === "number" && product.stock > 0
+      ? product.stock
+      : 8;
+
+  const handleCartClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onAddToCart(e, product);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1600);
+  };
 
   return (
     <article
-      className={`ksam-wishlist-card${isRemoving ? " is-removing" : ""}`}
+      className={`kx-wish-card${isRemoving ? " is-removing" : ""}`}
       onClick={(e) => onOpen(e, product)}
+      tabIndex={tabIndex}
     >
-      {/* 2. Top-Left: Discount Pill & Top-Right: Heart Button */}
-      <div className="ksam-wishlist-card-top">
+      {/* 1. Top Image Area (#F8FAFC, ~240px) */}
+      <div className="kx-wish-media">
+        {/* Top-Left Chip: Black pill with white text "50% OFF" */}
         {discountPct > 0 ? (
-          <span className="ksam-wishlist-discount-pill">
-            -{discountPct}%
-          </span>
+          <span className="kx-wish-discount-chip">{discountPct}% OFF</span>
         ) : (
-          <span className="ksam-wishlist-pill-spacer" />
+          <span className="kx-wish-discount-chip">SPECIAL</span>
         )}
 
+        {/* Top-Right: Round dark-grey translucent heart button */}
         <button
           type="button"
-          className="ksam-wishlist-heart-btn"
+          className={`kx-wish-heart-btn${isSaved ? " is-saved" : ""}`}
           onClick={(e) => onRemove(e, product)}
-          aria-label={`Remove ${product.name} from wishlist`}
-          title="Remove from wishlist"
+          aria-label={
+            isSaved
+              ? `Remove ${product.name} from wishlist`
+              : `Add ${product.name} to wishlist`
+          }
+          title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+          tabIndex={tabIndex}
         >
-          <Heart size={18} fill="#111111" color="#111111" />
+          <Heart
+            size={18}
+            fill={isSaved ? "#ffffff" : "none"}
+            color="#ffffff"
+            strokeWidth={2.2}
+          />
         </button>
+
+        {/* Centered Product Image */}
+        <div className="kx-wish-img-wrap">
+          <img
+            src={cardImage}
+            alt={product.name || "Product"}
+            loading="lazy"
+            decoding="async"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = DEFAULT_PLACEHOLDER_IMAGE;
+            }}
+          />
+        </div>
       </div>
 
-      {/* 4. Large Centered Product Image */}
-      <div className="ksam-wishlist-card-image">
-        <img
-          src={cardImage}
-          alt={product.name || "Product"}
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = DEFAULT_PLACEHOLDER_IMAGE;
-          }}
-        />
-      </div>
+      {/* 2. Text Block */}
+      <div className="kx-wish-body">
+        <span className="kx-wish-category">{categoryLabel}</span>
 
-      {/* 5. Text Area */}
-      <div className="ksam-wishlist-card-body">
-        <h3
-          className="ksam-wishlist-card-title"
-          title={product.name}
-          onClick={(e) => onOpen(e, product)}
-        >
+        <h3 className="kx-wish-title" title={product.name}>
           {product.name}
         </h3>
 
-        {/* Rating Row: 5 Gold Stars (16px) + rating text (15px) */}
-        <div className="ksam-wishlist-card-rating">
-          <div className="ksam-wishlist-stars" aria-hidden="true">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={16}
-                className="ksam-wishlist-star"
-                fill="#fbbf24"
-                stroke="#fbbf24"
-                strokeWidth={0}
-              />
-            ))}
-          </div>
-          <span className="ksam-wishlist-rating-val">({ratingVal.toFixed(1)})</span>
+        <div className="kx-wish-brand">{brandName}</div>
+
+        <p className="kx-wish-desc" title={descriptionText}>
+          {descriptionText}
+        </p>
+
+        {/* Price Row: Black weight 900, struck-through old price */}
+        <div className="kx-wish-price-row">
+          <span className="kx-wish-price">{formatPrice(product.price)}</span>
+          {hasDiscount && (
+            <span className="kx-wish-oldprice">{formatPrice(rawOldPrice)}</span>
+          )}
         </div>
 
-        {/* Price Row: current price 28px, original price 18px */}
-        <div className="ksam-wishlist-card-prices">
-          <span className="ksam-wishlist-card-price">
-            {formatPrice(product.price)}
-          </span>
-          {hasDiscount ? (
-            <span className="ksam-wishlist-card-oldprice">
-              {formatPrice(rawOldPrice)}
-            </span>
-          ) : null}
+        {/* Stock Text: green "8 items available" */}
+        <div className="kx-wish-stock">
+          <span className="kx-wish-stock-dot" aria-hidden="true" />
+          <span>{stockCount} items available</span>
         </div>
 
-        {/* 6. Color Swatches Row (24px) */}
-        <div className="ksam-wishlist-swatches" role="radiogroup" aria-label="Color options">
-          {colors.map((colorObj, idx) => {
-            const isSelected = selectedColorIdx === idx;
-            return (
-              <button
-                key={idx}
-                type="button"
-                role="radio"
-                aria-checked={isSelected}
-                className={`ksam-wishlist-swatch${isSelected ? " is-selected" : ""}`}
-                style={{ backgroundColor: colorObj.hex }}
-                onClick={(e) => handleColorClick(e, idx, colorObj)}
-                title={`Color ${idx + 1}`}
-              />
-            );
-          })}
-        </div>
-
-        {/* 7. Button Row (bottom, 52px high) */}
-        <div className="ksam-wishlist-card-actions">
+        {/* 3. Bottom Row: Square black button + Wide light-green button */}
+        <div className="kx-wish-actions">
           <button
             type="button"
-            className="ksam-wishlist-cart-btn"
-            onClick={(e) => onAddToCart(e, product)}
+            className={`kx-wish-cart-btn${added ? " is-added" : ""}`}
+            onClick={handleCartClick}
             aria-label={`Add ${product.name} to cart`}
             title="Add to Cart"
+            tabIndex={tabIndex}
           >
-            <ShoppingCart size={22} color="#111111" strokeWidth={2.2} />
+            {added ? (
+              <Check size={20} color="#84FF00" strokeWidth={2.8} />
+            ) : (
+              <ShoppingBag size={20} color="#ffffff" strokeWidth={2.2} />
+            )}
           </button>
 
           <button
             type="button"
-            className="ksam-wishlist-view-btn"
+            className="kx-wish-view-btn"
             onClick={(e) => onOpen(e, product)}
             aria-label={`View product details for ${product.name}`}
+            tabIndex={tabIndex}
           >
             <span>View Product</span>
-            <ArrowRight size={18} className="ksam-wishlist-view-arrow" />
+            <span className="kx-wish-view-arrow" aria-hidden="true">→</span>
           </button>
         </div>
       </div>
@@ -241,10 +261,11 @@ function WishlistPage() {
   }, [wishlist, selectedCategory]);
 
   // Remove handler with smooth animation
-  const handleRemove = (e, product) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+  const handleRemove = useCallback((e, product) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const targetKey = product?.uid || String(product?.id || product);
     setRemovingIds((prev) => new Set(prev).add(targetKey));
 
@@ -256,29 +277,43 @@ function WishlistPage() {
         return next;
       });
     }, 280);
-  };
+  }, []);
 
-  // Navigate to product details page in the same tab
-  const handleOpenProduct = (e, product) => {
+  // Toggle wishlist for recommendations
+  const handleToggleRecWishlist = useCallback((e, product) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    const id = product.id !== undefined && product.id !== null ? product.id : "";
-    const category = product.category || "";
-    const uid = product.uid || buildProductUid(category, id);
-    window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}&uid=${encodeURIComponent(uid)}`;
-  };
+    toggleWishlist(product);
+  }, []);
+
+  // Navigate to product details page in the same tab
+  const handleOpenProduct = useCallback(
+    (e, product) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const id = product.id !== undefined && product.id !== null ? product.id : "";
+      const category = product.category || "";
+      const uid = product.uid || buildProductUid(category, id);
+      window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(
+        id
+      )}&category=${encodeURIComponent(category)}&uid=${encodeURIComponent(uid)}`;
+    },
+    [normalizedBase]
+  );
 
   // Add to cart handler with toast
-  const handleAddToCart = (e, product) => {
+  const handleAddToCart = useCallback((e, product) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
     addProductToCart(product, 1);
     showWishlistToast("Added to Cart");
-  };
+  }, []);
 
   // Clear all handler
   const handleConfirmClear = () => {
@@ -294,16 +329,84 @@ function WishlistPage() {
     });
   };
 
+  // Task 4: Recommended products list from real catalog (16 products, 2 per distinct category)
+  const recommendedProducts = useMemo(() => {
+    const all = getAllMasterProducts();
+    const targetCats = [
+      "watches",
+      "shoes",
+      "electronics",
+      "clothes",
+      "beauty",
+      "furniture",
+      "home-appliances",
+      "accessories-lifestyle"
+    ];
+    const byCat = {};
+    for (const c of targetCats) byCat[c] = [];
+
+    for (const p of all) {
+      const parent = CATEGORY_PARENT_MAP[p.categorySlug] || p.categorySlug;
+      if (byCat[parent] && byCat[parent].length < 2) {
+        byCat[parent].push(p);
+      }
+    }
+    return Object.values(byCat).flat().slice(0, 16);
+  }, []);
+
+  // Set of wishlist UIDs for fast lookup
+  const wishlistUidSet = useMemo(() => {
+    return new Set(wishlist.map((w) => w.uid || String(w.id)));
+  }, [wishlist]);
+
+  // Marquee duration calculations
+  const chipsMarqueeDuration = useMemo(() => {
+    const count = Math.max(categories.length, 5);
+    return `${Math.round((count * 110) / 40)}s`;
+  }, [categories.length]);
+
+  const recMarqueeDuration = useMemo(() => {
+    // 16 cards * ~296px width / 45px/sec ≈ 105s
+    const totalPx = recommendedProducts.length * 296;
+    return `${Math.round(totalPx / 45)}s`;
+  }, [recommendedProducts.length]);
+
+  // Helper to render individual chips
+  const renderChip = (cat, isClone) => {
+    const count =
+      cat === "All"
+        ? wishlist.length
+        : wishlist.filter(
+            (p) => (p.category || "").toLowerCase() === cat.toLowerCase()
+          ).length;
+    const isActive = selectedCategory === cat;
+
+    return (
+      <button
+        key={`${isClone ? "clone" : "orig"}-${cat}`}
+        type="button"
+        role="tab"
+        aria-selected={isActive}
+        tabIndex={isClone ? -1 : 0}
+        className={`ksam-wishlist-chip${isActive ? " is-active" : ""}`}
+        onClick={() => setSelectedCategory(cat)}
+      >
+        <span className="ksam-wishlist-chip-name">{cat}</span>
+        <span className="ksam-wishlist-chip-count">{count}</span>
+      </button>
+    );
+  };
+
   return (
     <div className="ksam-wishlist-page">
       {/* 1. Global KSAM Navbar */}
       <Navbar />
 
       <main className="ksam-wishlist-main">
-        {/* 2. Page Header: Exact Rounded Banner Card Matching Image 1 */}
+        {/* 2. Page Header Banner Card */}
         <section className="ksam-wishlist-banner-wrapper">
           <div className="ksam-wishlist-banner-card">
-            {/* Top row: Two columns (Left: Text, Right: Illustration ~45%) */}
+            {/* Top row: Two columns (Left: Text, Right: Illustration) */}
             <div className="ksam-wishlist-banner-top">
               <div className="ksam-wishlist-banner-text">
                 <h1 className="ksam-wishlist-banner-title">
@@ -319,33 +422,33 @@ function WishlistPage() {
               </div>
             </div>
 
-            {/* Bottom row: Filter Bar inside the banner */}
+            {/* Task 2: Filter Bar with Auto-Moving Chips on Mobile (<=768px) and Fixed Clear All */}
             <div className="ksam-wishlist-filter-bar">
-              <div className="ksam-wishlist-chips" role="tablist" aria-label="Filter by category">
-                {categories.map((cat) => {
-                  const count =
-                    cat === "All"
-                      ? wishlist.length
-                      : wishlist.filter(
-                          (p) => (p.category || "").toLowerCase() === cat.toLowerCase()
-                        ).length;
-                  const isActive = selectedCategory === cat;
-                  return (
-                    <button
-                      key={cat}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`ksam-wishlist-chip${isActive ? " is-active" : ""}`}
-                      onClick={() => setSelectedCategory(cat)}
-                    >
-                      <span className="ksam-wishlist-chip-name">{cat}</span>
-                      <span className="ksam-wishlist-chip-count">{count}</span>
-                    </button>
-                  );
-                })}
+              <div
+                className="ksam-wishlist-chips-viewport"
+                style={{ "--chips-speed": chipsMarqueeDuration }}
+              >
+                <div className="ksam-wishlist-chips-track">
+                  {/* Original chips */}
+                  <div
+                    className="ksam-wishlist-chips-set"
+                    role="tablist"
+                    aria-label="Filter by category"
+                  >
+                    {categories.map((cat) => renderChip(cat, false))}
+                  </div>
+
+                  {/* Cloned chips for seamless infinite marquee */}
+                  <div
+                    className="ksam-wishlist-chips-set ksam-wishlist-chips-clone"
+                    aria-hidden="true"
+                  >
+                    {categories.map((cat) => renderChip(cat, true))}
+                  </div>
+                </div>
               </div>
 
+              {/* Fixed / Pinned Clear All Button at the right end */}
               {wishlist.length > 0 && (
                 <button
                   type="button"
@@ -367,7 +470,12 @@ function WishlistPage() {
             /* Empty State */
             <section className="ksam-wishlist-empty">
               <div className="ksam-wishlist-empty-icon-wrap" aria-hidden="true">
-                <Heart size={44} className="ksam-wishlist-empty-icon" fill="#ffffff" color="#ffffff" />
+                <Heart
+                  size={44}
+                  className="ksam-wishlist-empty-icon"
+                  fill="#ffffff"
+                  color="#ffffff"
+                />
               </div>
 
               <h2>Your wishlist is empty</h2>
@@ -392,8 +500,8 @@ function WishlistPage() {
               </button>
             </div>
           ) : (
-            /* Responsive Grid */
-            <div className="ksam-wishlist-grid">
+            /* Responsive Grid (Task 3: 4 cols desktop, 2 tablet, 1 or 2 mobile) */
+            <div className="kx-wishlist-grid">
               {filteredProducts.map((product) => (
                 <WishlistProductCard
                   key={product.uid || product.id}
@@ -402,11 +510,69 @@ function WishlistPage() {
                   onRemove={handleRemove}
                   onOpen={handleOpenProduct}
                   onAddToCart={handleAddToCart}
+                  isSaved={true}
+                  tabIndex={0}
                 />
               ))}
             </div>
           )}
         </div>
+
+        {/* Task 4: Auto-Moving "You May Also Like" Products Row */}
+        {recommendedProducts.length > 0 && (
+          <section
+            className="kx-rec-section"
+            aria-label="Recommended products"
+            style={{ "--rec-speed": recMarqueeDuration }}
+          >
+            <div className="kx-rec-container">
+              {/* Header: Lime label DISCOVER, white heading */}
+              <div className="kx-rec-header">
+                <span className="kx-rec-tag">DISCOVER</span>
+                <h2 className="kx-rec-title">You may also like</h2>
+              </div>
+
+              {/* Auto-moving Row: Continuous LEFT to RIGHT marquee */}
+              <div className="kx-rec-marquee-viewport">
+                <div className="kx-rec-marquee-track">
+                  {/* Original row of 16 cards */}
+                  <div className="kx-rec-marquee-group">
+                    {recommendedProducts.map((prod) => (
+                      <div key={`orig-rec-${prod.uid || prod.id}`} className="kx-rec-card-wrap">
+                        <WishlistProductCard
+                          product={prod}
+                          isRemoving={false}
+                          onRemove={handleToggleRecWishlist}
+                          onOpen={handleOpenProduct}
+                          onAddToCart={handleAddToCart}
+                          isSaved={wishlistUidSet.has(prod.uid || String(prod.id))}
+                          tabIndex={0}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Cloned row for seamless infinite marquee */}
+                  <div className="kx-rec-marquee-group kx-rec-marquee-clone" aria-hidden="true">
+                    {recommendedProducts.map((prod) => (
+                      <div key={`clone-rec-${prod.uid || prod.id}`} className="kx-rec-card-wrap">
+                        <WishlistProductCard
+                          product={prod}
+                          isRemoving={false}
+                          onRemove={handleToggleRecWishlist}
+                          onOpen={handleOpenProduct}
+                          onAddToCart={handleAddToCart}
+                          isSaved={wishlistUidSet.has(prod.uid || String(prod.id))}
+                          tabIndex={-1}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Floating Scroll to Top Button */}
@@ -420,7 +586,7 @@ function WishlistPage() {
         <ArrowUp size={20} />
       </button>
 
-      {/* Confirmation Modal for Clear All - NO RED */}
+      {/* Confirmation Modal for Clear All */}
       {showClearModal && (
         <div className="ksam-wishlist-modal-backdrop" onClick={() => setShowClearModal(false)}>
           <div
@@ -442,7 +608,9 @@ function WishlistPage() {
               <Trash2 size={24} style={{ color: "#ffffff" }} />
             </div>
             <h3 id="clear-modal-title">Clear Wishlist?</h3>
-            <p>Are you sure you want to remove all {wishlist.length} saved products from your wishlist?</p>
+            <p>
+              Are you sure you want to remove all {wishlist.length} saved products from your wishlist?
+            </p>
             <div className="ksam-wishlist-modal-btns">
               <button
                 type="button"
@@ -462,7 +630,6 @@ function WishlistPage() {
           </div>
         </div>
       )}
-      {/* NO FOOTER per requirement */}
     </div>
   );
 }
@@ -471,3 +638,5 @@ const rootEl = document.getElementById("watchwishlist-root");
 if (rootEl) {
   createRoot(rootEl).render(<WishlistPage />);
 }
+
+export default WishlistPage;

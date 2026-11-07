@@ -16,7 +16,7 @@
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // 2. Performance: Data-saver / slow 2G connection check
+    // 2. Performance: Data-saver / slow 2G/3G connection check
     const conn =
       navigator.connection ||
       navigator.mozConnection ||
@@ -25,7 +25,8 @@
       conn &&
       (Boolean(conn.saveData) ||
         conn.effectiveType === "2g" ||
-        conn.effectiveType === "slow-2g");
+        conn.effectiveType === "slow-2g" ||
+        conn.effectiveType === "3g");
 
     if (reducedMotion || isSlowConn) {
       video.pause();

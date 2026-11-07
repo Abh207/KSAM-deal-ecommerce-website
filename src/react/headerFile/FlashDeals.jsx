@@ -615,15 +615,8 @@ function FlashDeals({
                     onClick={viewAllDeals}
                     aria-label="View all deals"
                 >
-                    <span className="btn-colorful-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                            <path d="M12.5 2C12.5 2 13 4.5 11 6.5C9 8.5 7.5 11 7.5 13.5C7.5 16.5 9.5 19 12.5 19C15.5 19 17.5 16.5 17.5 13.5C17.5 9 14.5 7 14.5 7C14.5 7 15 9 14 10C13 11 11.5 10.5 11.5 9C11.5 7.5 12.5 2 12.5 2Z" />
-                        </svg>
-                    </span>
                     <span className="btn-colorful-text">VIEW ALL DEALS</span>
-                    <span className="btn-colorful-badge" aria-hidden="true">
-                        <span className="btn-colorful-arrow">→</span>
-                    </span>
+                    <span className="btn-colorful-arrow" aria-hidden="true">→</span>
                 </button>
 
             </div>
