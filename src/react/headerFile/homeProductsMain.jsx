@@ -1271,8 +1271,6 @@ function HomeProducts() {
                                                 aria-label={`View details for ${product.name}`}
                                             >
                                                 <span className="home-product-view-text">VIEW PRODUCT</span>
-                                                <span className="home-product-view-short">VIEW</span>
-                                                <strong className="home-product-view-arrow">→</strong>
                                             </button>
                                             <button
                                                 type="button"

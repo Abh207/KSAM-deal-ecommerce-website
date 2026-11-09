@@ -369,8 +369,8 @@ function WishlistPage() {
   }, [categories.length]);
 
   const recMarqueeDuration = useMemo(() => {
-    // 16 cards * ~244px width (230px card + 14px gap) / 45px/sec ≈ 87s
-    const totalPx = recommendedProducts.length * 244;
+    // 16 cards * ~231px width (216px card + 15px gap) / 45px/sec ≈ 82s
+    const totalPx = recommendedProducts.length * 231;
     return `${Math.round(totalPx / 45)}s`;
   }, [recommendedProducts.length]);
 
@@ -382,8 +382,8 @@ function WishlistPage() {
   const pauseTimerRef = useRef(null);
 
   const handleRecScroll = useCallback((dir) => {
-    // Card width 230px + 14px gap = 244px
-    setManualShift((prev) => prev + dir * 244);
+    // Card width 216px + 15px gap = 231px
+    setManualShift((prev) => prev + dir * 231);
     setIsRecPaused(true);
     if (pauseTimerRef.current) {
       clearTimeout(pauseTimerRef.current);

@@ -616,20 +616,23 @@ body {
    TASK 4: AUTO-MOVING PRODUCTS ROW ("You may also like")
    ========================================================================== */
 .kx-rec-section {
-  padding: clamp(32px, 5vw, 64px) 0;
+  padding: clamp(32px, 5vw, 60px) 0 clamp(48px, 6vw, 80px);
   width: 100%;
   position: relative;
 }
 
 .kx-rec-container {
-  max-width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 56px;
+  box-sizing: border-box;
 }
 
 .kx-rec-header {
-  max-width: 1280px;
-  margin: 0 auto clamp(20px, 3vw, 32px);
-  padding: 0 24px;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 0 clamp(20px, 3vw, 32px);
+  padding: 0;
   box-sizing: border-box;
   display: flex;
   align-items: flex-end;
@@ -788,11 +791,14 @@ body {
 
 .kx-rec-marquee-viewport {
   width: 100%;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
   scrollbar-width: none;
   -ms-overflow-style: none;
   position: relative;
-  padding: 8px 0 20px;
+  padding: 6px 0 16px;
+  box-sizing: border-box;
 }
 
 .kx-rec-marquee-viewport::-webkit-scrollbar {
@@ -808,7 +814,7 @@ body {
   display: flex;
   align-items: stretch;
   width: max-content;
-  animation: recMarqueeLtoR var(--rec-speed, 87s) linear infinite;
+  animation: recMarqueeLtoR var(--rec-speed, 82s) linear infinite;
 }
 
 .kx-rec-marquee-track.is-manual-paused,
@@ -829,16 +835,129 @@ body {
 .kx-rec-marquee-group {
   display: flex;
   align-items: stretch;
-  gap: 14px;
-  padding: 0 7px;
+  gap: 15px;
+  padding: 0;
 }
 
 .kx-rec-card-wrap {
-  width: 230px;
-  min-width: 230px;
-  max-width: 230px;
+  width: 216px;
+  min-width: 216px;
+  max-width: 216px;
   flex-shrink: 0;
   display: flex;
+}
+
+/* Scoped Compact Proportions for Carousel Cards */
+.kx-rec-card-wrap .kx-wish-card {
+  padding: 10px;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.kx-rec-card-wrap .kx-wish-media {
+  height: 145px;
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.kx-rec-card-wrap .kx-wish-img-wrap img {
+  max-height: 120px;
+}
+
+.kx-rec-card-wrap .kx-wish-discount-chip {
+  top: 8px;
+  left: 8px;
+  font-size: 9.5px;
+  padding: 3px 7px;
+}
+
+.kx-rec-card-wrap .kx-wish-heart-btn {
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+}
+
+.kx-rec-card-wrap .kx-wish-heart-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.kx-rec-card-wrap .kx-wish-body {
+  padding-top: 8px;
+}
+
+.kx-rec-card-wrap .kx-wish-category {
+  font-size: 9.5px;
+  margin-bottom: 2px;
+}
+
+.kx-rec-card-wrap .kx-wish-title {
+  font-size: 13.5px !important;
+  line-height: 1.25;
+  margin-bottom: 2px;
+  min-height: 2.5em;
+  -webkit-line-clamp: 2;
+}
+
+.kx-rec-card-wrap .kx-wish-brand {
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.kx-rec-card-wrap .kx-wish-desc {
+  font-size: 11px;
+  line-height: 1.35;
+  margin-bottom: 5px;
+  -webkit-line-clamp: 2;
+}
+
+.kx-rec-card-wrap .kx-wish-price-row {
+  margin-bottom: 3px;
+  gap: 6px;
+}
+
+.kx-rec-card-wrap .kx-wish-price {
+  font-size: 16px;
+}
+
+.kx-rec-card-wrap .kx-wish-oldprice {
+  font-size: 11px;
+}
+
+.kx-rec-card-wrap .kx-wish-stock {
+  font-size: 10px;
+  margin-bottom: 7px;
+}
+
+.kx-rec-card-wrap .kx-wish-actions {
+  gap: 6px;
+  margin-top: auto;
+}
+
+.kx-rec-card-wrap .kx-wish-cart-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 8px;
+}
+
+.kx-rec-card-wrap .kx-wish-cart-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.kx-rec-card-wrap .kx-wish-view-btn {
+  min-height: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  padding: 0 8px;
+  gap: 4px;
+}
+
+.kx-rec-card-wrap .kx-wish-view-arrow {
+  font-size: 13px;
 }
 
 /* ==========================================================================
@@ -858,6 +977,20 @@ body {
 
   .ksam-wishlist-banner-illustration {
     width: 40%;
+  }
+
+  .kx-rec-container {
+    padding: 0 32px;
+  }
+
+  .kx-rec-card-wrap {
+    width: 195px;
+    min-width: 195px;
+    max-width: 195px;
+  }
+
+  .kx-rec-marquee-group {
+    gap: 14px;
   }
 }
 
@@ -958,19 +1091,13 @@ body {
     padding: 0 8px !important;
   }
 
-  /* "You may also like" row on mobile: 62vw per card */
-  .kx-rec-card-wrap {
-    width: 62vw !important;
-    min-width: 62vw !important;
-    max-width: 62vw !important;
-  }
-
-  .kx-rec-marquee-group {
-    gap: 14px !important;
+  /* "You may also like" row on mobile: ~160-170px cards with 16px section breathing padding */
+  .kx-rec-container {
+    padding: 0 24px;
   }
 
   .kx-rec-header {
-    padding: 0 16px;
+    padding: 0;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -978,6 +1105,92 @@ body {
   /* Arrow controls hidden on mobile */
   .kx-rec-arrow-controls {
     display: none !important;
+  }
+
+  .kx-rec-card-wrap {
+    width: 170px !important;
+    min-width: 170px !important;
+    max-width: 170px !important;
+  }
+
+  .kx-rec-marquee-group {
+    gap: 12px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-card {
+    padding: 8px !important;
+    border-radius: 14px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-media {
+    height: 115px !important;
+    border-radius: 10px !important;
+    padding: 6px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-img-wrap img {
+    max-height: 95px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-title {
+    font-size: 12px !important;
+    min-height: 28px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-brand {
+    font-size: 10px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-desc {
+    display: none !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-price {
+    font-size: 13.5px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-oldprice {
+    font-size: 10px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-stock {
+    font-size: 9.5px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-cart-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 6px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-cart-btn svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-view-btn {
+    min-height: 32px !important;
+    height: 32px !important;
+    border-radius: 6px !important;
+    font-size: 10.5px !important;
+    padding: 0 6px !important;
+  }
+
+  .kx-rec-card-wrap .kx-wish-view-arrow {
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .kx-rec-container {
+    padding: 0 16px;
+  }
+
+  .kx-rec-card-wrap {
+    width: 165px !important;
+    min-width: 165px !important;
+    max-width: 165px !important;
   }
 }
 
@@ -1202,19 +1415,19 @@ body {
 /* Floating Scroll to Top */
 .ksam-wishlist-scrolltop-btn {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom: 24px;
+  right: 24px;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
   z-index: 99;
   opacity: 0;
   transform: translateY(16px);
@@ -1232,4 +1445,13 @@ body {
   background: #ffffff;
   color: #000000;
   border-color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .ksam-wishlist-scrolltop-btn {
+    bottom: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+  }
 }
