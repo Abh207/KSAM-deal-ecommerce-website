@@ -130,13 +130,18 @@ serve(async (req: Request) => {
     // 2. Prepare product rows for upsert
     const upsertRows = batch.map((p) => {
       const storeId = storeMap.get(p.store_slug) || null;
+      const realStore = (p.store_name && !p.store_name.toLowerCase().includes("serp") && p.store_name.toLowerCase() !== "google shopping")
+        ? p.store_name
+        : (p.store && !p.store.toLowerCase().includes("serp") && p.store.toLowerCase() !== "google shopping" ? p.store : null);
       return {
         store_id: storeId,
+        store_name: realStore || null,
         external_id: p.external_id,
         name: p.name,
         title: p.name,
         brand: p.brand || null,
         category: p.category || categoryToIngest,
+        description: p.description || null,
         image_url: p.image_url,
         additional_images: p.additional_images || [],
         price: p.price,
@@ -148,7 +153,7 @@ serve(async (req: Request) => {
         product_url: p.product_url,
         affiliate_url: p.affiliate_url || p.product_url,
         tags: p.tags || [],
-        source: p.store_slug,
+        source: realStore || p.store_slug,
         raw: p.raw || {},
         is_active: true,
         last_seen_at: new Date().toISOString(),

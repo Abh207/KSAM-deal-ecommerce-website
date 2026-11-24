@@ -78,6 +78,7 @@ export default defineConfig(({ command, mode }) => {
                     profile: resolve(__dirname, "profile.html"),
                     deal: resolve(__dirname, "deal.html"),
                     deals: resolve(__dirname, "deals.html"),
+                    subscribe: resolve(__dirname, "subscribe.html"),
                     forgotPassword: resolve(__dirname, "forgot-password.html"),
                     resetPassword: resolve(__dirname, "reset-password.html"),
                     verifyEmail: resolve(__dirname, "verify-email.html"),
@@ -87,7 +88,9 @@ export default defineConfig(({ command, mode }) => {
                     contactUs: resolve(__dirname, "contact-us.html"),
                     privacyPolicy: resolve(__dirname, "privacy-policy.html"),
                     terms: resolve(__dirname, "terms.html"),
-                    affiliateDisclosure: resolve(__dirname, "affiliate-disclosure.html")
+                    affiliateDisclosure: resolve(__dirname, "affiliate-disclosure.html"),
+                    refundPolicy: resolve(__dirname, "refund-policy.html"),
+                    search: resolve(__dirname, "search.html")
                 },
             output: {
                 manualChunks(id) {

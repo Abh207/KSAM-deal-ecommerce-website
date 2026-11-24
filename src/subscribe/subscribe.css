@@ -1,0 +1,705 @@
+/* ============================================================
+   KSAM DEAL - MEMBERSHIP CHECKOUT (SUBSCRIBE) STYLES
+   Dark theme, Lime #84FF00 accents, Glassmorphism, 4-Step Stepper
+   ============================================================ */
+
+:root {
+  --sub-bg: #050a02;
+  --sub-surface: #0a1106;
+  --sub-card: #0e1709;
+  --sub-card-hover: #131e0c;
+  --sub-border: rgba(255, 255, 255, 0.1);
+  --sub-border-hover: rgba(132, 255, 0, 0.35);
+  --sub-lime: #84FF00;
+  --sub-lime-glow: rgba(132, 255, 0, 0.25);
+  --sub-teal: #26D9F8;
+  --sub-amber: #FFD60A;
+  --sub-text: #F1F5F9;
+  --sub-text-muted: rgba(255, 255, 255, 0.6);
+  --sub-text-faint: rgba(255, 255, 255, 0.38);
+}
+
+.sub-checkout-page {
+  min-height: 100vh;
+  background-color: var(--sub-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(132, 255, 0, 0.12), transparent),
+    radial-gradient(circle 600px at 90% 70%, rgba(38, 217, 248, 0.05), transparent),
+    radial-gradient(circle 450px at 10% 40%, rgba(132, 255, 0, 0.04), transparent);
+  color: var(--sub-text);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   TOP BAR & 4-STEP STEPPER
+   ============================================================ */
+.sub-topbar {
+  background: rgba(5, 10, 2, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--sub-border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.sub-topbar-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sub-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--sub-text);
+}
+
+.sub-brand-logo {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
+.sub-brand-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sub-brand-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: rgba(132, 255, 0, 0.15);
+  color: var(--sub-lime);
+  border: 1px solid rgba(132, 255, 0, 0.3);
+}
+
+/* 4-Step Stepper */
+.sub-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+}
+
+.sub-step-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  color: inherit;
+  font: inherit;
+  transition: all 0.25s ease;
+}
+
+.sub-step-node:disabled {
+  cursor: default;
+}
+
+.sub-step-indicator {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(20, 26, 16, 0.9);
+  color: var(--sub-text-muted);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.sub-step-node.is-active .sub-step-indicator {
+  border-color: var(--sub-lime);
+  background: var(--sub-lime);
+  color: #000000;
+  box-shadow: 0 0 16px var(--sub-lime-glow);
+}
+
+.sub-step-node.is-completed .sub-step-indicator {
+  border-color: var(--sub-lime);
+  background: rgba(132, 255, 0, 0.15);
+  color: var(--sub-lime);
+}
+
+.sub-step-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--sub-text-muted);
+  transition: color 0.25s ease;
+  white-space: nowrap;
+}
+
+.sub-step-node.is-active .sub-step-title {
+  color: #ffffff;
+}
+
+.sub-step-node.is-completed .sub-step-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sub-step-line {
+  width: 28px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sub-step-line.is-active {
+  background: var(--sub-lime);
+}
+
+.sub-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sub-text-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+}
+
+.sub-back-link:hover {
+  color: #ffffff;
+  border-color: var(--sub-border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================================
+   CARD CONTAINERS & GLASS EFFECT
+   ============================================================ */
+.sub-card {
+  background: var(--sub-card);
+  border: 1px solid var(--sub-border);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.25s ease;
+}
+
+@media (min-width: 640px) {
+  .sub-card {
+    padding: 32px;
+  }
+}
+
+.sub-card-interactive:hover {
+  border-color: var(--sub-border-hover);
+}
+
+/* ============================================================
+   PLAN SELECTABLE CARDS (STEP 1)
+   ============================================================ */
+.sub-plan-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .sub-plan-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.sub-plan-card {
+  background: rgba(14, 22, 10, 0.7);
+  border: 1.5px solid var(--sub-border);
+  border-radius: 18px;
+  padding: 22px 18px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sub-plan-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(132, 255, 0, 0.4);
+  background: rgba(18, 28, 12, 0.85);
+}
+
+.sub-plan-card.is-selected {
+  border-color: var(--sub-lime);
+  background: rgba(132, 255, 0, 0.08);
+  box-shadow: 0 0 24px var(--sub-lime-glow);
+}
+
+.sub-plan-popular-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--sub-lime);
+  color: #000000;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 10px rgba(132, 255, 0, 0.4);
+  white-space: nowrap;
+}
+
+.sub-plan-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sub-plan-card.is-selected .sub-plan-radio {
+  border-color: var(--sub-lime);
+  background: var(--sub-lime);
+}
+
+.sub-plan-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000000;
+}
+
+/* ============================================================
+   COMPARE PLANS EXPANDABLE TABLE
+   ============================================================ */
+.sub-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.sub-compare-table th,
+.sub-compare-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sub-compare-table th {
+  color: var(--sub-text-muted);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sub-compare-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ============================================================
+   FORM INPUTS & LABELS (STEP 2)
+   ============================================================ */
+.sub-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sub-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sub-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.sub-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(10, 16, 8, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.sub-input::placeholder {
+  color: var(--sub-text-faint);
+}
+
+.sub-input:focus {
+  border-color: var(--sub-lime);
+  background: rgba(14, 22, 10, 0.95);
+  box-shadow: 0 0 0 3px rgba(132, 255, 0, 0.15);
+}
+
+.sub-input.has-error {
+  border-color: #EF4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.sub-input-error {
+  font-size: 11px;
+  font-weight: 600;
+  color: #F87171;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ============================================================
+   PAYMENT METHOD ROWS (STEP 3)
+   ============================================================ */
+.sub-payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sub-payment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 1.5px solid var(--sub-border);
+  background: rgba(12, 18, 9, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sub-payment-row:hover {
+  border-color: rgba(132, 255, 0, 0.3);
+  background: rgba(16, 25, 12, 0.85);
+}
+
+.sub-payment-row.is-selected {
+  border-color: var(--sub-lime);
+  background: rgba(132, 255, 0, 0.08);
+  box-shadow: 0 0 20px var(--sub-lime-glow);
+}
+
+.sub-payment-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sub-payment-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sub-lime);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PRIMARY BUTTONS & CTA
+   ============================================================ */
+.sub-btn-primary {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #000000;
+  background: linear-gradient(135deg, #84FF00 0%, #26D9F8 100%);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(132, 255, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.sub-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(132, 255, 0, 0.5);
+  filter: brightness(1.05);
+}
+
+.sub-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.sub-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.sub-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.sub-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================================
+   RIGHT COLUMN: ORDER SUMMARY CARD
+   ============================================================ */
+.sub-summary-sticky {
+  position: sticky;
+  top: 88px;
+}
+
+.sub-summary-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--sub-text-muted);
+  padding: 6px 0;
+}
+
+.sub-summary-line.total {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 10px;
+  padding-top: 14px;
+}
+
+/* Coupon Box */
+.sub-coupon-wrap {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.sub-coupon-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(10, 16, 8, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-family: inherit;
+  outline: none;
+  letter-spacing: 0.05em;
+}
+
+.sub-coupon-input:focus {
+  border-color: var(--sub-lime);
+}
+
+.sub-coupon-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sub-coupon-btn:hover:not(:disabled) {
+  background: rgba(132, 255, 0, 0.2);
+  border-color: var(--sub-lime);
+  color: var(--sub-lime);
+}
+
+/* Trust & Security Badges */
+.sub-trust-box {
+  background: rgba(10, 16, 8, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.sub-trust-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================
+   MOBILE COLLAPSIBLE SUMMARY & STICKY PAY BAR
+   ============================================================ */
+.sub-mobile-summary-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(14, 22, 10, 0.95);
+  border-bottom: 1px solid var(--sub-border);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  width: 100%;
+}
+
+.sub-mobile-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(8, 14, 6, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--sub-border);
+  padding: 12px 18px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* ============================================================
+   STEP 4: SUCCESS CELEBRATION
+   ============================================================ */
+.sub-success-check {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(132, 255, 0, 0.15);
+  border: 2px solid var(--sub-lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sub-lime);
+  margin: 0 auto 20px;
+  box-shadow: 0 0 35px var(--sub-lime-glow);
+  animation: pulse-check 2s infinite;
+}
+
+@keyframes pulse-check {
+  0%, 100% {
+    box-shadow: 0 0 25px var(--sub-lime-glow);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(132, 255, 0, 0.45);
+  }
+}
+
+/* ============================================================
+   FAQ ACCORDION
+   ============================================================ */
+.sub-faq-item {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(12, 18, 9, 0.6);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.sub-faq-trigger {
+  width: 100%;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sub-faq-trigger:hover {
+  color: var(--sub-lime);
+}
+
+.sub-faq-body {
+  padding: 0 18px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sub-text-muted);
+}
+
+/* ============================================================
+   PRINTABLE RECEIPT MODAL
+   ============================================================ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #sub-printable-receipt, #sub-printable-receipt * {
+    visibility: visible;
+  }
+  #sub-printable-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}

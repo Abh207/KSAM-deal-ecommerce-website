@@ -45,8 +45,6 @@ import CursorGlow
 
 import ScrollProgress
     from "./components/ScrollProgress.jsx";
-import ProductCard
-    from "./components/ProductCard.jsx";
 import { saveDealsNavigationState, getDealsNavigationState, clearDealsNavigationState } from "./services/productService.js";
 import { cartStore } from "./store/cartStore.js";
 import "./responsive-cards.css";
@@ -71,13 +69,6 @@ function markSplashSeen() {
 
 function Deals() {
     const [toast, setToast] =
-        useState("");
-
-
-    const [allSearchResults, setAllSearchResults] =
-        useState([]);
-
-    const [searchPageQuery, setSearchPageQuery] =
         useState("");
 
     /*
@@ -167,32 +158,13 @@ function Deals() {
     }
 
 
+    // Legacy search state cleanup: ensure Deals page always shows only normal deals
     useEffect(() => {
         const state = getDealsNavigationState();
-        if (state?.isSearchMode && Array.isArray(state?.searchResults) && state.searchResults.length > 0) {
-            setSearchPageQuery(state.searchPageQuery || "");
-            setAllSearchResults(state.searchResults);
+        if (state?.isSearchMode) {
+            saveDealsNavigationState({ isSearchMode: false, searchResults: null, searchPageQuery: "" });
         }
     }, []);
-
-    function handleViewAll(searchQuery, products) {
-        setSearchPageQuery(searchQuery || "");
-        setAllSearchResults(Array.isArray(products) ? products : []);
-        saveDealsNavigationState({
-            searchPageQuery: searchQuery || "",
-            searchResults: Array.isArray(products) ? products : [],
-            isSearchMode: true,
-            scrollY: window.scrollY
-        });
-        setTimeout(() => {
-            const el = document.querySelector(".search-results-section");
-            if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-        }, 120);
-    }
-
-
 
     return (
 
@@ -215,64 +187,10 @@ function Deals() {
 
             <CursorGlow />
 
-<Navbar
-    onViewAll={handleViewAll}
-/>
+            <Navbar />
 
             <main>
-
-    {/* SEARCH RESULTS */}
-    {allSearchResults.length > 0 && (
-        <section className="search-results-section">
-
-            {/* Search Results Header */}
-            <div className="search-results-header">
-
-                <div>
-                    <p className="search-results-label">
-                        KSAM DEAL SEARCH
-                    </p>
-
-                    <h2>
-                        Results for "{searchPageQuery}"
-                    </h2>
-
-                    <p>
-                        {allSearchResults.length} products found
-                    </p>
-                </div>
-
-                <button
-                    type="button"
-                    onClick={() => {
-                        setAllSearchResults([]);
-                        setSearchPageQuery("");
-                        clearDealsNavigationState();
-                    }}
-                    className="search-results-close"
-                >
-                    Clear results
-                </button>
-
-            </div>
-
-
-            {/* Products Grid */}
-            <div className="search-results-grid">
-                {allSearchResults.map((product, idx) => (
-                    <ProductCard
-                        key={product.id || idx}
-                        product={product}
-                        index={idx}
-                    />
-                ))}
-            </div>
-
-        </section>
-    )}
-
-
-    <HeroHead />
+                <HeroHead />
 
     
 

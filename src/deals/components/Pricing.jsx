@@ -1,36 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { requireAuth, BASE_URL } from "../../auth/auth.js";
+import { BASE_URL } from "../../auth/auth.js";
+import { PLANS } from "../../lib/plansConfig.js";
 
 /* ============================================================
-   DATA
+   DATA - Sourced from shared plansConfig
 ============================================================ */
-const plans = [
-  {
-    name: "Explorer",
-    amount: 0,
-    description: "For discovering deals.",
-    icon: "compass",
-    accent: "#38BDF8",
-    features: ["Deal discovery", "Product search", "Category filters", "External store links"],
-  },
-  {
-    name: "Deal Hunter",
-    amount: 99,
-    description: "For frequent deal hunters.",
-    icon: "flame",
-    accent: "#8cff00",
-    features: ["Everything in Explorer", "Deal alerts", "Saved products", "Price tracking"],
-    popular: true,
-  },
-  {
-    name: "Pro",
-    amount: 199,
-    description: "For advanced shoppers.",
-    icon: "crown",
-    accent: "#A855F7",
-    features: ["Everything in Deal Hunter", "Advanced tracking", "Personalized recommendations", "AI-powered discovery"],
-  },
-];
+const plans = PLANS.map((p) => ({
+  ...p,
+  amount: p.monthlyPrice,
+}));
 
 const YEARLY_DISCOUNT = 0.2;
 
@@ -159,7 +137,26 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly, currentPlan 
 
   const yearlyTotal = Math.round(amount * (1 - YEARLY_DISCOUNT) * 12);
   const isSelected = selected === name;
-  const isCurrentPlan = currentPlan && String(currentPlan).toLowerCase() === name.toLowerCase();
+  const planSlug = plan.slug || name.toLowerCase().replace(/\s+/g, "-");
+  const isCurrentPlan = currentPlan && (
+    String(currentPlan).toLowerCase() === name.toLowerCase() ||
+    String(currentPlan).toLowerCase() === planSlug
+  );
+
+  const buttonText = isCurrentPlan
+    ? "Current plan"
+    : currentPlan
+      ? "Upgrade"
+      : "Get Started";
+
+  const handleCtaClick = () => {
+    if (isCurrentPlan) {
+      window.location.href = `${BASE_URL}profile.html#subscription`;
+      return;
+    }
+    const targetUrl = `${BASE_URL}subscribe.html?plan=${planSlug}&billing=${yearly ? "yearly" : "monthly"}`;
+    window.location.href = targetUrl;
+  };
 
   return (
     <div
@@ -243,27 +240,20 @@ function PlanCard({ plan, index, shown, selected, onSelect, yearly, currentPlan 
           {/* CTA */}
           <button
             type="button"
-            onClick={() => {
-              const returnUrl = `${BASE_URL}profile.html#pricing`;
-              if (!requireAuth({ type: "pricing", planName: name, returnTo: returnUrl })) {
-                return;
-              }
-              onSelect(isSelected ? null : name);
-              try {
-                localStorage.setItem("ksam_user_plan", name);
-              } catch (e) {}
-            }}
-            aria-pressed={isSelected}
+            onClick={handleCtaClick}
+            aria-pressed={isCurrentPlan}
             className={`pr-cta group/btn relative flex w-full items-center justify-center overflow-hidden rounded-2xl border text-sm font-black transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8cff00] active:scale-[0.97] ${
-              popular || isSelected
-                ? "border-transparent bg-gradient-to-r from-[#8cff00] to-[#38BDF8] text-black hover:shadow-[0_0_40px_rgba(140, 255, 0, .35)]"
-                : "border-white/15 text-white hover:border-transparent hover:bg-white hover:text-black"
+              isCurrentPlan
+                ? "border-[#8cff00]/40 bg-[#8cff00]/15 text-[#8cff00] hover:bg-[#8cff00]/25"
+                : popular || isSelected
+                  ? "border-transparent bg-gradient-to-r from-[#8cff00] to-[#38BDF8] text-black hover:shadow-[0_0_40px_rgba(140, 255, 0, .35)]"
+                  : "border-white/15 text-white hover:border-transparent hover:bg-white hover:text-black"
             }`}
           >
             <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full" />
-            <span className="relative">{isSelected ? "Selected" : "Get Started"}</span>
+            <span className="relative">{buttonText}</span>
             <span className="relative transition-transform duration-300 group-hover/btn:translate-x-1.5">
-              <Icon name={isSelected ? "check" : "arrow"} size={17} />
+              <Icon name={isCurrentPlan ? "check" : "arrow"} size={17} />
             </span>
           </button>
         </article>

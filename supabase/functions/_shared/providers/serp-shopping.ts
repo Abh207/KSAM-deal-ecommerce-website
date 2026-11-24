@@ -22,6 +22,33 @@ function extractMerchantUrl(rawUrl?: string): string {
   }
 }
 
+function deriveStoreFromUrl(urlStr?: string): string {
+  if (!urlStr) return "";
+  try {
+    const host = new URL(urlStr).hostname.replace(/^(www\.|m\.)/i, "").toLowerCase();
+    if (host.includes("google.")) return "";
+    if (host.includes("flipkart.")) return "Flipkart";
+    if (host.includes("amazon.")) return "Amazon India";
+    if (host.includes("myntra.")) return "Myntra";
+    if (host.includes("ajio.")) return "AJIO";
+    if (host.includes("croma.")) return "Croma";
+    if (host.includes("tatacliq.")) return "Tata CLiQ";
+    if (host.includes("boat-lifestyle.") || host.includes("boat.")) return "boAt";
+    if (host.includes("meesho.")) return "Meesho";
+    if (host.includes("nykaa.")) return "Nykaa";
+    if (host.includes("reliancedigital.")) return "Reliance Digital";
+    if (host.includes("vijaysales.")) return "Vijay Sales";
+    if (host.includes("etoren.")) return "Etoren.com";
+    if (host.includes("samsung.")) return "Samsung";
+    if (host.includes("apple.")) return "Apple";
+    const domain = host.replace(/\.(co|com|org|net|gov|edu)\.[a-z]{2,4}$/i, "").replace(/\.[a-z]{2,8}$/i, "").split(".").pop();
+    if (domain && domain !== "google" && !domain.includes("ksam") && !domain.includes("serp")) {
+      return domain.charAt(0).toUpperCase() + domain.slice(1);
+    }
+  } catch {}
+  return "";
+}
+
 export class SerpShoppingAdapter implements ProviderAdapter {
   slug = "serp-shopping";
   name = "Licensed Shopping Data (Google Shopping India)";
@@ -116,24 +143,35 @@ export class SerpShoppingAdapter implements ProviderAdapter {
         const normalized = [];
 
         for (const item of shoppingResults) {
-          const merchant = (item.source || item.merchant || "").toLowerCase();
-          let storeSlug = "serp-shopping";
-          if (merchant.includes("amazon")) storeSlug = "amazon";
-          else if (merchant.includes("flipkart")) storeSlug = "flipkart";
-          else if (merchant.includes("croma")) storeSlug = "croma";
-          else if (merchant.includes("myntra")) storeSlug = "myntra";
-          else if (merchant.includes("ajio")) storeSlug = "ajio";
-          else if (merchant.includes("jiomart")) storeSlug = "jiomart";
-
+          const rawMerchant = String(item.source || item.merchant || "").trim();
           const rawUrl = item.link || item.product_link;
           const directUrl = extractMerchantUrl(rawUrl);
+
+          let merchantName = rawMerchant;
+          if (!merchantName || merchantName.toLowerCase() === "google shopping" || merchantName.toLowerCase().includes("serp")) {
+            merchantName = deriveStoreFromUrl(directUrl || rawUrl);
+          }
+
+          const storeSlug = merchantName
+            ? merchantName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
+            : "partner-store";
+
+          let description = item.snippet || "";
+          if (!description && Array.isArray(item.extensions) && item.extensions.length > 0) {
+            description = item.extensions.join(" • ");
+          }
+          if (!description && item.features) {
+            description = Array.isArray(item.features) ? item.features.join(" • ") : String(item.features);
+          }
 
           const product = normalizeAndValidateProduct(
             {
               store_slug: storeSlug,
+              store_name: merchantName || undefined,
               external_id: item.product_id || item.docid || item.link,
               name: item.title,
               category: options.category || "Deals",
+              description: description || undefined,
               image_url: item.thumbnail || item.serpapi_thumbnail,
               price: item.extracted_price || item.price,
               old_price: item.extracted_old_price || item.old_price,
@@ -142,7 +180,13 @@ export class SerpShoppingAdapter implements ProviderAdapter {
               reviews: item.reviews,
               product_url: directUrl || rawUrl,
               affiliate_url: directUrl || rawUrl,
-              raw: { source: item.source || item.merchant || "Google Shopping" }
+              raw: {
+                source: merchantName,
+                snippet: item.snippet,
+                extensions: item.extensions,
+                serpapi_product_id: item.product_id,
+                immersive_token: item.immersive_token
+              }
             },
             { isSearch: options.isSearch }
           );

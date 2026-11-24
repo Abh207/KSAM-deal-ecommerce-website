@@ -12,7 +12,13 @@ import {
   RotateCcw,
   ArrowRight,
   ExternalLink,
-  ArrowUp
+  ArrowUp,
+  Tag,
+  Clock,
+  Info,
+  ChevronDown,
+  ChevronUp,
+  Building
 } from "lucide-react";
 
 import Navbar from "../deals/components/Navbar.jsx";
@@ -37,7 +43,11 @@ import {
   isSafeAffiliateUrl,
   logPlatformClick,
   getDealFromSession,
-  upsertExternalDeal
+  upsertExternalDeal,
+  getStoreName,
+  deriveCategoryFromName,
+  formatTimeAgo,
+  getSearchNavigationState
 } from "../deals/services/productService.js";
 import { getCategoryPage, getCategoryBackLabel } from "../lib/categoryPageMap.js";
 import { ProductCard } from "../deals/components/ProductCard.jsx";
@@ -57,22 +67,33 @@ import DualMarqueeShowcase from "./components/DualMarqueeShowcase.jsx";
 
 import "./productDetail.css";
 
-// Data honesty: only return real description if present
+// Data honesty: only return real description if present (never invented text)
 function getRealDescription(product) {
   if (!product) return "";
-  if (product.description && typeof product.description === "string" && product.description.trim()) {
-    return product.description.trim();
-  }
-  if (product.desc && typeof product.desc === "string" && product.desc.trim()) {
-    return product.desc.trim();
-  }
-  if (product.details && typeof product.details === "string" && product.details.trim()) {
-    return product.details.trim();
-  }
-  return "";
+  const raw =
+    (product.description && typeof product.description === "string" && product.description.trim()) ||
+    (product.desc && typeof product.desc === "string" && product.desc.trim()) ||
+    (product.details && typeof product.details === "string" && product.details.trim()) ||
+    "";
+  if (!raw || raw.startsWith("Verified hot deal on")) return "";
+  const clean = raw
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (clean.length < 20 || clean.startsWith("Verified hot deal on")) return "";
+  return clean;
 }
 
-// Data honesty: only return real key features if present in product data
+// Data honesty: only return real key features if present in product data (no invented marketing claims)
 function getRealKeyFeatures(product) {
   if (!product) return [];
   const raw =
@@ -82,40 +103,64 @@ function getRealKeyFeatures(product) {
     (Array.isArray(product.highlights) && product.highlights);
   if (raw && raw.length > 0) {
     return raw
-      .filter((f) => typeof f === "string" && f.trim().length > 0)
+      .filter(
+        (f) =>
+          typeof f === "string" &&
+          f.trim().length > 0 &&
+          !f.includes("100% Genuine product verified") &&
+          !f.includes("Live price tracking across") &&
+          !f.includes("Official brand warranty") &&
+          !f.includes("Fast dispatch and secure checkout")
+      )
       .map((f) => f.trim());
   }
   return [];
 }
 
 // Data honesty: only return real specifications if present in product data
-function getRealSpecs(product, storeName) {
+function getRealSpecs(product, storeName, enrichedSpecs) {
   if (!product) return [];
   const list = [];
-  if (product.brand && typeof product.brand === "string" && product.brand.trim()) {
-    list.push({ label: "Brand", value: product.brand.trim() });
+  const brand = (product.brand && typeof product.brand === "string" ? product.brand.trim() : "") || enrichedSpecs?.brand || "";
+  if (brand && !brand.toLowerCase().includes("ksam")) {
+    list.push({ label: "Brand", value: brand });
   }
-  if (product.category && typeof product.category === "string" && product.category.trim()) {
-    list.push({ label: "Category", value: product.category.trim() });
+  if (storeName && !storeName.toLowerCase().includes("ksam")) {
+    list.push({ label: "Sold by", value: storeName });
   }
-  if (product.model || product.sku) {
-    list.push({ label: "Model / SKU", value: String(product.model || product.sku) });
+  const cat = product.category && typeof product.category === "string" ? product.category.trim() : "";
+  if (cat && cat.toLowerCase() !== "deals" && cat.toLowerCase() !== "deal" && cat.toLowerCase() !== "search" && cat.toLowerCase() !== "general") {
+    list.push({ label: "Category", value: cat });
+  }
+  const modelSku = product.sku || product.model || enrichedSpecs?.sku;
+  if (modelSku) {
+    list.push({ label: "Model / SKU", value: String(modelSku) });
+  }
+  const condition = product.condition || enrichedSpecs?.condition;
+  if (condition && condition !== "New") {
+    list.push({ label: "Condition", value: condition });
   }
   if (product.color && typeof product.color === "string" && product.color.trim()) {
     list.push({ label: "Color", value: product.color.trim() });
   }
-  if (product.specs && typeof product.specs === "object") {
-    for (const [key, val] of Object.entries(product.specs)) {
-      if (val && typeof val === "string" && val.trim()) {
+
+  const combinedSpecs = {
+    ...(typeof product.specs === "object" ? product.specs : {}),
+    ...(typeof product.specifications === "object" ? product.specifications : {}),
+    ...(typeof enrichedSpecs === "object" ? enrichedSpecs : {})
+  };
+
+  for (const [key, val] of Object.entries(combinedSpecs)) {
+    if (val && typeof val === "string" && val.trim()) {
+      const lower = key.toLowerCase();
+      if (!["brand", "sold by", "category", "sku", "model", "condition", "color", "availability"].includes(lower)) {
         list.push({ label: key, value: val.trim() });
       }
     }
   }
+
   if (product.availability && typeof product.availability === "string" && product.availability.trim() && product.availability !== "Unknown") {
     list.push({ label: "Availability", value: product.availability.trim() });
-  }
-  if (storeName && storeName !== "KSAM Deal") {
-    list.push({ label: "Store", value: storeName });
   }
   return list;
 }
@@ -599,6 +644,44 @@ function ProductSingleDetail() {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedSize, setSelectedSize] = useState("");
   const [sizeError, setSizeError] = useState("");
+  const [descExpanded, setDescExpanded] = useState(false);
+  const [enrichedDesc, setEnrichedDesc] = useState("");
+  const [isEnriching, setIsEnriching] = useState(false);
+  const enrichmentAttempted = useRef(false);
+
+  // If description is missing from product, call enrich-product once
+  useEffect(() => {
+    if (!product || enrichmentAttempted.current) return;
+    const existing = getRealDescription(product);
+    if (!existing) {
+      enrichmentAttempted.current = true;
+      setIsEnriching(true);
+      const url = `${import.meta.env.VITE_SUPABASE_URL || "https://epchmnhmwnrchgflgwdf.supabase.co"}/functions/v1/enrich-product`;
+      const key = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": key,
+          "Authorization": `Bearer ${key}`
+        },
+        body: JSON.stringify({
+          product_id: product.id,
+          external_id: product.external_id || (String(product.id || "").startsWith("ext-") ? String(product.id).slice(4) : undefined),
+          url: product.affiliate_url || product.product_url || product.url,
+          title: product.name || product.title
+        })
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.success && data?.description) {
+            setEnrichedDesc(data.description);
+          }
+        })
+        .catch(() => {})
+        .finally(() => setIsEnriching(false));
+    }
+  }, [product]);
 
   const base = import.meta.env.BASE_URL || "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
@@ -782,7 +865,8 @@ function ProductSingleDetail() {
 
   // 1. Explicit ?from= parameter takes highest precedence
   let origin = null;
-  if (fromParam === "list") origin = "list";
+  if (fromParam === "search" || referrer.includes("search.html")) origin = "search";
+  else if (fromParam === "list") origin = "list";
   else if (fromParam === "wishlist") origin = "wishlist";
   else if (fromParam === "deals") origin = "deals";
   else if (fromParam === "audio" || fromParam === "speakers" || fromParam === "gadgets") origin = "audio";
@@ -798,7 +882,8 @@ function ProductSingleDetail() {
 
   // 2. Referrer check if no explicit ?from=
   if (!origin && referrer) {
-    if (referrer.includes("wishlist")) origin = "wishlist";
+    if (referrer.includes("search.html")) origin = "search";
+    else if (referrer.includes("wishlist")) origin = "wishlist";
     else if (referrer.includes("deals.html") || referrer.includes("deal.html")) origin = "deals";
     else if (referrer.includes("audio.html")) origin = "audio";
     else if (referrer.includes("electronics.html") || referrer.includes("fashionspeaker.html")) origin = "electronics";
@@ -830,6 +915,7 @@ function ProductSingleDetail() {
     }
   }
 
+  const isFromSearch = origin === "search" || fromParam === "search";
   const isFromList = origin === "list" || fromParam === "list";
   const isFromWishlist = origin === "wishlist";
   const isFromDeals = origin === "deals";
@@ -902,7 +988,23 @@ function ProductSingleDetail() {
   const listTargetSlug = slugify(listTargetCat);
   const listTargetLabel = mapCategoryDisplayLabel(listTargetSlug);
 
-  const backUrl = isFromList
+  const savedSearchQuery = (() => {
+    try {
+      const q = params.get("q");
+      if (q) return q;
+      const s = getSearchNavigationState();
+      if (s?.query) return s.query;
+      return "";
+    } catch {
+      return "";
+    }
+  })();
+
+  const searchUrl = `${normalizedBase}search.html${savedSearchQuery ? `?q=${encodeURIComponent(savedSearchQuery)}` : ""}`;
+
+  const backUrl = isFromSearch
+    ? searchUrl
+    : isFromList
     ? `${normalizedBase}product.html?view=list&category=${encodeURIComponent(listTargetSlug)}`
     : isFromDeals
     ? dealsUrl
@@ -932,7 +1034,9 @@ function ProductSingleDetail() {
     ? `${normalizedBase}${getCategoryPage(fallbackCat)}`
     : dealsUrl;
 
-  const backLabel = isFromList
+  const backLabel = isFromSearch
+    ? "Back to results"
+    : isFromList
     ? `Back to ${listTargetLabel}`
     : isFromDeals
     ? "Back to Deals"
@@ -968,6 +1072,17 @@ function ProductSingleDetail() {
       typeof document !== "undefined" &&
       document.referrer &&
       document.referrer.startsWith(window.location.origin);
+    const isFromSearchReferrer = hasSameOriginReferrer && document.referrer.toLowerCase().includes("search.html");
+
+    if (isFromSearch) {
+      if (isFromSearchReferrer && window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = searchUrl;
+      }
+      return;
+    }
+
     if (hasSameOriginReferrer && window.history.length > 1) {
       window.history.back();
     } else {
@@ -1077,28 +1192,26 @@ function ProductSingleDetail() {
 
   const ratingVal = dynamicRating?.avg ?? (product.rating && Number(product.rating) > 0 ? Number(product.rating) : null);
   const reviewsCount = dynamicRating?.count ?? (product.reviews && Number(product.reviews) > 0 ? Number(product.reviews) : (product.review_count && Number(product.review_count) > 0 ? Number(product.review_count) : null));
-  const description = getRealDescription(product);
+  const description = enrichedDesc || getRealDescription(product);
   const keyFeatures = getRealKeyFeatures(product);
 
   // Real store name & external product classification
-  const bestPlatform =
-    product.store ||
-    product.platform ||
-    product.bestOffer?.platform ||
-    product.stores?.name ||
-    product.source ||
-    (product.external_id ? "Partner Store" : "KSAM Deal");
+  const bestPlatform = getStoreName(product);
 
   const isExternal = Boolean(
+    bestPlatform ||
     product.store_id ||
     product.external_id ||
     String(product.id || "").startsWith("ext-") ||
     product.affiliate_url ||
     product.affiliateUrl ||
-    (product.bestOffer && product.bestOffer.platform && product.bestOffer.platform !== "KSAM Deal") ||
-    (product.platform && product.platform !== "KSAM Deal") ||
-    (product.store && product.store !== "KSAM Deal")
+    product.product_url
   );
+
+  let displayCategory = (product.category || "").trim();
+  if (!displayCategory || displayCategory.toLowerCase() === "deals" || displayCategory.toLowerCase() === "deal" || displayCategory.toLowerCase() === "search") {
+    displayCategory = deriveCategoryFromName(product.name || product.title);
+  }
 
   const rawBuyUrl =
     product.affiliate_url ||
@@ -1115,7 +1228,7 @@ function ProductSingleDetail() {
     e.preventDefault();
     if (!safeBuyUrl) return;
     try {
-      logPlatformClick(product.id, bestPlatform, safeBuyUrl);
+      logPlatformClick(product.id, bestPlatform || "Partner Store", safeBuyUrl);
     } catch {}
     window.open(safeBuyUrl, "_blank", "nofollow sponsored noopener noreferrer");
   };
@@ -1132,17 +1245,28 @@ function ProductSingleDetail() {
   return (
     <div className="product-detail-page">
       {/* 1. Shared KSAM Navbar */}
-      <Navbar searchPlaceholder={`Search ${product.category?.toLowerCase() || "deals"}...`} />
+      <Navbar searchPlaceholder={`Search ${displayCategory.toLowerCase() || "deals"}...`} />
 
       <main className="product-detail-main">
-        {/* Breadcrumb Navigation: Home / Category / Product Name */}
+        {/* Breadcrumb Navigation: Home / Category or Search / Product Name */}
         <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
           <a href={homeUrl}>Home</a>
           <span className="sep">/</span>
-          <a href={backUrl} onClick={isFromDeals ? handleSmartBack : undefined}>
-            {product.category || "Catalog"}
-          </a>
-          <span className="sep">/</span>
+          {isFromSearch ? (
+            <>
+              <a href={searchUrl} onClick={handleSmartBack}>
+                Search results
+              </a>
+              <span className="sep">/</span>
+            </>
+          ) : (
+            <>
+              <a href={backUrl} onClick={isFromDeals ? handleSmartBack : undefined}>
+                {displayCategory || "Catalog"}
+              </a>
+              <span className="sep">/</span>
+            </>
+          )}
           <span className="current">{product.name || product.title}</span>
         </nav>
 
@@ -1215,7 +1339,7 @@ function ProductSingleDetail() {
           {/* Right Column: Product Information Block */}
           <div className="product-detail-info">
             <span className="product-detail-cat-pill">
-              {product.category || "Product"}
+              {displayCategory}
             </span>
 
             <h1 className="product-detail-title">
@@ -1259,16 +1383,49 @@ function ProductSingleDetail() {
                   Save {discountPct}%
                 </span>
               ) : null}
-              <div className="product-detail-platform-tag">
-                Best price on {bestPlatform}
-              </div>
+              {bestPlatform ? (
+                <div className="product-detail-platform-tag">
+                  Best price on {bestPlatform}
+                </div>
+              ) : null}
             </div>
 
-            {/* Description (hidden if missing) */}
+            {/* Description (hidden if missing) with Read more / Read less toggle */}
             {description ? (
               <div className="product-detail-desc-block">
                 <h2 className="product-detail-section-title">Description</h2>
-                <p className="product-detail-desc">{description}</p>
+                <p className="product-detail-desc">
+                  {description.length > 240 && !descExpanded
+                    ? `${description.slice(0, 240)}...`
+                    : description}
+                </p>
+                {description.length > 240 && (
+                  <button
+                    type="button"
+                    className="product-detail-desc-toggle-btn"
+                    onClick={() => setDescExpanded((prev) => !prev)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#84FF00",
+                      cursor: "pointer",
+                      padding: "4px 0",
+                      fontSize: "13px",
+                      fontWeight: "600",
+                      display: "inline-block",
+                      marginTop: "6px"
+                    }}
+                  >
+                    {descExpanded ? "Read less" : "Read more"}
+                  </button>
+                )}
+              </div>
+            ) : isEnriching ? (
+              <div className="product-detail-desc-block">
+                <h2 className="product-detail-section-title">Description</h2>
+                <p className="product-detail-desc" style={{ color: "#94a3b8", fontStyle: "italic" }}>
+                  Fetching authentic product details...
+                </p>
               </div>
             ) : null}
 
@@ -1302,23 +1459,25 @@ function ProductSingleDetail() {
               </div>
             ) : null}
 
-            {/* Delivery & Returns Line */}
-            <div className="product-detail-trust-line">
-              <div className="trust-item">
-                <Truck size={16} className="trust-icon" />
-                <span>Free delivery on qualifying orders</span>
+            {/* Delivery & Returns Line: Keep only for direct site products */}
+            {!isExternal && (
+              <div className="product-detail-trust-line">
+                <div className="trust-item">
+                  <Truck size={16} className="trust-icon" />
+                  <span>Free delivery on qualifying orders</span>
+                </div>
+                <span className="trust-dot">·</span>
+                <div className="trust-item">
+                  <RotateCcw size={16} className="trust-icon" />
+                  <span>Easy returns</span>
+                </div>
+                <span className="trust-dot">·</span>
+                <div className="trust-item">
+                  <ShieldCheck size={16} className="trust-icon" />
+                  <span>Secure payment</span>
+                </div>
               </div>
-              <span className="trust-dot">·</span>
-              <div className="trust-item">
-                <RotateCcw size={16} className="trust-icon" />
-                <span>Easy returns</span>
-              </div>
-              <span className="trust-dot">·</span>
-              <div className="trust-item">
-                <ShieldCheck size={16} className="trust-icon" />
-                <span>Secure payment</span>
-              </div>
-            </div>
+            )}
 
             {/* Quantity Selector & Action Buttons */}
             <div className="product-detail-buy-section">
@@ -1423,9 +1582,9 @@ function ProductSingleDetail() {
                   className="product-detail-buy-platform-btn"
                   disabled={!safeBuyUrl}
                   onClick={handlePlatformBuy}
-                  aria-label={safeBuyUrl ? `Buy on ${bestPlatform}` : "Link unavailable"}
+                  aria-label={safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}
                 >
-                  <span>{safeBuyUrl ? `Buy on ${bestPlatform}` : "Link unavailable"}</span>
+                  <span>{safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}</span>
                   <ExternalLink size={18} />
                 </button>
 
@@ -1460,7 +1619,7 @@ function ProductSingleDetail() {
                                 <a
                                   href={offSafe}
                                   target="_blank"
-                                  rel="noopener noreferrer sponsored"
+                                  rel="nofollow sponsored noopener noreferrer"
                                   onClick={() => logPlatformClick(product.id, off.platform, offSafe)}
                                   className="product-detail-compare-buy-btn"
                                 >
@@ -1480,7 +1639,7 @@ function ProductSingleDetail() {
                 {/* 4. Redirect disclaimer & affiliate disclosure */}
                 <div className="product-detail-platform-note">
                   <p style={{ margin: "4px 0" }}>
-                    You will be redirected to the {bestPlatform} website to complete your purchase. Prices and availability may change.
+                    You will be redirected to the {bestPlatform || "merchant"} website to complete your purchase. Prices and availability may change.
                   </p>
                   <p style={{ margin: "2px 0", color: "#94a3b8" }}>
                     Disclosure: As an affiliate, KSAM Deal may earn a commission from qualifying purchases.

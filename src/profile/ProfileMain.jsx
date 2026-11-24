@@ -19,6 +19,7 @@ import ProfileProductStrip from "./components/ProfileProductStrip.jsx";
 
 import OverviewTab from "./components/OverviewTab.jsx";
 import OrdersHistoryTab from "./components/OrdersHistoryTab.jsx";
+import SubscriptionTab from "./components/SubscriptionTab.jsx";
 import PersonalInfoTab from "./components/PersonalInfoTab.jsx";
 import AddressesTab from "./components/AddressesTab.jsx";
 import PriceAlertsTab from "./components/PriceAlertsTab.jsx";
@@ -51,7 +52,7 @@ export const PAGES_WITHOUT_FOOTER = [
 ];
 
 const VALID_SECTIONS = [
-  "overview", "orders", "profile", "addresses", "alerts", "recent",
+  "overview", "orders", "subscription", "profile", "addresses", "alerts", "recent",
   "security", "notifications", "appearance", "help", "danger"
 ];
 
@@ -73,6 +74,16 @@ function SectionArt({ sectionId }) {
           <path d="M18 36H66" stroke="#84FF00" strokeWidth="2.5" />
           <circle cx="34" cy="50" r="4" fill="#38BDF8" />
           <path d="M44 50H54" stroke="#84FF00" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      );
+    case "subscription":
+      return (
+        <svg width="84" height="84" viewBox="0 0 84 84" fill="none" className="ks-art-svg">
+          <circle cx="42" cy="42" r="34" stroke="rgba(140, 255, 0, 0.25)" strokeWidth="2" strokeDasharray="4 4" />
+          <path d="M22 56L28 32L42 46L56 32L62 56H22Z" stroke="#84FF00" strokeWidth="2.5" strokeLinejoin="round" fill="rgba(132, 255, 0, 0.12)" />
+          <circle cx="28" cy="30" r="3.5" fill="#38BDF8" />
+          <circle cx="42" cy="44" r="3.5" fill="#FFD60A" />
+          <circle cx="56" cy="30" r="3.5" fill="#38BDF8" />
         </svg>
       );
     case "profile":
@@ -729,6 +740,14 @@ export function ProfileApp() {
                     session={session}
                     profile={profile}
                     onNavigateTab={navigateToSection}
+                  />
+                )}
+
+                {activeSection === "subscription" && (
+                  <SubscriptionTab
+                    session={session}
+                    profile={profile}
+                    onShowToast={(msg) => setToast(msg)}
                   />
                 )}
 

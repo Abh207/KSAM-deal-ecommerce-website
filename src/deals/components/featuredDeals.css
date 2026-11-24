@@ -1045,3 +1045,110 @@
     transform: none !important;
   }
 }
+
+/* ==========================================================================
+   INFINITE SCROLL PENTAGON LOADER & ERROR STYLES
+   ========================================================================== */
+.deals-pentagon-loader-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 0;
+  width: 100%;
+}
+
+.deals-pentagon-spinner {
+  width: 48px;
+  height: 48px;
+  animation: pentagonRotate 1.8s linear infinite;
+  transform-origin: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deals-pentagon-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.deals-pentagon-polygon {
+  stroke: #84FF00;
+  stroke-width: 3.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 125;
+  stroke-dashoffset: 0;
+  animation: pentagonDash 2.4s ease-in-out infinite;
+}
+
+@keyframes pentagonRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pentagonDash {
+  0% {
+    stroke-dashoffset: 125;
+  }
+  50% {
+    stroke-dashoffset: 25;
+  }
+  100% {
+    stroke-dashoffset: 125;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deals-pentagon-spinner {
+    animation: none;
+  }
+  .deals-pentagon-polygon {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+  }
+}
+
+.deals-load-error-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 30px 16px;
+  text-align: center;
+}
+
+.deals-load-error-text {
+  font-size: 13px;
+  color: #f87171;
+  margin: 0;
+}
+
+.deals-load-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 12px;
+  background: #84FF00;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.deals-load-retry-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.95;
+}

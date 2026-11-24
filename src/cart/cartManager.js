@@ -14,6 +14,7 @@ import {
   CART_STORAGE_KEY
 } from "../lib/cartHelper.js";
 import { toggleWishlist, isInWishlist } from "../lib/wishlist.js";
+import { getStoreName } from "../deals/services/productService.js";
 
 // Storage Keys
 export const SAVED_FOR_LATER_KEY = "ksam_saved_for_later";
@@ -702,12 +703,13 @@ function renderCartItems(cart, summary) {
       `
       : "";
 
-    const rawStore = product.store || product.platform || "";
-    const cleanStore = rawStore.replace(/^on\s+/i, "");
-    const store = cleanStore || "KSAM Deal Verified";
+    const store = getStoreName(product);
     const outboundUrl = product.product_url || product.affiliate_url || "";
-    const isExternal = Boolean(product.is_external || outboundUrl || (cleanStore && cleanStore.toLowerCase() !== "ksam"));
-    const category = product.category || "Deals";
+    const isExternal = Boolean(product.is_external || outboundUrl || store);
+    let category = product.category || "";
+    if (!category || category.toLowerCase() === "deals" || category.toLowerCase() === "deal") {
+      category = "Product";
+    }
     const productName = product.name || product.title || "Selected Product";
     const productImage = resolveSafeProductImage(product);
     const inWishlist = isInWishlist(product);
@@ -731,7 +733,7 @@ function renderCartItems(cart, summary) {
         <!-- Meta Row -->
         <div class="shop-cart-meta-row">
           <span class="shop-cart-category">${category}</span>
-          <span class="shop-cart-store-tag">• on ${store}</span>
+          ${store ? `<span class="shop-cart-store-tag">• on ${store}</span>` : ""}
           ${ratingMarkup}
         </div>
 

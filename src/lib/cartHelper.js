@@ -255,12 +255,13 @@ export function normalizeCartItem(product, qty) {
     Number(qty || product.quantity || product.qty || 1)
   );
 
-  const rawStore = String(product.store || product.platform || product.stores?.name || catalogItem?.store || "");
-  const store = rawStore.replace(/^on\s+/i, "");
+  const rawStore = String(product.store_name || product.store || product.platform || product.stores?.name || catalogItem?.store || "");
+  const strippedStore = rawStore.replace(/^on\s+/i, "").trim();
+  const store = strippedStore.toLowerCase().includes("ksam") ? "" : strippedStore;
   const product_url = String(product.product_url || product.affiliate_url || product.url || product.link || "");
   const affiliate_url = String(product.affiliate_url || product.product_url || product.url || product.link || "");
   const external_id = String(product.external_id || product.uid || (product_url ? rawId : ""));
-  const is_external = Boolean(product.is_external || product_url || affiliate_url || product.external_id || (store && store.toLowerCase() !== "ksam"));
+  const is_external = Boolean(product.is_external || product_url || affiliate_url || product.external_id || store);
 
   return {
     id: rawId,

@@ -2,7 +2,15 @@ import React, { useState, useEffect } from "react";
 import { ShoppingBag, Check, ArrowRight } from "lucide-react";
 import { isInWishlist, toggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { addProductToCart, buildProductUid, resolveImagePath } from "../../lib/cartHelper.js";
-import { getCategoryFallbackImage, saveDealToSession, upsertExternalDeal, saveDealsNavigationState } from "../services/productService.js";
+import {
+  getCategoryFallbackImage,
+  saveDealToSession,
+  upsertExternalDeal,
+  saveDealsNavigationState,
+  getStoreName,
+  deriveCategoryFromName,
+  cleanCardDescription
+} from "../services/productService.js";
 import "./dealCardV2.css";
 
 /**
@@ -48,18 +56,19 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
     toggleWishlist(item);
   };
 
+  const storeName = getStoreName(item);
+
   const handleQuickAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const storeResolved = item.store || item.platform || item.bestOffer?.platform || item.stores?.name || item.source || "";
-    const cleanStore = storeResolved.replace(/^on\s+/i, "");
     addProductToCart({
       ...item,
-      store: cleanStore,
-      platform: cleanStore,
+      store: storeName || "",
+      platform: storeName || "",
+      store_name: storeName || "",
       product_url: item.product_url || item.affiliate_url || item.url || item.link || "",
       affiliate_url: item.affiliate_url || item.product_url || item.url || item.link || "",
-      is_external: Boolean(item.product_url || item.affiliate_url || item.external_id || (cleanStore && cleanStore.toLowerCase() !== "ksam"))
+      is_external: Boolean(item.product_url || item.affiliate_url || item.external_id || storeName)
     }, 1);
     setAddedQuick(true);
     setTimeout(() => setAddedQuick(false), 1200);
@@ -83,8 +92,6 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
     }
   };
 
-  const platformName = item.store || item.platform || item.bestOffer?.platform || item.stores?.name || item.source || "";
-  const platformClean = platformName.replace(/^on\s+/i, "");
   const rawImage = !imgFailed && (item.image_url || item.image || item.thumbnail)
     ? resolveImagePath(item.image_url || item.image || item.thumbnail)
     : getCategoryFallbackImage(item.category, item.name);
@@ -102,14 +109,23 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
       ? (item.stock > 0 ? `${item.stock} items available` : "Out of stock")
       : null);
 
-  const descText = (item.description && item.description.trim()) || "";
+  const rawDesc = (item.description || item.desc || item.summary || "").trim();
+  const descText = cleanCardDescription(rawDesc, item.name || item.title);
+
+  let categoryLabel = (item.category || "").trim();
+  if (!categoryLabel || categoryLabel.toLowerCase() === "deals" || categoryLabel.toLowerCase() === "deal" || categoryLabel.toLowerCase() === "search") {
+    categoryLabel = deriveCategoryFromName(item.name || item.title);
+  }
+
+  const realBrand = item.brand && !item.brand.toLowerCase().includes("ksam") ? item.brand.trim() : "";
+  const displayBrandOrStore = realBrand || storeName || "";
 
   return (
     <article
       className="deal-card-v2"
       data-product-id={item.id}
       data-id={item.id}
-      data-category={item.category}
+      data-category={categoryLabel || item.category}
     >
       {/* 1. TOP IMAGE AREA */}
       <div className={`deal-card-img-wrap ${!imgLoaded && !imgFailed ? "is-skeleton" : ""}`}>
@@ -157,12 +173,14 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
       <div className="deal-card-content">
         {/* Meta row: category + platform chip */}
         <div className="deal-card-meta-row">
-          <span className="deal-card-cat-label">{item.category || "Deals"}</span>
-          {platformClean && (
-            <span className="deal-platform-chip" title={`Available on ${platformClean}`}>
-              on {platformClean}
+          {categoryLabel ? (
+            <span className="deal-card-cat-label">{categoryLabel}</span>
+          ) : null}
+          {storeName ? (
+            <span className="deal-platform-chip" title={`Available on ${storeName}`}>
+              on {storeName}
             </span>
-          )}
+          ) : null}
         </div>
 
         {/* Bold clickable product name (max 2 lines with ellipsis) */}
@@ -176,10 +194,12 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
           </a>
         </h3>
 
-        {/* Brand / store name in grey */}
-        <p className="deal-card-brand">
-          {item.brand || platformName || "KSAM Certified"}
-        </p>
+        {/* Real store name in grey under title (hidden if none exists) */}
+        {storeName ? (
+          <p className="deal-card-brand">
+            {storeName}
+          </p>
+        ) : null}
 
         {/* Short description (max 2 lines, hidden if missing) */}
         {descText ? (

@@ -12,6 +12,7 @@ import {
   HelpCircle,
   AlertTriangle,
   ChevronRight,
+  Crown,
   X
 } from "lucide-react";
 
@@ -34,6 +35,15 @@ export const SECTIONS = [
     desc: "Track shipments in real time, view delivery milestones, and submit verified product reviews.",
     icon: Package,
     countKey: "orders"
+  },
+  {
+    id: "subscription",
+    label: "Subscription",
+    fullLabel: "Membership & Plan",
+    title: "Membership Tier & Billing",
+    eyebrow: "Deal Mode",
+    desc: "Manage your active membership plan, renewal cycle, payment history, and invoices.",
+    icon: Crown
   },
   {
     id: "profile",

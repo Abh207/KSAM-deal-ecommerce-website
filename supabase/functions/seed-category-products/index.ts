@@ -25,6 +25,33 @@ function extractMerchantUrl(rawUrl?: string): string {
   }
 }
 
+function deriveStoreFromUrl(urlStr?: string): string {
+  if (!urlStr) return "";
+  try {
+    const host = new URL(urlStr).hostname.replace(/^(www\.|m\.)/i, "").toLowerCase();
+    if (host.includes("google.")) return "";
+    if (host.includes("flipkart.")) return "Flipkart";
+    if (host.includes("amazon.")) return "Amazon";
+    if (host.includes("myntra.")) return "Myntra";
+    if (host.includes("ajio.")) return "AJIO";
+    if (host.includes("croma.")) return "Croma";
+    if (host.includes("tatacliq.")) return "Tata CLiQ";
+    if (host.includes("boat-lifestyle.") || host.includes("boat.")) return "boAt";
+    if (host.includes("meesho.")) return "Meesho";
+    if (host.includes("nykaa.")) return "Nykaa";
+    if (host.includes("reliancedigital.")) return "Reliance Digital";
+    if (host.includes("vijaysales.")) return "Vijay Sales";
+    if (host.includes("etoren.")) return "Etoren.com";
+    if (host.includes("samsung.")) return "Samsung";
+    if (host.includes("apple.")) return "Apple";
+    const domain = host.replace(/\.(co|com|org|net|gov|edu)\.[a-z]{2,4}$/i, "").replace(/\.[a-z]{2,8}$/i, "").split(".").pop();
+    if (domain && domain !== "google" && !domain.includes("ksam") && !domain.includes("serp")) {
+      return domain.charAt(0).toUpperCase() + domain.slice(1);
+    }
+  } catch {}
+  return "";
+}
+
 function parsePriceNum(val: unknown): number {
   if (typeof val === "number") return val;
   if (!val) return 0;
@@ -201,7 +228,7 @@ Deno.serve(async (req: Request) => {
         if (valid.length >= targetCount) break;
 
         const title = (item.title || "").trim();
-        if (!title) continue;
+        if (!title || title.length < 5 || /^\d+$/.test(title)) continue;
 
         const price = item.extracted_price ?? parsePriceNum(item.price);
         if (!price || price <= 0) continue;
@@ -215,7 +242,14 @@ Deno.serve(async (req: Request) => {
         const directUrl = extractMerchantUrl(rawUrl);
         if (!directUrl || !directUrl.startsWith("http")) continue;
 
-        const merchant = item.source || item.merchant || "Partner Store";
+        let merchant = (item.source || item.merchant || "").trim();
+        if (!merchant || merchant.toLowerCase() === "google shopping" || merchant.toLowerCase().includes("serp")) {
+          merchant = deriveStoreFromUrl(directUrl || rawUrl);
+        }
+        if (!merchant) {
+          merchant = deriveStoreFromUrl(directUrl || rawUrl) || "Partner Store";
+        }
+
         const storeInfo = await getOrCreateStore(merchant, directUrl);
 
         const rawOldPrice = item.extracted_old_price ?? parsePriceNum(item.old_price);
@@ -228,14 +262,26 @@ Deno.serve(async (req: Request) => {
           btoa(directUrl.slice(0, 100)).replace(/[^a-zA-Z0-9]/g, "").slice(0, 36)
         );
 
+        let desc = (item.snippet || "").trim();
+        if (!desc && Array.isArray((item as any).extensions) && (item as any).extensions.length > 0) {
+          desc = (item as any).extensions.join(" • ");
+        }
+        if (!desc && (item as any).features) {
+          desc = Array.isArray((item as any).features) ? (item as any).features.join(" • ") : String((item as any).features);
+        }
+        if (desc.startsWith("Verified hot deal on") || desc.length < 20) {
+          desc = "";
+        }
+
         valid.push({
           store_id: storeInfo.id,
+          store_name: storeInfo.name,
           external_id: externalId,
           name: title,
           title: title,
           category: category,
           brand: item.brand || null,
-          description: item.snippet || null,
+          description: desc || null,
           image_url: rawImg,
           price: price,
           old_price: oldPrice,

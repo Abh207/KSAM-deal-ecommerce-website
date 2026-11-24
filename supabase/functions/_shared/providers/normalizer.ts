@@ -26,11 +26,13 @@ export function computeDiscount(price: number, oldPrice?: number): number | unde
 
 export interface RawProductCandidate {
   store_slug: string;
+  store_name?: string;
   external_id?: string | number;
   name?: string;
   title?: string;
   brand?: string;
   category?: string;
+  description?: string;
   image_url?: string;
   image?: string;
   thumbnail?: string;
@@ -58,8 +60,8 @@ export function normalizeAndValidateProduct(
   const imageUrl = cleanText(candidate.image_url || candidate.image || candidate.thumbnail);
   const productUrl = cleanText(candidate.product_url || candidate.link || candidate.url);
 
-  // Mandatory checks: Must have a valid name, an image, and a destination product URL
-  if (!name || !imageUrl || !productUrl) {
+  // Mandatory checks: Must have a valid name (at least 5 chars), an image, and a destination product URL
+  if (!name || name.length < 5 || !imageUrl || !productUrl || productUrl === "#") {
     return null;
   }
 
@@ -86,12 +88,19 @@ export function normalizeAndValidateProduct(
   const externalId = cleanText(candidate.external_id) ||
     btoa(encodeURIComponent(`${candidate.store_slug}-${productUrl}`)).slice(0, 48);
 
+  const rawDescription = cleanText(candidate.description);
+  const description = rawDescription && !rawDescription.startsWith("Verified hot deal on")
+    ? rawDescription
+    : undefined;
+
   return {
     store_slug: candidate.store_slug,
+    store_name: cleanText(candidate.store_name) || undefined,
     external_id: externalId,
     name,
     brand: cleanText(candidate.brand) || undefined,
     category: cleanText(candidate.category) || undefined,
+    description,
     image_url: imageUrl,
     additional_images: Array.isArray(candidate.additional_images) ? candidate.additional_images : [],
     price,

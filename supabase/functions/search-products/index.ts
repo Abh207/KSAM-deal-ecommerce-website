@@ -22,6 +22,94 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
+function isInvalidStore(str: unknown): boolean {
+  if (!str || typeof str !== "string") return true;
+  const s = str.trim().toLowerCase();
+  return (
+    !s ||
+    s.includes("serp") ||
+    s.includes("google") ||
+    s.includes("ksam") ||
+    s.includes("licensed shopping data") ||
+    s === "partner store" ||
+    s === "partner-store" ||
+    s === "general" ||
+    s === "unknown" ||
+    s === "undefined" ||
+    s === "null" ||
+    s === "search" ||
+    s === "deal" ||
+    s === "deals"
+  );
+}
+
+function cleanStore(str: string): string {
+  if (!str) return "";
+  let clean = str.trim().replace(/^on\s+/i, "");
+  const lower = clean.toLowerCase();
+  if (lower === "flipkart") return "Flipkart";
+  if (lower === "amazon" || lower === "amazon.in" || lower === "amazon india") return "Amazon";
+  if (lower === "myntra") return "Myntra";
+  if (lower === "ajio") return "AJIO";
+  if (lower === "croma") return "Croma";
+  if (lower === "tatacliq" || lower === "tata cliq") return "Tata CLiQ";
+  if (lower === "boat" || lower === "boat lifestyle") return "boAt";
+  if (lower === "meesho") return "Meesho";
+  if (lower === "nykaa") return "Nykaa";
+  if (lower === "reliancedigital" || lower === "reliance digital") return "Reliance Digital";
+  if (lower === "vijaysales" || lower === "vijay sales") return "Vijay Sales";
+  if (lower === "etoren" || lower === "etoren.com") return "Etoren.com";
+  return clean.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function deriveMerchantName(p: any): string {
+  if (p.store_name && typeof p.store_name === "string" && !isInvalidStore(p.store_name)) {
+    return cleanStore(p.store_name);
+  }
+  if (p.source && typeof p.source === "string" && !isInvalidStore(p.source)) {
+    return cleanStore(p.source);
+  }
+  if (p.store && typeof p.store === "string" && !isInvalidStore(p.store)) {
+    return cleanStore(p.store);
+  }
+  if (p.raw?.source && typeof p.raw.source === "string" && !isInvalidStore(p.raw.source)) {
+    return cleanStore(p.raw.source);
+  }
+  const url = p.product_url || p.affiliate_url || p.url || "";
+  if (url) {
+    try {
+      const host = new URL(url).hostname.replace(/^(www\.|m\.)/i, "").toLowerCase();
+      if (host.includes("flipkart.")) return "Flipkart";
+      if (host.includes("amazon.")) return "Amazon";
+      if (host.includes("myntra.")) return "Myntra";
+      if (host.includes("ajio.")) return "AJIO";
+      if (host.includes("croma.")) return "Croma";
+      if (host.includes("tatacliq.")) return "Tata CLiQ";
+      if (host.includes("boat-lifestyle.") || host.includes("boat.")) return "boAt";
+      if (host.includes("meesho.")) return "Meesho";
+      if (host.includes("nykaa.")) return "Nykaa";
+      if (host.includes("reliancedigital.")) return "Reliance Digital";
+      if (host.includes("vijaysales.")) return "Vijay Sales";
+      if (host.includes("etoren.")) return "Etoren.com";
+      if (host.includes("samsung.")) return "Samsung";
+      if (host.includes("apple.")) return "Apple";
+      const domain = host.replace(/\.(co|com|org|net|gov|edu)\.[a-z]{2,4}$/i, "").replace(/\.[a-z]{2,8}$/i, "").split(".").pop();
+      if (domain && domain !== "google" && !domain.includes("ksam") && !domain.includes("serp")) {
+        return cleanStore(domain);
+      }
+    } catch {}
+  }
+  return "";
+}
+
+function extractRealDescription(p: any): string {
+  const cand = p.description || p.raw?.snippet || (Array.isArray(p.raw?.extensions) ? p.raw.extensions.join(" • ") : "") || p.features || "";
+  if (!cand || typeof cand !== "string") return "";
+  const cleaned = cand.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  if (cleaned.startsWith("Verified hot deal on") || cleaned.length < 20) return "";
+  return cleaned;
+}
+
 function cleanQuery(raw: unknown): string {
   if (!raw) return "";
   return String(raw)
@@ -77,26 +165,30 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    const resolvedStoreName = deriveMerchantName(p);
     let storeId: string | null = null;
-    const storeName = p.store || p.source || p.platform || "Partner Store";
-    const storeSlug = String(p.store_slug || storeName).toLowerCase().replace(/[^a-z0-9]/g, "-");
-    try {
-      const { data: storeRow } = await supabase
-        .from("stores")
-        .select("id")
-        .or(`slug.eq.${storeSlug},name.ilike.%${storeName}%`)
-        .maybeSingle();
-      if (storeRow?.id) storeId = storeRow.id;
-    } catch {}
+    if (resolvedStoreName) {
+      const storeSlug = resolvedStoreName.toLowerCase().replace(/[^a-z0-9]/g, "-");
+      try {
+        const { data: storeRow } = await supabase
+          .from("stores")
+          .select("id")
+          .or(`slug.eq.${storeSlug},name.ilike.%${resolvedStoreName}%`)
+          .maybeSingle();
+        if (storeRow?.id) storeId = storeRow.id;
+      } catch {}
+    }
 
+    const cleanDesc = extractRealDescription(p);
     const upsertData: Record<string, any> = {
       store_id: storeId,
+      store_name: resolvedStoreName || null,
       external_id: rawExternalId,
       name: p.name || p.title || "External Product",
       title: p.title || p.name || "External Product",
-      brand: p.brand || null,
-      category: p.category || "General",
-      description: p.description || null,
+      brand: p.brand && !String(p.brand).toLowerCase().includes("ksam") ? p.brand : null,
+      category: p.category && String(p.category).toLowerCase() !== "deals" ? p.category : "General",
+      description: cleanDesc || null,
       image_url: p.image_url || p.image || null,
       price: p.price ? Number(p.price) : 0,
       old_price: (p.old_price || p.oldPrice) ? Number(p.old_price || p.oldPrice) : null,
@@ -106,7 +198,7 @@ Deno.serve(async (req: Request) => {
       availability: p.availability || "In Stock",
       product_url: p.product_url || p.url || null,
       affiliate_url: p.affiliate_url || p.url || p.product_url || null,
-      source: p.source || storeSlug,
+      source: resolvedStoreName || null,
       is_active: true,
       last_seen_at: new Date().toISOString(),
       price_updated_at: new Date().toISOString()
@@ -116,11 +208,15 @@ Deno.serve(async (req: Request) => {
     try {
       const { data: existing } = await supabase
         .from("products")
-        .select("id")
+        .select("id, description")
         .eq("external_id", rawExternalId)
         .maybeSingle();
 
       if (existing?.id) {
+        // Do not overwrite an existing description with null
+        if (!cleanDesc && existing.description) {
+          delete upsertData.description;
+        }
         await supabase.from("products").update(upsertData).eq("id", existing.id);
         savedId = existing.id;
       } else {
@@ -206,7 +302,7 @@ Deno.serve(async (req: Request) => {
     rating: p.rating ? Number(p.rating) : 0,
     reviews: p.reviews || 0,
     availability: p.availability || "In Stock",
-    store: p.stores?.name || "KSAM Deal",
+    store: (p.stores?.name && p.stores.name.toLowerCase() !== "ksam deal") ? p.stores.name : (p.source || ""),
     storeLogo: p.stores?.logo_url,
     url: p.affiliate_url || p.product_url || "#",
     product_url: p.product_url,
@@ -260,14 +356,15 @@ Deno.serve(async (req: Request) => {
         // Map live products directly to the response format
         const mappedLive = liveProducts.map((p: any, idx: number) => {
           const storeInfo = storeMap.get(p.store_slug);
-          const storeName = storeInfo?.name || (p.raw?.source as string) || (p.store_slug === "serp-shopping" ? "Google Shopping" : p.store_slug);
+          const resolvedStoreName = deriveMerchantName(p) || (storeInfo && !isInvalidStore(storeInfo.name) ? storeInfo.name : "");
+          const desc = extractRealDescription(p);
           return {
             id: p.external_id ? `ext-${p.external_id}` : `live-${idx}-${Date.now()}`,
             external_id: p.external_id,
             name: p.name,
             brand: p.brand,
             category: p.category,
-            description: p.name,
+            description: desc || "",
             image: p.image_url,
             image_url: p.image_url,
             price: Number(p.price || 0),
@@ -277,7 +374,8 @@ Deno.serve(async (req: Request) => {
             rating: p.rating ? Number(p.rating) : 0,
             reviews: p.reviews || 0,
             availability: p.availability || "In Stock",
-            store: storeName,
+            store: resolvedStoreName,
+            store_name: resolvedStoreName,
             storeLogo: storeInfo?.logo,
             url: p.affiliate_url || p.product_url || "#",
             product_url: p.product_url,
@@ -300,32 +398,38 @@ Deno.serve(async (req: Request) => {
 
         // Best-effort background DB cache (do not crash if onConflict or RLS fails)
         try {
-          const upsertRows = liveProducts.map((p) => {
-            const storeInfo = storeMap.get(p.store_slug);
-            return {
-              store_id: storeInfo?.id || null,
-              external_id: p.external_id,
-              name: p.name,
-              title: p.name,
-              brand: p.brand || null,
-              category: p.category || "Search",
-              image_url: p.image_url,
-              price: p.price,
-              old_price: p.old_price || null,
-              currency: p.currency || "INR",
-              rating: p.rating || 0,
-              reviews: p.reviews || 0,
-              availability: p.availability || "In Stock",
-              product_url: p.product_url,
-              affiliate_url: p.affiliate_url || p.product_url,
-              tags: p.tags || [normalizedQuery],
-              source: p.store_slug,
-              raw: p.raw || {},
-              is_active: true,
-              last_seen_at: new Date().toISOString(),
-              price_updated_at: new Date().toISOString()
-            };
-          });
+          const upsertRows = liveProducts
+            .filter((p: any) => p.price && p.price > 0 && p.name && p.name.length >= 5 && !/^\d+$/.test(p.name.trim()))
+            .map((p: any) => {
+              const storeInfo = storeMap.get(p.store_slug);
+              const resolvedStoreName = deriveMerchantName(p) || (storeInfo && !isInvalidStore(storeInfo.name) ? storeInfo.name : null);
+              const desc = extractRealDescription(p);
+              return {
+                store_id: storeInfo?.id || null,
+                store_name: resolvedStoreName || null,
+                external_id: p.external_id,
+                name: p.name,
+                title: p.name,
+                brand: p.brand || null,
+                category: p.category || "Search",
+                description: desc || null,
+                image_url: p.image_url,
+                price: p.price,
+                old_price: p.old_price || null,
+                currency: p.currency || "INR",
+                rating: p.rating || 0,
+                reviews: p.reviews || 0,
+                availability: p.availability || "In Stock",
+                product_url: p.product_url,
+                affiliate_url: p.affiliate_url || p.product_url,
+                tags: p.tags || [normalizedQuery],
+                source: resolvedStoreName || null,
+                raw: p.raw || {},
+                is_active: true,
+                last_seen_at: new Date().toISOString(),
+                price_updated_at: new Date().toISOString()
+              };
+            });
 
           await supabase.from("products").insert(upsertRows).select("id");
         } catch (dbCacheErr) {

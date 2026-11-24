@@ -494,8 +494,10 @@
     height: 100% !important;
     border-radius: 16px !important;
     overflow: hidden !important;
+    background: #ffffff !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
     animation: dealCardEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    isolation: isolate !important;
   }
   #deals article:active {
     transform: scale(0.98) !important;
@@ -521,13 +523,16 @@
     align-items: center !important;
     justify-content: center !important;
     padding: 8px !important;
-    background: #111 !important;
+    background: #F3F4F6 !important;
+    background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%) !important;
     overflow: hidden !important;
+    isolation: isolate !important;
   }
   #deals article > div:first-child img {
     width: 100% !important;
     height: 100% !important;
     object-fit: contain !important;
+    mix-blend-mode: normal !important;
   }
 
   /* Badges inside Image Area corners */
@@ -724,8 +729,10 @@
       width: 88% !important;
     }
     #deals .mt-12.grid,
-    #deals .grid {
-      grid-template-columns: 1fr !important;
+    #deals .grid,
+    #deals .deals-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 8px !important;
     }
   }
 
@@ -1231,6 +1238,20 @@
     padding: 12px !important;
     height: 100% !important;
     background-color: #0b0b0d !important;
+  }
+  .deal-card-v2 {
+    background-color: #ffffff !important;
+    isolation: isolate !important;
+  }
+  .deal-card-v2 .deal-card-img-wrap,
+  #deals .deal-card-v2 .deal-card-img-wrap {
+    background: #F3F4F6 !important;
+    background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%) !important;
+    isolation: isolate !important;
+  }
+  .deal-card-v2 .deal-card-img,
+  #deals .deal-card-v2 .deal-card-img {
+    mix-blend-mode: normal !important;
   }
 }
 

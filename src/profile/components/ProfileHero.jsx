@@ -12,7 +12,8 @@ import {
   ShieldCheck,
   Zap,
   ShoppingBag,
-  UserCheck
+  UserCheck,
+  Crown
 } from "lucide-react";
 import gsap from "gsap";
 import { BASE_URL } from "../../auth/auth.js";
@@ -117,6 +118,7 @@ export default function ProfileHero({
   }, [circumference, strokeDashoffset]);
 
   const isEmailVerified = !!(session?.user?.email_confirmed_at || session?.user?.confirmed_at);
+  const currentPlan = profile?.preferences?.plan || profile?.plan || "Explorer";
 
   const memberSince = useMemo(() => {
     const rawDate = profile?.created_at || session?.user?.created_at;
@@ -286,6 +288,33 @@ export default function ProfileHero({
                   <span>Verify Email</span>
                 </a>
               )}
+
+              <button
+                type="button"
+                onClick={() => onNavigateSection && onNavigateSection("subscription")}
+                className="ks-badge-pill plan-badge hover:opacity-90 transition cursor-pointer flex items-center gap-1.5"
+                title="View your subscription details"
+                style={{
+                  background: currentPlan.toLowerCase().includes("pro")
+                    ? "rgba(132, 255, 0, 0.15)"
+                    : currentPlan.toLowerCase().includes("deal")
+                    ? "rgba(56, 189, 248, 0.15)"
+                    : "rgba(255, 255, 255, 0.08)",
+                  borderColor: currentPlan.toLowerCase().includes("pro")
+                    ? "rgba(132, 255, 0, 0.4)"
+                    : currentPlan.toLowerCase().includes("deal")
+                    ? "rgba(56, 189, 248, 0.4)"
+                    : "rgba(255, 255, 255, 0.15)",
+                  color: currentPlan.toLowerCase().includes("pro")
+                    ? "#84FF00"
+                    : currentPlan.toLowerCase().includes("deal")
+                    ? "#38BDF8"
+                    : "#F1F5F9"
+                }}
+              >
+                <Crown size={12} className={currentPlan.toLowerCase().includes("pro") ? "text-[#84FF00]" : "text-amber-400"} />
+                <span>{currentPlan}</span>
+              </button>
 
               <span className="ks-badge-pill member-since">
                 <Calendar size={12} />

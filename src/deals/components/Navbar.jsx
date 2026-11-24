@@ -7,7 +7,7 @@ import { resolveImagePath } from "../../lib/cartHelper.js";
 import { getWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL, getStoredSessionSync } from "../../auth/auth.js";
 import FloatingActions from "../../components/FloatingActions.jsx";
-import { saveDealToSession, upsertExternalDeal, saveDealsNavigationState, clearDealsNavigationState, logPlatformClick } from "../services/productService.js";
+import { saveDealToSession, upsertExternalDeal, saveDealsNavigationState, clearDealsNavigationState, logPlatformClick, getStoreName } from "../services/productService.js";
 import ProductCard from "./ProductCard.jsx";
 import "./Navbar.css";
 
@@ -120,7 +120,7 @@ const normalizeProduct = (p, i = 0) => {
     discount,
     rating: toNumber(p.rating) ?? 0,
     reviews: toNumber(p.reviews) ?? 0,
-    store: p.store ?? p.source ?? p.brand ?? p.stores?.name ?? "KSAM Deal",
+    store: getStoreName(p),
     product_url: safeUrl !== "#" ? safeUrl : undefined,
     url: safeUrl,
     availability: p.availability ?? "In Stock"
@@ -196,11 +196,13 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
     return path.includes("addtocart");
   })();
 
+  const isSearchPage = typeof window !== "undefined" && window.location.pathname.includes("search.html");
+
   const isHomePage = (() => {
     if (typeof window === "undefined") return true;
     const path = window.location.pathname.replace(/\/+$/, "") || "/";
     const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
-    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("products.html") || path.includes("watchwishlist.html") || path.includes("addtocart")) {
+    if (path.includes("terms.html") || path.includes("shop.html") || path.includes("products.html") || path.includes("watchwishlist.html") || path.includes("addtocart") || path.includes("search.html")) {
       return false;
     }
 
@@ -215,9 +217,12 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
       const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
       return `${base}/${href}`;
     }
-    if (isHomePage) return href;
     const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
     const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    if (href === "#deals") {
+      return `${normalizedBase}index.html#deals`;
+    }
+    if (isHomePage) return href;
     return `${normalizedBase}index.html${href}`;
   };
 
@@ -239,10 +244,26 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
     if (href === "products.html" || href === "shop.html" || href === "terms.html" || href === "watchwishlist.html") {
       return;
     }
-    if (isHomePage && href.startsWith("#")) {
-      if (href === "#deals") {
-        clearDealsNavigationState();
+    if (href === "#deals") {
+      clearDealsNavigationState();
+      if (isHomePage) {
+        e.preventDefault();
+        const el = document.getElementById("deals");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+          try {
+            window.history.pushState(null, "", "#deals");
+          } catch {}
+          setActiveSection("#deals");
+        }
+      } else {
+        const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
+        const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+        window.location.href = `${normalizedBase}index.html#deals`;
       }
+      return;
+    }
+    if (isHomePage && href.startsWith("#")) {
       const targetId = href.replace("#", "");
       const el = document.getElementById(targetId);
       if (el) {
@@ -299,8 +320,11 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   const [speechSupported, setSpeechSupported] = useState(false);
 
   // Supabase Search Modal State
+  const initialQuery = typeof window !== "undefined"
+    ? (new URLSearchParams(window.location.search).get("q") || "")
+    : "";
   const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -310,6 +334,31 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   const [sort, setSort] = useState("relevance");
   const [externalSearching, setExternalSearching] = useState(false);
   const activeSearchAbortRef = useRef(null);
+
+  const navigateToSearch = useCallback((term) => {
+    const q = (term !== undefined ? term : query).trim();
+    if (!q) return;
+    saveRecent(q);
+    closeSearch();
+    const base = (BASE_URL || "/KSAM-deal-ecommerce-website/").replace(/\/+$/, "");
+    window.location.assign(`${base}/search.html?q=${encodeURIComponent(q)}`);
+  }, [query]);
+
+  // Live suggestions debounce when typing in query
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      setResults([]);
+      setError("");
+      setLoading(false);
+      setSearched(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      runSearch(q);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     return () => {
@@ -450,10 +499,10 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
       recognition.onerror = () => setIsListening(false);
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        if (transcript) {
-          setQuery(transcript);
-          openSearch();
-          runSearch(transcript);
+        if (transcript && transcript.trim()) {
+          const t = transcript.trim();
+          setQuery(t);
+          navigateToSearch(t);
         }
       };
 
@@ -676,7 +725,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
       ksamProducts = Array.isArray(databaseProducts)
         ? databaseProducts.map((product, index) =>
             normalizeProduct(
-              { ...product, store: product.stores?.name || "KSAM Deal" },
+              { ...product, store: getStoreName(product) },
               index
             )
           )
@@ -800,16 +849,15 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
 
 
   const submitSearch = (e) => {
-    e.preventDefault();
-    saveRecent(query.trim());
-    runSearch(query);
+    if (e && e.preventDefault) e.preventDefault();
+    if (!query.trim()) return;
+    navigateToSearch(query);
   };
 
   const pickTerm = (term) => {
-    setQuery(term);
-    saveRecent(term);
-    runSearch(term);
-    if (inputRef.current) inputRef.current.focus();
+    if (!term || !term.trim()) return;
+    setQuery(term.trim());
+    navigateToSearch(term.trim());
   };
 
   const openProduct = (p) => {
@@ -954,7 +1002,14 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
           <div className="ksam-panel">
             {/* Input Row */}
             <form className="ksam-bar" onSubmit={submitSearch}>
-              <Search size={20} className="ksam-bar-icon" />
+              <Search
+                size={20}
+                className="ksam-bar-icon"
+                onClick={submitSearch}
+                style={{ cursor: "pointer" }}
+                role="button"
+                aria-label="Submit search"
+              />
 
               <input
                 ref={inputRef}
@@ -1213,17 +1268,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                 <button
                   type="button"
                   className="ksam-all"
-                  onClick={() => {
-                    saveRecent(query.trim());
-                    saveDealsNavigationState({
-                      searchPageQuery: query.trim(),
-                      searchResults: sortedResults,
-                      isSearchMode: true,
-                      scrollY: typeof window !== "undefined" ? window.scrollY : 0
-                    });
-                    if (onViewAll) onViewAll(query.trim(), sortedResults);
-                    closeSearch();
-                  }}
+                  onClick={() => navigateToSearch(query)}
                 >
                   View all results <ArrowUpRight size={15} />
                 </button>

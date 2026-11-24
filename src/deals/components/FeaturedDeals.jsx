@@ -48,6 +48,10 @@ const SORTS = [
   { id: "newest", label: "Newest" }
 ];
 
+const INITIAL_BATCH = 12;
+const BATCH_SIZE = 12;
+const MAX_PRODUCTS = 66;
+
 const STORES = [
   { id: "All", label: "All Stores" },
   { id: "amazon", label: "Amazon" },
@@ -104,16 +108,20 @@ function FeaturedDeals() {
   const initialPage = savedNavState?.page || 1;
   const initialLoadedCount = savedNavState?.loadedCount || (savedNavState?.page ? savedNavState.page * 12 : 12);
 
-  // Try instant render from localStorage cache
+  // Try instant render from localStorage cache ONLY if >= INITIAL_BATCH (12) items exist
   const initialCache = useMemo(() => {
-    return getInstantCachedDeals({
+    const cached = getInstantCachedDeals({
       category: initialCategory,
       store: initialStore,
       sort: initialSort,
       search: initialSearch,
       loadedCount: initialLoadedCount
     });
-  }, []);
+    if (cached && Array.isArray(cached.products) && cached.products.length >= INITIAL_BATCH) {
+      return cached;
+    }
+    return null;
+  }, [initialCategory, initialStore, initialSort, initialSearch, initialLoadedCount]);
 
   const [products, setProducts] = useState(() => initialCache?.products || []);
   const [category, setCategory] = useState(initialCategory);
@@ -121,13 +129,14 @@ function FeaturedDeals() {
   const [sort, setSort] = useState(initialSort);
   const [search, setSearch] = useState(initialSearch);
   const [page, setPage] = useState(initialPage);
-  const [hasMore, setHasMore] = useState(() => Boolean(initialCache?.hasMore));
+  const [hasMore, setHasMore] = useState(() => (initialCache ? Boolean(initialCache.hasMore !== false && initialCache.products?.length < MAX_PRODUCTS) : true));
   const [loading, setLoading] = useState(() => !initialCache);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loadMoreError, setLoadMoreError] = useState("");
   const [error, setError] = useState("");
   const [isOffline, setIsOffline] = useState(false);
 
+  const totalCountRef = useRef(290);
   const isRestoringRef = useRef(Boolean(savedNavState && savedNavState.loadedCount));
   const restorationDoneRef = useRef(false);
   const isLoadingMoreRef = useRef(false);
@@ -184,36 +193,40 @@ function FeaturedDeals() {
           if (!initialCache) {
             setLoading(true);
           }
-          if (isRestoringRef.current) {
-            setPage(initialPage);
-          } else {
-            setPage(1);
-          }
+          setPage(1);
         }
         setError("");
         setLoadMoreError("");
 
-        const fetchPageSize = isRestoringRef.current && isPageReset
-          ? Math.max(12, initialLoadedCount)
-          : 12;
+        const fetchCount = isRestoringRef.current && isPageReset
+          ? Math.min(MAX_PRODUCTS, Math.max(INITIAL_BATCH, initialLoadedCount))
+          : INITIAL_BATCH;
 
         const res = await getDeals({
           category,
           store,
           sort,
-          page: isRestoringRef.current && isPageReset ? 1 : 1,
-          pageSize: fetchPageSize
+          from: 0,
+          to: fetchCount - 1,
+          pageSize: fetchCount,
+          total: totalCountRef.current
         });
 
-        setProducts(res.products || []);
-        if (isRestoringRef.current) {
-          setPage(initialPage);
-          isRestoringRef.current = false;
-        } else {
-          setPage(1);
+        const initialProds = (res.products || []).slice(0, MAX_PRODUCTS);
+        setProducts(initialProds);
+        setPage(1);
+        isRestoringRef.current = false;
+
+        if (res.total && res.total > 0) {
+          totalCountRef.current = res.total;
         }
 
-        setHasMore(Boolean(res.hasMore));
+        // Log active count query result as requested
+        console.log(
+          `[KsamDeal Deals] Active products loaded: ${initialProds.length}. Total active in database: ${totalCountRef.current}`
+        );
+
+        setHasMore(Boolean(initialProds.length < Math.min(totalCountRef.current, MAX_PRODUCTS) && res.hasMore));
         setIsOffline(Boolean(res.isOffline));
       } catch (err) {
         console.error("Failed to fetch deals:", err);
@@ -222,28 +235,44 @@ function FeaturedDeals() {
         setLoading(false);
       }
     },
-    [category, store, sort]
+    [category, store, sort, initialCache, initialLoadedCount]
   );
 
   const loadNextBatch = useCallback(async () => {
-    if (!hasMore || loading || loadingMore || isLoadingMoreRef.current) return;
+    if (loading || loadingMore || isLoadingMoreRef.current) return;
+
+    const currentCount = products.length;
+    if (currentCount >= MAX_PRODUCTS) {
+      setHasMore(false);
+      return;
+    }
+
+    const itemsToFetch = Math.min(BATCH_SIZE, MAX_PRODUCTS - currentCount);
+    if (itemsToFetch <= 0) {
+      setHasMore(false);
+      return;
+    }
+
     isLoadingMoreRef.current = true;
     setLoadingMore(true);
     setLoadMoreError("");
 
     const startTime = Date.now();
-    const nextPage = page + 1;
+    const fromIndex = currentCount;
+    const toIndex = currentCount + itemsToFetch - 1;
 
     try {
       const res = await getDeals({
         category,
         store,
         sort,
-        page: nextPage,
-        pageSize: 12
+        from: fromIndex,
+        to: toIndex,
+        pageSize: itemsToFetch,
+        total: totalCountRef.current
       });
 
-      // Keep green spinner visible for at least 2 seconds before appending next batch
+      // Keep pentagon loader visible for at least 2 seconds before appending next batch
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, 2000 - elapsed);
       if (remaining > 0) {
@@ -251,14 +280,30 @@ function FeaturedDeals() {
       }
 
       if (Array.isArray(res.products) && res.products.length > 0) {
+        if (res.total && res.total > 0) {
+          totalCountRef.current = res.total;
+        }
+        let reachedCap = false;
+        let newCount = currentCount;
         setProducts((prev) => {
           const existingIds = new Set(prev.map((p) => String(p.id)));
           const fresh = res.products.filter((p) => !existingIds.has(String(p.id)));
-          return [...prev, ...fresh];
+          const combined = [...prev, ...fresh];
+          newCount = combined.length;
+          if (combined.length >= MAX_PRODUCTS) {
+            reachedCap = true;
+            return combined.slice(0, MAX_PRODUCTS);
+          }
+          return combined;
         });
-        setPage(nextPage);
+        setPage((prevPage) => prevPage + 1);
+
+        const dbTotal = totalCountRef.current || MAX_PRODUCTS;
+        const totalReached = reachedCap || (newCount >= MAX_PRODUCTS) || (newCount >= dbTotal);
+        setHasMore(!totalReached && res.products.length >= itemsToFetch);
+      } else {
+        setHasMore(false);
       }
-      setHasMore(Boolean(res.hasMore));
       setIsOffline(Boolean(res.isOffline));
     } catch (err) {
       console.error("Failed to load more deals:", err);
@@ -267,7 +312,7 @@ function FeaturedDeals() {
       isLoadingMoreRef.current = false;
       setLoadingMore(false);
     }
-  }, [hasMore, loading, loadingMore, page, category, store, sort]);
+  }, [products.length, loading, loadingMore, category, store, sort]);
 
   // Infinite Scroll IntersectionObserver (rootMargin: 200px)
   useEffect(() => {
@@ -635,41 +680,51 @@ function FeaturedDeals() {
               ))}
             </div>
 
-            {/* Pagination / Load More */}
-            {hasMore && (
-              <div className="mt-12 flex justify-center">
+            {/* Infinite Scroll Sentinel */}
+            {hasMore && !loading && (
+              <div
+                ref={sentinelRef}
+                className="deals-scroll-sentinel"
+                aria-hidden="true"
+                style={{ height: "24px", width: "100%", margin: "12px 0", opacity: 0, pointerEvents: "none" }}
+              />
+            )}
+
+            {/* Rotating green pentagon loader (#84FF00 outline) */}
+            {loadingMore && (
+              <div
+                className="deals-pentagon-loader-wrap"
+                role="status"
+                aria-live="polite"
+                aria-label="Loading more deals"
+              >
+                <div className="deals-pentagon-spinner" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 48 48"
+                    className="deals-pentagon-svg"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="24,4 43,18 36,40 12,40 5,18"
+                      className="deals-pentagon-polygon"
+                    />
+                  </svg>
+                </div>
+                <span className="sr-only">Loading more deals</span>
+              </div>
+            )}
+
+            {/* Error State with Retry Button */}
+            {loadMoreError && (
+              <div className="deals-load-error-wrap">
+                <p className="deals-load-error-text">{loadMoreError}</p>
                 <button
-                  onClick={() => loadDeals(false)}
-                  disabled={loadingMore}
-                  aria-label="Load more deals"
-                  className="
-                    flex
-                    min-h-[44px]
-                    items-center
-                    gap-2
-                    rounded-xl
-                    border
-                    border-white/10
-                    bg-[#0a0a0a]
-                    px-8
-                    py-3.5
-                    text-sm
-                    font-bold
-                    text-white
-                    transition-all
-                    hover:border-[#8cff00]/50
-                    hover:shadow-[0_0_25px_rgba(140, 255, 0, .15)]
-                    disabled:opacity-50
-                  "
+                  type="button"
+                  onClick={() => loadNextBatch()}
+                  className="deals-load-retry-btn"
                 >
-                  {loadingMore ? (
-                    <>
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-[#8cff00]" />
-                      <span>Loading more deals...</span>
-                    </>
-                  ) : (
-                    <span>Load more deals</span>
-                  )}
+                  <RefreshCw size={14} /> Retry
                 </button>
               </div>
             )}
