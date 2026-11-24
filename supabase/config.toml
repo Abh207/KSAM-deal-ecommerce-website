@@ -1,0 +1,15 @@
+# Supabase CLI configuration for Edge Functions
+# Setting verify_jwt = false allows the functions to handle authentication in code
+# while ensuring OPTIONS preflight and error responses always return proper CORS headers.
+
+[functions.create-razorpay-order]
+verify_jwt = false
+
+[functions.verify-razorpay-payment]
+verify_jwt = false
+
+[functions.razorpay-webhook]
+verify_jwt = false
+
+[functions.validate-coupon]
+verify_jwt = false

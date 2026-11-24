@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Search,
     GitCompare,
-    ExternalLink
+    ExternalLink,
+    BellRing,
+    BadgePercent,
+    Heart
 } from "lucide-react";
 import "./HowItWorks.css";
-
 
 const steps = [
     {
@@ -13,24 +15,50 @@ const steps = [
         icon: Search,
         title: "Search",
         text: "Tell KSAM Deal what product you are looking for.",
-        chip: "Instant results"
+        chip: "Instant results",
+        accent: "emerald"
     },
     {
         number: "02",
         icon: GitCompare,
         title: "Compare",
-        text: "Explore available prices and discounts.",
-        chip: "Best price"
+        text: "Explore available prices and discounts across stores.",
+        chip: "Best price",
+        accent: "blue"
     },
     {
         number: "03",
         icon: ExternalLink,
         title: "Visit Store",
         text: "Click the deal and continue on the original store.",
-        chip: "Direct link"
+        chip: "Direct link",
+        accent: "teal"
+    },
+    {
+        number: "04",
+        icon: BellRing,
+        title: "Price Drop Alerts",
+        text: "Set target prices and get notified the moment a deal drops.",
+        chip: "Live tracking",
+        accent: "amber"
+    },
+    {
+        number: "05",
+        icon: BadgePercent,
+        title: "Verified Discounts",
+        text: "Curated offers checked across top Indian partner stores.",
+        chip: "Trusted stores",
+        accent: "rose"
+    },
+    {
+        number: "06",
+        icon: Heart,
+        title: "Smart Wishlist",
+        text: "Save favorite products and revisit them anytime in one place.",
+        chip: "Synced history",
+        accent: "indigo"
     }
 ];
-
 
 function HowItWorks() {
     const sectionRef = useRef(null);
@@ -59,7 +87,7 @@ function HowItWorks() {
                 }
             },
             {
-                threshold: 0.15
+                threshold: 0.1
             }
         );
 
@@ -70,54 +98,32 @@ function HowItWorks() {
         };
     }, []);
 
-    const handleCardMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        e.currentTarget.style.setProperty("--spotlight-x", `${x}px`);
-        e.currentTarget.style.setProperty("--spotlight-y", `${y}px`);
-    };
-
     return (
         <section
             id="how-it-works"
             ref={sectionRef}
             className={`hiw-section ${isRevealed ? "is-revealed" : ""}`}
         >
-            {/* Full-bleed subtle lime background radial glow */}
-            <div className="hiw-bg-glow" aria-hidden="true"></div>
-
             <div className="hiw-container">
                 {/* Header Block */}
                 <div className="hiw-header">
                     <div className="hiw-pill-badge">
                         <span className="hiw-pill-dot" aria-hidden="true"></span>
-                        SIMPLE PROCESS
+                        HOW IT WORKS &amp; FEATURES
                     </div>
 
                     <h2 className="hiw-title">
-                        Three steps.{" "}
-                        <span className="hiw-title-gradient">That's it.</span>
+                        Everything you need.{" "}
+                        <span className="hiw-title-gradient">To save smarter.</span>
                     </h2>
 
                     <p className="hiw-subtitle">
-                        Find, compare and save, all in one place.
+                        Find, compare, and track deals across India's top retail stores — completely free.
                     </p>
                 </div>
 
-                {/* Grid Wrapper with Connector Line */}
+                {/* 6 Feature / Process Boxes */}
                 <div className="hiw-grid-wrapper">
-                    {/* Desktop animated dashed connector line with directional arrows */}
-                    <div className="hiw-desktop-connector" aria-hidden="true">
-                        <div className="hiw-connector-line"></div>
-                        <div className="hiw-connector-arrow hiw-arrow-1">▶</div>
-                        <div className="hiw-connector-arrow hiw-arrow-2">▶</div>
-                    </div>
-
-                    {/* Mobile vertical line */}
-                    <div className="hiw-mobile-connector" aria-hidden="true"></div>
-
-                    {/* 3 Step Cards */}
                     <div className="hiw-grid">
                         {steps.map((step, index) => {
                             const Icon = step.icon;
@@ -125,25 +131,16 @@ function HowItWorks() {
                             return (
                                 <div
                                     key={step.number}
-                                    className="hiw-card"
+                                    className={`hiw-card hiw-card-${step.accent}`}
                                     style={{
-                                        "--step-delay": `${index * 120}ms`
+                                        "--step-delay": `${index * 60}ms`
                                     }}
-                                    onMouseMove={handleCardMouseMove}
                                 >
-                                    {/* Mouse-follow spotlight */}
-                                    <div
-                                        className="hiw-spotlight"
-                                        aria-hidden="true"
-                                    ></div>
-
-                                    {/* Top Row: 72px Icon Badge & Outlined Step Number */}
+                                    {/* Top Row: Tinted Icon Badge & Watermark Step Number */}
                                     <div className="hiw-card-top">
-                                        <div
-                                            className={`hiw-icon-badge hiw-icon-badge-${index + 1}`}
-                                        >
+                                        <div className={`hiw-icon-badge hiw-badge-${step.accent}`}>
                                             <Icon
-                                                size={32}
+                                                size={22}
                                                 className="hiw-icon-svg"
                                                 strokeWidth={2.2}
                                             />
@@ -159,7 +156,7 @@ function HowItWorks() {
 
                                     {/* Card Content */}
                                     <div className="hiw-card-content">
-                                        <span className="hiw-step-label">
+                                        <span className={`hiw-step-label hiw-label-${step.accent}`}>
                                             STEP {step.number}
                                         </span>
 
@@ -172,9 +169,9 @@ function HowItWorks() {
                                         </p>
                                     </div>
 
-                                    {/* Bottom Lime Pill Chip */}
+                                    {/* Bottom Pill Tag */}
                                     <div className="hiw-card-bottom">
-                                        <span className="hiw-chip">
+                                        <span className={`hiw-chip hiw-chip-${step.accent}`}>
                                             <span
                                                 className="hiw-chip-dot"
                                                 aria-hidden="true"

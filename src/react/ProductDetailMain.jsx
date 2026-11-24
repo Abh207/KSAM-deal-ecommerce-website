@@ -918,7 +918,7 @@ function ProductSingleDetail() {
   const isFromSearch = origin === "search" || fromParam === "search";
   const isFromList = origin === "list" || fromParam === "list";
   const isFromWishlist = origin === "wishlist";
-  const isFromDeals = origin === "deals";
+  const isFromDeals = origin === "deals" || fromParam === "deals" || referrer.includes("deals.html") || referrer.includes("deal.html");
   const isFromAudio = origin === "audio";
   const isFromElectronics = origin === "electronics";
   const isFromClothing = origin === "clothing";
@@ -959,6 +959,61 @@ function ProductSingleDetail() {
     setTimeout(() => {
       setAdded(false);
     }, 2000);
+  };
+
+  // Direct Buy Now for Home & Products catalog items:
+  // Adds product to cart, stores direct checkout info, and redirects straight to checkout.html
+  const handleDirectBuyNow = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!product) return;
+
+    if (Array.isArray(product.sizes) && product.sizes.length > 0 && !selectedSize) {
+      setSizeError("Please select a size before proceeding to checkout");
+      return;
+    }
+
+    setSizeError("");
+    const itemToAdd = {
+      ...product,
+      selectedSize: selectedSize || undefined,
+      selectedColor: product.color || undefined
+    };
+
+    // 1. Add item to cart in localStorage so checkout immediately has it in cartProductLS
+    addProductToCart(itemToAdd, quantity, { silent: true });
+
+    // 2. Persist direct buy summary in sessionStorage for instant checkout loading
+    const directBuySummary = {
+      id: product.id,
+      title: product.name || product.title,
+      name: product.name || product.title,
+      price: Number(product.price) || 0,
+      quantity: quantity,
+      qty: quantity,
+      image: resolveImagePath(product.image || product.image_url),
+      category: product.category || "General",
+      selectedSize: selectedSize || undefined,
+      selectedColor: product.color || undefined,
+      totalAmount: (Number(product.price) || 0) * quantity
+    };
+
+    try {
+      sessionStorage.setItem("ksam_direct_buy", JSON.stringify(directBuySummary));
+      sessionStorage.setItem(
+        "ksam_checkout_summary",
+        JSON.stringify({
+          items: [{ ...itemToAdd, quantity }],
+          subtotal: (Number(product.price) || 0) * quantity,
+          total: (Number(product.price) || 0) * quantity
+        })
+      );
+    } catch (err) {
+      console.warn("[Buy Now] Session storage save warning:", err);
+    }
+
+    // 3. Redirect user directly to the checkout route with product details in query params
+    const checkoutUrl = `${normalizedBase}checkout.html?buyNow=1&id=${encodeURIComponent(product.id)}&title=${encodeURIComponent(product.name || product.title || "")}&price=${encodeURIComponent(product.price)}&qty=${encodeURIComponent(quantity)}`;
+    window.location.href = checkoutUrl;
   };
 
   const handleOpenRelated = (e, relProd) => {
@@ -1525,8 +1580,8 @@ function ProductSingleDetail() {
                 </div>
               )}
 
-              {/* Quantity Selector: hidden for external/store products */}
-              {!isExternal && (
+              {/* Quantity Selector: hidden for external deals products */}
+              {(!isExternal || !isFromDeals) && (
                 <div className="product-detail-qty-row">
                   <span className="product-detail-qty-label">Quantity:</span>
                   <div className="product-detail-qty-control">
@@ -1554,8 +1609,8 @@ function ProductSingleDetail() {
               )}
 
               <div className="product-detail-action-btns">
-                {/* 1. Add to Cart button (hidden for external/store products) */}
-                {!isExternal && (
+                {/* 1. Add to Cart button */}
+                {(!isExternal || !isFromDeals) && (
                   <button
                     type="button"
                     className={`product-detail-add-btn${added ? " is-added" : ""}`}
@@ -1576,20 +1631,32 @@ function ProductSingleDetail() {
                   </button>
                 )}
 
-                {/* 2. Main Buy on <Store> button */}
-                <button
-                  type="button"
-                  className="product-detail-buy-platform-btn"
-                  disabled={!safeBuyUrl}
-                  onClick={handlePlatformBuy}
-                  aria-label={safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}
-                >
-                  <span>{safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}</span>
-                  <ExternalLink size={18} />
-                </button>
+                {/* 2. Action Button: Deals show external merchant link ("Link unavailable" if disabled); Home/Products show styled "Buy Now" button */}
+                {isFromDeals ? (
+                  <button
+                    type="button"
+                    className="product-detail-buy-platform-btn"
+                    disabled={!safeBuyUrl}
+                    onClick={handlePlatformBuy}
+                    aria-label={safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}
+                  >
+                    <span>{safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}</span>
+                    <ExternalLink size={18} />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="product-detail-buynow-btn"
+                    onClick={handleDirectBuyNow}
+                    aria-label={`Buy ${product.name} now`}
+                  >
+                    <span>Buy Now</span>
+                    <ArrowRight size={18} />
+                  </button>
+                )}
 
-                {/* 3. Compact Compare prices list if multiple offers exist */}
-                {Array.isArray(product.offers) && product.offers.length > 1 && (
+                {/* 3. Compact Compare prices list if multiple offers exist (Deals only) */}
+                {isFromDeals && Array.isArray(product.offers) && product.offers.length > 1 && (
                   <div className="product-detail-compare-wrap">
                     <div className="product-detail-compare-title">
                       <span>Compare prices across stores</span>
@@ -1636,15 +1703,17 @@ function ProductSingleDetail() {
                   </div>
                 )}
 
-                {/* 4. Redirect disclaimer & affiliate disclosure */}
-                <div className="product-detail-platform-note">
-                  <p style={{ margin: "4px 0" }}>
-                    You will be redirected to the {bestPlatform || "merchant"} website to complete your purchase. Prices and availability may change.
-                  </p>
-                  <p style={{ margin: "2px 0", color: "#94a3b8" }}>
-                    Disclosure: As an affiliate, KSAM Deal may earn a commission from qualifying purchases.
-                  </p>
-                </div>
+                {/* 4. Redirect disclaimer & affiliate disclosure (Kept for Deals only; removed for Home/Products direct purchase) */}
+                {isFromDeals && (
+                  <div className="product-detail-platform-note">
+                    <p style={{ margin: "4px 0" }}>
+                      You will be redirected to the {bestPlatform || "merchant"} website to complete your purchase. Prices and availability may change.
+                    </p>
+                    <p style={{ margin: "2px 0", color: "#94a3b8" }}>
+                      Disclosure: As an affiliate, KSAM Deal may earn a commission from qualifying purchases.
+                    </p>
+                  </div>
+                )}
 
                 {/* 5. Back link */}
                 <a
@@ -1761,10 +1830,10 @@ function ProductSingleDetail() {
       {/* Sticky Bottom Add to Cart / Buy on Store Bar for Mobile */}
       <div className="product-detail-mobile-sticky-bar">
         <div className="mobile-sticky-left">
-          <span className="mobile-sticky-price">{formatPrice(product.price * (isExternal ? 1 : quantity))}</span>
+          <span className="mobile-sticky-price">{formatPrice(product.price * (isFromDeals && isExternal ? 1 : quantity))}</span>
           <span className="mobile-sticky-name">{product.name || product.title}</span>
         </div>
-        {isExternal ? (
+        {isFromDeals ? (
           <button
             type="button"
             className="mobile-sticky-btn"
@@ -1779,9 +1848,11 @@ function ProductSingleDetail() {
           <button
             type="button"
             className="mobile-sticky-btn"
-            onClick={handleAddToCart}
+            onClick={handleDirectBuyNow}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}
           >
-            {added ? "Added ✓" : "Add to Cart"}
+            <span>Buy Now</span>
+            <ArrowRight size={16} />
           </button>
         )}
       </div>

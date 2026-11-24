@@ -4,6 +4,8 @@
    Responsive for 360px phones up to 4K displays
    ========================================================================== */
 
+@import "./soft-ui.css";
+
 :root {
   /* KSAM Deal Sophisticated Dark Theme System */
   --ks-bg-primary: #05070B;

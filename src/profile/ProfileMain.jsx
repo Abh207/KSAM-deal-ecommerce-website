@@ -701,7 +701,7 @@ export function ProfileApp() {
               tabIndex={0}
             >
               {/* Open Panel Header: sits directly on section background without heavy card borders */}
-              {activeSection !== "overview" && (
+              {!["overview", "alerts", "recent"].includes(activeSection) && (
                 <div className={`kx-panel-header-open ${activeMeta.isDanger ? "is-danger-header" : ""}`}>
                   <div className="kx-panel-header-left">
                     <div className={`kx-section-eyebrow ${activeMeta.isDanger ? "text-red-400" : ""}`}>
@@ -778,6 +778,7 @@ export function ProfileApp() {
                     alerts={alerts}
                     onReloadAlerts={loadData}
                     onShowToast={(msg) => setToast(msg)}
+                    onNavigateTab={navigateToSection}
                   />
                 )}
 
@@ -787,6 +788,7 @@ export function ProfileApp() {
                     userId={session?.user?.id}
                     onReloadHistory={loadData}
                     onShowToast={(msg) => setToast(msg)}
+                    onNavigateTab={navigateToSection}
                   />
                 )}
 

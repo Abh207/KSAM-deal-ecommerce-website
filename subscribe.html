@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-accent="green">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <meta name="description" content="Subscribe to KSAM Deal membership for exclusive price drop alerts, deal tracking, and personalized recommendations.">
     <meta name="robots" content="noindex, follow">
     <link rel="canonical" href="https://abh207.github.io/KSAM-deal-ecommerce-website/subscribe.html">
-    <meta name="theme-color" content="#050a02">
+    <meta name="theme-color" content="#ffffff">
 
     <!-- Favicon & Touch Icons -->
     <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any">
@@ -21,26 +21,10 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Theme Initialization Script -->
-    <script>
-      (function() {
-        try {
-          var t = localStorage.getItem('ksam_theme_pref') || 'dark';
-          var a = localStorage.getItem('ksam_accent_pref') || 'green';
-          var effective = t;
-          if (t === 'auto') {
-            effective = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-          }
-          document.documentElement.setAttribute('data-theme', effective);
-          document.documentElement.setAttribute('data-accent', a);
-        } catch(e) {}
-      })();
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="bg-[#050a02] text-white font-['Plus_Jakarta_Sans',sans-serif] antialiased min-h-screen selection:bg-[#84FF00] selection:text-black">
+<body class="bg-[#F8F9FA] text-[#111827] font-['Plus_Jakarta_Sans','Inter',-apple-system,BlinkMacSystemFont,sans-serif] antialiased min-h-screen selection:bg-[#111827] selection:text-white">
 
     <div id="subscribe-root"></div>
 

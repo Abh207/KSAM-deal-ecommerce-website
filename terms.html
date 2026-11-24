@@ -10,7 +10,7 @@
     <meta name="description" content="Read the terms of service and discover how KSAM Deal helps you compare products and shop discounted deals.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://abh207.github.io/KSAM-deal-ecommerce-website/terms.html">
-    <meta name="theme-color" content="#050a02">
+    <meta name="theme-color" content="#FFFFFF">
 
     <!-- Favicon & Touch Icons -->
     <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any">
@@ -40,14 +40,8 @@
     <script>
       (function() {
         try {
-          var t = localStorage.getItem('ksam_theme_pref') || 'dark';
-          var a = localStorage.getItem('ksam_accent_pref') || 'green';
-          var effective = t;
-          if (t === 'auto') {
-            effective = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-          }
-          document.documentElement.setAttribute('data-theme', effective);
-          document.documentElement.setAttribute('data-accent', a);
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.documentElement.setAttribute('data-accent', 'green');
         } catch(e) {}
       })();
     </script>

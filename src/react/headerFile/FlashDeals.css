@@ -98,7 +98,7 @@
 .flash-deals-title h2 {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin: 0;
     font-size: clamp(2rem, 4.5vw, 3.6rem);
     font-weight: 900;
@@ -370,10 +370,15 @@
     z-index: 2;
     background: #0B5A12;
     color: #ffffff;
-    padding: 6px 9px;
+    padding: 5px 10px;
     border-radius: 6px;
-    font-size: 9px;
+    font-size: 9.5px;
     font-weight: 900;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     box-shadow: 0 2px 8px rgba(11, 90, 18, 0.25);
 }
 
@@ -755,8 +760,12 @@
         top: 8px !important;
         left: 8px !important;
         font-size: 9.5px !important;
-        padding: 3px 6px !important;
+        padding: 3px 8px !important;
         border-radius: 5px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
     }
 
     .flash-deal-discount {

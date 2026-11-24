@@ -43,12 +43,65 @@ const getImagePath = (image) => {
 ========================================================= */
 
 function getCart() {
-
     try {
-
-        return JSON.parse(
+        const stored = JSON.parse(
             localStorage.getItem(CART_KEY)
         ) || [];
+
+        if (stored.length > 0) {
+            return stored;
+        }
+
+        // Direct buy fallback from sessionStorage or URL query params
+        if (typeof window !== "undefined") {
+            try {
+                const direct = sessionStorage.getItem("ksam_direct_buy");
+                if (direct) {
+                    const parsed = JSON.parse(direct);
+                    if (parsed && (parsed.id || parsed.title)) {
+                        const directItem = {
+                            id: parsed.id || "direct-1",
+                            name: parsed.title || parsed.name || "Product",
+                            title: parsed.title || parsed.name || "Product",
+                            price: Number(parsed.price) || 0,
+                            quantity: Number(parsed.quantity || parsed.qty) || 1,
+                            qty: Number(parsed.quantity || parsed.qty) || 1,
+                            image: parsed.image || DEFAULT_PLACEHOLDER_IMAGE,
+                            category: parsed.category || "General",
+                            selectedSize: parsed.selectedSize,
+                            selectedColor: parsed.selectedColor
+                        };
+                        try {
+                            localStorage.setItem(CART_KEY, JSON.stringify([directItem]));
+                        } catch {}
+                        return [directItem];
+                    }
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get("id");
+                if (id) {
+                    const directItem = {
+                        id: id,
+                        name: urlParams.get("title") || "Product",
+                        title: urlParams.get("title") || "Product",
+                        price: Number(urlParams.get("price")) || 0,
+                        quantity: Number(urlParams.get("qty")) || 1,
+                        qty: Number(urlParams.get("qty")) || 1,
+                        image: DEFAULT_PLACEHOLDER_IMAGE,
+                        category: "General"
+                    };
+                    try {
+                        localStorage.setItem(CART_KEY, JSON.stringify([directItem]));
+                    } catch {}
+                    return [directItem];
+                }
+            } catch (fallbackErr) {
+                console.warn("[Checkout] Direct buy parse warning:", fallbackErr);
+            }
+        }
+
+        return [];
 
     } catch (error) {
 
@@ -60,7 +113,6 @@ function getCart() {
         return [];
 
     }
-
 }
 
 

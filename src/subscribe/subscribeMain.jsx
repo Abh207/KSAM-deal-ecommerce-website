@@ -1,33 +1,23 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  Compass,
-  Flame,
-  Crown,
-  Check,
-  ShieldCheck,
   Lock,
+  Check,
   ArrowRight,
   ArrowLeft,
   AlertCircle,
-  HelpCircle,
-  Sparkles,
-  Calendar,
-  CheckCircle2,
-  RefreshCw,
   CreditCard,
   Smartphone,
   Building,
   Wallet,
-  Tag,
   ChevronDown,
   ChevronUp,
-  ExternalLink,
+  RefreshCw,
+  FileText,
   Printer,
-  Download,
-  Info,
-  X,
-  FileText
+  ShieldCheck,
+  Tag,
+  X
 } from "lucide-react";
 
 import { supabase } from "../lib/supabase.js";
@@ -35,21 +25,10 @@ import {
   PLANS,
   getPlanBySlug,
   calculatePlanPricing,
-  normalizePlanSlug,
-  isHigherTier,
-  isSameTier,
-  getUpgradeNotice
+  normalizePlanSlug
 } from "../lib/plansConfig.js";
 
-import Navbar from "../deals/components/Navbar.jsx";
-import Footer from "../deals/components/Footer.jsx";
 import Toast from "../deals/components/Toast.jsx";
-
-// Global tokens and styles
-import "../deals/tailwind-generated.css";
-import "../deals/deals.css";
-import "../styles/kx-tokens.css";
-import "../styles/kx-motion.css";
 import "./subscribe.css";
 
 const BASE_URL = import.meta.env.BASE_URL || "/";
@@ -66,11 +45,14 @@ const INDIAN_STATES = [
   "Uttarakhand", "West Bengal"
 ];
 
-function PlanIcon({ icon, size = 20, className = "" }) {
-  if (icon === "flame") return <Flame size={size} className={className} />;
-  if (icon === "crown") return <Crown size={size} className={className} />;
-  return <Compass size={size} className={className} />;
-}
+const WALLET_OPTIONS = [
+  "PhonePe",
+  "Paytm",
+  "Mobikwik",
+  "Amazon Pay",
+  "Freecharge",
+  "Airtel Money"
+];
 
 // Lazy-load Razorpay checkout script on demand
 let rzpScriptPromise = null;
@@ -84,7 +66,7 @@ function loadRazorpayScript() {
       script.async = true;
       script.onload = () => resolve(true);
       script.onerror = () => {
-        console.error("Failed to load Razorpay checkout script");
+        console.error("[Subscribe Checkout] Failed to load Razorpay checkout script");
         resolve(false);
       };
       document.body.appendChild(script);
@@ -102,7 +84,7 @@ export default function SubscribeApp() {
   // Stepper state: 1: Plan, 2: Details, 3: Payment, 4: Success
   const [currentStep, setCurrentStep] = useState(1);
 
-  // Read URL query params
+  // Read URL query params or restore from sessionStorage
   const [selectedPlanSlug, setSelectedPlanSlug] = useState(() => {
     if (typeof window !== "undefined") {
       const p = new URLSearchParams(window.location.search).get("plan");
@@ -160,9 +142,28 @@ export default function SubscribeApp() {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [marketingConsent, setMarketingConsent] = useState(false);
-  const [preferredMethod, setPreferredMethod] = useState("upi");
-  const [termsAgreed, setTermsAgreed] = useState(true);
+
+  // Payment method selection (Default: UPI)
+  const [selectedMethod, setSelectedMethod] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = sessionStorage.getItem(FORM_STATE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.selectedMethod) return parsed.selectedMethod;
+        }
+      } catch {}
+    }
+    return "upi";
+  });
+
+  // Safe extra controls
+  const [upiId, setUpiId] = useState("");
+  const [selectedWallet, setSelectedWallet] = useState("PhonePe");
+  const [upiError, setUpiError] = useState("");
+
+  // Terms agreement checkbox: UNTICKED by default
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
   // Server coupon verification state
   const [couponInput, setCouponInput] = useState("");
@@ -176,7 +177,6 @@ export default function SubscribeApp() {
   const [completedSub, setCompletedSub] = useState(null);
 
   // UI accordion toggles
-  const [showCompareModal, setShowCompareModal] = useState(false);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
@@ -185,7 +185,47 @@ export default function SubscribeApp() {
   const selectedPlan = useMemo(() => getPlanBySlug(selectedPlanSlug), [selectedPlanSlug]);
   const pricing = useMemo(() => calculatePlanPricing(selectedPlan.slug, billingCycle), [selectedPlan.slug, billingCycle]);
 
-  // Save progress in sessionStorage (excluding payment data)
+  // Synchronize URL query params with current plan & billing cycle via history.replaceState
+  const updateUrlParams = useCallback((slug, cycle) => {
+    if (typeof window === "undefined") return;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("plan", slug);
+      url.searchParams.set("billing", cycle);
+      window.history.replaceState({}, "", url.toString());
+    } catch (err) {
+      console.warn("[Subscribe Checkout] URL sync error:", err);
+    }
+  }, []);
+
+  const handlePlanSelect = useCallback((slug) => {
+    const norm = normalizePlanSlug(slug);
+    setSelectedPlanSlug(norm);
+    updateUrlParams(norm, billingCycle);
+  }, [billingCycle, updateUrlParams]);
+
+  const handleBillingCycleChange = useCallback((cycle) => {
+    const nextCycle = cycle === "yearly" ? "yearly" : "monthly";
+    setBillingCycle(nextCycle);
+    updateUrlParams(selectedPlanSlug, nextCycle);
+  }, [selectedPlanSlug, updateUrlParams]);
+
+  // Read URL query params on page load
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlPlan = params.get("plan");
+      const urlCycle = params.get("billing");
+      if (urlPlan) {
+        setSelectedPlanSlug(normalizePlanSlug(urlPlan));
+      }
+      if (urlCycle === "yearly" || urlCycle === "monthly") {
+        setBillingCycle(urlCycle);
+      }
+    }
+  }, []);
+
+  // Save progress in sessionStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -194,6 +234,7 @@ export default function SubscribeApp() {
           JSON.stringify({
             planSlug: selectedPlanSlug,
             billingCycle,
+            selectedMethod,
             details: {
               name: details.name,
               email: details.email,
@@ -209,7 +250,7 @@ export default function SubscribeApp() {
         );
       } catch {}
     }
-  }, [selectedPlanSlug, billingCycle, details]);
+  }, [selectedPlanSlug, billingCycle, selectedMethod, details]);
 
   // Check auth and pre-fill details from profile
   useEffect(() => {
@@ -293,13 +334,6 @@ export default function SubscribeApp() {
     }
   }, [currentStep]);
 
-  // Recalculate coupon if plan or billing cycle changes
-  useEffect(() => {
-    if (appliedCoupon) {
-      handleValidateCoupon(appliedCoupon.code, false);
-    }
-  }, [selectedPlanSlug, billingCycle]);
-
   const handleRequireLogin = () => {
     const returnUrl = `${window.location.pathname}?plan=${selectedPlan.slug}&billing=${billingCycle}`;
     try {
@@ -339,7 +373,7 @@ export default function SubscribeApp() {
       errors.phone = "Please enter a valid 10-digit Indian mobile number.";
     }
     if (!details.line1.trim() || details.line1.trim().length < 4) {
-      errors.line1 = "Please enter a valid address (street or flat).";
+      errors.line1 = "Please enter your street address or flat number.";
     }
     if (!details.city.trim()) {
       errors.city = "Please enter your city.";
@@ -349,7 +383,7 @@ export default function SubscribeApp() {
     }
     const cleanPin = details.pincode.replace(/[^0-9]/g, "");
     if (!cleanPin || cleanPin.length !== 6) {
-      errors.pincode = "Please enter a valid 6-digit Indian PIN code.";
+      errors.pincode = "Please enter a valid 6-digit PIN code.";
     }
     if (details.gstNumber.trim() && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i.test(details.gstNumber.trim())) {
       errors.gstNumber = "Please enter a valid 15-character GSTIN or leave blank.";
@@ -359,7 +393,7 @@ export default function SubscribeApp() {
     return Object.keys(errors).length === 0;
   };
 
-  // Server coupon validation
+  // Server coupon validation via supabase.functions.invoke
   const handleValidateCoupon = async (codeToVerify, showToast = true) => {
     const code = (codeToVerify || couponInput).trim().toUpperCase();
     if (!code) {
@@ -376,32 +410,25 @@ export default function SubscribeApp() {
     setCouponError("");
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://epchmnhmwnrchgflgwdf.supabase.co";
-      const token = session?.access_token;
-      const headers = { "Content-Type": "application/json" };
-      if (token) headers["Authorization"] = `Bearer ${token}`;
-
-      const res = await fetch(`${supabaseUrl}/functions/v1/validate-coupon`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke("validate-coupon", {
+        body: {
           coupon_code: code,
           plan_slug: selectedPlan.slug,
           billing_cycle: billingCycle
-        })
+        }
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.valid) {
+      if (error || !data || !data.valid) {
+        console.warn("[Subscribe Checkout] Coupon validate error:", error || data);
         setAppliedCoupon(null);
-        setCouponError(data.error || `Coupon "${code}" is invalid or expired.`);
+        setCouponError(data?.error || `Coupon "${code}" is invalid or expired.`);
       } else {
         setAppliedCoupon(data);
         setCouponInput("");
         if (showToast) setToastMessage(data.message || `Coupon "${data.code}" applied!`);
       }
     } catch (err) {
-      console.warn("[SubscribeApp] Coupon validation fallback error:", err);
+      console.warn("[Subscribe Checkout] Coupon validation fallback error:", err);
       // Client-side fallback if edge function is unreachable
       if (code === "KSAM20") {
         const discountAmount = Math.round(pricing.basePrice * 0.2);
@@ -441,11 +468,11 @@ export default function SubscribeApp() {
     setToastMessage("Coupon removed.");
   };
 
-  // Grand Total Calculation with Coupon & GST
+  // Grand Total Calculation
   const discountAmount = appliedCoupon ? appliedCoupon.discount_amount : 0;
   const finalPayableTotal = Math.max(0, pricing.basePrice - discountAmount);
 
-  // Stepper navigation handlers
+  // Stepper navigation
   const handleStep1Continue = () => {
     if (!session && !authChecking) {
       handleRequireLogin();
@@ -459,34 +486,23 @@ export default function SubscribeApp() {
     if (e) e.preventDefault();
     if (!validateForm()) return;
 
-    // Save billing details & preferences if user opted in
-    if (session?.user) {
+    if (session?.user && details.saveToProfile) {
       try {
-        if (details.saveToProfile) {
-          await supabase.from("billing_details").upsert({
-            user_id: session.user.id,
-            name: details.name.trim(),
-            email: details.email.trim(),
-            phone: details.phone.trim(),
-            line1: details.line1.trim(),
-            line2: details.line2.trim() || null,
-            city: details.city.trim(),
-            state: details.state.trim(),
-            pincode: details.pincode.trim(),
-            gst_number: details.gstNumber.trim() || null,
-            updated_at: new Date().toISOString()
-          }, { onConflict: "user_id" });
-        }
-
-        // Save marketing preference if checked
-        if (marketingConsent) {
-          await supabase.from("profiles").update({
-            marketing_opt_in: true,
-            updated_at: new Date().toISOString()
-          }).eq("id", session.user.id);
-        }
+        await supabase.from("billing_details").upsert({
+          user_id: session.user.id,
+          name: details.name.trim(),
+          email: details.email.trim(),
+          phone: details.phone.trim(),
+          line1: details.line1.trim(),
+          line2: details.line2.trim() || null,
+          city: details.city.trim(),
+          state: details.state.trim(),
+          pincode: details.pincode.trim(),
+          gst_number: details.gstNumber.trim() || null,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "user_id" });
       } catch (err) {
-        console.warn("[SubscribeApp] Auto-save billing error:", err);
+        console.warn("[Subscribe Checkout] Billing save warning:", err);
       }
     }
 
@@ -494,44 +510,107 @@ export default function SubscribeApp() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Step 3 Payment Execution
+  // Dynamic Pay Button label following selected method (PROBLEM C)
+  const getPayButtonLabel = (method, amount) => {
+    if (amount === 0) return "Activate plan";
+    switch (method) {
+      case "upi":
+        return `Pay ₹${amount} via UPI`;
+      case "card":
+        return `Pay ₹${amount} with Card`;
+      case "netbanking":
+        return `Pay ₹${amount} via Netbanking`;
+      case "wallet":
+        return `Pay ₹${amount} with Wallet`;
+      default:
+        return `Pay ₹${amount}`;
+    }
+  };
+
+  const getMethodDisplayName = (method) => {
+    switch (method) {
+      case "upi": return "UPI";
+      case "card": return "Credit & Debit Cards";
+      case "netbanking": return "Netbanking";
+      case "wallet": return "Wallets";
+      default: return "Payment Method";
+    }
+  };
+
+  // Step 3 Payment Execution (PROBLEM A & B)
   const handlePaymentSubmit = async () => {
+    // 1. Enforce terms checkbox
     if (finalPayableTotal > 0 && !termsAgreed) {
-      setPaymentError("Please accept the Terms of Service, Privacy Policy, and Refund Policy.");
+      setPaymentError("Please check the box to accept the Terms of Service, Privacy Policy, and Refund Policy.");
       return;
     }
+
+    // 2. Validate optional UPI ID if entered
+    if (selectedMethod === "upi" && upiId.trim()) {
+      const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+      if (!upiRegex.test(upiId.trim())) {
+        setUpiError("Please enter a valid UPI ID (e.g. yourname@bank) or leave blank.");
+        return;
+      }
+    }
+    setUpiError("");
 
     setPaymentError("");
     setIsProcessingPayment(true);
 
     try {
-      const token = session?.access_token;
-      if (!token) {
+      // 3. Confirm active session before making request
+      const { data: { session: freshSession } } = await supabase.auth.getSession();
+      if (!freshSession?.access_token) {
+        setPaymentError("Your session has expired. Please sign in again to continue.");
+        setIsProcessingPayment(false);
         handleRequireLogin();
         return;
       }
 
-      // 1. Call create-razorpay-order Edge Function
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://epchmnhmwnrchgflgwdf.supabase.co";
-      const orderRes = await fetch(`${supabaseUrl}/functions/v1/create-razorpay-order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          plan_slug: selectedPlan.slug,
-          billing_cycle: billingCycle,
-          coupon_code: appliedCoupon ? appliedCoupon.code : undefined
-        })
-      });
+      // 4. Call create-razorpay-order Edge Function via supabase.functions.invoke
+      const { data: orderData, error: invokeErr } = await supabase.functions.invoke(
+        "create-razorpay-order",
+        {
+          body: {
+            plan_slug: selectedPlan.slug,
+            billing_cycle: billingCycle,
+            coupon_code: appliedCoupon ? appliedCoupon.code : undefined
+          }
+        }
+      );
 
-      const orderData = await orderRes.json();
-      if (!orderRes.ok || !orderData.success) {
-        throw new Error(orderData.error || "Failed to initialize order");
+      if (invokeErr) {
+        console.error("[Subscribe Checkout] create-razorpay-order error:", {
+          name: invokeErr.name,
+          message: invokeErr.message,
+          context: invokeErr.context,
+          status: invokeErr.context?.status
+        });
+
+        let friendlyMsg = "Unable to start checkout. Please try again.";
+        const msgStr = String(invokeErr.message || invokeErr.name || "");
+        if (msgStr.includes("Failed to fetch") || invokeErr.name === "FunctionsFetchError") {
+          friendlyMsg = "Unable to reach the payment server. Please check your internet connection or try again in a few moments.";
+        } else if (invokeErr.context?.status === 401) {
+          friendlyMsg = "Your session has expired. Please sign in again.";
+          handleRequireLogin();
+          return;
+        } else if (invokeErr.message) {
+          friendlyMsg = invokeErr.message;
+        }
+        setPaymentError(friendlyMsg);
+        setIsProcessingPayment(false);
+        return;
       }
 
-      // 2. Free Plan / 100% Discount: Completed immediately without gateway
+      if (!orderData || !orderData.success) {
+        setPaymentError(orderData?.error || "Failed to initialize payment order. Please try again.");
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      // 5. Free Plan or 100% Coupon: Completed immediately without gateway
       if (orderData.free || finalPayableTotal === 0) {
         const now = new Date();
         const endDate = new Date(now.getTime() + (billingCycle === "yearly" ? 365 : 30) * 24 * 60 * 60 * 1000);
@@ -551,19 +630,21 @@ export default function SubscribeApp() {
         setIsProcessingPayment(false);
         try {
           localStorage.setItem("ksam_user_plan", selectedPlan.name);
+          sessionStorage.removeItem(FORM_STATE_KEY);
           window.dispatchEvent(new CustomEvent("ksam-profile-updated", { detail: { plan: selectedPlan.name } }));
         } catch {}
         return;
       }
 
-      // 3. Paid Plan: Ensure Razorpay script is loaded
+      // 6. Paid Plan: Load and open Razorpay Checkout
       const hasRzp = await loadRazorpayScript();
       if (!hasRzp || !window.Razorpay) {
         throw new Error("Unable to open Razorpay payment gateway. Please check your internet connection.");
       }
 
+      // Configure Razorpay Standard Checkout with preferred method (PROBLEM B)
       const options = {
-        key: orderData.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_TbQFNEdiyvVwDt",
+        key: orderData.key_id || "rzp_test_TbQFNEdiyvVwDt",
         amount: orderData.amount,
         currency: "INR",
         name: "KSAM Deal",
@@ -572,17 +653,43 @@ export default function SubscribeApp() {
         order_id: orderData.order_id,
         prefill: {
           name: details.name || "",
-          email: details.email || session?.user?.email || "",
-          contact: details.phone ? details.phone.replace(/[^0-9]/g, "") : ""
+          email: details.email || freshSession?.user?.email || "",
+          contact: details.phone ? details.phone.replace(/[^0-9]/g, "") : "",
+          method: selectedMethod,
+          vpa: selectedMethod === "upi" && upiId.trim() ? upiId.trim() : undefined
         },
         notes: {
           plan: selectedPlan.slug,
           cycle: billingCycle,
-          preferred_method: preferredMethod
+          preferred_method: selectedMethod,
+          wallet_name: selectedMethod === "wallet" ? selectedWallet : undefined
+        },
+        // Razorpay config.display: prioritizes selected method block at the top while keeping other methods accessible
+        config: {
+          display: {
+            blocks: {
+              preferred: {
+                name: `Pay using ${getMethodDisplayName(selectedMethod)}`,
+                instruments: [{ method: selectedMethod }]
+              },
+              other: {
+                name: "Other Payment Methods",
+                instruments: [
+                  { method: "upi" },
+                  { method: "card" },
+                  { method: "netbanking" },
+                  { method: "wallet" }
+                ].filter((m) => m.method !== selectedMethod)
+              }
+            },
+            sequence: ["block.preferred", "block.other"],
+            preferences: {
+              show_default_blocks: true
+            }
+          }
         },
         theme: {
-          color: "#84FF00",
-          backdrop_color: "rgba(5, 10, 2, 0.9)"
+          color: "#111827"
         },
         modal: {
           ondismiss: function () {
@@ -592,25 +699,23 @@ export default function SubscribeApp() {
         },
         handler: async function (response) {
           try {
-            // Verify payment on server
-            const verifyRes = await fetch(`${supabaseUrl}/functions/v1/verify-razorpay-payment`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                plan_slug: selectedPlan.slug,
-                billing_cycle: billingCycle
-              })
-            });
+            // Verify payment signature on server via verify-razorpay-payment
+            const { data: verifyData, error: verifyErr } = await supabase.functions.invoke(
+              "verify-razorpay-payment",
+              {
+                body: {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  plan_slug: selectedPlan.slug,
+                  billing_cycle: billingCycle
+                }
+              }
+            );
 
-            const verifyData = await verifyRes.json();
-            if (!verifyRes.ok || !verifyData.success) {
-              throw new Error(verifyData.error || "Payment signature verification failed.");
+            if (verifyErr || !verifyData || !verifyData.success) {
+              console.error("[Subscribe Checkout] Payment verification failure:", verifyErr || verifyData);
+              throw new Error(verifyData?.error || "Payment signature verification failed. Please contact support.");
             }
 
             const now = new Date();
@@ -631,7 +736,6 @@ export default function SubscribeApp() {
               customer_email: details.email
             });
 
-            // Update local plan state for navbar and profile
             try {
               localStorage.setItem("ksam_user_plan", selectedPlan.name);
               sessionStorage.removeItem(FORM_STATE_KEY);
@@ -641,8 +745,8 @@ export default function SubscribeApp() {
             setCurrentStep(4);
             window.scrollTo({ top: 0, behavior: "smooth" });
           } catch (verErr) {
-            console.error("[SubscribeApp] Verify payment error:", verErr);
-            setPaymentError(verErr.message || "Payment verification failed. Please contact support.");
+            console.error("[Subscribe Checkout] Verify error:", verErr);
+            setPaymentError(verErr.message || "Payment verification failed. Please contact support with your payment ID.");
           } finally {
             setIsProcessingPayment(false);
           }
@@ -652,21 +756,19 @@ export default function SubscribeApp() {
       const rzp = new window.Razorpay(options);
       rzp.on("payment.failed", function (resp) {
         setIsProcessingPayment(false);
-        const errDesc = resp.error?.description || "Payment failed at gateway";
+        const errDesc = resp.error?.description || "Payment was declined or cancelled at the gateway";
         setPaymentError(`Payment failed: ${errDesc}. Please try a different payment method.`);
       });
       rzp.open();
     } catch (err) {
-      console.error("[SubscribeApp] Checkout execution error:", err);
+      console.error("[Subscribe Checkout] Execution error:", err);
       setIsProcessingPayment(false);
-      setPaymentError(err.message || "Failed to start checkout. Please try again.");
+      setPaymentError(err.message || "Unable to start checkout. Please try again.");
     }
   };
 
-  const isCurrentPlanActive = activeSub && isSameTier(activeSub.plan_slug, selectedPlan.slug);
-  const upgradeNotice = useMemo(() => getUpgradeNotice(activeSub, selectedPlan.slug), [activeSub, selectedPlan.slug]);
+  const isCurrentPlanActive = activeSub && activeSub.plan_slug === selectedPlan.slug;
 
-  // Back link handler
   const handleBackNavigation = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -676,579 +778,453 @@ export default function SubscribeApp() {
     }
   };
 
+  const payButtonLabel = getPayButtonLabel(selectedMethod, finalPayableTotal);
+
   return (
-    <div className="sub-checkout-page">
-      {/* 1. TOP BAR WITH 4-STEP STEPPER */}
-      <header className="sub-topbar">
-        <div className="sub-topbar-inner">
-          {/* Brand Logo & Title */}
-          <a href={`${BASE_URL}index.html`} className="sub-brand-link">
+    <div className="checkout-page">
+      {/* 1. SIMPLE TOP HEADER (PROBLEM D: Logo left, Secure checkout right, no full site nav) */}
+      <header className="checkout-header">
+        <div className="checkout-header-inner">
+          <a href={`${BASE_URL}index.html`} className="checkout-brand">
             <img
               src={`${BASE_URL}assets/images/ksam-deal logo.png`}
               alt="KSAM Deal"
-              className="sub-brand-logo"
+              className="checkout-brand-logo"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = `${BASE_URL}assets/images/logo-512.png`;
               }}
             />
-            <div className="sub-brand-title hidden sm:flex">
-              <span>KSAM Deal</span>
-              <span className="sub-brand-badge">Checkout</span>
-            </div>
+            <span className="checkout-brand-title">KSAM Deal</span>
           </a>
 
-          {/* Stepper with 4 Steps */}
-          <nav className="sub-stepper" aria-label="Checkout Progress">
-            <button
-              type="button"
-              disabled={currentStep > 3}
-              onClick={() => setCurrentStep(1)}
-              className={`sub-step-node ${currentStep === 1 ? "is-active" : currentStep > 1 ? "is-completed" : ""}`}
-            >
-              <div className="sub-step-indicator">
-                {currentStep > 1 ? <Check size={14} /> : "1"}
-              </div>
-              <span className="sub-step-title hidden md:inline">Plan</span>
-            </button>
-
-            <div className={`sub-step-line ${currentStep >= 2 ? "is-active" : ""}`} />
-
-            <button
-              type="button"
-              disabled={currentStep < 2 || currentStep > 3}
-              onClick={() => setCurrentStep(2)}
-              className={`sub-step-node ${currentStep === 2 ? "is-active" : currentStep > 2 ? "is-completed" : ""}`}
-            >
-              <div className="sub-step-indicator">
-                {currentStep > 2 ? <Check size={14} /> : "2"}
-              </div>
-              <span className="sub-step-title hidden md:inline">Details</span>
-            </button>
-
-            <div className={`sub-step-line ${currentStep >= 3 ? "is-active" : ""}`} />
-
-            <button
-              type="button"
-              disabled={currentStep < 3 || currentStep > 3}
-              className={`sub-step-node ${currentStep === 3 ? "is-active" : currentStep > 3 ? "is-completed" : ""}`}
-            >
-              <div className="sub-step-indicator">
-                {currentStep > 3 ? <Check size={14} /> : "3"}
-              </div>
-              <span className="sub-step-title hidden md:inline">Payment</span>
-            </button>
-
-            <div className={`sub-step-line ${currentStep >= 4 ? "is-active" : ""}`} />
-
-            <div className={`sub-step-node ${currentStep === 4 ? "is-active" : ""}`}>
-              <div className="sub-step-indicator">4</div>
-              <span className="sub-step-title hidden md:inline">Success</span>
-            </div>
-          </nav>
-
-          {/* Back Link */}
-          {currentStep <= 3 && (
-            <button
-              type="button"
-              onClick={handleBackNavigation}
-              className="sub-back-link"
-              aria-label="Go back to previous step"
-            >
-              <ArrowLeft size={14} />
-              <span>Back</span>
-            </button>
-          )}
-        </div>
-
-        {/* Mobile Accordion Summary Bar (Visible on mobile only, steps 1-3) */}
-        {currentStep <= 3 && (
-          <div className="lg:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
-              className="sub-mobile-summary-trigger"
-            >
-              <div className="flex items-center gap-2">
-                <Tag size={14} className="text-[#84FF00]" />
-                <span>Order Summary: <strong className="text-white">{selectedPlan.name}</strong></span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#84FF00] font-black">₹{finalPayableTotal}</span>
-                {mobileSummaryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </div>
-            </button>
-
-            {mobileSummaryOpen && (
-              <div className="p-4 bg-[#080e05] border-b border-white/10 space-y-3">
-                <div className="sub-summary-line">
-                  <span>Subtotal ({selectedPlan.name} {billingCycle})</span>
-                  <span>₹{pricing.subtotal}</span>
-                </div>
-                <div className="sub-summary-line">
-                  <span>18% GST (Included)</span>
-                  <span>₹{pricing.gstAmount}</span>
-                </div>
-                {appliedCoupon && (
-                  <div className="sub-summary-line text-[#84FF00]">
-                    <span>Coupon ({appliedCoupon.code})</span>
-                    <span>-₹{discountAmount}</span>
-                  </div>
-                )}
-                <div className="sub-summary-line total">
-                  <span>Total Amount</span>
-                  <span className="text-[#84FF00]">₹{finalPayableTotal}</span>
-                </div>
-              </div>
-            )}
+          <div className="checkout-secure-badge">
+            <Lock size={14} className="text-gray-500" />
+            <span>Secure checkout</span>
           </div>
-        )}
+        </div>
       </header>
 
-      {/* Shared Global Navbar */}
-      <Navbar />
+      {/* 2. SLIM STEP INDICATOR (1. Plan, 2. Details, 3. Payment) */}
+      {currentStep <= 3 && (
+        <div className="checkout-stepper-wrap">
+          <nav className="checkout-stepper" aria-label="Checkout Progress">
+            <button
+              type="button"
+              onClick={() => setCurrentStep(1)}
+              className={`checkout-step-btn ${currentStep === 1 ? "is-active" : currentStep > 1 ? "is-completed" : ""}`}
+            >
+              <span className="checkout-step-num">
+                {currentStep > 1 ? <Check size={12} /> : "1"}
+              </span>
+              <span>Plan</span>
+            </button>
 
-      {/* MAIN CONTENT AREA: 2-COLUMN LAYOUT (DESKTOP) */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1 w-full">
-        {/* Not Signed In Banner */}
+            <span className="checkout-step-divider" />
+
+            <button
+              type="button"
+              disabled={currentStep < 2}
+              onClick={() => setCurrentStep(2)}
+              className={`checkout-step-btn ${currentStep === 2 ? "is-active" : currentStep > 2 ? "is-completed" : ""}`}
+            >
+              <span className="checkout-step-num">
+                {currentStep > 2 ? <Check size={12} /> : "2"}
+              </span>
+              <span>Details</span>
+            </button>
+
+            <span className="checkout-step-divider" />
+
+            <button
+              type="button"
+              disabled={currentStep < 3}
+              className={`checkout-step-btn ${currentStep === 3 ? "is-active" : ""}`}
+            >
+              <span className="checkout-step-num">3</span>
+              <span>Payment</span>
+            </button>
+          </nav>
+        </div>
+      )}
+
+      {/* Mobile Collapsible Summary Accordion (< 1024px) */}
+      {currentStep <= 3 && (
+        <div className="checkout-mobile-summary">
+          <button
+            type="button"
+            onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
+            className="checkout-mobile-summary-trigger"
+            aria-expanded={mobileSummaryOpen}
+          >
+            <div className="checkout-mobile-summary-left">
+              <Tag size={14} className="text-gray-500 shrink-0" />
+              <span>Order Summary</span>
+              <span className="text-gray-300">•</span>
+              <span className="checkout-mobile-summary-title">{selectedPlan.name}</span>
+              <ChevronDown
+                size={14}
+                className={`checkout-mobile-chevron ${mobileSummaryOpen ? "is-open" : ""}`}
+              />
+            </div>
+            <span className="checkout-mobile-summary-price tabular-nums">₹{finalPayableTotal}</span>
+          </button>
+
+          {mobileSummaryOpen && (
+            <div className="checkout-mobile-accordion">
+              <div className="checkout-mobile-accordion-inner">
+                <div className="flex justify-between text-gray-700">
+                  <span>{selectedPlan.name} ({billingCycle === "yearly" ? "Annual" : "Monthly"})</span>
+                  <span className="tabular-nums font-semibold">₹{pricing.subtotal}</span>
+                </div>
+
+                {billingCycle === "yearly" && pricing.savingsAmount > 0 && (
+                  <div className="flex justify-between text-green-700 font-medium">
+                    <span>Yearly savings (20% off)</span>
+                    <span className="tabular-nums font-semibold">-₹{pricing.savingsAmount}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-gray-500 text-[11px]">
+                  <span>Price includes 18% GST</span>
+                  <span className="tabular-nums">₹{pricing.gstAmount}</span>
+                </div>
+
+                {appliedCoupon && (
+                  <div className="flex justify-between text-green-700 font-semibold">
+                    <span>Coupon ({appliedCoupon.code})</span>
+                    <span className="tabular-nums">-₹{discountAmount}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between font-bold text-gray-900 pt-2 border-t border-gray-200 text-sm">
+                  <span>Total Amount</span>
+                  <span className="tabular-nums text-base">₹{finalPayableTotal}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 3. MAIN CHECKOUT CONTAINER */}
+      <main className="checkout-container">
+        {/* Not Signed In Notice */}
         {!authChecking && !session && currentStep <= 3 && (
-          <div className="sub-card mb-8 border-[#FFD60A]/40 bg-[#FFD60A]/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-[#FFD60A]/20 text-[#FFD60A] flex items-center justify-center shrink-0">
-                <AlertCircle size={22} />
-              </div>
-              <div>
-                <h3 className="text-white font-bold text-base">Sign In Required</h3>
-                <p className="text-white/60 text-sm">
-                  Please sign in to link your membership to your KSAM Deal account.
-                </p>
-              </div>
+          <div className="mb-6 p-4 rounded-md border border-amber-200 bg-amber-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm">
+            <div className="flex items-center gap-2.5 text-amber-900">
+              <AlertCircle size={18} className="text-amber-600 shrink-0" />
+              <span>Please sign in to continue with the {selectedPlan.name} plan.</span>
             </div>
             <button
               type="button"
               onClick={handleRequireLogin}
-              className="sub-btn-primary sm:w-auto shrink-0 !bg-[#FFD60A] !text-black !py-2.5 !px-6"
+              className="text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition shrink-0"
             >
               Sign In to Continue →
             </button>
           </div>
         )}
 
-        {/* Already on Same Plan Banner */}
+        {/* Already on Same Plan Notice */}
         {isCurrentPlanActive && currentStep <= 3 && (
-          <div className="sub-card mb-8 border-[#84FF00]/40 bg-[#84FF00]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <CheckCircle2 size={24} className="text-[#84FF00] shrink-0" />
-              <div>
-                <h4 className="text-white font-bold text-base">You're already on this plan!</h4>
-                <p className="text-white/70 text-sm">
-                  Your active <strong>{selectedPlan.name}</strong> membership is valid until{" "}
-                  {activeSub.end_date ? new Date(activeSub.end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "current cycle"}.
-                </p>
-              </div>
+          <div className="mb-6 p-4 rounded-md border border-blue-200 bg-blue-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm">
+            <div className="text-blue-900">
+              <strong>You're already on the {selectedPlan.name} plan.</strong> Active until{" "}
+              {activeSub.end_date ? new Date(activeSub.end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "current cycle"}.
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <a
-                href={`${BASE_URL}profile.html#subscription`}
-                className="sub-btn-secondary !text-xs !py-2"
-              >
-                View in Profile
-              </a>
-              {selectedPlan.slug !== "pro" && (
-                <button
-                  type="button"
-                  onClick={() => setSelectedPlanSlug("pro")}
-                  className="sub-btn-primary !text-xs !py-2 !px-4"
-                >
-                  Upgrade to Pro →
-                </button>
-              )}
-            </div>
+            <a
+              href={`${BASE_URL}profile.html#subscription`}
+              className="text-xs font-semibold text-blue-700 hover:underline shrink-0"
+            >
+              View in Profile →
+            </a>
           </div>
         )}
 
-        {/* Upgrade Notice */}
-        {upgradeNotice && upgradeNotice.type === "upgrade" && currentStep <= 3 && (
-          <div className="sub-card mb-8 border-sky-400/30 bg-sky-400/10 flex items-center gap-3">
-            <Sparkles size={20} className="text-sky-400 shrink-0" />
-            <p className="text-xs sm:text-sm text-sky-200">
-              {upgradeNotice.message}
-            </p>
-          </div>
-        )}
-
-        {/* 2-COLUMN GRID (STEPS 1, 2, 3) */}
+        {/* 2-COLUMN LAYOUT (DESKTOP >= 1024px: ~65% Left, ~35% Right) */}
         {currentStep <= 3 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* LEFT PANEL (~65% / 7.5 COLS) */}
-            <div className="lg:col-span-7 xl:col-span-8 space-y-8">
+          <div className="checkout-grid">
+            {/* LEFT COLUMN: STEPS */}
+            <div>
               {/* ================= STEP 1: PLAN SELECTION ================= */}
               {currentStep === 1 && (
-                <div className="sub-card space-y-6">
-                  {/* Step Title & Monthly/Yearly Toggle */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                    <div>
-                      <span className="text-xs font-bold text-[#84FF00] tracking-wider uppercase">Step 1 of 3</span>
-                      <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">Select Your Deal Mode</h1>
-                      <p className="text-sm text-white/50 mt-1">Unlock real-time price tracking, deal alerts, and intelligent recommendations.</p>
-                    </div>
+                <div className="checkout-box">
+                  <h1 className="checkout-box-title">Choose your deal mode</h1>
+                  <p className="checkout-box-desc">Select the membership tier that fits your deal hunting needs.</p>
 
-                    {/* Monthly / Yearly Switcher */}
-                    <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] p-1 shrink-0">
+                  {/* Tactile Billing Segmented Control */}
+                  <div className="checkout-cycle-wrap">
+                    <div
+                      className={`checkout-segmented-control ${billingCycle === "yearly" ? "is-yearly" : "is-monthly"}`}
+                      role="group"
+                      aria-label="Billing cycle"
+                    >
+                      <div className="checkout-segment-slider" aria-hidden="true" />
                       <button
                         type="button"
-                        onClick={() => setBillingCycle("monthly")}
-                        className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
-                          billingCycle === "monthly" ? "bg-[#84FF00] text-black shadow-sm" : "text-white/60 hover:text-white"
-                        }`}
+                        onClick={() => handleBillingCycleChange("monthly")}
+                        className={`checkout-segment-btn ${billingCycle === "monthly" ? "is-active" : ""}`}
+                        aria-pressed={billingCycle === "monthly"}
                       >
                         Monthly
                       </button>
                       <button
                         type="button"
-                        onClick={() => setBillingCycle("yearly")}
-                        className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all flex items-center gap-1.5 ${
-                          billingCycle === "yearly" ? "bg-[#84FF00] text-black shadow-sm" : "text-white/60 hover:text-white"
-                        }`}
+                        onClick={() => handleBillingCycleChange("yearly")}
+                        className={`checkout-segment-btn ${billingCycle === "yearly" ? "is-active" : ""}`}
+                        aria-pressed={billingCycle === "yearly"}
                       >
                         <span>Yearly</span>
-                        <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${billingCycle === "yearly" ? "bg-black text-[#84FF00]" : "bg-[#FFD60A] text-black"}`}>
-                          Save 20%
-                        </span>
+                        <span className="checkout-savings-pill">Save 20%</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* 3 Selectable Plan Cards */}
-                  <div className="sub-plan-grid">
+                  {/* 3 Clean Plan Cards (Anti-AI, Custom Radio Indicator, No Double Bullets) */}
+                  <div className="checkout-plan-grid" role="radiogroup" aria-label="Subscription Plans">
                     {PLANS.map((plan) => {
                       const isSelected = plan.slug === selectedPlan.slug;
-                      const price = billingCycle === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
-                      const period = billingCycle === "yearly" ? "/year" : "/month";
+                      const isYearly = billingCycle === "yearly";
+                      const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+                      const monthlyEq = isYearly && plan.yearlyPrice > 0 ? Math.round(plan.yearlyPrice / 12) : plan.monthlyPrice;
 
                       return (
                         <div
                           key={plan.slug}
-                          onClick={() => setSelectedPlanSlug(plan.slug)}
-                          className={`sub-plan-card ${isSelected ? "is-selected" : ""}`}
+                          onClick={() => handlePlanSelect(plan.slug)}
+                          className={`checkout-plan-card ${isSelected ? "is-selected" : ""}`}
                           role="radio"
                           aria-checked={isSelected}
                           tabIndex={0}
                           onKeyDown={(e) => {
                             if (e.key === " " || e.key === "Enter") {
                               e.preventDefault();
-                              setSelectedPlanSlug(plan.slug);
+                              handlePlanSelect(plan.slug);
                             }
                           }}
                         >
                           {plan.popular && (
-                            <div className="sub-plan-popular-badge">
-                              Most Popular
-                            </div>
+                            <span className="checkout-plan-badge">Most Popular</span>
                           )}
 
                           <div>
-                            {/* Card Header */}
-                            <div className="flex items-center justify-between mb-3">
-                              <div
-                                className="w-10 h-10 rounded-xl flex items-center justify-center border"
-                                style={{
-                                  backgroundColor: `${plan.accent}15`,
-                                  borderColor: `${plan.accent}30`,
-                                  color: plan.accent
-                                }}
-                              >
-                                <PlanIcon icon={plan.icon} size={20} />
-                              </div>
-                              <div className="sub-plan-radio">
-                                {isSelected && <div className="sub-plan-radio-dot" />}
+                            {/* Card Header: Title & Circular Indicator */}
+                            <div className="checkout-plan-header">
+                              <h3 className="checkout-plan-name">{plan.name}</h3>
+                              <div className="checkout-plan-indicator">
+                                {isSelected && <Check size={12} strokeWidth={3} className="text-white" />}
                               </div>
                             </div>
 
-                            <h3 className="text-lg font-extrabold text-white">{plan.name}</h3>
-                            <p className="text-xs text-white/50 mt-1 min-h-[32px]">{plan.description}</p>
+                            <p className="checkout-plan-desc">{plan.description}</p>
 
-                            {/* Price */}
-                            <div className="my-4 pb-4 border-b border-white/10">
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-2xl sm:text-3xl font-black text-white">
+                            {/* Price Hierarchy */}
+                            <div className="checkout-price-block">
+                              <div className="checkout-price-main">
+                                <span className="checkout-price-amount tabular-nums">
                                   {price === 0 ? "Free" : `₹${price}`}
                                 </span>
                                 {price > 0 && (
-                                  <span className="text-xs text-white/40">{period}</span>
+                                  <span className="checkout-price-period">
+                                    {isYearly ? "/year" : "/month"}
+                                  </span>
                                 )}
                               </div>
-                              {billingCycle === "yearly" && price > 0 && (
-                                <span className="text-[11px] text-[#84FF00] font-bold mt-1 inline-block">
-                                  ₹{Math.round(price / 12)}/mo billed annually
-                                </span>
+                              {isYearly && price > 0 && (
+                                <p className="checkout-price-subtext">
+                                  ₹{monthlyEq}/mo billed annually • Save 20%
+                                </p>
                               )}
                             </div>
 
-                            {/* Features Checklist */}
-                            <ul className="space-y-2.5 text-xs text-white/70">
+                            {/* Features List (fixed double-bullet bug) */}
+                            <ul className="checkout-plan-features">
                               {plan.features.map((feat, idx) => (
-                                <li key={idx} className="flex items-start gap-2">
-                                  <Check size={14} className="text-[#84FF00] shrink-0 mt-0.5" />
+                                <li key={idx} className="checkout-plan-feature-item">
+                                  <Check size={14} strokeWidth={2.5} className="checkout-feature-icon" />
                                   <span>{feat}</span>
                                 </li>
                               ))}
                             </ul>
-                          </div>
-
-                          <div className="mt-6 pt-4 border-t border-white/5">
-                            <span className={`text-xs font-bold block text-center py-2 rounded-lg transition-all ${
-                              isSelected ? "bg-[#84FF00] text-black" : "bg-white/5 text-white/70"
-                            }`}>
-                              {isSelected ? "Selected Plan" : "Choose Plan"}
-                            </span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
 
-                  {/* Expandable Compare Plans Matrix */}
-                  <div className="pt-4 border-t border-white/10">
-                    <button
-                      type="button"
-                      onClick={() => setShowCompareModal(!showCompareModal)}
-                      className="text-xs font-bold text-[#84FF00] hover:underline inline-flex items-center gap-1.5"
-                    >
-                      <Info size={14} />
-                      <span>{showCompareModal ? "Hide full plan comparison" : "Compare all plans side-by-side"}</span>
-                      {showCompareModal ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                    </button>
-
-                    {showCompareModal && (
-                      <div className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-black/40 p-4">
-                        <table className="sub-compare-table">
-                          <thead>
-                            <tr>
-                              <th>Feature</th>
-                              <th>Explorer</th>
-                              <th className="text-[#84FF00]">Deal Hunter</th>
-                              <th className="text-purple-400">Pro</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>Deal Search &amp; Price Comparison</td>
-                              <td><Check size={14} className="text-white/60" /></td>
-                              <td><Check size={14} className="text-[#84FF00]" /></td>
-                              <td><Check size={14} className="text-[#84FF00]" /></td>
-                            </tr>
-                            <tr>
-                              <td>Price Drop Instant Alerts</td>
-                              <td className="text-white/30">—</td>
-                              <td>5 Active Alerts</td>
-                              <td>Unlimited Alerts</td>
-                            </tr>
-                            <tr>
-                              <td>Multi-Store Tracker (Amazon, Flipkart)</td>
-                              <td className="text-white/30">—</td>
-                              <td><Check size={14} className="text-[#84FF00]" /></td>
-                              <td><Check size={14} className="text-[#84FF00]" /></td>
-                            </tr>
-                            <tr>
-                              <td>AI Personalized Recommendations</td>
-                              <td className="text-white/30">—</td>
-                              <td className="text-white/30">—</td>
-                              <td><Check size={14} className="text-[#84FF00]" /></td>
-                            </tr>
-                            <tr>
-                              <td>Priority Customer Support</td>
-                              <td>Community</td>
-                              <td>Standard</td>
-                              <td>24/7 Dedicated</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Continue Button to Step 2 */}
-                  <div className="pt-4">
-                    <button
-                      type="button"
-                      onClick={handleStep1Continue}
-                      className="sub-btn-primary"
-                    >
-                      <span>Continue to Your Details</span>
-                      <ArrowRight size={16} />
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleStep1Continue}
+                    className="checkout-btn-primary"
+                  >
+                    <span>Continue to Details</span>
+                    <ArrowRight size={16} />
+                  </button>
                 </div>
               )}
 
-              {/* ================= STEP 2: YOUR DETAILS ================= */}
+              {/* ================= STEP 2: DETAILS ================= */}
               {currentStep === 2 && (
-                <div className="sub-card space-y-6">
-                  <div className="pb-6 border-b border-white/10 flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-[#84FF00] tracking-wider uppercase">Step 2 of 3</span>
-                      <h2 className="text-2xl font-extrabold text-white mt-1">Your Billing &amp; Contact Details</h2>
-                      <p className="text-sm text-white/50 mt-1">We need this information to generate your tax invoice and verify your account.</p>
-                    </div>
-                  </div>
+                <div className="checkout-box">
+                  <h2 className="checkout-box-title">Contact &amp; billing details</h2>
+                  <p className="checkout-box-desc">We use these details for your tax invoice and account verification.</p>
 
                   <form onSubmit={handleStep2Continue} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="checkout-form-grid">
                       {/* Full Name */}
-                      <div className="sub-input-group">
-                        <label className="sub-label">Full Name *</label>
+                      <div className="checkout-field">
+                        <label className="checkout-label">Full Name *</label>
                         <input
                           type="text"
                           required
+                          autoComplete="name"
                           value={details.name}
                           onChange={(e) => handleFieldChange("name", e.target.value)}
                           placeholder="e.g. Rahul Sharma"
-                          className={`sub-input ${formErrors.name ? "has-error" : ""}`}
+                          className={`checkout-input ${formErrors.name ? "has-error" : ""}`}
                         />
-                        {formErrors.name && <span className="sub-input-error">{formErrors.name}</span>}
+                        {formErrors.name && <span className="checkout-error-msg">{formErrors.name}</span>}
                       </div>
 
                       {/* Email Address */}
-                      <div className="sub-input-group">
-                        <label className="sub-label">Email Address *</label>
+                      <div className="checkout-field">
+                        <label className="checkout-label">Email Address *</label>
                         <input
                           type="email"
                           required
+                          autoComplete="email"
                           value={details.email}
                           onChange={(e) => handleFieldChange("email", e.target.value)}
                           placeholder="name@example.com"
-                          className={`sub-input ${formErrors.email ? "has-error" : ""}`}
+                          className={`checkout-input ${formErrors.email ? "has-error" : ""}`}
                         />
-                        {formErrors.email && <span className="sub-input-error">{formErrors.email}</span>}
+                        {formErrors.email && <span className="checkout-error-msg">{formErrors.email}</span>}
                       </div>
-                    </div>
 
-                    {/* Phone Number */}
-                    <div className="sub-input-group">
-                      <label className="sub-label">10-Digit Mobile Number *</label>
-                      <div className="relative">
-                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40 text-sm font-bold select-none">+91</span>
-                        <input
-                          type="tel"
-                          required
-                          maxLength={10}
-                          value={details.phone}
-                          onChange={(e) => handleFieldChange("phone", e.target.value.replace(/[^0-9]/g, ""))}
-                          placeholder="9876543210"
-                          className={`sub-input !pl-14 ${formErrors.phone ? "has-error" : ""}`}
-                        />
+                      {/* Mobile Number */}
+                      <div className="checkout-field full-width">
+                        <label className="checkout-label">10-Digit Mobile Number *</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-semibold select-none">+91</span>
+                          <input
+                            type="tel"
+                            required
+                            autoComplete="tel"
+                            maxLength={10}
+                            value={details.phone}
+                            onChange={(e) => handleFieldChange("phone", e.target.value.replace(/[^0-9]/g, ""))}
+                            placeholder="9876543210"
+                            className={`checkout-input !pl-12 ${formErrors.phone ? "has-error" : ""}`}
+                          />
+                        </div>
+                        {formErrors.phone && <span className="checkout-error-msg">{formErrors.phone}</span>}
                       </div>
-                      {formErrors.phone && <span className="sub-input-error">{formErrors.phone}</span>}
-                    </div>
 
-                    {/* Street Address */}
-                    <div className="sub-input-group">
-                      <label className="sub-label">Street / House / Building Address *</label>
-                      <input
-                        type="text"
-                        required
-                        value={details.line1}
-                        onChange={(e) => handleFieldChange("line1", e.target.value)}
-                        placeholder="e.g. Flat 402, Green Heights, MG Road"
-                        className={`sub-input ${formErrors.line1 ? "has-error" : ""}`}
-                      />
-                      {formErrors.line1 && <span className="sub-input-error">{formErrors.line1}</span>}
-                    </div>
-
-                    {/* Address Line 2 (Optional) */}
-                    <div className="sub-input-group">
-                      <label className="sub-label">Apartment / Landmark (Optional)</label>
-                      <input
-                        type="text"
-                        value={details.line2}
-                        onChange={(e) => handleFieldChange("line2", e.target.value)}
-                        placeholder="Near Metro Station"
-                        className="sub-input"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {/* City */}
-                      <div className="sub-input-group">
-                        <label className="sub-label">City *</label>
+                      {/* Street Address */}
+                      <div className="checkout-field full-width">
+                        <label className="checkout-label">Street / House Address *</label>
                         <input
                           type="text"
                           required
+                          autoComplete="street-address"
+                          value={details.line1}
+                          onChange={(e) => handleFieldChange("line1", e.target.value)}
+                          placeholder="e.g. Flat 402, Green Heights, MG Road"
+                          className={`checkout-input ${formErrors.line1 ? "has-error" : ""}`}
+                        />
+                        {formErrors.line1 && <span className="checkout-error-msg">{formErrors.line1}</span>}
+                      </div>
+
+                      {/* Line 2 (Optional) */}
+                      <div className="checkout-field full-width">
+                        <label className="checkout-label">Apartment / Landmark (Optional)</label>
+                        <input
+                          type="text"
+                          value={details.line2}
+                          onChange={(e) => handleFieldChange("line2", e.target.value)}
+                          placeholder="Near City Mall"
+                          className="checkout-input"
+                        />
+                      </div>
+
+                      {/* City */}
+                      <div className="checkout-field">
+                        <label className="checkout-label">City *</label>
+                        <input
+                          type="text"
+                          required
+                          autoComplete="address-level2"
                           value={details.city}
                           onChange={(e) => handleFieldChange("city", e.target.value)}
                           placeholder="Mumbai"
-                          className={`sub-input ${formErrors.city ? "has-error" : ""}`}
+                          className={`checkout-input ${formErrors.city ? "has-error" : ""}`}
                         />
-                        {formErrors.city && <span className="sub-input-error">{formErrors.city}</span>}
+                        {formErrors.city && <span className="checkout-error-msg">{formErrors.city}</span>}
                       </div>
 
-                      {/* State Dropdown */}
-                      <div className="sub-input-group">
-                        <label className="sub-label">State *</label>
+                      {/* State */}
+                      <div className="checkout-field">
+                        <label className="checkout-label">State *</label>
                         <select
                           value={details.state}
                           onChange={(e) => handleFieldChange("state", e.target.value)}
-                          className={`sub-input ${formErrors.state ? "has-error" : ""}`}
+                          className={`checkout-input ${formErrors.state ? "has-error" : ""}`}
                         >
                           {INDIAN_STATES.map((s) => (
-                            <option key={s} value={s} className="bg-[#0e1709] text-white">
+                            <option key={s} value={s}>
                               {s}
                             </option>
                           ))}
                         </select>
-                        {formErrors.state && <span className="sub-input-error">{formErrors.state}</span>}
+                        {formErrors.state && <span className="checkout-error-msg">{formErrors.state}</span>}
                       </div>
 
                       {/* PIN Code */}
-                      <div className="sub-input-group">
-                        <label className="sub-label">6-Digit PIN Code *</label>
+                      <div className="checkout-field">
+                        <label className="checkout-label">6-Digit PIN Code *</label>
                         <input
                           type="text"
                           required
+                          autoComplete="postal-code"
                           maxLength={6}
                           value={details.pincode}
                           onChange={(e) => handleFieldChange("pincode", e.target.value.replace(/[^0-9]/g, ""))}
                           placeholder="400001"
-                          className={`sub-input ${formErrors.pincode ? "has-error" : ""}`}
+                          className={`checkout-input ${formErrors.pincode ? "has-error" : ""}`}
                         />
-                        {formErrors.pincode && <span className="sub-input-error">{formErrors.pincode}</span>}
+                        {formErrors.pincode && <span className="checkout-error-msg">{formErrors.pincode}</span>}
+                      </div>
+
+                      {/* GST Number */}
+                      <div className="checkout-field">
+                        <label className="checkout-label">GSTIN (Optional, for tax credit)</label>
+                        <input
+                          type="text"
+                          maxLength={15}
+                          value={details.gstNumber}
+                          onChange={(e) => handleFieldChange("gstNumber", e.target.value.toUpperCase())}
+                          placeholder="27AAAAA0000A1Z5"
+                          className={`checkout-input ${formErrors.gstNumber ? "has-error" : ""}`}
+                        />
+                        {formErrors.gstNumber && <span className="checkout-error-msg">{formErrors.gstNumber}</span>}
                       </div>
                     </div>
 
-                    {/* GSTIN (Optional) */}
-                    <div className="sub-input-group">
-                      <label className="sub-label">GST Number (Optional, for Business Tax Credit)</label>
+                    <label className="checkout-checkbox-row">
                       <input
-                        type="text"
-                        maxLength={15}
-                        value={details.gstNumber}
-                        onChange={(e) => handleFieldChange("gstNumber", e.target.value.toUpperCase())}
-                        placeholder="27AAAAA0000A1Z5"
-                        className={`sub-input ${formErrors.gstNumber ? "has-error" : ""}`}
+                        type="checkbox"
+                        checked={details.saveToProfile}
+                        onChange={(e) => handleFieldChange("saveToProfile", e.target.checked)}
                       />
-                      {formErrors.gstNumber && <span className="sub-input-error">{formErrors.gstNumber}</span>}
-                    </div>
+                      <span>Save these billing details to my KSAM Deal profile for future orders.</span>
+                    </label>
 
-                    {/* Save to Profile Checkbox */}
-                    <div className="pt-2">
-                      <label className="flex items-center gap-3 cursor-pointer text-xs text-white/70 select-none">
-                        <input
-                          type="checkbox"
-                          checked={details.saveToProfile}
-                          onChange={(e) => handleFieldChange("saveToProfile", e.target.checked)}
-                          className="h-4 w-4 rounded accent-[#84FF00] bg-black/40 border-white/20"
-                        />
-                        <span>Save these details to my KSAM Deal profile for 1-click future renewals and orders.</span>
-                      </label>
-                    </div>
-
-                    {/* Action Row */}
-                    <div className="pt-4 flex items-center justify-between gap-4">
+                    <div className="pt-4 flex items-center justify-between gap-3">
                       <button
                         type="button"
                         onClick={() => setCurrentStep(1)}
-                        className="sub-btn-secondary"
+                        className="checkout-btn-secondary"
                       >
                         <ArrowLeft size={14} />
                         <span>Change Plan</span>
@@ -1256,7 +1232,7 @@ export default function SubscribeApp() {
 
                       <button
                         type="submit"
-                        className="sub-btn-primary sm:w-auto"
+                        className="checkout-btn-primary !w-auto"
                       >
                         <span>Continue to Payment</span>
                         <ArrowRight size={16} />
@@ -1266,244 +1242,301 @@ export default function SubscribeApp() {
                 </div>
               )}
 
-              {/* ================= STEP 3: PAYMENT ================= */}
+              {/* ================= STEP 3: PAYMENT METHOD (PROBLEM B) ================= */}
               {currentStep === 3 && (
-                <div className="sub-card space-y-6">
-                  <div className="pb-6 border-b border-white/10">
-                    <span className="text-xs font-bold text-[#84FF00] tracking-wider uppercase">Step 3 of 3</span>
-                    <h2 className="text-2xl font-extrabold text-white mt-1">Select Payment Method</h2>
-                    <p className="text-sm text-white/50 mt-1">
-                      Choose your preferred method. You will complete your payment securely in the official Razorpay checkout window.
-                    </p>
-                  </div>
+                <div className="checkout-box">
+                  <h2 className="checkout-box-title">Select payment method</h2>
+                  <p className="checkout-box-desc">
+                    Choose how you want to pay. You will complete your transaction safely in the secure Razorpay payment window.
+                  </p>
 
-                  {/* Informational Payment Method Radio Rows */}
-                  <div className="sub-payment-methods">
-                    {/* UPI */}
+                  <div className="checkout-method-list" role="radiogroup" aria-label="Payment Methods">
+                    {/* 1. UPI */}
                     <div
-                      onClick={() => setPreferredMethod("upi")}
-                      className={`sub-payment-row ${preferredMethod === "upi" ? "is-selected" : ""}`}
+                      onClick={() => setSelectedMethod("upi")}
+                      className={`checkout-method-row ${selectedMethod === "upi" ? "is-selected" : ""}`}
                       role="radio"
-                      aria-checked={preferredMethod === "upi"}
+                      aria-checked={selectedMethod === "upi"}
                       tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === " " || e.key === "Enter") {
+                          e.preventDefault();
+                          setSelectedMethod("upi");
+                        }
+                      }}
                     >
-                      <div className="sub-payment-info">
-                        <div className="sub-payment-icon">
-                          <Smartphone size={20} />
+                      <div className={`checkout-radio mt-0.5 ${selectedMethod === "upi" ? "is-checked" : ""}`}>
+                        {selectedMethod === "upi" && <div className="checkout-radio-dot" />}
+                      </div>
+
+                      <div className="checkout-method-content">
+                        <div className="checkout-method-header">
+                          <h4 className="checkout-method-name">UPI (Instant &amp; Free)</h4>
+                          <span className="text-[10px] font-bold text-green-800 bg-green-100 px-1.5 py-0.5 rounded">Fastest</span>
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-sm font-extrabold text-white">UPI</h4>
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#84FF00]/15 text-[#84FF00]">Fastest</span>
+                        <p className="checkout-method-desc">
+                          Google Pay, PhonePe, Paytm, BHIM, CRED, or any banking UPI app.
+                        </p>
+
+                        {/* Optional UPI ID Input */}
+                        {selectedMethod === "upi" && (
+                          <div className="checkout-method-extra" onClick={(e) => e.stopPropagation()}>
+                            <div className="checkout-upi-input-wrap">
+                              <label className="checkout-label">Your UPI ID (Optional)</label>
+                              <input
+                                type="text"
+                                value={upiId}
+                                onChange={(e) => {
+                                  setUpiId(e.target.value.trim());
+                                  setUpiError("");
+                                }}
+                                placeholder="e.g. yourname@oksbi"
+                                className={`checkout-input !py-1.5 !text-xs ${upiError ? "has-error" : ""}`}
+                              />
+                              {upiError ? (
+                                <span className="checkout-error-msg">{upiError}</span>
+                              ) : (
+                                <span className="text-[11px] text-gray-500">
+                                  Optional. We will prefill this in the Razorpay window for you.
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <p className="text-xs text-white/50 mt-0.5">Google Pay, PhonePe, Paytm, BHIM, and any UPI app</p>
-                        </div>
-                      </div>
-                      <div className="sub-plan-radio">
-                        {preferredMethod === "upi" && <div className="sub-plan-radio-dot" />}
+                        )}
                       </div>
                     </div>
 
-                    {/* Cards */}
+                    {/* 2. Credit & Debit Cards */}
                     <div
-                      onClick={() => setPreferredMethod("card")}
-                      className={`sub-payment-row ${preferredMethod === "card" ? "is-selected" : ""}`}
+                      onClick={() => setSelectedMethod("card")}
+                      className={`checkout-method-row ${selectedMethod === "card" ? "is-selected" : ""}`}
                       role="radio"
-                      aria-checked={preferredMethod === "card"}
+                      aria-checked={selectedMethod === "card"}
                       tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === " " || e.key === "Enter") {
+                          e.preventDefault();
+                          setSelectedMethod("card");
+                        }
+                      }}
                     >
-                      <div className="sub-payment-info">
-                        <div className="sub-payment-icon">
-                          <CreditCard size={20} />
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-extrabold text-white">Credit &amp; Debit Cards</h4>
-                          <p className="text-xs text-white/50 mt-0.5">Visa, Mastercard, RuPay, American Express</p>
-                        </div>
+                      <div className={`checkout-radio mt-0.5 ${selectedMethod === "card" ? "is-checked" : ""}`}>
+                        {selectedMethod === "card" && <div className="checkout-radio-dot" />}
                       </div>
-                      <div className="sub-plan-radio">
-                        {preferredMethod === "card" && <div className="sub-plan-radio-dot" />}
+
+                      <div className="checkout-method-content">
+                        <div className="checkout-method-header">
+                          <h4 className="checkout-method-name">Credit &amp; Debit Cards</h4>
+                        </div>
+                        <p className="checkout-method-desc">
+                          Visa, Mastercard, RuPay, Maestro. All major Indian and international cards.
+                        </p>
+                        {selectedMethod === "card" && (
+                          <div className="checkout-method-extra">
+                            <span className="text-[11px] text-gray-500 block leading-relaxed">
+                              Card details are entered directly inside Razorpay's encrypted modal. KSAM Deal never collects or stores your card number or CVV.
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Netbanking */}
+                    {/* 3. Netbanking */}
                     <div
-                      onClick={() => setPreferredMethod("netbanking")}
-                      className={`sub-payment-row ${preferredMethod === "netbanking" ? "is-selected" : ""}`}
+                      onClick={() => setSelectedMethod("netbanking")}
+                      className={`checkout-method-row ${selectedMethod === "netbanking" ? "is-selected" : ""}`}
                       role="radio"
-                      aria-checked={preferredMethod === "netbanking"}
+                      aria-checked={selectedMethod === "netbanking"}
                       tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === " " || e.key === "Enter") {
+                          e.preventDefault();
+                          setSelectedMethod("netbanking");
+                        }
+                      }}
                     >
-                      <div className="sub-payment-info">
-                        <div className="sub-payment-icon">
-                          <Building size={20} />
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-extrabold text-white">Netbanking</h4>
-                          <p className="text-xs text-white/50 mt-0.5">50+ major Indian banks supported (HDFC, ICICI, SBI, Axis, etc.)</p>
-                        </div>
+                      <div className={`checkout-radio mt-0.5 ${selectedMethod === "netbanking" ? "is-checked" : ""}`}>
+                        {selectedMethod === "netbanking" && <div className="checkout-radio-dot" />}
                       </div>
-                      <div className="sub-plan-radio">
-                        {preferredMethod === "netbanking" && <div className="sub-plan-radio-dot" />}
+
+                      <div className="checkout-method-content">
+                        <div className="checkout-method-header">
+                          <h4 className="checkout-method-name">Netbanking</h4>
+                        </div>
+                        <p className="checkout-method-desc">
+                          50+ Indian banks supported including HDFC, SBI, ICICI, Axis, Kotak, and PNB.
+                        </p>
                       </div>
                     </div>
 
-                    {/* Wallets */}
+                    {/* 4. Wallets */}
                     <div
-                      onClick={() => setPreferredMethod("wallet")}
-                      className={`sub-payment-row ${preferredMethod === "wallet" ? "is-selected" : ""}`}
+                      onClick={() => setSelectedMethod("wallet")}
+                      className={`checkout-method-row ${selectedMethod === "wallet" ? "is-selected" : ""}`}
                       role="radio"
-                      aria-checked={preferredMethod === "wallet"}
+                      aria-checked={selectedMethod === "wallet"}
                       tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === " " || e.key === "Enter") {
+                          e.preventDefault();
+                          setSelectedMethod("wallet");
+                        }
+                      }}
                     >
-                      <div className="sub-payment-info">
-                        <div className="sub-payment-icon">
-                          <Wallet size={20} />
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-extrabold text-white">Wallets</h4>
-                          <p className="text-xs text-white/50 mt-0.5">Paytm, Mobikwik, and other supported wallets</p>
-                        </div>
+                      <div className={`checkout-radio mt-0.5 ${selectedMethod === "wallet" ? "is-checked" : ""}`}>
+                        {selectedMethod === "wallet" && <div className="checkout-radio-dot" />}
                       </div>
-                      <div className="sub-plan-radio">
-                        {preferredMethod === "wallet" && <div className="sub-plan-radio-dot" />}
+
+                      <div className="checkout-method-content">
+                        <div className="checkout-method-header">
+                          <h4 className="checkout-method-name">Wallets</h4>
+                        </div>
+                        <p className="checkout-method-desc">
+                          Paytm, PhonePe, Mobikwik, Amazon Pay, Freecharge, and more.
+                        </p>
+
+                        {/* Wallet Choice Chips */}
+                        {selectedMethod === "wallet" && (
+                          <div className="checkout-method-extra" onClick={(e) => e.stopPropagation()}>
+                            <span className="text-[11px] font-semibold text-gray-700 block mb-1">
+                              Select your preferred wallet:
+                            </span>
+                            <div className="checkout-wallet-chips">
+                              {WALLET_OPTIONS.map((w) => (
+                                <button
+                                  key={w}
+                                  type="button"
+                                  onClick={() => setSelectedWallet(w)}
+                                  className={`checkout-wallet-chip ${selectedWallet === w ? "is-selected" : ""}`}
+                                >
+                                  {w}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Informational Security Notice */}
-                  <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] flex items-start gap-3 text-xs text-white/60">
-                    <Lock size={16} className="text-[#84FF00] shrink-0 mt-0.5" />
-                    <p>
-                      <strong>Zero Storage Guarantee:</strong> KSAM Deal never collects or stores your card number, CVV, expiry date, or UPI PIN. You will enter your payment details securely inside the official 256-bit encrypted Razorpay window.
-                    </p>
-                  </div>
+                  {/* Terms & Conditions Checkbox (PROBLEM C: UNCHECKED by default) */}
+                  <label className="checkout-checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      required
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <a href={`${BASE_URL}terms.html`} target="_blank" rel="noopener noreferrer" className="text-gray-900 underline font-semibold">
+                        Terms of Service
+                      </a>
+                      ,{" "}
+                      <a href={`${BASE_URL}privacy-policy.html`} target="_blank" rel="noopener noreferrer" className="text-gray-900 underline font-semibold">
+                        Privacy Policy
+                      </a>
+                      , and{" "}
+                      <a href={`${BASE_URL}refund-policy.html`} target="_blank" rel="noopener noreferrer" className="text-gray-900 underline font-semibold">
+                        Refund &amp; Cancellation Policy
+                      </a>
+                      .
+                    </span>
+                  </label>
 
-                  {/* Terms & Conditions Checkbox */}
-                  <div className="pt-2">
-                    <label className="flex items-start gap-3 cursor-pointer text-xs text-white/70 select-none">
-                      <input
-                        type="checkbox"
-                        checked={termsAgreed}
-                        onChange={(e) => setTermsAgreed(e.target.checked)}
-                        className="h-4 w-4 rounded accent-[#84FF00] bg-black/40 border-white/20 mt-0.5 shrink-0"
-                      />
-                      <span>
-                        I agree to KSAM Deal's{" "}
-                        <a href={`${BASE_URL}terms.html`} target="_blank" rel="noopener noreferrer" className="text-[#84FF00] underline">
-                          Terms of Service
-                        </a>
-                        ,{" "}
-                        <a href={`${BASE_URL}privacy-policy.html`} target="_blank" rel="noopener noreferrer" className="text-[#84FF00] underline">
-                          Privacy Policy
-                        </a>
-                        , and{" "}
-                        <a href={`${BASE_URL}refund-policy.html`} target="_blank" rel="noopener noreferrer" className="text-[#84FF00] underline">
-                          Refund &amp; Cancellation Policy
-                        </a>
-                        .
-                      </span>
-                    </label>
-                  </div>
-
-                  {/* Error Banner */}
+                  {/* Payment Error Banner with Retry */}
                   {paymentError && (
-                    <div className="p-4 rounded-xl border border-red-500/40 bg-red-500/10 text-red-200 text-xs flex items-center justify-between gap-3">
+                    <div className="mt-4 p-3 rounded-md border border-red-200 bg-red-50 text-red-800 text-xs flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <AlertCircle size={16} className="shrink-0" />
+                        <AlertCircle size={16} className="text-red-600 shrink-0" />
                         <span>{paymentError}</span>
                       </div>
                       <button
                         type="button"
                         onClick={handlePaymentSubmit}
-                        className="px-3 py-1 rounded bg-red-500 text-white font-bold text-[11px] hover:bg-red-600 transition shrink-0"
+                        className="px-3 py-1 rounded bg-red-600 text-white font-bold text-xs hover:bg-red-700 transition shrink-0"
                       >
                         Retry
                       </button>
                     </div>
                   )}
 
-                  {/* Action Row */}
-                  <div className="pt-4 flex items-center justify-between gap-4">
+                  {/* Desktop Primary Pay Button (PROBLEM C: Single button on desktop, dynamic label) */}
+                  <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between gap-4">
                     <button
                       type="button"
                       disabled={isProcessingPayment}
                       onClick={() => setCurrentStep(2)}
-                      className="sub-btn-secondary"
+                      className="checkout-btn-secondary"
                     >
                       <ArrowLeft size={14} />
                       <span>Back to Details</span>
                     </button>
 
-                    <button
-                      type="button"
-                      disabled={isProcessingPayment || (finalPayableTotal > 0 && !termsAgreed)}
-                      onClick={handlePaymentSubmit}
-                      className="sub-btn-primary sm:w-auto"
-                    >
-                      {isProcessingPayment ? (
-                        <>
-                          <RefreshCw size={16} className="animate-spin" />
-                          <span>Connecting to Razorpay...</span>
-                        </>
-                      ) : finalPayableTotal === 0 ? (
-                        <>
-                          <Check size={16} />
-                          <span>Activate Free Plan</span>
-                        </>
-                      ) : (
-                        <>
-                          <Lock size={16} />
-                          <span>Pay ₹{finalPayableTotal} with Razorpay</span>
-                        </>
-                      )}
-                    </button>
+                    {/* Shown on desktop; on mobile the sticky bar is used */}
+                    <div className="hidden lg:block w-72">
+                      <button
+                        type="button"
+                        disabled={isProcessingPayment || (finalPayableTotal > 0 && !termsAgreed)}
+                        onClick={handlePaymentSubmit}
+                        className="checkout-btn-primary"
+                      >
+                        {isProcessingPayment ? (
+                          <>
+                            <RefreshCw size={16} className="animate-spin" />
+                            <span>Connecting...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Lock size={15} />
+                            <span>{payButtonLabel}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* FAQ Accordion under checkout */}
-              <div className="sub-card">
-                <h3 className="text-lg font-extrabold text-white mb-4 flex items-center gap-2">
-                  <HelpCircle size={18} className="text-[#84FF00]" />
-                  <span>Frequently Asked Questions</span>
-                </h3>
-                <div className="space-y-2">
+              {/* FAQ Accordion (Clean, plain layout) */}
+              <div className="checkout-faq-wrap">
+                <h3 className="checkout-faq-title">Frequently asked questions</h3>
+                <div className="space-y-1">
                   {[
                     {
                       id: "faq-1",
-                      q: "Can I cancel my membership at any time?",
-                      a: "Yes. You can cancel with 1 click directly from your Account Hub > Subscription tab anytime. You will retain all benefits until your current billing period ends."
+                      q: "Can I cancel my subscription at any time?",
+                      a: "Yes. You can cancel your subscription from your profile Subscription tab. You retain all benefits until the end of your paid billing period."
                     },
                     {
                       id: "faq-2",
-                      q: "How does renewal work?",
-                      a: "Memberships renew automatically at standard plan pricing. We send you a reminder alert 3 days before renewal. You can disable auto-renewal anytime in your profile settings."
+                      q: "How does billing and renewal work?",
+                      a: "Your membership is active for the selected duration (monthly or yearly). When the period ends, you can renew directly through your profile."
                     },
                     {
                       id: "faq-3",
-                      q: "Are refunds available?",
-                      a: "Digital memberships can be cancelled anytime. For detailed terms regarding refund eligibility and cooling-off windows, please review our Refund & Cancellation Policy."
+                      q: "What is your refund policy?",
+                      a: "For digital subscriptions, please review our Refund & Cancellation Policy. If you experience technical issues, contact our support team."
                     },
                     {
                       id: "faq-4",
-                      q: "Can I get a GST tax invoice?",
-                      a: "Yes. Simply enter your company GSTIN during Step 2 of checkout. Your itemized 18% GST tax invoice will be available to download instantly in your profile."
+                      q: "How do I download my GST tax invoice?",
+                      a: "Provide your GSTIN during Step 2 of checkout. Your itemized 18% GST tax invoice will be generated and available to download in your profile."
                     }
                   ].map((faq) => {
                     const isOpen = activeFaq === faq.id;
                     return (
-                      <div key={faq.id} className="sub-faq-item">
+                      <div key={faq.id} className="checkout-faq-item">
                         <button
                           type="button"
                           onClick={() => setActiveFaq(isOpen ? null : faq.id)}
-                          className="sub-faq-trigger"
+                          className="checkout-faq-trigger"
                           aria-expanded={isOpen}
                         >
                           <span>{faq.q}</span>
-                          {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                          {isOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
                         </button>
-                        {isOpen && <div className="sub-faq-body">{faq.a}</div>}
+                        {isOpen && <div className="checkout-faq-body">{faq.a}</div>}
                       </div>
                     );
                   })}
@@ -1511,109 +1544,63 @@ export default function SubscribeApp() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN (~35% / 4.5 COLS): SUMMARY CARD */}
-            <div className="lg:col-span-5 xl:col-span-4">
-              <div className="sub-card sub-summary-sticky space-y-6">
-                <div>
-                  <h3 className="text-lg font-extrabold text-white">Order Summary</h3>
-                  <p className="text-xs text-white/50 mt-0.5">Transparent billing. No hidden fees.</p>
-                </div>
+            {/* RIGHT STICKY ORDER SUMMARY COLUMN (~35%) */}
+            <div>
+              <div className="checkout-summary-box">
+                <h3 className="checkout-summary-title">Order summary</h3>
 
-                {/* Selected Plan Banner */}
-                <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: `${selectedPlan.accent}20`, color: selectedPlan.accent }}
-                    >
-                      <PlanIcon icon={selectedPlan.icon} size={20} />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-extrabold text-white">{selectedPlan.name}</h4>
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/70 capitalize inline-block mt-0.5">
-                        {billingCycle} billing
-                      </span>
-                    </div>
-                  </div>
-                  {currentStep > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep(1)}
-                      className="text-xs text-[#84FF00] font-bold hover:underline"
-                    >
-                      Change
-                    </button>
-                  )}
-                </div>
-
-                {/* Itemized Calculation */}
-                <div className="space-y-2.5 text-xs">
-                  <div className="sub-summary-line">
-                    <span>Base Plan Price</span>
-                    <span>₹{pricing.subtotal}</span>
-                  </div>
-                  <div className="sub-summary-line">
-                    <span className="flex items-center gap-1">
-                      <span>18% GST (Included)</span>
-                      <Info size={12} className="text-white/40" title="18% Goods & Services Tax" />
+                <div className="checkout-summary-table">
+                  <div className="checkout-summary-row">
+                    <span className="font-semibold text-gray-900">
+                      {selectedPlan.name} ({billingCycle === "yearly" ? "Annual" : "Monthly"})
                     </span>
-                    <span>₹{pricing.gstAmount}</span>
+                    <span className="font-semibold text-gray-900 tabular-nums">₹{pricing.subtotal}</span>
+                  </div>
+
+                  {billingCycle === "yearly" && pricing.savingsAmount > 0 && (
+                    <div className="checkout-summary-row is-savings">
+                      <div className="flex items-center gap-1.5">
+                        <Tag size={13} />
+                        <span>Yearly savings (20% off)</span>
+                      </div>
+                      <span className="tabular-nums font-semibold">-₹{pricing.savingsAmount}</span>
+                    </div>
+                  )}
+
+                  <div className="checkout-summary-row is-gst">
+                    <span>Price includes 18% GST</span>
+                    <span className="tabular-nums">₹{pricing.gstAmount}</span>
                   </div>
 
                   {appliedCoupon && (
-                    <div className="sub-summary-line text-[#84FF00] font-bold">
-                      <div className="flex items-center gap-1.5">
+                    <div className="checkout-summary-row is-savings">
+                      <div className="flex items-center gap-1">
                         <Tag size={12} />
-                        <span>Discount ({appliedCoupon.code})</span>
+                        <span>Coupon ({appliedCoupon.code})</span>
                         <button
                           type="button"
                           onClick={handleRemoveCoupon}
-                          className="text-white/40 hover:text-white ml-1"
+                          className="text-gray-400 hover:text-gray-600 ml-1 transition"
                           title="Remove coupon"
                         >
                           <X size={12} />
                         </button>
                       </div>
-                      <span>-₹{discountAmount}</span>
+                      <span className="tabular-nums font-semibold">-₹{discountAmount}</span>
                     </div>
                   )}
 
-                  <div className="sub-summary-line total">
-                    <span>Total Amount</span>
-                    <span className="text-[#84FF00] font-black">₹{finalPayableTotal}</span>
+                  <div className="checkout-summary-row is-total">
+                    <span>Total</span>
+                    <span className="checkout-summary-total-price tabular-nums">₹{finalPayableTotal}</span>
                   </div>
                 </div>
 
-                {/* Pre-filled Editable Email Input in Summary */}
-                <div className="sub-input-group pt-2 border-t border-white/10">
-                  <label className="sub-label">Receipt Email</label>
-                  <input
-                    type="email"
-                    value={details.email}
-                    onChange={(e) => handleFieldChange("email", e.target.value)}
-                    placeholder="name@example.com"
-                    className="sub-input !py-2.5 !text-xs"
-                  />
-                </div>
-
-                {/* Marketing Consent Checkbox */}
-                <div>
-                  <label className="flex items-start gap-2.5 cursor-pointer text-xs text-white/60 select-none">
-                    <input
-                      type="checkbox"
-                      checked={marketingConsent}
-                      onChange={(e) => setMarketingConsent(e.target.checked)}
-                      className="h-3.5 w-3.5 rounded accent-[#84FF00] bg-black/40 border-white/20 mt-0.5 shrink-0"
-                    />
-                    <span>Send me curated deal alerts, flash sale warnings, and special offers.</span>
-                  </label>
-                </div>
-
-                {/* Coupon Code Box */}
+                {/* Coupon Code Input */}
                 {pricing.basePrice > 0 && (
-                  <div className="pt-2 border-t border-white/10">
-                    <label className="sub-label mb-1.5 block">Have a coupon code?</label>
-                    <div className="sub-coupon-wrap">
+                  <div className="checkout-coupon-wrap">
+                    <label className="checkout-label text-xs">Have a coupon code?</label>
+                    <div className="checkout-coupon-row">
                       <input
                         type="text"
                         value={couponInput}
@@ -1622,149 +1609,95 @@ export default function SubscribeApp() {
                           setCouponError("");
                         }}
                         placeholder="e.g. KSAM20"
-                        className="sub-coupon-input"
+                        className="checkout-coupon-input"
                       />
                       <button
                         type="button"
                         disabled={couponValidating || !couponInput.trim()}
                         onClick={() => handleValidateCoupon()}
-                        className="sub-coupon-btn"
+                        className="checkout-coupon-btn"
                       >
-                        {couponValidating ? "Verifying..." : "Apply"}
+                        {couponValidating ? "..." : "Apply"}
                       </button>
                     </div>
 
                     {couponError && (
-                      <p className="text-[11px] text-red-400 font-semibold mt-1.5 flex items-center gap-1">
-                        <AlertCircle size={12} />
+                      <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1">
+                        <AlertCircle size={12} className="shrink-0" />
                         <span>{couponError}</span>
                       </p>
                     )}
 
                     {appliedCoupon && (
-                      <p className="text-[11px] text-[#84FF00] font-semibold mt-1.5 flex items-center gap-1">
-                        <Check size={12} />
+                      <p className="text-xs text-green-700 mt-1.5 flex items-center gap-1 font-semibold">
+                        <Check size={12} className="shrink-0" />
                         <span>{appliedCoupon.description || `Coupon ${appliedCoupon.code} applied!`}</span>
                       </p>
                     )}
                   </div>
                 )}
 
-                {/* Primary CTA Button (in right column) */}
-                <div className="pt-2">
-                  {currentStep === 1 ? (
-                    <button
-                      type="button"
-                      onClick={handleStep1Continue}
-                      className="sub-btn-primary"
-                    >
-                      <span>Continue to Details</span>
-                      <ArrowRight size={16} />
-                    </button>
-                  ) : currentStep === 2 ? (
-                    <button
-                      type="button"
-                      onClick={handleStep2Continue}
-                      className="sub-btn-primary"
-                    >
-                      <span>Continue to Payment</span>
-                      <ArrowRight size={16} />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled={isProcessingPayment || (finalPayableTotal > 0 && !termsAgreed)}
-                      onClick={handlePaymentSubmit}
-                      className="sub-btn-primary"
-                    >
-                      {isProcessingPayment ? (
-                        <>
-                          <RefreshCw size={16} className="animate-spin" />
-                          <span>Processing...</span>
-                        </>
-                      ) : finalPayableTotal === 0 ? (
-                        <span>Activate Free Plan</span>
-                      ) : (
-                        <span>Pay ₹{finalPayableTotal} Now</span>
-                      )}
-                    </button>
-                  )}
-                </div>
-
-                {/* Safe & Secure Payments Card */}
-                <div className="sub-trust-box space-y-3">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck size={16} className="text-[#84FF00]" />
-                    <span className="text-xs font-bold text-white">Safe &amp; Secure Payments</span>
-                  </div>
-                  <p className="text-[11px] text-white/50 leading-relaxed">
-                    Payments are processed securely by Razorpay. 256-bit bank-grade encryption protects your transaction.
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {["UPI", "Visa", "Mastercard", "RuPay", "Netbanking", "Wallets"].map((m) => (
-                      <span key={m} className="sub-trust-pill">
-                        {m}
-                      </span>
-                    ))}
-                  </div>
+                {/* Factual Reassurance Note */}
+                <div className="checkout-reassurance">
+                  <ShieldCheck size={14} className="shrink-0 mt-0.5 text-gray-500" />
+                  <span>Payments are processed securely by Razorpay. KSAM Deal does not store your card, UPI PIN or CVV.</span>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          /* ================= STEP 4: SUCCESS SCREEN ================= */
-          <div className="max-w-2xl mx-auto sub-card text-center py-10 sm:py-14 space-y-6">
-            <div className="sub-success-check">
-              <Check size={40} />
+          /* ================= STEP 4: SUCCESS SCREEN (PROBLEM D: Plain, high-contrast) ================= */
+          <div className="max-w-lg mx-auto checkout-box text-center py-10 space-y-5">
+            <div className="w-12 h-12 rounded-full bg-green-100 text-green-800 flex items-center justify-center mx-auto">
+              <Check size={28} />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-[#84FF00] tracking-wider uppercase">Order Confirmed</span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Welcome to {completedSub?.plan_name}!</h1>
-              <p className="text-sm text-white/60 max-w-md mx-auto">
-                Your payment was verified successfully. All membership features have been unlocked on your account.
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Payment confirmed</h1>
+              <p className="text-xs text-gray-600 mt-1">
+                Your subscription to <strong>{completedSub?.plan_name}</strong> is now active.
               </p>
             </div>
 
-            {/* Receipt Summary Card */}
-            <div className="p-6 rounded-2xl border border-white/10 bg-black/40 text-left space-y-3 max-w-lg mx-auto text-xs">
-              <div className="flex justify-between py-1 border-b border-white/10">
-                <span className="text-white/50">Payment ID</span>
-                <span className="font-mono font-bold text-white">{completedSub?.payment_id}</span>
+            {/* Plain Receipt Box */}
+            <div className="p-4 rounded border border-gray-200 bg-gray-50 text-left text-xs space-y-2">
+              <div className="flex justify-between py-1 border-b border-gray-200">
+                <span className="text-gray-500">Payment ID</span>
+                <span className="font-mono font-semibold text-gray-900">{completedSub?.payment_id}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/10">
-                <span className="text-white/50">Order Reference</span>
-                <span className="font-mono text-white/80">{completedSub?.order_id}</span>
+              <div className="flex justify-between py-1 border-b border-gray-200">
+                <span className="text-gray-500">Order Reference</span>
+                <span className="font-mono text-gray-700">{completedSub?.order_id}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/10">
-                <span className="text-white/50">Plan &amp; Cycle</span>
-                <span className="font-bold text-white">{completedSub?.plan_name} ({completedSub?.billing_cycle})</span>
+              <div className="flex justify-between py-1 border-b border-gray-200">
+                <span className="text-gray-500">Plan</span>
+                <span className="font-semibold text-gray-900">{completedSub?.plan_name} ({completedSub?.billing_cycle})</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/10">
-                <span className="text-white/50">Amount Paid</span>
-                <span className="font-extrabold text-[#84FF00] text-sm">₹{completedSub?.amount_paid}</span>
+              <div className="flex justify-between py-1 border-b border-gray-200">
+                <span className="text-gray-500">Amount Paid</span>
+                <span className="font-bold text-gray-900">₹{completedSub?.amount_paid}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/10">
-                <span className="text-white/50">Valid Until</span>
-                <span className="font-bold text-white">
+              <div className="flex justify-between py-1">
+                <span className="text-gray-500">Valid Until</span>
+                <span className="font-semibold text-gray-900">
                   {new Date(completedSub?.end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                 </span>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
                 href={`${BASE_URL}profile.html#subscription`}
-                className="sub-btn-primary sm:w-auto !py-3 !px-6"
+                className="checkout-btn-primary !w-auto !py-2.5 !px-5 text-sm"
               >
                 <span>View My Subscription</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={14} />
               </a>
 
               <a
                 href={`${BASE_URL}products.html`}
-                className="sub-btn-secondary sm:w-auto !py-3 !px-6"
+                className="checkout-btn-secondary !w-auto !py-2.5 !px-5 text-sm"
               >
                 <span>Explore Deals</span>
               </a>
@@ -1772,22 +1705,22 @@ export default function SubscribeApp() {
               <button
                 type="button"
                 onClick={() => setShowReceiptModal(true)}
-                className="sub-btn-secondary sm:w-auto !py-3 !px-6"
+                className="checkout-btn-secondary !w-auto !py-2.5 !px-5 text-sm"
               >
-                <Printer size={16} />
-                <span>Download Receipt</span>
+                <Printer size={14} />
+                <span>Print Receipt</span>
               </button>
             </div>
           </div>
         )}
       </main>
 
-      {/* MOBILE STICKY BOTTOM PAY BAR (Steps 1-3) */}
+      {/* MOBILE STICKY BOTTOM PAY BAR (PROBLEM C: Only sticky bar on mobile) */}
       {currentStep <= 3 && (
-        <div className="sub-mobile-sticky-bar lg:hidden">
+        <div className="checkout-mobile-sticky">
           <div>
-            <span className="text-[10px] text-white/50 block font-bold uppercase tracking-wider">Total Payable</span>
-            <span className="text-lg font-black text-[#84FF00]">₹{finalPayableTotal}</span>
+            <span className="text-[10px] text-gray-500 block font-semibold uppercase">Total</span>
+            <span className="text-base font-extrabold text-gray-900">₹{finalPayableTotal}</span>
           </div>
 
           <button
@@ -1800,16 +1733,16 @@ export default function SubscribeApp() {
                 ? handleStep2Continue
                 : handlePaymentSubmit
             }
-            className="sub-btn-primary !w-auto !py-3 !px-6"
+            className="checkout-btn-primary !w-auto !py-2.5 !px-5 text-sm"
           >
             {currentStep === 1 ? (
               <span>Continue →</span>
             ) : currentStep === 2 ? (
               <span>Proceed to Pay →</span>
             ) : isProcessingPayment ? (
-              <span>Processing...</span>
+              <span>Connecting...</span>
             ) : (
-              <span>Pay ₹{finalPayableTotal}</span>
+              <span>{payButtonLabel}</span>
             )}
           </button>
         </div>
@@ -1817,56 +1750,56 @@ export default function SubscribeApp() {
 
       {/* PRINTABLE RECEIPT MODAL */}
       {showReceiptModal && completedSub && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#0e1709] border border-white/20 rounded-2xl max-w-lg w-full p-6 text-white space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <div className="bg-white border border-gray-300 rounded-lg max-w-md w-full p-6 text-gray-900 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between pb-3 border-b border-gray-200">
               <div className="flex items-center gap-2">
-                <FileText size={18} className="text-[#84FF00]" />
+                <FileText size={18} className="text-gray-700" />
                 <h3 className="font-bold text-base">Tax Invoice &amp; Receipt</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowReceiptModal(false)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-white/60"
+                className="p-1 rounded hover:bg-gray-100 text-gray-500"
               >
                 <X size={16} />
               </button>
             </div>
 
-            <div id="sub-printable-receipt" className="space-y-3 text-xs p-4 bg-black/40 rounded-xl">
-              <div className="flex justify-between items-center pb-2 border-b border-white/10">
+            <div className="space-y-3 text-xs p-4 bg-gray-50 border border-gray-200 rounded">
+              <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                 <div>
-                  <h4 className="font-extrabold text-sm text-white">KSAM Deal E-Commerce</h4>
-                  <p className="text-[10px] text-white/50">Sold by KSAM Deal • GSTIN: 27AAAAA0000A1Z5</p>
+                  <h4 className="font-bold text-sm text-gray-900">KSAM Deal E-Commerce</h4>
+                  <p className="text-[11px] text-gray-500">GSTIN: 27AAAAA0000A1Z5</p>
                 </div>
-                <span className="px-2 py-0.5 rounded bg-[#84FF00]/15 text-[#84FF00] font-bold text-[10px]">PAID</span>
+                <span className="px-2 py-0.5 rounded bg-green-100 text-green-800 font-bold text-[10px]">PAID</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-white/70">
+              <div className="grid grid-cols-2 gap-2 text-gray-700">
                 <div>
-                  <span className="block text-white/40">Billed To:</span>
-                  <strong className="text-white">{completedSub.customer_name || "Customer"}</strong>
+                  <span className="block text-gray-400">Billed To:</span>
+                  <strong className="text-gray-900">{completedSub.customer_name || "Customer"}</strong>
                   <p>{completedSub.customer_email}</p>
                 </div>
                 <div className="text-right">
-                  <span className="block text-white/40">Invoice Date:</span>
+                  <span className="block text-gray-400">Date:</span>
                   <strong>{new Date().toLocaleDateString("en-IN")}</strong>
                   <p>Order #{completedSub.order_id}</p>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-white/10 space-y-1">
-                <div className="flex justify-between text-white/80">
-                  <span>{completedSub.plan_name} Membership ({completedSub.billing_cycle})</span>
+              <div className="pt-2 border-t border-gray-200 space-y-1">
+                <div className="flex justify-between text-gray-700">
+                  <span>{completedSub.plan_name} ({completedSub.billing_cycle})</span>
                   <span>₹{completedSub.amount_paid}</span>
                 </div>
-                <div className="flex justify-between text-[11px] text-white/50">
+                <div className="flex justify-between text-[11px] text-gray-500">
                   <span>18% Integrated GST</span>
                   <span>Included</span>
                 </div>
-                <div className="flex justify-between font-bold text-sm text-white pt-2 border-t border-white/10">
+                <div className="flex justify-between font-bold text-sm text-gray-900 pt-2 border-t border-gray-200">
                   <span>Grand Total</span>
-                  <span className="text-[#84FF00]">₹{completedSub.amount_paid}</span>
+                  <span>₹{completedSub.amount_paid}</span>
                 </div>
               </div>
             </div>
@@ -1875,7 +1808,7 @@ export default function SubscribeApp() {
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="sub-btn-primary !w-auto !py-2 !px-4 text-xs"
+                className="checkout-btn-primary !w-auto !py-2 !px-4 text-xs"
               >
                 <Printer size={14} />
                 <span>Print Invoice</span>
@@ -1885,50 +1818,32 @@ export default function SubscribeApp() {
         </div>
       )}
 
-      {/* LEGAL FOOTER AREA */}
-      <footer className="border-t border-white/10 bg-[#040802] mt-16 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <p className="text-xs text-white/50 max-w-2xl mx-auto">
-            By proceeding, you agree to the{" "}
-            <a href={`${BASE_URL}terms.html`} className="text-white/80 hover:text-[#84FF00] underline">
+      {/* CLEAN FOOTER */}
+      <footer className="checkout-footer">
+        <div className="checkout-footer-inner">
+          <div className="checkout-footer-links">
+            <a href={`${BASE_URL}terms.html`} className="checkout-footer-link">
               Terms of Service
             </a>
-            ,{" "}
-            <a href={`${BASE_URL}privacy-policy.html`} className="text-white/80 hover:text-[#84FF00] underline">
+            <span>•</span>
+            <a href={`${BASE_URL}privacy-policy.html`} className="checkout-footer-link">
               Privacy Policy
             </a>
-            , and the{" "}
-            <a href={`${BASE_URL}refund-policy.html`} className="text-white/80 hover:text-[#84FF00] underline">
-              Refund &amp; Cancellation Policy
-            </a>
-            .
-          </p>
-
-          <p className="text-xs font-semibold text-white/70">
-            Sold by KSAM Deal. All rights reserved © {new Date().getFullYear()}.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-white/60">
-            <a href={`${BASE_URL}terms.html`} className="hover:text-[#84FF00] transition">
-              Terms
-            </a>
             <span>•</span>
-            <a href={`${BASE_URL}privacy-policy.html`} className="hover:text-[#84FF00] transition">
-              Privacy
-            </a>
-            <span>•</span>
-            <a href={`${BASE_URL}refund-policy.html`} className="hover:text-[#84FF00] transition">
+            <a href={`${BASE_URL}refund-policy.html`} className="checkout-footer-link">
               Refund Policy
             </a>
             <span>•</span>
-            <a href={`${BASE_URL}contact-us.html`} className="hover:text-[#84FF00] transition">
+            <a href={`${BASE_URL}contact-us.html`} className="checkout-footer-link">
               Contact
             </a>
           </div>
+
+          <p>© {new Date().getFullYear()} KSAM Deal. Payments processed securely by Razorpay.</p>
         </div>
       </footer>
 
-      {/* Global Toast */}
+      {/* Toast */}
       {toastMessage && (
         <Toast
           message={toastMessage}

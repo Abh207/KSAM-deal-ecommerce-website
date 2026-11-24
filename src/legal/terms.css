@@ -1,0 +1,773 @@
+/* ==========================================================================
+   KSAM DEAL - TERMS OF SERVICE & HOW IT WORKS
+   Colorful White Theme — Anti-AI High-Trust Aesthetic
+   Inspired by Stripe, Notion, and Modern Help Centers
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. PAGE ROOT & BASE CONTAINERS
+   -------------------------------------------------------------------------- */
+.terms-page-white {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.terms-page-white * {
+  box-sizing: border-box;
+}
+
+.terms-page-white .kx-main-wrapper {
+  padding-top: 88px; /* 72px navbar + 16px space */
+  width: 100%;
+  background: #FFFFFF !important;
+  flex: 1 0 auto;
+}
+
+/* Eliminate dark blobs, mesh gradients, and neon washes completely */
+.terms-page-white .kx-hero-mesh,
+.terms-page-white .kx-hero-scrim,
+.terms-page-white .kx-faq-row-wash,
+.terms-page-white .kx-faq-row-aurora,
+.terms-page-white .kx-faq-row-scrim,
+.terms-page-white .hiw-bg-glow {
+  display: none !important;
+}
+
+/* Single Centered Column container for Legal Accordions */
+.terms-page-white .kx-legal-single-col {
+  width: min(1000px, calc(100% - 2 * clamp(16px, 4vw, 40px)));
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding-inline: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. UPGRADED WIDE & TALL HERO SECTION
+   -------------------------------------------------------------------------- */
+.terms-hero-wrapper {
+  width: 100%;
+  padding-inline: clamp(16px, 3vw, 32px);
+  margin-top: 8px;
+  margin-bottom: 48px;
+  box-sizing: border-box;
+}
+
+.terms-hero-card {
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  background-color: #FFFFFF;
+  background-image: radial-gradient(#E2E8F0 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  border: 1px solid #E2E8F0;
+  border-radius: 28px;
+  padding: clamp(48px, 6vw, 76px) clamp(24px, 5vw, 64px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 12px 32px -4px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Multi-tone top accent line (Emerald, Blue, Teal, Amber, Rose) */
+.terms-hero-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #16A34A 0%, #2563EB 25%, #0D9488 50%, #D97706 75%, #E11D48 100%);
+  z-index: 2;
+}
+
+.terms-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Left Column: Typography & Quick Jumps */
+.terms-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.terms-hero-eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #F0FDF4;
+  border: 1px solid #DCFCE7;
+  color: #15803D;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  width: fit-content;
+  line-height: 1;
+}
+
+.terms-hero-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16A34A;
+}
+
+.terms-hero-title {
+  font-size: clamp(34px, 4.4vw, 54px);
+  font-weight: 800;
+  line-height: 1.12;
+  color: #0F172A;
+  letter-spacing: -0.025em;
+  margin: 0 0 16px 0;
+}
+
+.terms-hero-title-accent {
+  color: #15803D;
+  display: inline-block;
+}
+
+.terms-hero-desc {
+  font-size: clamp(15px, 1.8vw, 17px);
+  line-height: 1.65;
+  color: #475569;
+  max-width: 580px;
+  margin: 0 0 28px 0;
+}
+
+/* Quick Jump Navigation Pills */
+.terms-hero-quick-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.terms-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.terms-hero-pill:hover {
+  transform: translateY(-1px);
+}
+
+.terms-pill-emerald {
+  background: #F0FDF4;
+  border: 1px solid #DCFCE7;
+  color: #15803D;
+}
+.terms-pill-emerald:hover {
+  background: #DCFCE7;
+  border-color: #86EFAC;
+  color: #14532D;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.12);
+}
+
+.terms-pill-blue {
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #1D4ED8;
+}
+.terms-pill-blue:hover {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+  color: #1E40AF;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+}
+
+.terms-pill-teal {
+  background: #F0FDFA;
+  border: 1px solid #CCFBF1;
+  color: #0F766E;
+}
+.terms-pill-teal:hover {
+  background: #CCFBF1;
+  border-color: #5EEAD4;
+  color: #115E59;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.12);
+}
+
+/* Right Column: Trust Summary Block */
+.terms-hero-right {
+  display: flex;
+  justify-content: center;
+}
+
+.terms-hero-trust-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  max-width: 440px;
+}
+
+.terms-trust-header {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.terms-trust-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #0F172A;
+  text-transform: uppercase;
+}
+
+.terms-trust-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.terms-trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.terms-trust-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.terms-trust-icon-emerald {
+  background: #F0FDF4;
+  border: 1px solid #DCFCE7;
+  color: #16A34A;
+}
+
+.terms-trust-icon-blue {
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #2563EB;
+}
+
+.terms-trust-icon-amber {
+  background: #FFFBEB;
+  border: 1px solid #FEF3C7;
+  color: #D97706;
+}
+
+.terms-trust-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 2px;
+}
+
+.terms-trust-text p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #64748B;
+}
+
+.terms-trust-footer {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #94A3B8;
+}
+
+.terms-trust-footer-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #16A34A;
+}
+
+/* Tablet & Mobile Hero Layout */
+@media (max-width: 991px) {
+  .terms-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .terms-hero-card {
+    padding: 36px 24px;
+    border-radius: 22px;
+  }
+  .terms-hero-trust-box {
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================================
+   3. TERMS ACCORDION SYSTEM (KXFAQ) — COLORFUL WHITE THEME
+   ========================================================================== */
+.terms-page-white #terms-accordion {
+  scroll-margin-top: 96px;
+}
+
+.terms-page-white .kx-faq-controls-row {
+  margin-bottom: 20px !important;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.terms-page-white .kx-faq-expand-btn {
+  height: 38px !important;
+  padding: 0 18px !important;
+  border-radius: 9999px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #0F172A !important;
+  font-size: 13.5px !important;
+  font-weight: 650 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease !important;
+}
+
+.terms-page-white .kx-faq-expand-btn:hover {
+  background: #F8FAFC !important;
+  border-color: #94A3B8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+}
+
+.terms-page-white .kx-faq-expand-btn .kx-faq-expand-icon {
+  color: #64748B;
+}
+
+/* Accordion List */
+.terms-page-white .kx-faq-list {
+  gap: 14px !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   PER-SECTION COLOR PALETTE MAPPING
+   -------------------------------------------------------------------------- */
+.terms-page-white [data-accent="emerald"] {
+  --row-accent: #10B981;
+  --row-soft: #ECFDF5;
+  --row-border: #A7F3D0;
+  --row-text: #047857;
+}
+
+.terms-page-white [data-accent="blue"] {
+  --row-accent: #3B82F6;
+  --row-soft: #EFF6FF;
+  --row-border: #BFDBFE;
+  --row-text: #1D4ED8;
+}
+
+.terms-page-white [data-accent="violet"] {
+  --row-accent: #8B5CF6;
+  --row-soft: #F5F3FF;
+  --row-border: #DDD6FE;
+  --row-text: #6D28D9;
+}
+
+.terms-page-white [data-accent="rose"] {
+  --row-accent: #EC4899;
+  --row-soft: #FDF2F8;
+  --row-border: #FBCFE8;
+  --row-text: #BE185D;
+}
+
+.terms-page-white [data-accent="amber"] {
+  --row-accent: #F59E0B;
+  --row-soft: #FFFBEB;
+  --row-border: #FDE68A;
+  --row-text: #B45309;
+}
+
+.terms-page-white [data-accent="teal"] {
+  --row-accent: #06B6D4;
+  --row-soft: #ECFEFF;
+  --row-border: #A5F3FC;
+  --row-text: #0E7490;
+}
+
+/* Accordion Row Base: Pure White surface, 14px radius, 4px left accent bar */
+.terms-page-white .kx-faq-row {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-left: 4px solid var(--row-accent, #10B981) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  padding: 18px 22px !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease !important;
+  overflow: hidden;
+  box-sizing: border-box;
+  opacity: 1 !important;
+  transform: none;
+}
+
+/* Subtle Hover Lift */
+.terms-page-white .kx-faq-row:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--row-border, #CBD5E1) !important;
+  border-left-color: var(--row-accent, #10B981) !important;
+  box-shadow: 0 8px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Open Accordion State: Elevation + highlighted border */
+.terms-page-white .kx-faq-row.is-open {
+  border-color: var(--row-border, #CBD5E1) !important;
+  border-left-color: var(--row-accent, #10B981) !important;
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.06), 0 4px 10px -2px rgba(0, 0, 0, 0.02) !important;
+  background: #FFFFFF !important;
+}
+
+@media (max-width: 640px) {
+  .terms-page-white .kx-faq-row {
+    padding: 15px 16px !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* Accordion Question Button (Click-to-Toggle) */
+.terms-page-white .kx-faq-question-btn {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px !important;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.terms-page-white .kx-faq-question-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(16px, 1.9vw, 19px) !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  line-height: 1.35 !important;
+  flex: 1;
+}
+
+.terms-page-white .kx-faq-question-title {
+  color: #0F172A !important;
+  -webkit-text-fill-color: #0F172A !important;
+}
+
+/* Vibrant Rounded Number Pill Badge (01, 02, 03...) */
+.terms-page-white .kx-faq-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  line-height: 1;
+  background: var(--row-soft, #ECFDF5) !important;
+  color: var(--row-text, #047857) !important;
+  border: 1px solid var(--row-border, #A7F3D0) !important;
+}
+
+/* + / − Toggle Button: Crisp rounded square tinted with section's soft color */
+.terms-page-white .kx-faq-icon-tile {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  background: var(--row-soft, #ECFDF5) !important;
+  border: 1px solid var(--row-border, #A7F3D0) !important;
+  color: var(--row-accent, #10B981) !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  pointer-events: none !important; /* ensures row click is seamless */
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.terms-page-white .kx-faq-row:hover .kx-faq-icon-tile {
+  border-color: var(--row-accent, #10B981) !important;
+  transform: scale(1.06) !important;
+}
+
+/* When opened, fill button solid with section accent and turn icon white */
+.terms-page-white .kx-faq-row.is-open .kx-faq-icon-tile {
+  background: var(--row-accent, #10B981) !important;
+  border-color: var(--row-accent, #10B981) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Rotate + into × on open */
+.terms-page-white .kx-faq-plus-icon {
+  width: 18px !important;
+  height: 18px !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  stroke: currentColor !important;
+}
+
+.terms-page-white .kx-faq-row.is-open .kx-faq-plus-icon {
+  transform: rotate(45deg) !important;
+}
+
+/* --------------------------------------------------------------------------
+   STRICT COLLAPSIBLE ENGINE (grid-template-rows: 0fr -> 1fr)
+   Ensures accordion is 100% hidden at rest and smoothly expands on open.
+   -------------------------------------------------------------------------- */
+.terms-page-white .kx-faq-answer-grid {
+  display: grid !important;
+  grid-template-rows: 0fr !important;
+  transition: grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.terms-page-white .kx-faq-row.is-open .kx-faq-answer-grid {
+  grid-template-rows: 1fr !important;
+  visibility: visible !important;
+}
+
+/* Inner wrapper: min-height: 0 is mandatory for grid 0fr collapse */
+.terms-page-white .kx-faq-answer-inner {
+  min-height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  transform: translateY(-6px) !important;
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16, 1, 0.3, 1), visibility 300ms !important;
+}
+
+.terms-page-white .kx-faq-row.is-open .kx-faq-answer-inner {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Accordion Answer Content */
+.terms-page-white .kx-faq-answer-content {
+  color: #334155 !important;
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+  padding-bottom: 6px !important;
+  margin-top: 16px !important;
+  border-top: 1px solid #F1F5F9;
+  padding-top: 16px;
+}
+
+.terms-page-white .kx-faq-answer-content p {
+  color: #334155 !important;
+  line-height: 1.75 !important;
+  margin-bottom: 12px !important;
+}
+
+.terms-page-white .kx-faq-answer-content strong {
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+/* Tinted Callout and Notice Blocks matching section accent */
+.terms-page-white .kx-callout-block {
+  background: var(--row-soft, #ECFDF5) !important;
+  border: 1px solid var(--row-border, #A7F3D0) !important;
+  border-radius: 12px !important;
+  color: var(--row-text, #047857) !important;
+  padding: 16px 20px !important;
+  margin: 16px 0 !important;
+  box-shadow: none !important;
+}
+
+.terms-page-white .kx-callout-block strong {
+  color: var(--row-text, #047857) !important;
+}
+
+.terms-page-white .kx-callout-block a {
+  color: var(--row-accent, #10B981) !important;
+  text-decoration: underline !important;
+}
+
+/* Bullets matching section accent */
+.terms-page-white .kx-gradient-bullets {
+  padding-left: 20px !important;
+  margin: 14px 0 !important;
+}
+
+.terms-page-white .kx-gradient-bullets li {
+  color: #334155 !important;
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+  margin-bottom: 10px !important;
+  position: relative !important;
+}
+
+.terms-page-white .kx-gradient-bullets li::before {
+  content: "" !important;
+  position: absolute !important;
+  left: -16px !important;
+  top: 11px !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: var(--row-accent, #10B981) !important;
+  box-shadow: none !important;
+}
+
+/* Links inside Answer matching section accent */
+.terms-page-white .kx-faq-answer-content a,
+.terms-page-white a.kx-animated-link {
+  color: var(--row-accent, #10B981) !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  transition: opacity 0.18s ease !important;
+}
+
+.terms-page-white .kx-faq-answer-content a:hover,
+.terms-page-white a.kx-animated-link:hover {
+  opacity: 0.8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. FOOTER & CTA ACTION BUTTONS
+   -------------------------------------------------------------------------- */
+.terms-page-white .kx-legal-actions {
+  margin-top: 48px !important;
+  margin-bottom: 64px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+}
+
+.terms-page-white .kx-legal-btn-primary {
+  height: 48px !important;
+  padding: 0 24px !important;
+  border-radius: 12px !important;
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border: 1px solid #0F172A !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.terms-page-white .kx-legal-btn-primary:hover {
+  background: #1E293B !important;
+  border-color: #1E293B !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
+}
+
+.terms-page-white .kx-legal-btn-secondary {
+  height: 48px !important;
+  padding: 0 24px !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  color: #334155 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.terms-page-white .kx-legal-btn-secondary:hover {
+  background: #F8FAFC !important;
+  border-color: #94A3B8 !important;
+  color: #0F172A !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. READING PROGRESS BAR & BACK TO TOP BUTTON
+   -------------------------------------------------------------------------- */
+.terms-page-white .kx-reading-progress-track {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 1001;
+  pointer-events: none;
+  background: transparent;
+}
+
+.terms-page-white .kx-reading-progress-bar {
+  height: 100%;
+  background: #16A34A !important;
+  box-shadow: 0 1px 3px rgba(22, 163, 74, 0.3) !important;
+}
+
+/* Floating back-to-top button styled for light mode */
+.terms-page-white .ks-scroll-top-btn {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2E8F0 !important;
+  color: #0F172A !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+.terms-page-white .ks-scroll-top-btn .ks-scroll-ring-bg {
+  stroke: #E2E8F0 !important;
+}
+
+.terms-page-white .ks-scroll-top-btn .ks-scroll-ring-fill {
+  stroke: #16A34A !important;
+}
+
+.terms-page-white .ks-scroll-top-btn:hover {
+  border-color: #16A34A !important;
+  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.18) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}

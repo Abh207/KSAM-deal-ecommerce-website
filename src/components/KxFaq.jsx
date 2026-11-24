@@ -34,10 +34,8 @@ export default function KxFaq({
         return initial;
       }
     }
-    if (defaultOpen) {
+    if (defaultOpen && defaultOpen !== "none") {
       initial.add(defaultOpen);
-    } else if (items.length > 0) {
-      initial.add(items[0].id);
     }
     return initial;
   });
@@ -172,6 +170,9 @@ export default function KxFaq({
       const isCurrentlyOpen = next.has(id);
       if (isCurrentlyOpen) {
         next.delete(id);
+        if (typeof window !== "undefined" && window.history?.replaceState && window.location.hash === `#${id}`) {
+          window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
       } else {
         if (!allowMultiple) next.clear();
         next.add(id);
@@ -257,6 +258,7 @@ export default function KxFaq({
               id={item.id}
               className={`kx-faq-row ${isOpen ? "is-open" : ""}`}
               data-tone={tone}
+              data-accent={item.accent || tone}
             >
               {/* Moving Gradient Wash Layer (Drifts on hover or open, max 0.10 opacity) */}
               <div className="kx-faq-row-wash" aria-hidden="true" />
@@ -291,7 +293,9 @@ export default function KxFaq({
                   <span className="kx-faq-question-text">
                     {prefixMatch ? (
                       <>
-                        <span className="kx-faq-question-prefix" data-tone={tone}>{prefixMatch[1]}</span>
+                        <span className="kx-faq-num-badge" aria-hidden="true">
+                          {prefixMatch[1].replace(/[-—\s]/g, "")}
+                        </span>
                         <span className="kx-faq-question-title">{prefixMatch[2]}</span>
                       </>
                     ) : (
@@ -299,7 +303,7 @@ export default function KxFaq({
                     )}
                   </span>
                   <span className="kx-faq-icon-tile" aria-hidden="true">
-                    <Plus size={22} className="kx-faq-plus-icon" strokeWidth={2.4} />
+                    <Plus size={20} className="kx-faq-plus-icon" strokeWidth={2.4} />
                   </span>
                 </button>
               </h2>

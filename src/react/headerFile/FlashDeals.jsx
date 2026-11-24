@@ -325,20 +325,6 @@ function FlashDeals({
                     </div>
 
                     <h2>
-                        <span className="flash-bolt-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" width="38" height="38" fill="none">
-                                <defs>
-                                    <linearGradient id="flashBoltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="#84FF00" />
-                                        <stop offset="100%" stopColor="#FF8800" />
-                                    </linearGradient>
-                                </defs>
-                                <path
-                                    d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
-                                    fill="url(#flashBoltGrad)"
-                                />
-                            </svg>
-                        </span>
                         FLASH <span className="flash-deals-gradient-text">DEALS</span>
                     </h2>
 
@@ -458,7 +444,7 @@ function FlashDeals({
                                 <div className="flash-deal-image">
 
                                     <span className="flash-deal-tag">
-                                        ⚡ DEAL
+                                        DEAL
                                     </span>
 
 
