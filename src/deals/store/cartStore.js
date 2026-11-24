@@ -7,7 +7,8 @@ import {
   formatPrice,
   normalizeCartItem,
   getNormalizedCart,
-  showCartToast
+  showCartToast,
+  isSameCartProduct
 } from "../../lib/cartHelper.js";
 
 export const CART_KEY = CART_STORAGE_KEY;
@@ -93,7 +94,7 @@ export const cartStore = {
     if (!normalized || !normalized.id) return;
 
     const existingIndex = memoryCart.findIndex(
-      (item) => String(item.id) === String(normalized.id)
+      (item) => isSameCartProduct(item, normalized)
     );
 
     if (existingIndex > -1) {

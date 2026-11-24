@@ -181,14 +181,30 @@ export function findRelatedProducts(category, currentId, limit = 4) {
 }
 
 /**
+ * Matches products across varying ID schemes (numeric, UUID, ext-*, external_id, or URL).
+ */
+export function isSameCartProduct(a, b) {
+  if (!a || !b) return false;
+  if (a.id && b.id && String(a.id) === String(b.id)) return true;
+  if (a.external_id && b.external_id && String(a.external_id) === String(b.external_id)) return true;
+  if (a.product_url && b.product_url && a.product_url === b.product_url) return true;
+  if (a.affiliate_url && b.affiliate_url && a.affiliate_url === b.affiliate_url) return true;
+  return false;
+}
+
+/**
  * Converts any product representation into a single standard cart item shape:
- * { id, name, price, originalPrice, oldPrice, image, category, qty, quantity, rating, store }
+ * { id, name, price, originalPrice, oldPrice, image, category, qty, quantity, rating, store, platform, product_url, affiliate_url, external_id, is_external }
  */
 export function normalizeCartItem(product, qty) {
   if (!product) return null;
 
-  const rawId = product.id !== undefined && product.id !== null ? String(product.id) : "";
-  const catalogItem = rawId ? findProductInCatalog(rawId) : null;
+  const rawId = product.id !== undefined && product.id !== null ? String(product.id) : (product.external_id ? String(product.external_id) : "");
+  
+  // Guard against ID collision: only consult static catalog if the item lacks direct name or price
+  const hasDirectName = Boolean(product.name || product.title);
+  const hasDirectPrice = product.price !== undefined && product.price !== null && !isNaN(Number(product.price));
+  const catalogItem = (!hasDirectName || !hasDirectPrice) && rawId ? findProductInCatalog(rawId) : null;
 
   const name =
     product.name ||
@@ -206,6 +222,8 @@ export function normalizeCartItem(product, qty) {
   const rawOldPrice =
     product.originalPrice ??
     product.oldPrice ??
+    product.old_price ??
+    product.mrp ??
     catalogItem?.oldPrice ??
     catalogItem?.originalPrice ??
     price;
@@ -213,7 +231,9 @@ export function normalizeCartItem(product, qty) {
   const oldPrice = parsePrice(rawOldPrice);
 
   const rawImage =
+    product.image_url ||
     product.image ||
+    product.thumbnail ||
     product.img ||
     product.src ||
     (Array.isArray(product.images) && product.images[0]) ||
@@ -221,8 +241,6 @@ export function normalizeCartItem(product, qty) {
     catalogItem?.image ||
     catalogItem?.img ||
     catalogItem?.src ||
-    (Array.isArray(catalogItem?.images) && catalogItem.images[0]) ||
-    (Array.isArray(catalogItem?.heroImages) && catalogItem.heroImages[0]) ||
     "";
 
   const image = resolveImagePath(rawImage);
@@ -237,18 +255,31 @@ export function normalizeCartItem(product, qty) {
     Number(qty || product.quantity || product.qty || 1)
   );
 
+  const rawStore = String(product.store || product.platform || product.stores?.name || catalogItem?.store || "");
+  const store = rawStore.replace(/^on\s+/i, "");
+  const product_url = String(product.product_url || product.affiliate_url || product.url || product.link || "");
+  const affiliate_url = String(product.affiliate_url || product.product_url || product.url || product.link || "");
+  const external_id = String(product.external_id || product.uid || (product_url ? rawId : ""));
+  const is_external = Boolean(product.is_external || product_url || affiliate_url || product.external_id || (store && store.toLowerCase() !== "ksam"));
+
   return {
     id: rawId,
     name: String(name),
     price: price,
-    originalPrice: oldPrice,
-    oldPrice: oldPrice,
+    originalPrice: oldPrice > price ? oldPrice : price,
+    oldPrice: oldPrice > price ? oldPrice : price,
     image: image,
     category: String(category),
     quantity: parsedQty,
     qty: parsedQty,
     rating: Number(product.rating ?? catalogItem?.rating ?? 4.5),
-    store: String(product.store || catalogItem?.store || "")
+    store: store,
+    platform: store,
+    brand: String(product.brand || ""),
+    product_url: product_url,
+    affiliate_url: affiliate_url,
+    external_id: external_id,
+    is_external: is_external
   };
 }
 
@@ -353,7 +384,7 @@ export function addProductToCart(product, qty = 1, options = {}) {
   if (!normalized || !normalized.id) return cart;
 
   const existingIndex = cart.findIndex(
-    (item) => String(item.id) === String(normalized.id)
+    (item) => isSameCartProduct(item, normalized)
   );
 
   if (existingIndex > -1) {

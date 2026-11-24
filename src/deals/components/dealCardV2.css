@@ -39,8 +39,10 @@
 .deal-card-img-wrap {
   position: relative;
   width: 100%;
-  height: 220px;
-  background: #f8f8f8 !important;
+  aspect-ratio: 4 / 3;
+  min-height: 180px;
+  background: #F3F4F6 !important;
+  background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%) !important;
   border-top-left-radius: 22px;
   border-top-right-radius: 22px;
   overflow: hidden;
@@ -49,6 +51,29 @@
   justify-content: center;
   padding: 16px;
   box-sizing: border-box;
+}
+
+.deal-card-img-wrap.is-skeleton {
+  background: #e2e8f0 !important;
+}
+
+.deal-card-img-wrap.is-skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: dealImgShimmer 1.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes dealImgShimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .deal-card-img-link {
@@ -64,10 +89,18 @@
 .deal-card-img {
   width: 100%;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   object-position: center;
+  mix-blend-mode: multiply;
   display: block;
-  transition: transform 0.35s ease;
+  transition: transform 0.35s ease, opacity 0.3s ease;
+  opacity: 0.95;
+}
+
+.deal-card-img.is-loaded {
+  opacity: 1;
 }
 
 .deal-card-v2:hover .deal-card-img {
@@ -320,8 +353,8 @@
 /* ==========================================================================
    RESPONSIVE GRID LAYOUT FOR DEALS
    - Desktop: 4 columns
-   - Tablet: 3 or 2 columns
-   - Mobile (<= 768px): 2 columns, compact cards, zero horizontal overflow
+   - Tablet: 2 columns
+   - Mobile: 2 columns (1 on very narrow)
    ========================================================================== */
 
 #deals .deals-grid {
@@ -331,14 +364,14 @@
   width: 100% !important;
 }
 
-@media (max-width: 1100px) and (min-width: 769px) {
+@media (max-width: 1024px) and (min-width: 640px) {
   #deals .deals-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 16px !important;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 639px) {
   #deals .deals-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
@@ -349,7 +382,7 @@
   }
 
   .deal-card-img-wrap {
-    height: 140px;
+    min-height: 130px;
     padding: 10px;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
@@ -430,10 +463,11 @@
   }
 }
 
-/* Very narrow phones (360px and below) */
-@media (max-width: 360px) {
+/* Very narrow phones (380px and below) */
+@media (max-width: 380px) {
   #deals .deals-grid {
-    gap: 8px !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 
   .deal-view-btn-full {

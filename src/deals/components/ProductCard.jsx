@@ -2,29 +2,28 @@ import React, { useState, useEffect } from "react";
 import { ShoppingBag, Check, ArrowRight } from "lucide-react";
 import { isInWishlist, toggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { addProductToCart, buildProductUid, resolveImagePath } from "../../lib/cartHelper.js";
-import { getCategoryFallbackImage } from "../services/productService.js";
+import { getCategoryFallbackImage, saveDealToSession, upsertExternalDeal, saveDealsNavigationState } from "../services/productService.js";
 import "./dealCardV2.css";
 
 /**
- * ProductCard renders in Image 2 ("Best Sellers" / Watches card) style:
- * - White card, rounded 20-24px, soft shadow
- * - Light grey image area (#f8f8f8) with centered contain image
- * - Black "N% OFF" pill top-left
- * - Round wishlist heart top-right (green filled #8cff00 when active)
- * - Small platform chip (e.g. "on Amazon")
- * - Small uppercase green category label
- * - Bold product name (max 2 lines with ellipsis)
- * - Grey brand/store name
- * - 2-line short description
- * - Large bold ₹ price with struck-through old price
- * - Green "N items available" line (hidden if stock is unknown)
- * - Footer: square black cart button + wide light-green outlined "View Product ->" button
- * - Opens product.html?id=<id>&category=<category>&uid=<uid>&from=deals in SAME tab
+ * ProductCard renders in Screenshot 3 ("Chrono Black" card) style:
+ * - White rounded card, product image on a light background
+ * - Discount badge top-left (e.g. "50% OFF"), only when a real discount exists
+ * - Heart (wishlist) button top-right, reusing the existing wishlist logic
+ * - Small uppercase category label, bold product title (max 2 lines), brand/store name in grey
+ * - Short description (max 2 lines, hidden if missing)
+ * - Current price in bold INR, struck-through old price (only if it exists)
+ * - Small availability text (hidden if unknown)
+ * - Bottom row: a cart/bag icon button and a full-width "View Product ->" button
+ * - Store name (Flipkart, Amazon, etc.) shown as a small label on the card
+ * - Saves product to sessionStorage on click & initiates background upsert so detail page never shows Deal Not Found
  */
-export function ProductCard({ product, onOpenDetails }) {
+export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
+  const item = product || p;
   const [, setWishlistVersion] = useState(0);
   const [addedQuick, setAddedQuick] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   useEffect(() => {
     const unsub = subscribeWishlist(() => {
@@ -33,65 +32,112 @@ export function ProductCard({ product, onOpenDetails }) {
     return unsub;
   }, []);
 
-  if (!product) return null;
+  if (!item) return null;
 
   const base = import.meta.env.BASE_URL || "/";
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-  const uid = product.uid || buildProductUid(product.category, product.id);
-  const fromParam = product.from || "deals";
-  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(product.id)}&category=${encodeURIComponent(product.category || "General")}&uid=${encodeURIComponent(uid)}&from=${encodeURIComponent(fromParam)}`;
+  const uid = item.uid || item.external_id || buildProductUid(item.category, item.id);
+  const fromParam = item.from || "deals";
+  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(item.id)}&category=${encodeURIComponent(item.category || "General")}&uid=${encodeURIComponent(uid)}&from=${encodeURIComponent(fromParam)}`;
 
-  const isSaved = isInWishlist(product.uid || product.id);
+  const isSaved = isInWishlist(item.uid || item.id || item.external_id);
 
   const handleToggleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist(product);
+    toggleWishlist(item);
   };
 
   const handleQuickAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addProductToCart(product, 1);
+    const storeResolved = item.store || item.platform || item.bestOffer?.platform || item.stores?.name || item.source || "";
+    const cleanStore = storeResolved.replace(/^on\s+/i, "");
+    addProductToCart({
+      ...item,
+      store: cleanStore,
+      platform: cleanStore,
+      product_url: item.product_url || item.affiliate_url || item.url || item.link || "",
+      affiliate_url: item.affiliate_url || item.product_url || item.url || item.link || "",
+      is_external: Boolean(item.product_url || item.affiliate_url || item.external_id || (cleanStore && cleanStore.toLowerCase() !== "ksam"))
+    }, 1);
     setAddedQuick(true);
     setTimeout(() => setAddedQuick(false), 1200);
   };
 
-  const platformName = product.platform || product.bestOffer?.platform || product.store || "Amazon";
-  const rawImage = !imgFailed && (product.image || product.image_url)
-    ? resolveImagePath(product.image || product.image_url)
-    : getCategoryFallbackImage(product.category, product.name);
+  const handleCardClick = (e) => {
+    // Save full product to sessionStorage so detail view never shows Deal Not Found
+    saveDealToSession(item);
+    // Background upsert via Edge Function
+    upsertExternalDeal(item).catch(() => {});
+    // Persist navigation click state
+    saveDealsNavigationState({
+      clickedProductId: item.id,
+      scrollY: typeof window !== "undefined" ? window.scrollY : 0
+    });
 
-  const hasDiscount = Boolean(product.discount && product.discount > 0);
-  const showStock = product.stock !== null && product.stock !== undefined;
+    if (onClick) {
+      onClick(item);
+    } else if (onOpenDetails) {
+      onOpenDetails(item);
+    }
+  };
+
+  const platformName = item.store || item.platform || item.bestOffer?.platform || item.stores?.name || item.source || "";
+  const platformClean = platformName.replace(/^on\s+/i, "");
+  const rawImage = !imgFailed && (item.image_url || item.image || item.thumbnail)
+    ? resolveImagePath(item.image_url || item.image || item.thumbnail)
+    : getCategoryFallbackImage(item.category, item.name);
+
+  const discountNum = Number(item.discount || item.discount_percent || 0);
+  const hasDiscount = Boolean(discountNum > 0);
+
+  const rawOldPrice = Number(item.oldPrice || item.old_price || item.mrp || item.originalPrice || 0);
+  const priceNum = Number(item.price || 0);
+  const hasOldPrice = Boolean(rawOldPrice && rawOldPrice > priceNum);
+
+  const availabilityText =
+    (item.availability && item.availability !== "Unknown" && item.availability) ||
+    (item.stock !== null && item.stock !== undefined
+      ? (item.stock > 0 ? `${item.stock} items available` : "Out of stock")
+      : null);
+
+  const descText = (item.description && item.description.trim()) || "";
 
   return (
     <article
       className="deal-card-v2"
-      data-id={product.id}
-      data-category={product.category}
+      data-product-id={item.id}
+      data-id={item.id}
+      data-category={item.category}
     >
       {/* 1. TOP IMAGE AREA */}
-      <div className="deal-card-img-wrap">
+      <div className={`deal-card-img-wrap ${!imgLoaded && !imgFailed ? "is-skeleton" : ""}`}>
         <a
           href={productUrl}
           className="deal-card-img-link"
-          aria-label={`View details for ${product.name}`}
+          aria-label={`View details for ${item.name}`}
+          onClick={handleCardClick}
         >
           <img
             src={rawImage}
-            alt={product.name}
-            loading="lazy"
+            alt={item.name}
+            loading={index !== undefined && index < 4 ? "eager" : "lazy"}
             decoding="async"
-            className="deal-card-img"
-            onError={() => setImgFailed(true)}
+            referrerPolicy="no-referrer"
+            className={`deal-card-img ${imgLoaded ? "is-loaded" : ""}`}
+            onLoad={() => setImgLoaded(true)}
+            onError={() => {
+              setImgFailed(true);
+              setImgLoaded(true);
+            }}
           />
         </a>
 
-        {/* Black "N% OFF" pill top-left */}
+        {/* Discount badge top-left (e.g. "50% OFF") - only when real discount exists */}
         {hasDiscount && (
           <span className="deal-card-discount-pill">
-            {product.discount}% OFF
+            {discountNum}% OFF
           </span>
         )}
 
@@ -111,60 +157,65 @@ export function ProductCard({ product, onOpenDetails }) {
       <div className="deal-card-content">
         {/* Meta row: category + platform chip */}
         <div className="deal-card-meta-row">
-          <span className="deal-card-cat-label">{product.category || "Deals"}</span>
-          {platformName && (
-            <span className="deal-platform-chip" title={`Best offer from ${platformName}`}>
-              on {platformName}
+          <span className="deal-card-cat-label">{item.category || "Deals"}</span>
+          {platformClean && (
+            <span className="deal-platform-chip" title={`Available on ${platformClean}`}>
+              on {platformClean}
             </span>
           )}
         </div>
 
-        {/* Bold clickable product name */}
+        {/* Bold clickable product name (max 2 lines with ellipsis) */}
         <h3 className="deal-card-name">
-          <a href={productUrl} className="deal-card-name-link">
-            {product.name}
+          <a
+            href={productUrl}
+            className="deal-card-name-link"
+            onClick={handleCardClick}
+          >
+            {item.name}
           </a>
         </h3>
 
-        {/* Grey brand name */}
+        {/* Brand / store name in grey */}
         <p className="deal-card-brand">
-          {product.brand || platformName || "KSAM Certified"}
+          {item.brand || platformName || "KSAM Certified"}
         </p>
 
-        {/* 2-line short description */}
-        <p className="deal-card-desc">
-          {product.description}
-        </p>
+        {/* Short description (max 2 lines, hidden if missing) */}
+        {descText ? (
+          <p className="deal-card-desc">
+            {descText}
+          </p>
+        ) : null}
 
         {/* Price row */}
         <div className="deal-card-price-row">
           <span className="deal-current-price">
-            ₹{Number(product.price || 0).toLocaleString("en-IN")}
+            ₹{priceNum.toLocaleString("en-IN")}
           </span>
-          {product.oldPrice > product.price && (
+          {hasOldPrice && (
             <span className="deal-original-price">
-              ₹{Number(product.oldPrice).toLocaleString("en-IN")}
+              ₹{rawOldPrice.toLocaleString("en-IN")}
             </span>
           )}
         </div>
 
-        {/* Green stock line */}
-        {showStock && (
+        {/* Small availability text (hidden if unknown) */}
+        {availabilityText ? (
           <p className="deal-stock-line">
-            {product.stock > 0 ? `${product.stock} items available` : "Out of stock"}
+            {availabilityText}
           </p>
-        )}
+        ) : null}
 
-        {/* 3. FOOTER ROW */}
+        {/* 3. FOOTER ROW: cart icon button + full-width View Product button */}
         <div className="deal-card-actions">
           {/* Black square cart button */}
           <button
             type="button"
             className={`deal-cart-btn ${addedQuick ? "is-added" : ""}`}
             onClick={handleQuickAddToCart}
-            aria-label={`Add ${product.name} to Cart`}
+            aria-label={`Add ${item.name} to Cart`}
             title="Add to Cart"
-            disabled={showStock && product.stock <= 0}
           >
             {addedQuick ? (
               <Check size={20} strokeWidth={2.5} />
@@ -173,11 +224,12 @@ export function ProductCard({ product, onOpenDetails }) {
             )}
           </button>
 
-          {/* Light-green outlined View Product button */}
+          {/* Full-width View Product button */}
           <a
             href={productUrl}
             className="deal-view-btn"
-            aria-label={`View details for ${product.name}`}
+            aria-label={`View details for ${item.name}`}
+            onClick={handleCardClick}
           >
             <span className="deal-view-btn-full">View Product</span>
             <span className="deal-view-btn-short">View</span>

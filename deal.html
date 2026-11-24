@@ -42,6 +42,17 @@
 
     <!-- Shared Background Video Styles -->
     <link rel="stylesheet" href="./assets/css/bg-video.css">
+    <!-- Canonical Redirect: route deal.html to the unified product detail layout -->
+    <script>
+      (function() {
+        var search = window.location.search;
+        if (search) {
+          var base = "%BASE_URL%" || "./";
+          var target = (base.endsWith("/") ? base : base + "/") + "product.html" + search;
+          window.location.replace(target);
+        }
+      })();
+    </script>
 </head>
 
 <body style="margin: 0; background: transparent; color: #ffffff;">

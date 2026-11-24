@@ -48,19 +48,11 @@ Deno.serve(async (req: Request) => {
     }
 
 
-  let body: { query?: string } = {};
+  let body: { query?: string; action?: string; product?: any } = {};
   try {
     body = await req.json();
   } catch {
     body = {};
-  }
-
-  const query = cleanQuery(body.query);
-  if (!query) {
-    return new Response(
-      JSON.stringify({ success: true, count: 0, products: [] }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
@@ -73,6 +65,90 @@ Deno.serve(async (req: Request) => {
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  // Handle single external product upsert action (persists clicked live search deals securely server-side)
+  if (body.action === "upsert" && body.product) {
+    const p = body.product;
+    const rawExternalId = p.external_id ? String(p.external_id) : (p.id ? String(p.id).replace(/^ext-/, "") : "");
+    if (!rawExternalId) {
+      return new Response(JSON.stringify({ success: false, error: "Missing external_id" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    let storeId: string | null = null;
+    const storeName = p.store || p.source || p.platform || "Partner Store";
+    const storeSlug = String(p.store_slug || storeName).toLowerCase().replace(/[^a-z0-9]/g, "-");
+    try {
+      const { data: storeRow } = await supabase
+        .from("stores")
+        .select("id")
+        .or(`slug.eq.${storeSlug},name.ilike.%${storeName}%`)
+        .maybeSingle();
+      if (storeRow?.id) storeId = storeRow.id;
+    } catch {}
+
+    const upsertData: Record<string, any> = {
+      store_id: storeId,
+      external_id: rawExternalId,
+      name: p.name || p.title || "External Product",
+      title: p.title || p.name || "External Product",
+      brand: p.brand || null,
+      category: p.category || "General",
+      description: p.description || null,
+      image_url: p.image_url || p.image || null,
+      price: p.price ? Number(p.price) : 0,
+      old_price: (p.old_price || p.oldPrice) ? Number(p.old_price || p.oldPrice) : null,
+      discount_percent: p.discount ? Number(p.discount) : 0,
+      rating: p.rating ? Number(p.rating) : 0,
+      reviews: p.reviews ? Number(p.reviews) : 0,
+      availability: p.availability || "In Stock",
+      product_url: p.product_url || p.url || null,
+      affiliate_url: p.affiliate_url || p.url || p.product_url || null,
+      source: p.source || storeSlug,
+      is_active: true,
+      last_seen_at: new Date().toISOString(),
+      price_updated_at: new Date().toISOString()
+    };
+
+    let savedId = null;
+    try {
+      const { data: existing } = await supabase
+        .from("products")
+        .select("id")
+        .eq("external_id", rawExternalId)
+        .maybeSingle();
+
+      if (existing?.id) {
+        await supabase.from("products").update(upsertData).eq("id", existing.id);
+        savedId = existing.id;
+      } else {
+        const { data: inserted, error: insertErr } = await supabase
+          .from("products")
+          .insert(upsertData)
+          .select("id")
+          .single();
+        if (!insertErr && inserted?.id) {
+          savedId = inserted.id;
+        }
+      }
+    } catch (e) {
+      console.error("[search-products upsert] Error:", e);
+    }
+
+    return new Response(JSON.stringify({ success: true, id: savedId, external_id: rawExternalId }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+  }
+
+  const query = cleanQuery(body.query);
+  if (!query) {
+    return new Response(
+      JSON.stringify({ success: true, count: 0, products: [] }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
   const normalizedQuery = query.toLowerCase();
 
   // Ensure existing database products have is_active set to true

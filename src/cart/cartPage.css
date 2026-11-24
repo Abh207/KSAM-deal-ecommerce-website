@@ -2340,3 +2340,79 @@ h3.shop-cart-title {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* =============================================================================
+   OUTBOUND BUY & AFFILIATE DISCLOSURE STYLES
+   ============================================================================= */
+.shop-cart-buy-store-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #84FF00;
+  color: #050a02 !important;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(132, 255, 0, 0.3);
+  white-space: nowrap;
+}
+
+.shop-cart-buy-store-btn:hover {
+  background: #9dff1a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(132, 255, 0, 0.45);
+}
+
+.shop-cart-buy-store-btn.pulse-highlight {
+  animation: pulseBuyBtn 0.8s 2 ease-in-out;
+}
+
+@keyframes pulseBuyBtn {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(132, 255, 0, 0.7); }
+  50% { transform: scale(1.08); box-shadow: 0 0 0 12px rgba(132, 255, 0, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(132, 255, 0, 0); }
+}
+
+.cart-external-checkout-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(132, 255, 0, 0.08);
+  border: 1px solid rgba(132, 255, 0, 0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #d1fae5;
+}
+
+.cart-external-checkout-note svg {
+  flex-shrink: 0;
+  color: #84FF00;
+  margin-top: 2px;
+}
+
+.cart-affiliate-disclosure-box {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.shopping-checkout.is-external-flow {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+}
+
+.shopping-checkout.is-external-flow:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}

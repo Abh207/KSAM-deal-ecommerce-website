@@ -702,7 +702,11 @@ function renderCartItems(cart, summary) {
       `
       : "";
 
-    const store = product.store || "KSAM Deal Verified";
+    const rawStore = product.store || product.platform || "";
+    const cleanStore = rawStore.replace(/^on\s+/i, "");
+    const store = cleanStore || "KSAM Deal Verified";
+    const outboundUrl = product.product_url || product.affiliate_url || "";
+    const isExternal = Boolean(product.is_external || outboundUrl || (cleanStore && cleanStore.toLowerCase() !== "ksam"));
     const category = product.category || "Deals";
     const productName = product.name || product.title || "Selected Product";
     const productImage = resolveSafeProductImage(product);
@@ -718,6 +722,7 @@ function renderCartItems(cart, summary) {
           src="${productImage}"
           alt="${productName}"
           loading="lazy"
+          referrerPolicy="no-referrer"
           onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER_IMAGE}';"
         >
       </div>
@@ -726,7 +731,7 @@ function renderCartItems(cart, summary) {
         <!-- Meta Row -->
         <div class="shop-cart-meta-row">
           <span class="shop-cart-category">${category}</span>
-          <span class="shop-cart-store-tag">• ${store}</span>
+          <span class="shop-cart-store-tag">• on ${store}</span>
           ${ratingMarkup}
         </div>
 
@@ -782,6 +787,22 @@ function renderCartItems(cart, summary) {
 
           <!-- Action Buttons -->
           <div class="shop-cart-action-buttons">
+            ${isExternal && outboundUrl ? `
+              <a
+                href="${outboundUrl}"
+                target="_blank"
+                rel="nofollow sponsored noopener noreferrer"
+                class="shop-cart-buy-store-btn"
+                data-id="${product.id}"
+                data-store="${store}"
+                data-url="${outboundUrl}"
+                title="Complete purchase on ${store}"
+              >
+                <span>Buy on ${store}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </a>
+            ` : ''}
+
             <button
               class="shop-cart-wishlist-btn ${inWishlist ? 'active' : ''}"
               data-id="${product.id}"
@@ -1040,7 +1061,10 @@ function renderOrderSummary(summary) {
   const container = document.getElementById("cartOrderSummaryContainer");
   if (!container) return;
 
+  const cart = getCart();
   const hasItems = summary.itemCount > 0;
+  const allExternal = hasItems && cart.every((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
+  const hasExternal = cart.some((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
 
   container.innerHTML = `
     <div class="your-shopping-card">
@@ -1140,22 +1164,39 @@ function renderOrderSummary(summary) {
           : ""
       }
 
-      <!-- Proceed to Secure Checkout Button -->
+      <!-- Proceed to Checkout Button -->
       <button
         type="button"
-        class="shopping-checkout"
+        class="shopping-checkout ${allExternal ? 'is-external-flow' : ''}"
         id="shoppingCheckout"
-        data-requires-auth="true"
+        data-requires-auth="${allExternal ? 'false' : 'true'}"
         data-auth-action="checkout"
-        aria-label="Proceed to Secure Checkout"
+        aria-label="${allExternal ? 'Complete purchase on store website' : 'Proceed to Secure Checkout'}"
         ${!hasItems ? "disabled style='opacity: 0.55; cursor: not-allowed;'" : ""}
       >
         <span class="checkout-lock-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </span>
-        <span id="checkoutBtnLabel">Proceed to Secure Checkout</span>
+        <span id="checkoutBtnLabel">${allExternal ? 'Complete your purchase on the store\'s website' : 'Proceed to Secure Checkout'}</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="checkout-arrow-icon"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
       </button>
+
+      ${allExternal ? `
+        <div class="cart-external-checkout-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span>All items in your cart are fulfilled directly by partner stores (Amazon, Flipkart, etc.). Click <strong>"Buy on [Store]"</strong> on each item above to complete your order on their official site.</span>
+        </div>
+      ` : (hasExternal ? `
+        <div class="cart-external-checkout-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span>Some items in your cart are fulfilled by external partner stores. Use the <strong>"Buy on [Store]"</strong> button above to complete your purchase on their website.</span>
+        </div>
+      ` : '')}
+
+      <!-- Affiliate Disclosure -->
+      <div class="cart-affiliate-disclosure-box">
+        <p><strong>Affiliate Disclosure:</strong> KSAM Deal is an affiliate aggregator. We may earn a commission when you purchase through links on our site, at no additional cost to you.</p>
+      </div>
 
       <!-- Secondary Link -->
       <a href="./shop.html" class="shopping-continue">
@@ -1375,6 +1416,24 @@ export function attachCartEvents() {
       handleCheckoutClick(checkoutBtn);
       return;
     }
+
+    // 13. Outbound Buy on Store Click Logging
+    const buyStoreBtn = e.target.closest(".shop-cart-buy-store-btn");
+    if (buyStoreBtn) {
+      const prodId = buyStoreBtn.dataset.id;
+      const storeName = buyStoreBtn.dataset.store;
+      const url = buyStoreBtn.dataset.url;
+      try {
+        if (supabase) {
+          supabase.from("click_events").insert({
+            product_id: prodId,
+            platform: storeName,
+            affiliate_url: url,
+            user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null
+          }).catch(() => {});
+        }
+      } catch {}
+    }
   });
 
   // Enter key in coupon input
@@ -1401,6 +1460,16 @@ function handleCheckoutClick(btn) {
   const cart = getCart();
   if (cart.length === 0) {
     showCartToast("Your cart is empty. Please add items to proceed.");
+    return;
+  }
+
+  const allExternal = cart.length > 0 && cart.every((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
+  if (allExternal) {
+    showCartToast("Please use the 'Buy on [Store]' button next to each item to purchase directly from the partner store.");
+    document.querySelectorAll(".shop-cart-buy-store-btn").forEach((b) => {
+      b.classList.add("pulse-highlight");
+      setTimeout(() => b.classList.remove("pulse-highlight"), 1600);
+    });
     return;
   }
 

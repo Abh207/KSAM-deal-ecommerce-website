@@ -35,7 +35,9 @@ import {
   getSupabaseDealByIdOrUid,
   getDeals,
   isSafeAffiliateUrl,
-  logPlatformClick
+  logPlatformClick,
+  getDealFromSession,
+  upsertExternalDeal
 } from "../deals/services/productService.js";
 import { getCategoryPage, getCategoryBackLabel } from "../lib/categoryPageMap.js";
 import { ProductCard } from "../deals/components/ProductCard.jsx";
@@ -55,178 +57,67 @@ import DualMarqueeShowcase from "./components/DualMarqueeShowcase.jsx";
 
 import "./productDetail.css";
 
-// Unique description generator for products that lack a detailed description
-function getProductDescription(product) {
-  if (product.description && product.description.trim()) {
+// Data honesty: only return real description if present
+function getRealDescription(product) {
+  if (!product) return "";
+  if (product.description && typeof product.description === "string" && product.description.trim()) {
     return product.description.trim();
   }
-  if (product.desc && product.desc.trim()) {
+  if (product.desc && typeof product.desc === "string" && product.desc.trim()) {
     return product.desc.trim();
   }
   if (product.details && typeof product.details === "string" && product.details.trim()) {
     return product.details.trim();
   }
-
-  const name = product.name || product.title || "This premium product";
-  const cat = (product.category || "General").toLowerCase();
-  const priceStr = formatPrice(product.price);
-
-  if (cat.includes("watch")) {
-    return `The ${name} combines master horology with sleek contemporary craftsmanship. Featuring high-durability construction and refined aesthetics, it offers exceptional reliability for both daily wear and formal occasions. At ${priceStr}, it delivers remarkable precision and enduring sophistication.`;
-  } else if (cat.includes("shoe")) {
-    return `Engineered for superior comfort and all-day agility, the ${name} delivers responsive cushioning and dynamic foot support. Built with premium breathable materials and reinforced traction outsoles, it transitions seamlessly from training to urban lifestyle. Experience exceptional footwear value at ${priceStr}.`;
-  } else if (cat.includes("audio") || cat.includes("headphone") || cat.includes("speaker")) {
-    return `Immerse yourself in rich, high-fidelity sound with the ${name}. Tuned with precision acoustic drivers and advanced noise isolation, it reproduces crisp highs, natural vocals, and deep bass. Available today at ${priceStr} with certified audio clarity.`;
-  } else if (cat.includes("cloth") || cat.includes("shirt") || cat.includes("apparel") || cat.includes("fashion")) {
-    return `Crafted with premium organic textiles, the ${name} provides breathable softness and a tailored modern silhouette. Its reinforced double stitching and anti-fade weave ensure lasting wear through daily routines. Add timeless wardrobe value at ${priceStr}.`;
-  } else if (cat.includes("chair") || cat.includes("furniture") || cat.includes("home")) {
-    return `Designed for ultimate postural alignment, the ${name} integrates ergonomic lumbar contouring with high-density pressure-relief cushioning. Tested for heavy-duty daily performance and smooth multi-directional movement, it elevates any space. Exceptional value at ${priceStr}.`;
-  } else if (cat.includes("beauty") || cat.includes("skin") || cat.includes("cosmetic")) {
-    return `Infused with nutrient-rich botanical active extracts, the ${name} revitalizes and deeply hydrates your skin. Dermatologist tested and hypoallergenic, this clean formula restores balanced glow throughout the day. Elevate your self-care routine at ${priceStr}.`;
-  }
-
-  return `The ${name} is engineered to rigorous standards for dependable performance and everyday durability. With an ergonomic design tailored for modern living, it combines functional utility with sleek aesthetics. Certified authentic quality at ${priceStr}.`;
+  return "";
 }
 
-// Category-specific bullet features
-function getKeyFeatures(product) {
-  if (Array.isArray(product.keyFeatures) && product.keyFeatures.length > 0) {
-    return product.keyFeatures;
+// Data honesty: only return real key features if present in product data
+function getRealKeyFeatures(product) {
+  if (!product) return [];
+  const raw =
+    (Array.isArray(product.keyFeatures) && product.keyFeatures) ||
+    (Array.isArray(product.key_features) && product.key_features) ||
+    (Array.isArray(product.features) && product.features) ||
+    (Array.isArray(product.highlights) && product.highlights);
+  if (raw && raw.length > 0) {
+    return raw
+      .filter((f) => typeof f === "string" && f.trim().length > 0)
+      .map((f) => f.trim());
   }
-  if (Array.isArray(product.key_features) && product.key_features.length > 0) {
-    return product.key_features;
-  }
-  if (Array.isArray(product.features) && product.features.length > 0) {
-    return product.features;
-  }
+  return [];
+}
 
-  const cat = (product.category || "").toLowerCase();
-  if (
-    cat.includes("audio") ||
-    cat.includes("headphone") ||
-    cat.includes("speaker") ||
-    cat.includes("earbud") ||
-    cat.includes("neckband")
-  ) {
-    const batteryText = product.battery
-      ? `Up to ${product.battery} of wireless playback with rapid fast-charging`
-      : "Ultra-long continuous wireless playback with USB-C fast charging";
-    const connText = product.connectivity
-      ? `Ultra-low latency ${product.connectivity} connection with instant pairing`
-      : "Ultra-low latency Bluetooth 5.3 connection with instant auto-pairing";
-    const hasAnc =
-      Array.isArray(product.features) &&
-      product.features.some((f) => /noise|anc/i.test(f));
-    const ancText = hasAnc
-      ? "Hybrid Active Noise Cancellation (ANC) with ambient pass-through mode"
-      : "Passive noise-isolating acoustic seal with ergonomic comfort fit";
-
-    return [
-      ancText,
-      batteryText,
-      connText,
-      "Precision-tuned neodymium acoustic dynamic drivers with deep bass stereo",
-      "Dual beamforming ENC microphones for crystal-clear hands-free calls"
-    ];
+// Data honesty: only return real specifications if present in product data
+function getRealSpecs(product, storeName) {
+  if (!product) return [];
+  const list = [];
+  if (product.brand && typeof product.brand === "string" && product.brand.trim()) {
+    list.push({ label: "Brand", value: product.brand.trim() });
   }
-
-  if (cat.includes("watch")) {
-    return [
-      "High-precision Japanese quartz / automatic movement",
-      "50-meter water resistance with sealed screw-down caseback",
-      "Scratch-resistant sapphire-coated crystal glass",
-      "Comfort-fit hypoallergenic strap with quick-release clasp",
-      "Luminous hands and indices for clear night visibility"
-    ];
-  } else if (cat.includes("shoe")) {
-    return [
-      "Ultra-responsive shock absorption foam midsole",
-      "High-abrasion anti-slip rubber compound outsole",
-      "Breathable engineered multi-layer mesh upper",
-      "Reinforced ergonomic heel cradle for locked-in support",
-      "Lightweight design engineered for all-day endurance"
-    ];
-  } else if (cat.includes("cloth") || cat.includes("apparel") || cat.includes("fashion")) {
-    return [
-      "100% premium combed organic cotton blend",
-      "Pre-shrunk anti-fade colorfast textile treatment",
-      "Reinforced double-needle stitching along stress points",
-      "Breathable moisture-wicking weave for all-day comfort",
-      "Easy-care machine washable with wrinkle resistance"
-    ];
-  } else if (cat.includes("chair") || cat.includes("furniture") || cat.includes("home")) {
-    return [
-      "Ergonomic lumbar contouring with multi-angle tilt lock",
-      "High-density molded memory foam seat cushion",
-      "Breathable tension-responsive mesh backrest",
-      "Heavy-duty Class 4 pneumatic gas lift mechanism",
-      "360° smooth-glide dual-wheel casters safe for all floors"
-    ];
-  } else if (cat.includes("beauty")) {
-    return [
-      "100% certified organic botanical active extracts",
-      "Deep-penetrating moisture complex with hyaluronic acid",
-      "Dermatologist tested, hypoallergenic, and non-comedogenic",
-      "Free from parabens, sulfates, phthalates, and synthetic dyes",
-      "Cruelty-free certified formulation for sensitive skin"
-    ];
-  } else if (cat.includes("laptop") || cat.includes("computer")) {
-    return [
-      "High-performance multi-core processor with turbo boost capability",
-      "Vibrant high-resolution anti-glare display with wide viewing angles",
-      "Ultra-fast PCIe NVMe SSD storage with high-speed DDR memory",
-      "Precision backlit keyboard and multi-gesture glass trackpad",
-      "All-day battery life with rapid USB-C Power Delivery charging"
-    ];
-  } else if (cat.includes("phone") || cat.includes("mobile") || cat.includes("smartphone")) {
-    return [
-      "Ultra-responsive 120Hz AMOLED / OLED edge-to-edge display",
-      "Advanced multi-lens camera system with optical image stabilization",
-      "Next-generation 5G connectivity with ultra-low latency streaming",
-      "All-day intelligent battery optimization with fast wireless charging",
-      "Durable aerospace-grade frame with IP68 water & dust resistance"
-    ];
-  } else if (cat.includes("camera")) {
-    return [
-      "High-resolution sensor with wide dynamic range and low-noise capture",
-      "Ultra-fast hybrid autofocus with real-time subject tracking",
-      "4K Ultra HD video recording with cinematic stabilization",
-      "Weather-sealed ergonomic body with dual memory card slots",
-      "High-speed Wi-Fi and Bluetooth for seamless instant mobile transfer"
-    ];
-  } else if (cat.includes("gaming")) {
-    return [
-      "Ultra-low latency mechanical / optical switches for competitive gaming",
-      "Dynamic customizable per-key RGB backlighting with sync effects",
-      "Ergonomic contoured profile designed for extended gameplay sessions",
-      "High-polling rate sensor with pinpoint precision tracking",
-      "Reinforced braided cable and durable tournament-grade build"
-    ];
-  } else if (cat.includes("smart") || cat.includes("home")) {
-    return [
-      "Seamless smart home integration with voice assistant compatibility",
-      "High-definition room-filling audio / visual performance",
-      "Secure encrypted wireless communication with easy Wi-Fi pairing",
-      "Automated scheduling and energy-efficient ambient sensors",
-      "Intuitive companion mobile app with multi-device remote control"
-    ];
-  } else if (cat.includes("electronic") || cat.includes("gadget")) {
-    return [
-      "Engineered with cutting-edge micro-architecture for peak efficiency",
-      "Universal high-speed connectivity with robust cross-platform support",
-      "Sleek minimalist industrial aesthetic with premium tactile finish",
-      "Advanced thermal management system ensuring cool and quiet operation",
-      "Backed by full manufacturer warranty and verified KSAM Deal support"
-    ];
+  if (product.category && typeof product.category === "string" && product.category.trim()) {
+    list.push({ label: "Category", value: product.category.trim() });
   }
-
-  return [
-    "Precision engineered with durable high-grade materials",
-    "Rigorously tested for long-lasting daily performance",
-    "Modern minimalist design aesthetic with ergonomic comfort",
-    "100% genuine and verified KSAM Deal authentic guarantee",
-    "Manufacturer certified warranty coverage included"
-  ];
+  if (product.model || product.sku) {
+    list.push({ label: "Model / SKU", value: String(product.model || product.sku) });
+  }
+  if (product.color && typeof product.color === "string" && product.color.trim()) {
+    list.push({ label: "Color", value: product.color.trim() });
+  }
+  if (product.specs && typeof product.specs === "object") {
+    for (const [key, val] of Object.entries(product.specs)) {
+      if (val && typeof val === "string" && val.trim()) {
+        list.push({ label: key, value: val.trim() });
+      }
+    }
+  }
+  if (product.availability && typeof product.availability === "string" && product.availability.trim() && product.availability !== "Unknown") {
+    list.push({ label: "Availability", value: product.availability.trim() });
+  }
+  if (storeName && storeName !== "KSAM Deal") {
+    list.push({ label: "Store", value: storeName });
+  }
+  return list;
 }
 
 function CategoryListingView({ categorySlug: initialCategorySlug }) {
@@ -744,7 +635,17 @@ function ProductSingleDetail() {
         item = await getSupabaseDealByIdOrUid(id, uid);
       }
 
-      // 3. Fallback: check catalog if not found from Supabase
+      // 3. Fallback: check sessionStorage for live search results (ext- IDs)
+      if (!item) {
+        const sessionItem = getDealFromSession(id || uid);
+        if (sessionItem) {
+          item = sessionItem;
+          // Trigger background upsert to Supabase
+          upsertExternalDeal(sessionItem).catch(() => {});
+        }
+      }
+
+      // 4. Fallback: check catalog if not found from Supabase
       if (!item) {
         item = findProduct({ uid, category, id });
       }
@@ -1061,6 +962,19 @@ function ProductSingleDetail() {
     ? getCategoryBackLabel(fallbackCat)
     : "Back to Deals";
 
+  const handleSmartBack = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const hasSameOriginReferrer =
+      typeof document !== "undefined" &&
+      document.referrer &&
+      document.referrer.startsWith(window.location.origin);
+    if (hasSameOriginReferrer && window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = backUrl || `${normalizedBase}index.html#deals`;
+    }
+  };
+
   if (loading) {
     return (
       <div className="product-detail-page">
@@ -1092,6 +1006,7 @@ function ProductSingleDetail() {
             <a
               href={backUrl}
               className="product-detail-notfound-btn"
+              onClick={handleSmartBack}
             >
               <ArrowLeft size={16} />
               <span>{backLabel}</span>
@@ -1160,37 +1075,37 @@ function ProductSingleDetail() {
     ? Math.round(((rawOldPrice - product.price) / rawOldPrice) * 100)
     : 0;
 
-  const ratingVal = dynamicRating ? dynamicRating.avg : (product.rating ? Number(product.rating) : 4.8);
-  const reviewsCount = dynamicRating ? dynamicRating.count : (product.reviews || product.review_count || (40 + Math.abs(String(product.id).length * 19)));
-  const description = getProductDescription(product);
-  const keyFeatures = getKeyFeatures(product);
+  const ratingVal = dynamicRating?.avg ?? (product.rating && Number(product.rating) > 0 ? Number(product.rating) : null);
+  const reviewsCount = dynamicRating?.count ?? (product.reviews && Number(product.reviews) > 0 ? Number(product.reviews) : (product.review_count && Number(product.review_count) > 0 ? Number(product.review_count) : null));
+  const description = getRealDescription(product);
+  const keyFeatures = getRealKeyFeatures(product);
 
-  const isAudio = Boolean(
-    isFromAudio ||
-    (product &&
-      ["audio", "earbuds", "headphones", "speakers", "neckbands"].some(
-        (c) => String(product.category || "").toLowerCase().includes(c)
-      ))
-  );
-
-  const isElectronics = Boolean(
-    isFromElectronics ||
-    (product &&
-      ["smartphones", "laptops", "cameras", "gaming", "smart home", "electronics", "gadgets"].some(
-        (c) => String(product.category || "").toLowerCase().includes(c)
-      ))
-  );
-
-  // Best platform & Buy URL setup
+  // Real store name & external product classification
   const bestPlatform =
-    product.bestOffer?.platform || product.platform || product.store || "Amazon";
+    product.store ||
+    product.platform ||
+    product.bestOffer?.platform ||
+    product.stores?.name ||
+    product.source ||
+    (product.external_id ? "Partner Store" : "KSAM Deal");
+
+  const isExternal = Boolean(
+    product.store_id ||
+    product.external_id ||
+    String(product.id || "").startsWith("ext-") ||
+    product.affiliate_url ||
+    product.affiliateUrl ||
+    (product.bestOffer && product.bestOffer.platform && product.bestOffer.platform !== "KSAM Deal") ||
+    (product.platform && product.platform !== "KSAM Deal") ||
+    (product.store && product.store !== "KSAM Deal")
+  );
 
   const rawBuyUrl =
-    product.bestOffer?.affiliateUrl ||
-    product.affiliateUrl ||
     product.affiliate_url ||
-    product.productUrl ||
+    product.affiliateUrl ||
+    product.bestOffer?.affiliateUrl ||
     product.product_url ||
+    product.productUrl ||
     product.url;
 
   const safeBuyUrl = isSafeAffiliateUrl(rawBuyUrl) ? rawBuyUrl : null;
@@ -1198,41 +1113,15 @@ function ProductSingleDetail() {
 
   const handlePlatformBuy = (e) => {
     e.preventDefault();
-    if (!safeBuyUrl || !isInStock) return;
-    logPlatformClick(product.id, bestPlatform, safeBuyUrl);
-    window.open(safeBuyUrl, "_blank", "noopener,noreferrer,sponsored");
+    if (!safeBuyUrl) return;
+    try {
+      logPlatformClick(product.id, bestPlatform, safeBuyUrl);
+    } catch {}
+    window.open(safeBuyUrl, "_blank", "nofollow sponsored noopener noreferrer");
   };
 
-  // Specifications table mapping
-  const specs = [
-    { label: "Brand", value: product.brand || bestPlatform || (isAudio ? "KSAM Audio" : "KSAM Certified") },
-    { label: "Category", value: product.category || (isAudio ? "Audio" : "General") },
-    { label: "Model / SKU", value: product.sku || (product.specs && product.specs["Model / SKU"]) || `KSAM-${product.id}` },
-    isAudio
-      ? { label: "Connectivity", value: (product.specs && product.specs["Connectivity"]) || product.connectivity || "Bluetooth 5.3 / Wireless" }
-      : isElectronics
-      ? { label: "Connectivity", value: (product.specs && product.specs["Connectivity"]) || "USB-C / High-Speed Wi-Fi / Bluetooth 5.3" }
-      : {
-          label: "Material",
-          value:
-            (product.specs && product.specs["Material"]) ||
-            product.material ||
-            (String(product.category || "").toLowerCase().includes("watch")
-              ? "Stainless Steel / Sapphire Crystal"
-              : String(product.category || "").toLowerCase().includes("shoe")
-              ? "Engineered Mesh / High-Grade EVA"
-              : String(product.category || "").toLowerCase().includes("chair")
-              ? "Reinforced Steel / High-Density Foam"
-              : "Certified High-Grade Composite")
-        },
-    ...(isElectronics ? [{ label: "Compatibility", value: "Universal / Android / iOS / Windows / macOS" }] : []),
-    ...(isAudio && (product.battery || product.specs?.["Battery / Playback"])
-      ? [{ label: "Battery / Playback", value: product.battery || product.specs?.["Battery / Playback"] }]
-      : []),
-    ...(isAudio && product.waterResistance ? [{ label: "Water Resistance", value: product.waterResistance }] : []),
-    { label: "Warranty", value: product.specs?.["Warranty"] || "1-Year Official Manufacturer Warranty" },
-    { label: "Availability", value: isInStock ? "In Stock (Ships in 24 Hours)" : "Currently unavailable" }
-  ];
+  // Real specifications table without invented text
+  const specs = getRealSpecs(product, bestPlatform);
 
   const mainImgSrc = resolveImagePath(product.image || product.image_url);
   const thumbnailList =
@@ -1250,7 +1139,7 @@ function ProductSingleDetail() {
         <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
           <a href={homeUrl}>Home</a>
           <span className="sep">/</span>
-          <a href={backUrl}>
+          <a href={backUrl} onClick={isFromDeals ? handleSmartBack : undefined}>
             {product.category || "Catalog"}
           </a>
           <span className="sep">/</span>
@@ -1289,6 +1178,7 @@ function ProductSingleDetail() {
                 src={activeImage || mainImgSrc}
                 alt={product.name || product.title || "Product"}
                 className="product-detail-img"
+                referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = DEFAULT_PLACEHOLDER_IMAGE;
@@ -1310,6 +1200,7 @@ function ProductSingleDetail() {
                     <img
                       src={thumb}
                       alt=""
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.src = DEFAULT_PLACEHOLDER_IMAGE;
@@ -1331,23 +1222,27 @@ function ProductSingleDetail() {
               {product.name || product.title}
             </h1>
 
-            {/* Rating Row: Gold stars #fbbf24 */}
-            <div className="product-detail-rating-row">
-              <div className="product-detail-stars" aria-hidden="true">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    fill={i < Math.round(ratingVal) ? "#fbbf24" : "none"}
-                    stroke="#fbbf24"
-                  />
-                ))}
+            {/* Rating Row: Gold stars #fbbf24 (only when real rating exists) */}
+            {ratingVal !== null && ratingVal > 0 ? (
+              <div className="product-detail-rating-row">
+                <div className="product-detail-stars" aria-hidden="true">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      fill={i < Math.round(ratingVal) ? "#fbbf24" : "none"}
+                      stroke="#fbbf24"
+                    />
+                  ))}
+                </div>
+                <span className="product-detail-rating-num">{ratingVal.toFixed(1)}</span>
+                {reviewsCount !== null && Number(reviewsCount) > 0 ? (
+                  <span className="product-detail-rating-count">
+                    ({Number(reviewsCount).toLocaleString("en-IN")} verified reviews)
+                  </span>
+                ) : null}
               </div>
-              <span className="product-detail-rating-num">{ratingVal.toFixed(1)}</span>
-              <span className="product-detail-rating-count">
-                ({reviewsCount} verified reviews)
-              </span>
-            </div>
+            ) : null}
 
             {/* Price Box with Platform indicator */}
             <div className="product-detail-price-box">
@@ -1369,37 +1264,43 @@ function ProductSingleDetail() {
               </div>
             </div>
 
-            {/* Description */}
-            <div className="product-detail-desc-block">
-              <h2 className="product-detail-section-title">Description</h2>
-              <p className="product-detail-desc">{description}</p>
-            </div>
-
-            {/* Key Features List */}
-            <div className="product-detail-features-block">
-              <h2 className="product-detail-section-title">Key Features</h2>
-              <ul className="product-detail-features-list">
-                {keyFeatures.map((feat, idx) => (
-                  <li key={idx}>
-                    <Check size={16} className="product-detail-feat-check" />
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Specifications Table */}
-            <div className="product-detail-specs-block">
-              <h2 className="product-detail-section-title">Specifications</h2>
-              <div className="product-detail-specs-table">
-                {specs.map((row, idx) => (
-                  <div key={idx} className="product-detail-spec-row">
-                    <span className="product-detail-spec-label">{row.label}</span>
-                    <span className="product-detail-spec-val">{row.value}</span>
-                  </div>
-                ))}
+            {/* Description (hidden if missing) */}
+            {description ? (
+              <div className="product-detail-desc-block">
+                <h2 className="product-detail-section-title">Description</h2>
+                <p className="product-detail-desc">{description}</p>
               </div>
-            </div>
+            ) : null}
+
+            {/* Key Features List (hidden if missing) */}
+            {keyFeatures.length > 0 ? (
+              <div className="product-detail-features-block">
+                <h2 className="product-detail-section-title">Key Features</h2>
+                <ul className="product-detail-features-list">
+                  {keyFeatures.map((feat, idx) => (
+                    <li key={idx}>
+                      <Check size={16} className="product-detail-feat-check" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {/* Specifications Table (hidden if missing) */}
+            {specs.length > 0 ? (
+              <div className="product-detail-specs-block">
+                <h2 className="product-detail-section-title">Specifications</h2>
+                <div className="product-detail-specs-table">
+                  {specs.map((row, idx) => (
+                    <div key={idx} className="product-detail-spec-row">
+                      <span className="product-detail-spec-label">{row.label}</span>
+                      <span className="product-detail-spec-val">{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             {/* Delivery & Returns Line */}
             <div className="product-detail-trust-line">
@@ -1465,61 +1366,66 @@ function ProductSingleDetail() {
                 </div>
               )}
 
-              <div className="product-detail-qty-row">
-                <span className="product-detail-qty-label">Quantity:</span>
-                <div className="product-detail-qty-control">
-                  <button
-                    type="button"
-                    className="product-detail-qty-btn"
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    disabled={quantity <= 1}
-                    aria-label="Decrease quantity"
-                  >
-                    -
-                  </button>
-                  <span className="product-detail-qty-val">{quantity}</span>
-                  <button
-                    type="button"
-                    className="product-detail-qty-btn"
-                    onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))}
-                    disabled={product.stock ? quantity >= product.stock : quantity >= 99}
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+              {/* Quantity Selector: hidden for external/store products */}
+              {!isExternal && (
+                <div className="product-detail-qty-row">
+                  <span className="product-detail-qty-label">Quantity:</span>
+                  <div className="product-detail-qty-control">
+                    <button
+                      type="button"
+                      className="product-detail-qty-btn"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      disabled={quantity <= 1}
+                      aria-label="Decrease quantity"
+                    >
+                      -
+                    </button>
+                    <span className="product-detail-qty-val">{quantity}</span>
+                    <button
+                      type="button"
+                      className="product-detail-qty-btn"
+                      onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))}
+                      disabled={product.stock ? quantity >= product.stock : quantity >= 99}
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="product-detail-action-btns">
-                {/* 1. Full-width Add to Cart button */}
-                <button
-                  type="button"
-                  className={`product-detail-add-btn${added ? " is-added" : ""}`}
-                  onClick={handleAddToCart}
-                  aria-label={`Add ${quantity} of ${product.name} to cart`}
-                >
-                  {added ? (
-                    <>
-                      <Check size={18} />
-                      <span>Added to Cart ✓</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingBag size={18} />
-                      <span>Add to Cart ({formatPrice(product.price * quantity)})</span>
-                    </>
-                  )}
-                </button>
+                {/* 1. Add to Cart button (hidden for external/store products) */}
+                {!isExternal && (
+                  <button
+                    type="button"
+                    className={`product-detail-add-btn${added ? " is-added" : ""}`}
+                    onClick={handleAddToCart}
+                    aria-label={`Add ${quantity} of ${product.name} to cart`}
+                  >
+                    {added ? (
+                      <>
+                        <Check size={18} />
+                        <span>Added to Cart ✓</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag size={18} />
+                        <span>Add to Cart ({formatPrice(product.price * quantity)})</span>
+                      </>
+                    )}
+                  </button>
+                )}
 
-                {/* 2. Full-width Buy on <Platform> button directly below Add to Cart */}
+                {/* 2. Main Buy on <Store> button */}
                 <button
                   type="button"
                   className="product-detail-buy-platform-btn"
-                  disabled={!isInStock || !safeBuyUrl}
+                  disabled={!safeBuyUrl}
                   onClick={handlePlatformBuy}
-                  aria-label={isInStock ? `Buy on ${bestPlatform}` : "Currently unavailable"}
+                  aria-label={safeBuyUrl ? `Buy on ${bestPlatform}` : "Link unavailable"}
                 >
-                  <span>{isInStock ? `Buy on ${bestPlatform}` : "Currently unavailable"}</span>
+                  <span>{safeBuyUrl ? `Buy on ${bestPlatform}` : "Link unavailable"}</span>
                   <ExternalLink size={18} />
                 </button>
 
@@ -1582,7 +1488,11 @@ function ProductSingleDetail() {
                 </div>
 
                 {/* 5. Back link */}
-                <a href={backUrl} className="product-detail-back-link">
+                <a
+                  href={backUrl}
+                  className="product-detail-back-link"
+                  onClick={handleSmartBack}
+                >
                   <ArrowLeft size={16} />
                   <span>{backLabel}</span>
                 </a>
@@ -1689,19 +1599,32 @@ function ProductSingleDetail() {
         )}
       </main>
 
-      {/* Sticky Bottom Add to Cart Bar for Mobile */}
+      {/* Sticky Bottom Add to Cart / Buy on Store Bar for Mobile */}
       <div className="product-detail-mobile-sticky-bar">
         <div className="mobile-sticky-left">
-          <span className="mobile-sticky-price">{formatPrice(product.price * quantity)}</span>
+          <span className="mobile-sticky-price">{formatPrice(product.price * (isExternal ? 1 : quantity))}</span>
           <span className="mobile-sticky-name">{product.name || product.title}</span>
         </div>
-        <button
-          type="button"
-          className="mobile-sticky-btn"
-          onClick={handleAddToCart}
-        >
-          {added ? "Added ✓" : "Add to Cart"}
-        </button>
+        {isExternal ? (
+          <button
+            type="button"
+            className="mobile-sticky-btn"
+            disabled={!safeBuyUrl}
+            onClick={handlePlatformBuy}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+          >
+            <span>{safeBuyUrl ? `Buy on ${bestPlatform}` : "Unavailable"}</span>
+            <ExternalLink size={16} />
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="mobile-sticky-btn"
+            onClick={handleAddToCart}
+          >
+            {added ? "Added ✓" : "Add to Cart"}
+          </button>
+        )}
       </div>
     </div>
   );

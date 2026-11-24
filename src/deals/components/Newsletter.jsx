@@ -415,9 +415,7 @@ function Newsletter({ variant = "default" }) {
 
           display: grid;
 
-          grid-template-columns:
-            minmax(0,1fr)
-            minmax(400px,0.85fr);
+          grid-template-columns: minmax(380px, 0.95fr) minmax(0, 1.05fr);
 
           gap: 80px;
 
@@ -1814,6 +1812,166 @@ function Newsletter({ variant = "default" }) {
               LEFT
           ================================================= */}
 
+          <div className="ksam-visual">
+
+
+            {/* Decorative circles */}
+
+            <div
+              className="
+                ksam-circle
+                ksam-circle-one
+              "
+            ></div>
+
+
+            <div
+              className="
+                ksam-circle
+                ksam-circle-two
+              "
+            ></div>
+
+
+            {/* =================================================
+                MAIN IMAGE
+            ================================================= */}
+
+            <div className="ksam-image-wrapper">
+
+              <div className="ksam-shine"></div>
+
+              <img
+                src={`${import.meta.env.BASE_URL}products/newsletter-person1.png`}
+                alt="KSAM Deal shopping"
+                className="ksam-image"
+              />
+
+            </div>
+
+
+            {/* =================================================
+                DEAL CARD
+            ================================================= */}
+
+            <div className="ksam-deal-card">
+
+              <div className="ksam-deal-icon">
+                <TrendingDown size={20} />
+              </div>
+
+              <div>
+
+                <p className="ksam-deal-label">
+                  PRICE DROP
+                </p>
+
+                <h4 className="ksam-deal-title">
+
+                  Up to{" "}
+
+                  <strong>
+                    70% OFF
+                  </strong>
+
+                </h4>
+
+              </div>
+
+            </div>
+
+
+            {/* =================================================
+                RATING CARD
+            ================================================= */}
+
+            <div className="ksam-rating-card">
+
+              <div className="ksam-avatar">
+                KD
+              </div>
+
+              <div>
+
+                <div className="ksam-stars">
+
+                  {[1,2,3,4,5].map((star) => (
+
+                    <Star
+                      key={star}
+                      size={13}
+                      fill="currentColor"
+                    />
+
+                  ))}
+
+                </div>
+
+                <p className="ksam-rating-text">
+
+                  Loved by{" "}
+                  <strong>
+                    50K+
+                  </strong>{" "}
+                  shoppers
+
+                </p>
+
+              </div>
+
+            </div>
+
+
+            {/* =================================================
+                NOTIFICATION
+            ================================================= */}
+
+            <div className="ksam-notification">
+
+              <div className="ksam-notification-icon">
+
+                <Mail size={18} />
+
+              </div>
+
+
+              <div>
+
+                <small>
+                  NEW DEAL ALERT
+                </small>
+
+                <strong>
+                  Nike Air Max — 42% OFF
+                </strong>
+
+              </div>
+
+
+              <div className="ksam-notification-dot"></div>
+
+            </div>
+
+
+            {/* =================================================
+                DISCOUNT
+            ================================================= */}
+
+            <div className="ksam-discount">
+
+              <span>
+                -42%
+              </span>
+
+              <small>
+                TODAY
+              </small>
+
+            </div>
+
+
+          </div>
+
           <div className="ksam-newsletter-content">
 
             {/* Badge */}
@@ -2009,171 +2167,6 @@ function Newsletter({ variant = "default" }) {
               Unsubscribe anytime.
 
             </p>
-
-          </div>
-
-
-          {/* =================================================
-              RIGHT VISUAL
-          ================================================= */}
-
-          <div className="ksam-visual">
-
-
-            {/* Decorative circles */}
-
-            <div
-              className="
-                ksam-circle
-                ksam-circle-one
-              "
-            ></div>
-
-
-            <div
-              className="
-                ksam-circle
-                ksam-circle-two
-              "
-            ></div>
-
-
-            {/* =================================================
-                MAIN IMAGE
-            ================================================= */}
-
-            <div className="ksam-image-wrapper">
-
-              <div className="ksam-shine"></div>
-
-              <img
-                src={`${import.meta.env.BASE_URL}products/newsletter-person1.png`}
-                alt="KSAM Deal shopping"
-                className="ksam-image"
-              />
-
-            </div>
-
-
-            {/* =================================================
-                DEAL CARD
-            ================================================= */}
-
-            <div className="ksam-deal-card">
-
-              <div className="ksam-deal-icon">
-                <TrendingDown size={20} />
-              </div>
-
-              <div>
-
-                <p className="ksam-deal-label">
-                  PRICE DROP
-                </p>
-
-                <h4 className="ksam-deal-title">
-
-                  Up to{" "}
-
-                  <strong>
-                    70% OFF
-                  </strong>
-
-                </h4>
-
-              </div>
-
-            </div>
-
-
-            {/* =================================================
-                RATING CARD
-            ================================================= */}
-
-            <div className="ksam-rating-card">
-
-              <div className="ksam-avatar">
-                KD
-              </div>
-
-              <div>
-
-                <div className="ksam-stars">
-
-                  {[1,2,3,4,5].map((star) => (
-
-                    <Star
-                      key={star}
-                      size={13}
-                      fill="currentColor"
-                    />
-
-                  ))}
-
-                </div>
-
-                <p className="ksam-rating-text">
-
-                  Loved by{" "}
-                  <strong>
-                    50K+
-                  </strong>{" "}
-                  shoppers
-
-                </p>
-
-              </div>
-
-            </div>
-
-
-            {/* =================================================
-                NOTIFICATION
-            ================================================= */}
-
-            <div className="ksam-notification">
-
-              <div className="ksam-notification-icon">
-
-                <Mail size={18} />
-
-              </div>
-
-
-              <div>
-
-                <small>
-                  NEW DEAL ALERT
-                </small>
-
-                <strong>
-                  Nike Air Max — 42% OFF
-                </strong>
-
-              </div>
-
-
-              <div className="ksam-notification-dot"></div>
-
-            </div>
-
-
-            {/* =================================================
-                DISCOUNT
-            ================================================= */}
-
-            <div className="ksam-discount">
-
-              <span>
-                -42%
-              </span>
-
-              <small>
-                TODAY
-              </small>
-
-            </div>
-
 
           </div>
 

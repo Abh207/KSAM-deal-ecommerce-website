@@ -7,6 +7,8 @@ import { resolveImagePath } from "../../lib/cartHelper.js";
 import { getWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { requireAuth, getSession, getProfile, onAuthChange, BASE_URL, getStoredSessionSync } from "../../auth/auth.js";
 import FloatingActions from "../../components/FloatingActions.jsx";
+import { saveDealToSession, upsertExternalDeal, saveDealsNavigationState, clearDealsNavigationState, logPlatformClick } from "../services/productService.js";
+import ProductCard from "./ProductCard.jsx";
 import "./Navbar.css";
 
 /* =====================================================
@@ -167,41 +169,7 @@ function ProductImage({ src, name }) {
   );
 }
 
-function ProductCard({ p, onClick, cta = "View deal" }) {
-  const discount =
-    p.discount ||
-    (p.oldPrice && p.price && p.oldPrice > p.price
-      ? Math.round((1 - p.price / p.oldPrice) * 100)
-      : 0);
 
-
-  return (
-    <button type="button" className="ksam-card" onClick={() => onClick(p)}>
-      <div className="ksam-img">
-        <ProductImage src={p.image} name={p.name} />
-        {discount > 0 && <span className="ksam-badge">{discount}% OFF</span>}
-        {p.store && <span className="ksam-store">{p.store}</span>}
-      </div>
-
-      <div className="ksam-info">
-        <h4 className="ksam-name">{p.name}</h4>
-
-        {p.rating ? (
-          <span className="ksam-rate">
-            <Star size={12} fill="#FFD60A" color="#FFD60A" /> {p.rating}
-          </span>
-        ) : null}
-
-        <div className="ksam-price">
-          <span className="ksam-now">{formatPrice(p.price)}</span>
-          {discount > 0 && <span className="ksam-was">{formatPrice(p.oldPrice)}</span>}
-        </div>
-
-        <span className="ksam-cta">{cta}</span>
-      </div>
-    </button>
-  );
-}
 
 /* =====================================================
    MAIN NAVBAR COMPONENT
@@ -272,6 +240,9 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
       return;
     }
     if (isHomePage && href.startsWith("#")) {
+      if (href === "#deals") {
+        clearDealsNavigationState();
+      }
       const targetId = href.replace("#", "");
       const el = document.getElementById(targetId);
       if (el) {
@@ -843,14 +814,26 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
 
   const openProduct = (p) => {
     saveRecent(query.trim());
+    // Save to session storage so deal detail page never shows Deal Not Found
+    saveDealToSession(p);
+    // Background upsert via Edge Function (non-blocking)
+    upsertExternalDeal(p).catch(() => {});
+    // Persist search navigation state
+    saveDealsNavigationState({
+      search: query.trim(),
+      clickedProductId: p.id,
+      scrollY: typeof window !== "undefined" ? window.scrollY : 0
+    });
+
     if (onProductClick) {
       onProductClick(p);
       closeSearch();
-    } else if (p.id && !String(p.id).startsWith("p-") && !String(p.id).startsWith("demo-")) {
-      const base = import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/";
-      window.location.href = `${base}deal.html?id=${encodeURIComponent(p.id)}`;
-    } else if (p.url && p.url !== "#") {
-      window.open(p.url, "_blank", "noopener,noreferrer");
+    } else {
+      const base = import.meta.env.BASE_URL || "/";
+      const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+      const cat = p.category || "General";
+      const uid = p.uid || (p.external_id ? `ext-${p.external_id}` : p.id);
+      window.location.href = `${normalizedBase}product.html?id=${encodeURIComponent(p.id)}&category=${encodeURIComponent(cat)}&uid=${encodeURIComponent(uid)}&from=deals`;
     }
   };
 
@@ -891,8 +874,14 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
   /* --------------------------------------------------------------------------
      12. Checkout Navigation
      -------------------------------------------------------------------------- */
+  const allExternal = items.length > 0 && items.every((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
+
   const handleProceedToCheckout = () => {
     if (items.length === 0) return;
+    if (allExternal) {
+      alert("All products in your cart are fulfilled directly by partner stores (Amazon, Flipkart, etc.). Please click the 'Buy on [Store]' button on each item to complete your purchase securely on the merchant's website.");
+      return;
+    }
     if (!requireAuth({ type: "checkout" })) return;
     setIsCartOpen(false);
     const checkoutUrl = new URL("checkout.html", window.location.href).href;
@@ -904,6 +893,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
      -------------------------------------------------------------------------- */
   const handleLogoClick = (e) => {
     e.preventDefault();
+    clearDealsNavigationState();
     if (!isHomePage) {
       const base = BASE_URL || "/KSAM-deal-ecommerce-website/";
       const normalizedBase = base.endsWith("/") ? base : `${base}/`;
@@ -1225,6 +1215,12 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                   className="ksam-all"
                   onClick={() => {
                     saveRecent(query.trim());
+                    saveDealsNavigationState({
+                      searchPageQuery: query.trim(),
+                      searchResults: sortedResults,
+                      isSearchMode: true,
+                      scrollY: typeof window !== "undefined" ? window.scrollY : 0
+                    });
                     if (onViewAll) onViewAll(query.trim(), sortedResults);
                     closeSearch();
                   }}
@@ -1705,6 +1701,11 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
               const itemName = item.name || item.title || "Product";
               const itemImage = resolveImagePath(item.image);
               const fallbackImage = placeholderFor(itemName);
+              const rawStore = item.store || item.platform || "";
+              const storeClean = rawStore.replace(/^on\s+/i, "");
+              const outboundUrl = item.product_url || item.affiliate_url || "";
+              const isExternal = Boolean(item.is_external || outboundUrl || (storeClean && storeClean.toLowerCase() !== "ksam"));
+
               return (
                 <div
                   key={item.id}
@@ -1715,6 +1716,7 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                     src={itemImage}
                     alt={itemName}
                     className="kh-nav-cart-item-thumb"
+                    referrerPolicy="no-referrer"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = fallbackImage;
@@ -1724,6 +1726,11 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                     <div className="kh-nav-cart-item-name" title={itemName}>
                       {itemName}
                     </div>
+                    {storeClean && (
+                      <div className="kh-nav-cart-store-tag">
+                        on {storeClean}
+                      </div>
+                    )}
                     <div className="kh-nav-cart-item-price">
                       <span>{formatPrice(item.price)}</span>
                       {item.oldPrice && item.oldPrice > item.price ? (
@@ -1732,6 +1739,19 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
                         </span>
                       ) : null}
                     </div>
+                    {isExternal && outboundUrl && (
+                      <a
+                        href={outboundUrl}
+                        target="_blank"
+                        rel="nofollow sponsored noopener noreferrer"
+                        className="kh-nav-cart-buy-link"
+                        onClick={() => logPlatformClick(item.id, storeClean, outboundUrl)}
+                        title={`Buy ${itemName} directly on ${storeClean || "Store"}`}
+                      >
+                        <span>Buy on {storeClean || "Store"}</span>
+                        <ArrowUpRight size={13} />
+                      </a>
+                    )}
                   </div>
 
                   <div className="kh-nav-cart-item-actions">
@@ -1812,9 +1832,13 @@ export default function Navbar({ onProductClick, onViewAll, searchPlaceholder })
             onClick={handleProceedToCheckout}
           >
             <span className="kh-nav-checkout-shine" aria-hidden="true" />
-            <span>Proceed to Checkout</span>
+            <span>{allExternal ? "Complete purchase on store website" : "Proceed to Checkout"}</span>
             <ArrowUpRight size={18} />
           </button>
+
+          <div className="kh-nav-cart-affiliate-note">
+            <span>* KSAM Deal earns an affiliate commission from qualifying purchases via partner store links at no extra cost to you.</span>
+          </div>
 
           {!isCartPage && (
             <a

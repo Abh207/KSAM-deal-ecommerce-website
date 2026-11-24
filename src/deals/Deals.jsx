@@ -45,6 +45,9 @@ import CursorGlow
 
 import ScrollProgress
     from "./components/ScrollProgress.jsx";
+import ProductCard
+    from "./components/ProductCard.jsx";
+import { saveDealsNavigationState, getDealsNavigationState, clearDealsNavigationState } from "./services/productService.js";
 import { cartStore } from "./store/cartStore.js";
 import "./responsive-cards.css";
 
@@ -164,9 +167,23 @@ function Deals() {
     }
 
 
+    useEffect(() => {
+        const state = getDealsNavigationState();
+        if (state?.isSearchMode && Array.isArray(state?.searchResults) && state.searchResults.length > 0) {
+            setSearchPageQuery(state.searchPageQuery || "");
+            setAllSearchResults(state.searchResults);
+        }
+    }, []);
+
     function handleViewAll(searchQuery, products) {
         setSearchPageQuery(searchQuery || "");
         setAllSearchResults(Array.isArray(products) ? products : []);
+        saveDealsNavigationState({
+            searchPageQuery: searchQuery || "",
+            searchResults: Array.isArray(products) ? products : [],
+            isSearchMode: true,
+            scrollY: window.scrollY
+        });
         setTimeout(() => {
             const el = document.querySelector(".search-results-section");
             if (el) {
@@ -230,6 +247,7 @@ function Deals() {
                     onClick={() => {
                         setAllSearchResults([]);
                         setSearchPageQuery("");
+                        clearDealsNavigationState();
                     }}
                     className="search-results-close"
                 >
@@ -241,120 +259,13 @@ function Deals() {
 
             {/* Products Grid */}
             <div className="search-results-grid">
-
-                {allSearchResults.map((product) => {
-
-                    const discount =
-                        product.oldPrice &&
-                        product.price &&
-                        Number(product.oldPrice) > Number(product.price)
-                            ? Math.round(
-                                (1 -
-                                    Number(product.price) /
-                                    Number(product.oldPrice)) *
-                                100
-                            )
-                            : 0;
-
-                    return (
-                        <article
-                            key={product.id}
-                            className="search-product-card"
-                        >
-
-                            {/* Product Image */}
-                            <div className="search-product-image">
-
-                                {discount > 0 && (
-                                    <span className="search-product-discount">
-                                        {discount}% OFF
-                                    </span>
-                                )}
-
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    loading="lazy"
-                                    onError={(event) => {
-                                        event.currentTarget.style.display =
-                                            "none";
-                                    }}
-                                />
-
-                            </div>
-
-
-                            {/* Product Information */}
-                            <div className="search-product-content">
-
-                                {product.store && (
-                                    <span className="search-product-store">
-                                        {product.store}
-                                    </span>
-                                )}
-
-                                <h3>
-                                    {product.name}
-                                </h3>
-
-
-                                {/* Rating */}
-                                {product.rating && (
-                                    <div className="search-product-rating">
-                                        ★ {product.rating}
-                                    </div>
-                                )}
-
-
-                                {/* Price */}
-                                <div className="search-product-price">
-
-                                    <strong>
-                                        ₹
-                                        {Number(product.price || 0).toLocaleString(
-                                            "en-IN"
-                                        )}
-                                    </strong>
-
-                                    {discount > 0 && (
-                                        <del>
-                                            ₹
-                                            {Number(
-                                                product.oldPrice
-                                            ).toLocaleString("en-IN")}
-                                        </del>
-                                    )}
-
-                                </div>
-
-
-                                {/* Actions */}
-                                <div className="mt-3 flex items-center gap-2">
-                                    {product.id && !String(product.id).startsWith("p-") && !String(product.id).startsWith("demo-") ? (
-                                        <a
-                                            href={`${import.meta.env.BASE_URL || "/KSAM-deal-ecommerce-website/"}deal.html?id=${encodeURIComponent(product.id)}`}
-                                            className="search-product-button"
-                                        >
-                                            View details ↗
-                                        </a>
-                                    ) : (
-                                        <a
-                                            href={product.url}
-                                            target="_blank"
-                                            rel="sponsored noopener noreferrer"
-                                            className="search-product-button"
-                                        >
-                                            View Deal ↗
-                                        </a>
-                                    )}
-                                </div>
-
-                            </div>
-
-                        </article>
-                    );
-                })}
-
+                {allSearchResults.map((product, idx) => (
+                    <ProductCard
+                        key={product.id || idx}
+                        product={product}
+                        index={idx}
+                    />
+                ))}
             </div>
 
         </section>

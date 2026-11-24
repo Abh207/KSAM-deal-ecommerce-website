@@ -1,33 +1,42 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Search, SlidersHorizontal, RefreshCw, ChevronDown, X, Info, WifiOff, Store as StoreIcon, ArrowUpDown } from "lucide-react";
 import ProductCard from "./ProductCard.jsx";
-import { getDeals, subscribeDealsRealtime } from "../services/productService.js";
+import {
+  getDeals,
+  subscribeDealsRealtime,
+  saveDealsNavigationState,
+  getDealsNavigationState,
+  clearDealsNavigationState,
+  getInstantCachedDeals
+} from "../services/productService.js";
 import "./featuredDeals.css";
 
 const CATEGORIES = [
   "All",
-  "Audio",
+  "Clothes",
+  "Watches",
   "Mobiles",
   "Laptops",
+  "Audio",
   "Shoes",
   "Fashion",
   "Home",
   "Gaming",
-  "Watches",
   "Electronics",
   "Beauty"
 ];
 
 const CATEGORY_ICONS = {
   All: "⚡",
-  Audio: "🎧",
+  Clothes: "👕",
+  Watches: "⌚",
   Mobiles: "📱",
   Laptops: "💻",
+  Audio: "🎧",
   Shoes: "👟",
   Fashion: "👗",
   Home: "🏠",
   Gaming: "🎮",
-  Watches: "⌚",
   Electronics: "🔌",
   Beauty: "💄"
 };
@@ -49,44 +58,159 @@ const STORES = [
   { id: "meesho", label: "Meesho" }
 ];
 
+function performScrollRestoration(state) {
+  if (!state) return () => {};
+  const targetId = state.clickedProductId;
+  const targetScrollY = state.scrollY;
+  const startTime = performance.now();
+  let cancelled = false;
+
+  function attempt() {
+    if (cancelled) return;
+    let found = false;
+
+    if (targetId) {
+      const el = document.querySelector(`[data-product-id="${targetId}"]`);
+      if (el) {
+        el.scrollIntoView({ block: "center", behavior: "instant" });
+        found = true;
+      }
+    }
+
+    if (!found && typeof targetScrollY === "number" && targetScrollY > 0) {
+      window.scrollTo({ top: targetScrollY, behavior: "instant" });
+      if (Math.abs(window.scrollY - targetScrollY) < 40 || document.body.scrollHeight >= targetScrollY + window.innerHeight) {
+        found = true;
+      }
+    }
+
+    if (!found && performance.now() - startTime < 2000) {
+      requestAnimationFrame(attempt);
+    }
+  }
+
+  requestAnimationFrame(attempt);
+  return () => {
+    cancelled = true;
+  };
+}
+
 function FeaturedDeals() {
-  const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState("All");
-  const [store, setStore] = useState("All");
-  const [sort, setSort] = useState("biggest_discount");
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const savedNavState = useMemo(() => getDealsNavigationState(), []);
+  const initialCategory = savedNavState?.category || "All";
+  const initialStore = savedNavState?.store || "All";
+  const initialSort = savedNavState?.sort || "biggest_discount";
+  const initialSearch = savedNavState?.search || "";
+  const initialPage = savedNavState?.page || 1;
+  const initialLoadedCount = savedNavState?.loadedCount || (savedNavState?.page ? savedNavState.page * 12 : 12);
+
+  // Try instant render from localStorage cache
+  const initialCache = useMemo(() => {
+    return getInstantCachedDeals({
+      category: initialCategory,
+      store: initialStore,
+      sort: initialSort,
+      search: initialSearch,
+      loadedCount: initialLoadedCount
+    });
+  }, []);
+
+  const [products, setProducts] = useState(() => initialCache?.products || []);
+  const [category, setCategory] = useState(initialCategory);
+  const [store, setStore] = useState(initialStore);
+  const [sort, setSort] = useState(initialSort);
+  const [search, setSearch] = useState(initialSearch);
+  const [page, setPage] = useState(initialPage);
+  const [hasMore, setHasMore] = useState(() => Boolean(initialCache?.hasMore));
+  const [loading, setLoading] = useState(() => !initialCache);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [loadMoreError, setLoadMoreError] = useState("");
   const [error, setError] = useState("");
   const [isOffline, setIsOffline] = useState(false);
+
+  const isRestoringRef = useRef(Boolean(savedNavState && savedNavState.loadedCount));
+  const restorationDoneRef = useRef(false);
+  const isLoadingMoreRef = useRef(false);
+  const sentinelRef = useRef(null);
+
+  // Set manual scroll restoration so browser doesn't conflict
+  useEffect(() => {
+    if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+      try {
+        window.history.scrollRestoration = "manual";
+      } catch {}
+    }
+  }, []);
+
+  // Handle bfcache (back-forward cache)
+  useEffect(() => {
+    const handlePageShow = (e) => {
+      if (e.persisted) {
+        const state = getDealsNavigationState();
+        if (state) {
+          performScrollRestoration(state);
+        }
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  // Save state on pagehide and beforeunload as safety net
+  useEffect(() => {
+    const saveCurrent = () => {
+      saveDealsNavigationState({
+        category,
+        store,
+        sort,
+        search,
+        page,
+        loadedCount: products.length,
+        scrollY: window.scrollY
+      });
+    };
+    window.addEventListener("pagehide", saveCurrent);
+    window.addEventListener("beforeunload", saveCurrent);
+    return () => {
+      window.removeEventListener("pagehide", saveCurrent);
+      window.removeEventListener("beforeunload", saveCurrent);
+    };
+  }, [category, store, sort, search, page, products.length]);
 
   const loadDeals = useCallback(
     async (isPageReset = true) => {
       try {
         if (isPageReset) {
-          setLoading(true);
-          setPage(1);
-        } else {
-          setLoadingMore(true);
+          if (!initialCache) {
+            setLoading(true);
+          }
+          if (isRestoringRef.current) {
+            setPage(initialPage);
+          } else {
+            setPage(1);
+          }
         }
         setError("");
+        setLoadMoreError("");
 
-        const currentPage = isPageReset ? 1 : page + 1;
+        const fetchPageSize = isRestoringRef.current && isPageReset
+          ? Math.max(12, initialLoadedCount)
+          : 12;
+
         const res = await getDeals({
           category,
           store,
           sort,
-          page: currentPage,
-          pageSize: 12
+          page: isRestoringRef.current && isPageReset ? 1 : 1,
+          pageSize: fetchPageSize
         });
 
-        if (isPageReset) {
-          setProducts(res.products || []);
+        setProducts(res.products || []);
+        if (isRestoringRef.current) {
+          setPage(initialPage);
+          isRestoringRef.current = false;
         } else {
-          setProducts((prev) => [...prev, ...(res.products || [])]);
-          setPage(currentPage);
+          setPage(1);
         }
 
         setHasMore(Boolean(res.hasMore));
@@ -96,15 +220,106 @@ function FeaturedDeals() {
         setError("Unable to load deals right now. Please try again.");
       } finally {
         setLoading(false);
-        setLoadingMore(false);
       }
     },
-    [category, store, sort, page]
+    [category, store, sort]
   );
+
+  const loadNextBatch = useCallback(async () => {
+    if (!hasMore || loading || loadingMore || isLoadingMoreRef.current) return;
+    isLoadingMoreRef.current = true;
+    setLoadingMore(true);
+    setLoadMoreError("");
+
+    const startTime = Date.now();
+    const nextPage = page + 1;
+
+    try {
+      const res = await getDeals({
+        category,
+        store,
+        sort,
+        page: nextPage,
+        pageSize: 12
+      });
+
+      // Keep green spinner visible for at least 2 seconds before appending next batch
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 2000 - elapsed);
+      if (remaining > 0) {
+        await new Promise((r) => setTimeout(r, remaining));
+      }
+
+      if (Array.isArray(res.products) && res.products.length > 0) {
+        setProducts((prev) => {
+          const existingIds = new Set(prev.map((p) => String(p.id)));
+          const fresh = res.products.filter((p) => !existingIds.has(String(p.id)));
+          return [...prev, ...fresh];
+        });
+        setPage(nextPage);
+      }
+      setHasMore(Boolean(res.hasMore));
+      setIsOffline(Boolean(res.isOffline));
+    } catch (err) {
+      console.error("Failed to load more deals:", err);
+      setLoadMoreError("Unable to load more deals. Please try again.");
+    } finally {
+      isLoadingMoreRef.current = false;
+      setLoadingMore(false);
+    }
+  }, [hasMore, loading, loadingMore, page, category, store, sort]);
+
+  // Infinite Scroll IntersectionObserver (rootMargin: 200px)
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore || loading) return;
+
+    let observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && entry.isIntersecting) {
+          loadNextBatch();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0
+      }
+    );
+
+    observer.observe(sentinel);
+
+    return () => {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    };
+  }, [hasMore, loading, loadNextBatch]);
 
   useEffect(() => {
     loadDeals(true);
   }, [category, store, sort]);
+
+  // Attempt scroll restoration once products are in the DOM (with retries up to 2 seconds)
+  useEffect(() => {
+    if (savedNavState && !restorationDoneRef.current && products.length > 0) {
+      const cancel = performScrollRestoration(savedNavState);
+      restorationDoneRef.current = true;
+      return cancel;
+    }
+  }, [products, savedNavState]);
+
+  // Smooth scroll to #deals on mount if hash is #deals
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#deals") {
+      setTimeout(() => {
+        const el = document.getElementById("deals");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    }
+  }, []);
 
   // Stable ref for loadDeals to prevent subscription churn
   const loadDealsRef = useRef(loadDeals);
@@ -167,10 +382,12 @@ function FeaturedDeals() {
   const hasActiveFilters = category !== "All" || store !== "All" || search.trim() !== "" || sort !== "biggest_discount";
 
   const resetFilters = () => {
+    clearDealsNavigationState();
     setCategory("All");
     setStore("All");
     setSort("biggest_discount");
     setSearch("");
+    setPage(1);
     loadDeals(true);
   };
 
@@ -396,9 +613,25 @@ function FeaturedDeals() {
         {/* Products Grid: 4 cols desktop, 3 tablet, 2 mobile */}
         {!loading && !error && filteredProducts.length > 0 && (
           <>
-            <div className="deals-grid mt-8 grid">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+            <div
+              className="deals-grid mt-8 grid"
+              onClickCapture={(e) => {
+                const card = e.target.closest("[data-product-id]");
+                const pId = card?.getAttribute("data-product-id");
+                saveDealsNavigationState({
+                  category,
+                  store,
+                  sort,
+                  search,
+                  page,
+                  loadedCount: products.length,
+                  clickedProductId: pId,
+                  scrollY: window.scrollY
+                });
+              }}
+            >
+              {filteredProducts.map((product, idx) => (
+                <ProductCard key={product.id} product={product} index={idx} />
               ))}
             </div>
 

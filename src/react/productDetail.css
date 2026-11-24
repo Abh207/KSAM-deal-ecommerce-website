@@ -116,7 +116,8 @@ body.product-details-body:has(.is-home-appliances-view) {
 
 .product-detail-media {
   position: relative;
-  background: #f8fafc;
+  background: #F3F4F6;
+  background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%);
   border: 1px solid #e5e7eb;
   border-radius: 24px;
   padding: 32px 24px;
@@ -134,6 +135,7 @@ body.product-details-body:has(.is-home-appliances-view) {
   width: auto;
   height: auto;
   object-fit: contain;
+  mix-blend-mode: multiply;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: block;
   margin: 0 auto;
@@ -212,6 +214,7 @@ body.product-details-body:has(.is-home-appliances-view) {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
 .product-detail-thumb-btn.is-active,
