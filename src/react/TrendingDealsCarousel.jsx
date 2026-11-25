@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, TrendingUp } from "lucide-react";
 import { getAllMasterProducts, slugify } from "../lib/productCatalog.js";
 import { getDeals } from "../deals/services/productService.js";
 import { ProductCard } from "../deals/components/ProductCard.jsx";
@@ -228,7 +228,7 @@ export default function TrendingDealsCarousel({ currentCategorySlug }) {
         {/* Section Heading Block */}
         <header className="trending-deals-header">
           <div className="trending-deals-eyebrow">
-            <Sparkles size={13} className="eyebrow-icon" />
+            <TrendingUp size={13} className="eyebrow-icon" />
             <span>TRENDING NOW</span>
           </div>
 

@@ -115,14 +115,6 @@
 .pc:hover .pc__head::after { transform: translateX(120%); transition: transform .9s ease; }
 .pc__head { position: relative; z-index: 1; }
 
-/* sparkles */
-.pc__spark { position: absolute; width: 22px; height: 22px; z-index: 1; opacity: .9;
-  background: #ffc25a; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  animation: spin 4s ease-in-out infinite; }
-.pc__spark--a { left: 28px; top: 52%; }
-.pc__spark--b { right: 20px; top: 38%; width: 16px; height: 16px; animation-delay: 1.4s; }
-@keyframes spin { 0%, 100% { transform: scale(.6) rotate(0); opacity: .4; } 50% { transform: scale(1.1) rotate(90deg); opacity: 1; } }
-
 /* typography */
 .pc__eyebrow { margin: 0 0 3px; font-size: 15px; font-weight: 500; opacity: .95; padding: 0 6px; }
 .pc__title { margin: 0; padding: 0 6px; font-size: 30px; line-height: 1.08; font-weight: 800; letter-spacing: -.02em; }

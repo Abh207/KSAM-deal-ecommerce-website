@@ -10,7 +10,6 @@ import {
   Copy,
   Check,
   ShieldCheck,
-  Sparkles,
   Headphones,
   Zap,
   Lock,
@@ -971,7 +970,7 @@ export function ContactUsPage() {
 
                 <div className="ct-stats-banner-content">
                   <div className="ct-stats-banner-chip">
-                    <Sparkles size={14} className="text-[#84FF00]" />
+                    <Zap size={14} className="text-[#84FF00]" />
                     <span>{STATS_SECTION_CONFIG.bannerImage.chip}</span>
                   </div>
                   <div className="ct-stats-banner-panel">

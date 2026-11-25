@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { ArrowDown, Compass, Sparkles, Zap, Coffee } from "lucide-react";
+import { ArrowDown, Compass, Zap, Coffee } from "lucide-react";
 import "./HomeAppliancesPlaylistHero.css";
 
 const ICONS = {
-  Sparkles,
+  Compass,
   Zap,
   Coffee
 };
@@ -32,7 +32,7 @@ export default function HomeAppliancesPlaylistHero({
       posterSrc: `${normalizedBase}videos/home-hero-1-poster.webp`,
       fallbackPoster: `${normalizedBase}videos/home-hero-1-poster.jpg`,
       badge: "PREMIUM KITCHEN",
-      iconKey: "Sparkles",
+      iconKey: "Coffee",
       titleLine1: "Brew Perfection",
       titleLine2: "Every Morning",
       subtitle:
@@ -213,7 +213,7 @@ export default function HomeAppliancesPlaylistHero({
   };
 
   const currentItem = playlist[activeIndex];
-  const BadgeIcon = ICONS[currentItem.badgeIcon] || Sparkles;
+  const BadgeIcon = ICONS[currentItem.iconKey || currentItem.badgeIcon] || Compass;
 
   return (
     <div className="home-playlist-hero" ref={heroRef} aria-label="Home Appliances Hero Showcase">

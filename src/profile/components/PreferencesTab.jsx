@@ -1,4 +1,4 @@
-import { Sliders, Bell, Sparkles } from "lucide-react";
+import { Sliders, Bell, Tag } from "lucide-react";
 
 const CATEGORIES = [
   { id: "electronics", name: "Electronics", icon: "💻" },
@@ -53,7 +53,7 @@ export default function PreferencesTab({
       <div className="ks-card">
         <div className="ks-card-header">
           <h2 className="ks-card-title">
-            <Sparkles size={20} color="#FFD60A" />
+            <Tag size={20} className="text-[#15803D]" />
             <span>Favorite Categories</span>
           </h2>
           <p className="ks-card-desc">

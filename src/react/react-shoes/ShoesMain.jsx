@@ -697,7 +697,7 @@ function ShoesMain() {
 
             const icons = {
 
-                All: "✨",
+                All: "🏷️",
 
                 Sneakers: "👟",
 

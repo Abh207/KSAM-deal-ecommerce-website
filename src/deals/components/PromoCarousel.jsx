@@ -120,9 +120,6 @@ function PromoCard({ card, festival, bank, isEager = false }) {
       aria-label={`${card.title} ${card.subtitle || ""}`.trim()}
       draggable="false"
     >
-      <i className="pc__spark pc__spark--a" />
-      <i className="pc__spark pc__spark--b" />
-
       <div className="pc__head">
         {card.eyebrow && <p className="pc__eyebrow">{card.eyebrow}</p>}
         <h3 className={`pc__title ${card.title.length > 22 ? "pc__title--long" : ""}`}>{card.title}</h3>

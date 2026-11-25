@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Sparkles, Droplets, Sun, Feather, ShieldCheck, HeartHandshake } from "lucide-react";
+import { Zap, Droplets, Sun, Feather, ShieldCheck, HeartHandshake } from "lucide-react";
 
 const ROUTINE_STEPS = [
     {
@@ -13,7 +13,7 @@ const ROUTINE_STEPS = [
     {
         num: "02",
         name: "Treat",
-        icon: Sparkles,
+        icon: Zap,
         tip: "Apply targeted active serums—Vitamin C for daytime brightening or Hyaluronic Acid for deep plumping.",
         tag: "Active Care",
         color: "#f59e0b"
@@ -78,7 +78,7 @@ const RoutineTimeline = () => {
             <div className="beauty-glass-panel">
                 <div className="beauty-section-header-centered">
                     <div className="beauty-section-badge">
-                        <Sparkles size={14} className="beauty-badge-icon" />
+                        <ShieldCheck size={14} className="beauty-badge-icon" />
                         <span>EXPERT SKINCARE GUIDE</span>
                     </div>
                     <h2 className="beauty-section-title">Your Daily Glow Routine</h2>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sparkles, CheckCircle2, RotateCw } from "lucide-react";
+import { Droplets, CheckCircle2, RotateCw } from "lucide-react";
 
 const INGREDIENTS = [
     {
@@ -81,7 +81,7 @@ const IngredientSpotlight = () => {
             <div className="beauty-glass-panel">
                 <div className="beauty-section-header-centered">
                     <div className="beauty-section-badge">
-                        <Sparkles size={14} className="beauty-badge-icon" />
+                        <Droplets size={14} className="beauty-badge-icon" />
                         <span>CLEAN & POTENT BOTANICALS</span>
                     </div>
                     <h2 className="beauty-section-title">Ingredient Spotlight</h2>

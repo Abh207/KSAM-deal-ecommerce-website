@@ -38,6 +38,7 @@ import "../deals/deals.css";
 import "../deals/responsive-cards.css";
 import "./profile.css";
 import "./kx-spotlight.css";
+import "./soft-ui.css";
 import "../styles/kx-tokens.css";
 import "../styles/kx-motion.css";
 
@@ -680,7 +681,8 @@ export function ProfileApp() {
           />
 
           {/* 3. ONE SECTION AT A TIME - STICKY NAV + ACTIVE PANEL */}
-          <div className="ks-account-hub-layout relative z-10" id="ks-hub-content-area">
+          <div className="ks-account-hub-backdrop relative z-10 w-full" id="ks-hub-content-area">
+            <div className="ks-account-hub-layout">
             {/* Desktop sticky sidebar / Mobile horizontal sticky pill bar */}
             <SectionNav
               activeSection={activeSection}
@@ -704,18 +706,18 @@ export function ProfileApp() {
               {!["overview", "alerts", "recent"].includes(activeSection) && (
                 <div className={`kx-panel-header-open ${activeMeta.isDanger ? "is-danger-header" : ""}`}>
                   <div className="kx-panel-header-left">
-                    <div className={`kx-section-eyebrow ${activeMeta.isDanger ? "text-red-400" : ""}`}>
+                    <div className={`kx-section-eyebrow ${activeMeta.isDanger ? "text-red-600 is-danger-eyebrow" : ""}`}>
                       <ActiveIcon size={14} className="shrink-0" />
                       <span>{activeMeta.eyebrow}</span>
                     </div>
-                    <h1 className={`kx-panel-heading ${activeMeta.isDanger ? "text-red-400" : ""}`}>
+                    <h1 className={`kx-panel-heading ${activeMeta.isDanger ? "text-red-700" : ""}`}>
                       {activeMeta.title}
                     </h1>
                     <p className="kx-panel-desc">{activeMeta.desc}</p>
                   </div>
 
                   <div className="kx-panel-header-art hidden md:flex" aria-hidden="true">
-                    <ActiveIcon size={22} className={activeMeta.isDanger ? "text-red-400" : "text-[#8cff00]"} />
+                    <ActiveIcon size={22} className={activeMeta.isDanger ? "text-red-600" : "text-[#15803D]"} />
                   </div>
                 </div>
               )}
@@ -830,6 +832,7 @@ export function ProfileApp() {
               </div>
             </main>
           </div>
+        </div>
         </>
       )}
 

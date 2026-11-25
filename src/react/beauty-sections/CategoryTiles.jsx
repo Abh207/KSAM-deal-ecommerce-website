@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, ArrowUpRight } from "lucide-react";
+import { Compass, ArrowUpRight } from "lucide-react";
 
 const CATEGORY_TILES = [
     {
@@ -65,7 +65,7 @@ const CategoryTiles = ({ onSelectCategory }) => {
             <div className="beauty-glass-panel">
                 <div className="beauty-section-header-centered">
                     <div className="beauty-section-badge">
-                        <Sparkles size={14} className="beauty-badge-icon" />
+                        <Compass size={14} className="beauty-badge-icon" />
                         <span>EXPLORE COLLECTIONS</span>
                     </div>
                     <h2 className="beauty-section-title">Shop by Category</h2>

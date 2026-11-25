@@ -5,7 +5,7 @@ import {
   ShieldCheck,
   Mail,
   ArrowRight,
-  Sparkles,
+  CheckCircle2,
   Building2,
   Clock
 } from "lucide-react";
@@ -289,7 +289,7 @@ export function TermsPage() {
                   <div className="terms-trust-items">
                     <div className="terms-trust-item">
                       <div className="terms-trust-icon terms-trust-icon-emerald">
-                        <Sparkles size={18} />
+                        <CheckCircle2 size={18} />
                       </div>
                       <div className="terms-trust-text">
                         <strong>100% Free to Use</strong>

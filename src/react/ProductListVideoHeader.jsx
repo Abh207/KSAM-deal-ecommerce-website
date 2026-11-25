@@ -8,7 +8,6 @@ import {
   LayoutGrid,
   Rows,
   ChevronDown,
-  Sparkles,
   Tag,
   Truck
 } from "lucide-react";
@@ -189,7 +188,7 @@ export default function ProductListVideoHeader({
           <div className="product-list-hero-title-block">
             <div className="product-list-hero-pill">
               <span className="hero-pill-icon">
-                {categoryConfig?.iconEmoji || "✨"}
+                {categoryConfig?.iconEmoji || "🏷️"}
               </span>
               <span>{categoryLabel}</span>
             </div>
@@ -206,7 +205,7 @@ export default function ProductListVideoHeader({
             {/* Stats Chips */}
             <div className="product-list-hero-stats">
               <div className="hero-stat-chip">
-                <Sparkles size={14} className="hero-chip-icon text-green" />
+                <Tag size={14} className="hero-chip-icon text-green" />
                 <span>{totalProductsCount} Products</span>
               </div>
               {maxDiscount > 0 && (

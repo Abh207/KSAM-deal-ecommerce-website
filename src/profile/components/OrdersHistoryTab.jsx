@@ -18,7 +18,7 @@ import {
   Phone,
   Calendar,
   CreditCard,
-  Sparkles
+  Sliders
 } from "lucide-react";
 import {
   fetchUserOrders,
@@ -196,10 +196,10 @@ export default function OrdersHistoryTab({ session, profile, onNavigateTab }) {
       {/* Header bar */}
       <div className="orders-header-row">
         <div>
-          <h2 className="orders-tab-title">
-            Order History & <span className="text-lime">Live Tracking</span>
+          <h2 className="orders-tab-title text-[#0F172A]">
+            Order History &amp; <span className="text-[#15803D]">Live Tracking</span>
           </h2>
-          <p className="orders-tab-subtitle">
+          <p className="orders-tab-subtitle text-[#475569]">
             Manage your past purchases, view real-time delivery timelines, and share verified reviews.
           </p>
         </div>
@@ -467,7 +467,7 @@ export default function OrdersHistoryTab({ session, profile, onNavigateTab }) {
                 {/* Developer / Demo Simulator Control to test stage updates */}
                 <div className="tracking-demo-simulator">
                   <div className="demo-simulator-header">
-                    <Sparkles size={14} className="text-lime" />
+                    <Sliders size={14} className="text-lime" />
                     <span>Demo Tracking Controller (Advance Stages)</span>
                   </div>
                   <p className="demo-simulator-text">

@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Check,
   Star,
-  Sparkles,
   ShoppingBag,
   Zap,
   TrendingDown,
@@ -112,7 +111,7 @@ function Newsletter({ variant = "default" }) {
               {/* Badge */}
               <div className="ksam-badge mb-4">
                 <span className="ksam-badge-icon">
-                  <Sparkles size={15} />
+                  <Zap size={15} />
                 </span>
                 KSAM DEAL INSIDER
                 <span className="ksam-live-dot"></span>
@@ -1979,7 +1978,7 @@ function Newsletter({ variant = "default" }) {
             <div className="ksam-badge">
 
               <span className="ksam-badge-icon">
-                <Sparkles size={15} />
+                <Zap size={15} />
               </span>
 
               KSAM DEAL INSIDER

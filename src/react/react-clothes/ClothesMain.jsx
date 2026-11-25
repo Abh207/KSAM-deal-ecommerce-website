@@ -763,7 +763,7 @@ function ClothesMain() {
                 <div className="clothes-announcement-track">
 
                     <span>
-                        ✦ FREE DELIVERY ABOVE ₹999
+                        FREE DELIVERY ABOVE ₹999
                     </span>
 
                     <span>•</span>
@@ -787,7 +787,7 @@ function ClothesMain() {
                     <span>•</span>
 
                     <span>
-                        ✦ FREE DELIVERY ABOVE ₹999
+                        FREE DELIVERY ABOVE ₹999
                     </span>
 
                 </div>
@@ -1051,7 +1051,7 @@ function ClothesMain() {
                 {/* MODERN CENTERED STACKED HEADER */}
                 <div className="clothes-header-block">
                     <div className="clothes-header-badge">
-                        <i className="fa-solid fa-wand-magic-sparkles"></i>
+                        <i className="fa-solid fa-tag"></i>
                         <span>SHOP THE DROP</span>
                     </div>
 

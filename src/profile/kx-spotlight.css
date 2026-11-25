@@ -320,66 +320,65 @@ html[data-theme="light"] body {
    -------------------------------------------------------------------------- */
 .kx-page .kx-toggle-btn {
   position: relative;
-  width: 52px;
-  height: 30px;
-  border-radius: 9999px;
-  padding: 0;
+  width: 48px;
+  height: 26px;
+  border-radius: 999px;
+  padding: 3px;
+  box-sizing: border-box;
+  background: #CBD5E1;
+  border: none;
   cursor: pointer;
   flex-shrink: 0;
-  background: #141A1F;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-sizing: border-box;
-  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transition: background-color 0.2s ease;
   z-index: 1;
   outline: none;
 }
 
 .kx-page .kx-toggle-btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(140, 255, 0, 0.35);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.35);
 }
 
 /* Active / On Track */
 .kx-page .kx-toggle-btn.is-active,
 .kx-page .kx-toggle-btn[aria-checked="true"] {
-  background: linear-gradient(135deg, #8cff00 0%, #38BDF8 100%);
-  border-color: transparent;
-  box-shadow: 0 0 14px rgba(140, 255, 0, 0.35);
+  background: #16A34A;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.35);
 }
 
-/* 24px Sliding Thumb */
+/* 20px Sliding Thumb */
 .kx-page .kx-toggle-thumb {
   position: absolute;
-  top: 2px;
-  left: 0;
-  width: 24px;
-  height: 24px;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #FFFFFF;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.4);
-  transform: translateX(3px);
-  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), background-color 220ms ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+  transform: translateX(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .kx-page .kx-toggle-btn.is-active .kx-toggle-thumb,
 .kx-page .kx-toggle-btn[aria-checked="true"] .kx-toggle-thumb {
-  transform: translateX(23px);
+  transform: translateX(22px);
 }
 
 /* Locked (Security) Toggle */
 .kx-page .kx-toggle-btn.is-locked,
 .kx-page .kx-toggle-btn:disabled {
+  background: #E2E8F0;
   cursor: not-allowed;
-  opacity: 0.55;
-  background: rgba(140, 255, 0, 0.35);
-  border-color: transparent;
+  opacity: 1;
 }
 
 .kx-page .kx-toggle-btn.is-locked .kx-toggle-thumb {
-  transform: translateX(23px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transform: translateX(22px);
+  color: #475569;
 }
 
 /* --------------------------------------------------------------------------
@@ -1432,7 +1431,9 @@ html[data-theme="light"] body {
 [data-theme="light"] .kx-page .kx-spot-title,
 .kx-page[data-theme="light"] .kx-strip-prod-name,
 [data-theme="light"] .kx-page .kx-strip-prod-name {
-  color: #0F172A !important;
+  color: #1E293B !important;
+  -webkit-text-fill-color: #1E293B !important;
+  background: none !important;
 }
 
 .kx-page[data-theme="light"] .kx-panel-desc,
@@ -1443,7 +1444,7 @@ html[data-theme="light"] body {
 [data-theme="light"] .kx-page .kx-strip-subtitle,
 .kx-page[data-theme="light"] .kx-danger-intro-bar,
 [data-theme="light"] .kx-page .kx-danger-intro-bar {
-  color: #C0CAD8 !important;
+  color: #475569 !important;
 }
 
 .kx-page[data-theme="light"] .kx-spot,
@@ -1452,61 +1453,36 @@ html[data-theme="light"] body {
 [data-theme="light"] .kx-page .kx-theme-card,
 .kx-page[data-theme="light"] .kx-strip-card,
 [data-theme="light"] .kx-page .kx-strip-card {
-  background: #0D1420 !important;
-  border-color: rgba(148, 163, 184, 0.14) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  background: #EDF0F5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: -6px -6px 14px rgba(255, 255, 255, 0.85), 6px 6px 16px rgba(163, 177, 198, 0.35) !important;
+  color: #0F172A !important;
 }
 
 .kx-page[data-theme="light"] .kx-modal-card,
 [data-theme="light"] .kx-page .kx-modal-card {
-  background: linear-gradient(135deg, #0D1420 0%, #111827 100%) !important;
-  border-color: rgba(239, 68, 68, 0.35) !important;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8) !important;
-  color: #F1F5F9 !important;
+  background: #EDF0F5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: -10px -10px 30px rgba(255, 255, 255, 0.9), 10px 10px 30px rgba(163, 177, 198, 0.45) !important;
+  color: #0F172A !important;
 }
 
 .kx-page[data-theme="light"] .kx-modal-card input,
 [data-theme="light"] .kx-page .kx-modal-card input {
-  background: #080D15 !important;
-  border-color: rgba(148, 163, 184, 0.20) !important;
-  color: #E2E8F0 !important;
+  background: #E6EBF1 !important;
+  border: 1px solid rgba(163, 177, 198, 0.25) !important;
+  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.85) !important;
+  color: #0F172A !important;
 }
 
 .kx-page[data-theme="light"] .kx-help-featured-banner,
 [data-theme="light"] .kx-page .kx-help-featured-banner {
-  background: radial-gradient(circle at top right, rgba(132, 255, 0, 0.08) 0%, transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%) !important;
-  border-color: rgba(132, 255, 0, 0.22) !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
+  background: #EDF0F5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: -7px -7px 16px rgba(255, 255, 255, 0.85), 7px 7px 18px rgba(163, 177, 198, 0.35) !important;
+  color: #0F172A !important;
 }
 
-.kx-page[data-theme="light"] .ks-hub-sidebar .ks-sticky-nav,
-[data-theme="light"] .kx-page .ks-hub-sidebar .ks-sticky-nav {
-  background: #0A0F17 !important;
-  border-color: rgba(148, 163, 184, 0.14) !important;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45) !important;
-}
-
-.kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-pill-btn,
-[data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-pill-btn {
-  color: #98A6BA !important;
-}
-
-.kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-pill-btn:hover,
-[data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-pill-btn:hover {
-  background: rgba(132, 255, 0, 0.05) !important;
-  color: #F1F5F9 !important;
-}
-
-.kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-pill-btn.is-active,
-[data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-pill-btn.is-active {
-  color: #84FF00 !important;
-}
-
-.kx-page[data-theme="light"] .ks-hub-sidebar .ks-nav-active-pill,
-[data-theme="light"] .kx-page .ks-hub-sidebar .ks-nav-active-pill {
-  background: linear-gradient(135deg, rgba(132, 255, 0, 0.14) 0%, rgba(38, 217, 248, 0.08) 100%) !important;
-  border-color: rgba(132, 255, 0, 0.35) !important;
-  box-shadow: 0 0 16px rgba(132, 255, 0, 0.15) !important;
-}
+/* Light theme sidebar rules handled by neumorphic soft-UI styles in profile.css */
 
 

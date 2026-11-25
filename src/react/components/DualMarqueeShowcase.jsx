@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ShoppingBag, Check, Heart, Star, Sparkles } from "lucide-react";
+import { ShoppingBag, Check, Heart, Star, Zap } from "lucide-react";
 import { isInWishlist, toggleWishlist, subscribeWishlist } from "../../lib/wishlist.js";
 import { addProductToCart, buildProductUid, resolveImagePath } from "../../lib/cartHelper.js";
 import "./DualMarqueeShowcase.css";
@@ -174,7 +174,7 @@ export default function DualMarqueeShowcase({ products = [], categoryLabel = "Cu
     <section className="dual-marquee-showcase-section" id="accessories-collection-section">
       <div className="dual-marquee-header">
         <div className="dual-marquee-badge">
-          <Sparkles size={14} />
+          <Zap size={14} />
           <span>FEATURED SPOTLIGHT</span>
         </div>
         <h2 className="dual-marquee-heading">Trending {categoryLabel}</h2>

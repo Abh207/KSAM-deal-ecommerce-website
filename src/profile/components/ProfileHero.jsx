@@ -4,7 +4,6 @@ import {
   MapPin,
   Bell,
   Clock,
-  Sparkles,
   Calendar,
   CheckCircle2,
   AlertTriangle,
@@ -243,7 +242,7 @@ export default function ProfileHero({
                 className="ks-avatar-badge-pct"
                 title={`${completeness}% profile completeness`}
               >
-                <Sparkles size={11} className="text-[#84FF00] inline mr-1" />
+                <CheckCircle2 size={11} className="text-[#84FF00] inline mr-1" />
                 {animatedCompleteness}%
               </div>
             </div>
@@ -399,7 +398,7 @@ export default function ProfileHero({
               title="Jump to completeness checklist"
             >
               <div className="ks-stat-icon-wrap icon-completeness">
-                <Sparkles size={20} />
+                <CheckCircle2 size={20} />
               </div>
               <div className="ks-stat-body">
                 <span className="ks-stat-num">{animatedCompleteness}%</span>

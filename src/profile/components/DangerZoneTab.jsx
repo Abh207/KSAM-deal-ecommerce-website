@@ -137,10 +137,10 @@ export default function DangerZoneTab({
               <AlertTriangle size={22} />
             </div>
             <div className="kx-spot-text-wrap">
-              <h4 className="kx-spot-title text-red-400">
+              <h4 className="kx-spot-title text-red-600 font-bold">
                 Delete Account Permanently
               </h4>
-              <p className="kx-spot-desc">
+              <p className="kx-spot-desc text-[#475569]">
                 Permanently purge your account credentials, avatar, addresses, alerts, and activity history.
               </p>
             </div>
@@ -154,7 +154,7 @@ export default function DangerZoneTab({
               setError("");
               setModalOpen(true);
             }}
-            className="kx-btn-danger-outline"
+            className="su-btn-delete-account"
             aria-haspopup="dialog"
           >
             <Trash2 size={15} />
@@ -169,8 +169,8 @@ export default function DangerZoneTab({
               <LogOut size={20} />
             </div>
             <div className="kx-spot-text-wrap">
-              <h4 className="kx-spot-title">Active Browser Session</h4>
-              <p className="kx-spot-desc">
+              <h4 className="kx-spot-title text-[#0F172A] font-bold">Active Browser Session</h4>
+              <p className="kx-spot-desc text-[#475569]">
                 Sign out of this browser session. You can sign back in at any time with your credentials.
               </p>
             </div>
@@ -179,7 +179,7 @@ export default function DangerZoneTab({
           <button
             type="button"
             onClick={handleLogout}
-            className="ks-btn-secondary shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition"
+            className="su-btn-signout"
           >
             <LogOut size={15} />
             <span>Sign Out</span>
@@ -199,22 +199,22 @@ export default function DangerZoneTab({
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="absolute right-5 top-5 text-gray-400 hover:text-white transition"
+              className="absolute right-5 top-5 text-[#64748B] hover:text-[#0F172A] transition"
               aria-label="Close dialog"
             >
               <X size={18} />
             </button>
 
-            <div className="flex items-center gap-3 text-red-400 mb-3">
+            <div className="flex items-center gap-3 text-red-600 mb-3">
               <AlertTriangle size={24} />
-              <h3 id="delete-dialog-title" className="text-lg font-bold text-white tracking-[-0.01em]">
+              <h3 id="delete-dialog-title" className="text-lg font-bold text-[#0F172A] tracking-[-0.01em]">
                 Permanently Delete Account?
               </h3>
             </div>
 
-            <div className="rounded-2xl border border-red-500/25 bg-red-500/10 p-4 text-xs text-red-200 mb-5 leading-relaxed">
-              <p className="font-bold mb-1.5 text-white">What will be permanently deleted:</p>
-              <ul className="list-disc pl-4 space-y-1 text-red-300">
+            <div className="rounded-2xl border border-red-200 bg-[#FEF2F2] p-4 text-xs text-[#991B1B] mb-5 leading-relaxed">
+              <p className="font-bold mb-1.5 text-[#7F1D1D]">What will be permanently deleted:</p>
+              <ul className="list-disc pl-4 space-y-1 text-[#991B1B]">
                 <li>Your customer profile, name, phone, and birthdate</li>
                 <li>All saved delivery addresses</li>
                 <li>Your active and past price drop alert subscriptions</li>
@@ -225,8 +225,8 @@ export default function DangerZoneTab({
 
             <form onSubmit={handleDeleteAccount} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
-                  Type <span className="font-black text-red-400">DELETE</span> to confirm
+                <label className="block text-xs font-semibold text-[#334155] mb-1.5">
+                  Type <span className="font-black text-red-600">DELETE</span> to confirm
                 </label>
                 <input
                   type="text"
@@ -234,12 +234,12 @@ export default function DangerZoneTab({
                   placeholder="DELETE"
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value)}
-                  className="w-full rounded-xl border border-[rgba(148,163,184,0.20)] bg-[#080D15] px-3.5 py-2.5 text-sm font-bold text-[#E2E8F0] focus:border-red-500 focus:outline-none transition"
+                  className="w-full rounded-xl border border-[rgba(163,177,198,0.25)] bg-[#E6EBF1] shadow-[inset_2px_2px_5px_rgba(163,177,198,0.35),inset_-2px_-2px_5px_rgba(255,255,255,0.85)] px-3.5 py-2.5 text-sm font-bold text-[#0F172A] focus:border-red-500 focus:outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label className="block text-xs font-semibold text-[#334155] mb-1.5">
                   Current Password
                 </label>
                 <input
@@ -248,12 +248,12 @@ export default function DangerZoneTab({
                   placeholder="Enter your account password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-[rgba(148,163,184,0.20)] bg-[#080D15] px-3.5 py-2.5 text-sm text-[#E2E8F0] focus:border-red-500 focus:outline-none transition"
+                  className="w-full rounded-xl border border-[rgba(163,177,198,0.25)] bg-[#E6EBF1] shadow-[inset_2px_2px_5px_rgba(163,177,198,0.35),inset_-2px_-2px_5px_rgba(255,255,255,0.85)] px-3.5 py-2.5 text-sm text-[#0F172A] focus:border-red-500 focus:outline-none transition"
                 />
               </div>
 
               {error && (
-                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-2.5 text-xs text-red-400">
+                <div className="rounded-xl border border-red-300 bg-[#FEE2E2] p-2.5 text-xs text-red-600 font-semibold">
                   {error}
                 </div>
               )}
@@ -262,14 +262,15 @@ export default function DangerZoneTab({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition"
+                  className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#475569] hover:text-[#0F172A] hover:bg-[#E2E8F0] transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || confirmText !== "DELETE" || !password}
-                  className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-black text-white disabled:opacity-40 transition shadow-lg"
+                  className="su-btn-delete-account"
+                  style={{ opacity: (loading || confirmText !== "DELETE" || !password) ? 0.45 : 1 }}
                 >
                   {loading ? "Deleting Forever..." : "Permanently Delete"}
                 </button>

@@ -43,8 +43,11 @@ import {
   isSafeAffiliateUrl,
   logPlatformClick,
   getDealFromSession,
+  saveDealToSession,
   upsertExternalDeal,
   getStoreName,
+  getProductDirectMerchantUrl,
+  isExternalProduct,
   deriveCategoryFromName,
   formatTimeAgo,
   getSearchNavigationState
@@ -122,7 +125,12 @@ function getRealSpecs(product, storeName, enrichedSpecs) {
   if (!product) return [];
   const list = [];
   const brand = (product.brand && typeof product.brand === "string" ? product.brand.trim() : "") || enrichedSpecs?.brand || "";
-  if (brand && !brand.toLowerCase().includes("ksam")) {
+  const storeLower = (storeName || "").toLowerCase().trim();
+  const brandLower = brand.toLowerCase().trim();
+  const isStoreAsBrand = storeLower && (brandLower === storeLower || brandLower.includes(storeLower));
+  const isGenericBrand = ["unknown", "n/a", "generic", "general", "deal", "deals", "store", "partner store"].includes(brandLower);
+
+  if (brand && !brandLower.includes("ksam") && !isStoreAsBrand && !isGenericBrand) {
     list.push({ label: "Brand", value: brand });
   }
   if (storeName && !storeName.toLowerCase().includes("ksam")) {
@@ -707,18 +715,24 @@ function ProductSingleDetail() {
 
     async function fetchProductData() {
       let item = null;
+      const isExt = (id && String(id).startsWith("ext-")) || (uid && String(uid).startsWith("ext-")) || from === "search";
 
-      // 1. If from !== "deals", check catalog first
-      if (from !== "deals") {
+      // 1. For ext- IDs or search results, check sessionStorage first for instant, lossless load
+      if (isExt) {
+        item = getDealFromSession(id || uid);
+      }
+
+      // 2. If not found in session and from !== "deals", check catalog
+      if (!item && from !== "deals") {
         item = findProduct({ uid, category, id });
       }
 
-      // 2. If not found in local catalog or came from deals, check Supabase deals
+      // 3. If not found in local catalog or came from deals/search, check Supabase deals
       if (!item) {
         item = await getSupabaseDealByIdOrUid(id, uid);
       }
 
-      // 3. Fallback: check sessionStorage for live search results (ext- IDs)
+      // 4. Fallback: check sessionStorage if not already checked
       if (!item) {
         const sessionItem = getDealFromSession(id || uid);
         if (sessionItem) {
@@ -728,7 +742,7 @@ function ProductSingleDetail() {
         }
       }
 
-      // 4. Fallback: check catalog if not found from Supabase
+      // 5. Fallback: check catalog if not found from Supabase
       if (!item) {
         item = findProduct({ uid, category, id });
       }
@@ -750,6 +764,13 @@ function ProductSingleDetail() {
           category: resolvedCategory,
           uid: item.uid || buildProductUid(resolvedCategory, item.id)
         };
+
+        // Persist to session storage so refresh / back-nav never loses store_name or outbound links
+        if (isExternalProduct(populatedProduct) || String(populatedProduct.id || "").startsWith("ext-")) {
+          saveDealToSession(populatedProduct);
+          upsertExternalDeal(populatedProduct).catch(() => {});
+        }
+
         setProduct(populatedProduct);
         const resolvedImg = resolveImagePath(populatedProduct.image || populatedProduct.image_url);
         setActiveImage(resolvedImg);
@@ -1253,7 +1274,7 @@ function ProductSingleDetail() {
   // Real store name & external product classification
   const bestPlatform = getStoreName(product);
 
-  const isExternal = Boolean(
+  const isExternal = isExternalProduct(product) || Boolean(
     bestPlatform ||
     product.store_id ||
     product.external_id ||
@@ -1263,12 +1284,15 @@ function ProductSingleDetail() {
     product.product_url
   );
 
+  const targetStoreName = bestPlatform || "store website";
+
   let displayCategory = (product.category || "").trim();
   if (!displayCategory || displayCategory.toLowerCase() === "deals" || displayCategory.toLowerCase() === "deal" || displayCategory.toLowerCase() === "search") {
     displayCategory = deriveCategoryFromName(product.name || product.title);
   }
 
   const rawBuyUrl =
+    getProductDirectMerchantUrl(product) ||
     product.affiliate_url ||
     product.affiliateUrl ||
     product.bestOffer?.affiliateUrl ||
@@ -1280,12 +1304,13 @@ function ProductSingleDetail() {
   const isInStock = product.bestOffer?.inStock !== false && product.stock !== 0;
 
   const handlePlatformBuy = (e) => {
-    e.preventDefault();
-    if (!safeBuyUrl) return;
+    if (!safeBuyUrl) {
+      if (e && e.preventDefault) e.preventDefault();
+      return;
+    }
     try {
-      logPlatformClick(product.id, bestPlatform || "Partner Store", safeBuyUrl);
+      logPlatformClick(product.id, targetStoreName, safeBuyUrl);
     } catch {}
-    window.open(safeBuyUrl, "_blank", "nofollow sponsored noopener noreferrer");
   };
 
   // Real specifications table without invented text
@@ -1414,12 +1439,20 @@ function ProductSingleDetail() {
                     />
                   ))}
                 </div>
-                <span className="product-detail-rating-num">{ratingVal.toFixed(1)}</span>
-                {reviewsCount !== null && Number(reviewsCount) > 0 ? (
-                  <span className="product-detail-rating-count">
-                    ({Number(reviewsCount).toLocaleString("en-IN")} verified reviews)
+                {isExternal ? (
+                  <span className="product-detail-rating-count" style={{ fontWeight: 600, color: "#334155" }}>
+                    Rated {ratingVal.toFixed(1)}{bestPlatform ? ` on ${bestPlatform}` : ""}{reviewsCount !== null && Number(reviewsCount) > 0 ? ` (${Number(reviewsCount).toLocaleString("en-IN")} ratings)` : ""}
                   </span>
-                ) : null}
+                ) : (
+                  <>
+                    <span className="product-detail-rating-num">{ratingVal.toFixed(1)}</span>
+                    {reviewsCount !== null && Number(reviewsCount) > 0 ? (
+                      <span className="product-detail-rating-count">
+                        ({Number(reviewsCount).toLocaleString("en-IN")} verified reviews)
+                      </span>
+                    ) : null}
+                  </>
+                )}
               </div>
             ) : null}
 
@@ -1443,6 +1476,11 @@ function ProductSingleDetail() {
                   Best price on {bestPlatform}
                 </div>
               ) : null}
+              {isExternal && (
+                <div className="product-detail-price-note" style={{ width: "100%", fontSize: "13px", color: "#64748b", marginTop: "6px" }}>
+                  Price on {bestPlatform || "store website"}. It may change.
+                </div>
+              )}
             </div>
 
             {/* Description (hidden if missing) with Read more / Read less toggle */}
@@ -1580,8 +1618,8 @@ function ProductSingleDetail() {
                 </div>
               )}
 
-              {/* Quantity Selector: hidden for external deals products */}
-              {(!isExternal || !isFromDeals) && (
+              {/* Quantity Selector: hidden for all external products */}
+              {!isExternal && (
                 <div className="product-detail-qty-row">
                   <span className="product-detail-qty-label">Quantity:</span>
                   <div className="product-detail-qty-control">
@@ -1609,8 +1647,8 @@ function ProductSingleDetail() {
               )}
 
               <div className="product-detail-action-btns">
-                {/* 1. Add to Cart button */}
-                {(!isExternal || !isFromDeals) && (
+                {/* 1. Add to Cart button: hidden for all external products */}
+                {!isExternal && (
                   <button
                     type="button"
                     className={`product-detail-add-btn${added ? " is-added" : ""}`}
@@ -1631,18 +1669,31 @@ function ProductSingleDetail() {
                   </button>
                 )}
 
-                {/* 2. Action Button: Deals show external merchant link ("Link unavailable" if disabled); Home/Products show styled "Buy Now" button */}
-                {isFromDeals ? (
-                  <button
-                    type="button"
-                    className="product-detail-buy-platform-btn"
-                    disabled={!safeBuyUrl}
-                    onClick={handlePlatformBuy}
-                    aria-label={safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}
-                  >
-                    <span>{safeBuyUrl ? (bestPlatform ? `Buy on ${bestPlatform}` : "Buy Now") : "Link unavailable"}</span>
-                    <ExternalLink size={18} />
-                  </button>
+                {/* 2. Action Button: External products show "Buy on <Store>" (or "Link unavailable" if disabled); Home/Products show styled "Buy Now" button */}
+                {isExternal ? (
+                  safeBuyUrl ? (
+                    <a
+                      href={safeBuyUrl}
+                      target="_blank"
+                      rel="nofollow sponsored noopener noreferrer"
+                      className="product-detail-buy-platform-btn"
+                      onClick={handlePlatformBuy}
+                      aria-label={`Buy on ${targetStoreName}`}
+                    >
+                      <span>Buy on {targetStoreName}</span>
+                      <ExternalLink size={18} />
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      className="product-detail-buy-platform-btn"
+                      disabled
+                      aria-label="Link unavailable"
+                    >
+                      <span>Link unavailable</span>
+                      <ExternalLink size={18} />
+                    </button>
+                  )
                 ) : (
                   <button
                     type="button"
@@ -1703,14 +1754,14 @@ function ProductSingleDetail() {
                   </div>
                 )}
 
-                {/* 4. Redirect disclaimer & affiliate disclosure (Kept for Deals only; removed for Home/Products direct purchase) */}
-                {isFromDeals && (
+                {/* 4. Redirect disclaimer & affiliate disclosure (for all external products) */}
+                {isExternal && (
                   <div className="product-detail-platform-note">
                     <p style={{ margin: "4px 0" }}>
-                      You will be redirected to the {bestPlatform || "merchant"} website to complete your purchase. Prices and availability may change.
+                      You will be redirected to {bestPlatform ? bestPlatform : "the store"} to complete your purchase. Prices and availability may change.
                     </p>
                     <p style={{ margin: "2px 0", color: "#94a3b8" }}>
-                      Disclosure: As an affiliate, KSAM Deal may earn a commission from qualifying purchases.
+                      We may earn a commission from qualifying purchases.
                     </p>
                   </div>
                 )}
@@ -1830,20 +1881,33 @@ function ProductSingleDetail() {
       {/* Sticky Bottom Add to Cart / Buy on Store Bar for Mobile */}
       <div className="product-detail-mobile-sticky-bar">
         <div className="mobile-sticky-left">
-          <span className="mobile-sticky-price">{formatPrice(product.price * (isFromDeals && isExternal ? 1 : quantity))}</span>
+          <span className="mobile-sticky-price">{formatPrice(product.price * (isExternal ? 1 : quantity))}</span>
           <span className="mobile-sticky-name">{product.name || product.title}</span>
         </div>
-        {isFromDeals ? (
-          <button
-            type="button"
-            className="mobile-sticky-btn"
-            disabled={!safeBuyUrl}
-            onClick={handlePlatformBuy}
-            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}
-          >
-            <span>{safeBuyUrl ? `Buy on ${bestPlatform}` : "Unavailable"}</span>
-            <ExternalLink size={16} />
-          </button>
+        {isExternal ? (
+          safeBuyUrl ? (
+            <a
+              href={safeBuyUrl}
+              target="_blank"
+              rel="nofollow sponsored noopener noreferrer"
+              className="mobile-sticky-btn is-dark"
+              onClick={handlePlatformBuy}
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, textDecoration: "none" }}
+            >
+              <span>{`Buy on ${targetStoreName}`}</span>
+              <ExternalLink size={16} />
+            </a>
+          ) : (
+            <button
+              type="button"
+              className="mobile-sticky-btn is-dark"
+              disabled
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+            >
+              <span>Link unavailable</span>
+              <ExternalLink size={16} />
+            </button>
+          )
         ) : (
           <button
             type="button"

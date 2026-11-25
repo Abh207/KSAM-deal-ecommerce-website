@@ -115,14 +115,14 @@ export default function SecurityTab({ session, onShowToast }) {
   const providers = session?.user?.app_metadata?.providers || ["email"];
 
   return (
-    <div className="space-y-6" role="tabpanel" aria-label="Security & Authentication">
+    <div className="space-y-6" role="tabpanel" aria-label="Security & Authentication" id="security">
       {/* Change Password Card */}
-      <div className="ks-card">
+      <div className="ks-card su-security-card su-card su-card-raised">
         {/* Header with non-floating Forgot Password link */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
           <div>
-            <h2 className="ks-card-title text-base">
-              <Key size={18} color="#8cff00" />
+            <h2 className="ks-card-title text-base flex items-center gap-2">
+              <Key size={18} className="text-[#15803D]" />
               <span>Change Password</span>
             </h2>
             <p className="ks-card-desc">
@@ -132,7 +132,7 @@ export default function SecurityTab({ session, onShowToast }) {
 
           <a
             href={`${BASE_URL}forgot-password.html`}
-            className="text-xs font-bold text-[#38BDF8] hover:underline self-start sm:self-auto shrink-0"
+            className="su-forgot-link text-xs font-bold hover:underline self-start sm:self-auto shrink-0"
           >
             Forgot your password?
           </a>
@@ -141,7 +141,7 @@ export default function SecurityTab({ session, onShowToast }) {
         <form onSubmit={handlePasswordChange} className="space-y-4 max-w-lg">
           {/* Current Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+            <label className="su-field-label block text-xs font-semibold mb-1.5">
               Current Password
             </label>
             <div className="ks-password-input-wrap">
@@ -168,8 +168,8 @@ export default function SecurityTab({ session, onShowToast }) {
 
           {/* New Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
-              New Password (min 8 chars, letters & numbers)
+            <label className="su-field-label block text-xs font-semibold mb-1.5">
+              New Password (min 8 chars, letters &amp; numbers)
             </label>
             <div className="ks-password-input-wrap">
               <input
@@ -196,17 +196,17 @@ export default function SecurityTab({ session, onShowToast }) {
             {newPassword && (
               <div className="mt-2.5 space-y-1.5">
                 <div className="flex justify-between text-[11px]">
-                  <span className="text-gray-400">Password Strength:</span>
-                  <span style={{ color: strength.color, fontWeight: 700 }}>
+                  <span className="text-[#64748B]">Password Strength:</span>
+                  <span style={{ color: strength.color === "#8cff00" ? "#15803D" : strength.color, fontWeight: 700 }}>
                     {strength.label}
                   </span>
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-[#E2E8F0] shadow-[inset_1px_1px_3px_rgba(163,177,198,0.4)] rounded-full h-2 overflow-hidden">
                   <div
-                    className="h-full transition-all duration-300"
+                    className="h-full transition-all duration-300 rounded-full"
                     style={{
                       width: `${(strength.score / 4) * 100}%`,
-                      backgroundColor: strength.color
+                      backgroundColor: strength.color === "#8cff00" ? "#16A34A" : strength.color
                     }}
                   />
                 </div>
@@ -216,7 +216,7 @@ export default function SecurityTab({ session, onShowToast }) {
 
           {/* Confirm New Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+            <label className="su-field-label block text-xs font-semibold mb-1.5">
               Confirm New Password
             </label>
             <div className="ks-password-input-wrap">
@@ -242,14 +242,14 @@ export default function SecurityTab({ session, onShowToast }) {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400">
+            <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-600">
               <AlertCircle size={15} className="shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="flex items-center gap-2 rounded-xl border border-[#8cff00]/30 bg-[#8cff00]/10 p-3 text-xs text-[#8cff00]">
+            <div className="flex items-center gap-2 rounded-xl border border-[#16A34A]/30 bg-[#DCFCE7] p-3 text-xs text-[#15803D]">
               <CheckCircle2 size={15} className="shrink-0" />
               <span>{success}</span>
             </div>
@@ -259,7 +259,7 @@ export default function SecurityTab({ session, onShowToast }) {
             <button
               type="submit"
               disabled={loading || !newPassword || !confirmPassword}
-              className="ks-btn-primary"
+              className="su-btn-update-pwd"
             >
               <Key size={14} />
               <span>{loading ? "Verifying & Updating..." : "Update Password"}</span>
@@ -269,10 +269,10 @@ export default function SecurityTab({ session, onShowToast }) {
       </div>
 
       {/* Connected Sign-In Methods */}
-      <div className="ks-card">
-        <div className="ks-card-header">
-          <h2 className="ks-card-title text-base">
-            <Shield size={18} color="#38BDF8" />
+      <div className="ks-card su-security-card su-card su-card-raised">
+        <div className="ks-card-header mb-4">
+          <h2 className="ks-card-title text-base flex items-center gap-2">
+            <Shield size={18} className="text-[#15803D]" />
             <span>Connected Sign-in Methods</span>
           </h2>
           <p className="ks-card-desc">
@@ -282,36 +282,36 @@ export default function SecurityTab({ session, onShowToast }) {
 
         <div className="space-y-3">
           {providers.includes("email") && (
-            <div className="ks-connected-row">
+            <div className="ks-connected-row flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#8cff00]/10 text-[#8cff00] border border-[#8cff00]/20 shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] shrink-0">
                   <Mail size={18} />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-white">Email & Password</h4>
-                  <p className="text-[11px] text-gray-400 truncate">{session?.user?.email}</p>
+                  <h4 className="text-xs font-bold">Email &amp; Password</h4>
+                  <p className="text-[11px] truncate">{session?.user?.email}</p>
                 </div>
               </div>
-              <span className="ks-status-pill is-active shrink-0">
-                <span className="ks-status-dot" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] shrink-0">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#15803D]" />
                 <span>Active</span>
               </span>
             </div>
           )}
 
           {providers.filter((p) => p !== "email").map((provider) => (
-            <div key={provider} className="ks-connected-row">
+            <div key={provider} className="ks-connected-row flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20 shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] shrink-0">
                   <Globe size={18} />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-white capitalize">{provider} OAuth</h4>
-                  <p className="text-[11px] text-gray-400">Third-party social authentication</p>
+                  <h4 className="text-xs font-bold capitalize">{provider} OAuth</h4>
+                  <p className="text-[11px]">Third-party social authentication</p>
                 </div>
               </div>
-              <span className="ks-status-pill is-linked shrink-0">
-                <span className="ks-status-dot" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] shrink-0">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#0369A1]" />
                 <span>Linked</span>
               </span>
             </div>
@@ -320,14 +320,14 @@ export default function SecurityTab({ session, onShowToast }) {
       </div>
 
       {/* Global Device Sign-out Card */}
-      <div className="ks-card">
+      <div className="ks-card su-security-card su-card su-card-raised">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <LogOut size={16} className="text-amber-400" />
+            <h3 className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+              <LogOut size={16} className="text-[#D97706]" />
               <span>Sign Out from All Devices</span>
             </h3>
-            <p className="text-xs text-gray-400 mt-1 max-w-lg">
+            <p className="text-xs text-[#475569] mt-1 max-w-lg">
               Revoke active refresh tokens on all computers, tablets, and mobile browsers where you are currently signed in.
             </p>
           </div>
@@ -336,7 +336,7 @@ export default function SecurityTab({ session, onShowToast }) {
             type="button"
             disabled={signingOutAll}
             onClick={handleSignOutAll}
-            className="shrink-0 px-4 py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-bold text-amber-400 transition cursor-pointer"
+            className="shrink-0 px-4 py-2.5 rounded-full border border-[#CBD5E1] bg-[#EDF0F5] hover:bg-[#FEE2E2] hover:text-[#DC2626] hover:border-[#FCA5A5] text-xs font-bold text-[#0F172A] shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(163,177,198,0.3)] transition cursor-pointer"
           >
             {signingOutAll ? "Signing out..." : "Sign Out Everywhere"}
           </button>

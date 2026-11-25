@@ -8,7 +8,6 @@ import {
   CreditCard,
   ArrowRight,
   ShieldCheck,
-  Sparkles,
   Download,
   Printer,
   X,
@@ -130,17 +129,16 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" id="subscription">
       {/* 1. CURRENT MEMBERSHIP PLAN CARD */}
-      <div className="ks-hub-panel relative overflow-hidden bg-white/[0.03] border border-white/10 rounded-2xl p-6 sm:p-8">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 border-b border-white/10">
+      <div className="ks-hub-panel ks-subscription-card relative overflow-hidden rounded-2xl p-6 sm:p-8">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 border-b border-[#E2E8F0]">
           <div className="flex items-start gap-4">
             <div
-              className="h-14 w-14 rounded-2xl flex items-center justify-center shrink-0 border"
+              className="h-14 w-14 rounded-2xl flex items-center justify-center shrink-0 border bg-[#F1F5F9] shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(163,177,198,0.25)]"
               style={{
-                background: `${currentPlanDef.accent}18`,
                 borderColor: `${currentPlanDef.accent}40`,
-                color: currentPlanDef.accent
+                color: currentPlanDef.accent === "#84FF00" ? "#15803D" : currentPlanDef.accent
               }}
             >
               <PlanIcon icon={currentPlanDef.icon} size={28} />
@@ -148,33 +146,33 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
 
             <div>
               <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-                <h3 className="text-2xl font-black text-white">{currentPlanDef.name}</h3>
+                <h3 className="su-sub-plan-title text-2xl font-black">{currentPlanDef.name}</h3>
                 {activeSubscription ? (
                   expiryInfo.isExpiringSoon ? (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FFD60A]/15 text-[#FFD60A] border border-[#FFD60A]/30">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#B45309] border border-[#FCD34D]">
                       Expiring Soon
                     </span>
                   ) : (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#84FF00]/15 text-[#84FF00] border border-[#84FF00]/30 flex items-center gap-1">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] flex items-center gap-1">
                       <Check size={12} /> Active
                     </span>
                   )
                 ) : (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-400/15 text-sky-400 border border-sky-400/30">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                     Free Tier
                   </span>
                 )}
               </div>
-              <p className="text-sm text-white/50">{currentPlanDef.description}</p>
+              <p className="su-sub-plan-desc text-sm">{currentPlanDef.description}</p>
             </div>
           </div>
 
           {/* Quick Action Buttons */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
             {currentPlanDef.slug !== "pro" ? (
               <a
                 href={`${BASE_URL}subscribe.html?plan=pro`}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-[#84FF00] text-black hover:bg-[#99ff26] transition shadow-sm"
+                className="su-btn-upgrade"
               >
                 <span>Upgrade to Pro</span>
                 <ArrowRight size={15} />
@@ -184,7 +182,8 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
             {expiryInfo.isExpiringSoon || expiryInfo.isExpired ? (
               <a
                 href={`${BASE_URL}subscribe.html?plan=${currentPlanDef.slug}&billing=${activeSubscription?.billing_cycle || "monthly"}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-white/10 text-white hover:bg-white/20 transition border border-white/15"
+                className="su-btn-upgrade"
+                style={{ background: "#16A34A", borderColor: "#16A34A" }}
               >
                 <span>Renew Plan</span>
               </a>
@@ -197,7 +196,7 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
                 const el = document.getElementById("pricing");
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl font-medium text-xs text-white/60 hover:text-white hover:bg-white/5 transition"
+              className="su-btn-view-plans"
             >
               <span>View All Plans</span>
             </a>
@@ -207,20 +206,20 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
         {/* Plan Details & Progress */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
           <div className="space-y-1">
-            <span className="text-xs text-white/40 uppercase tracking-wider font-semibold">Billing Cycle</span>
-            <p className="text-base font-bold text-white capitalize">
+            <span className="su-sub-label">Billing Cycle</span>
+            <p className="su-sub-val capitalize">
               {activeSubscription ? `${activeSubscription.billing_cycle}` : "Free Lifetime"}
             </p>
             {activeSubscription && (
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-[#64748B]">
                 Amount: ₹{activeSubscription.amount_paid} {activeSubscription.currency}
               </p>
             )}
           </div>
 
           <div className="space-y-1">
-            <span className="text-xs text-white/40 uppercase tracking-wider font-semibold">Renewal / Expiry</span>
-            <p className="text-base font-bold text-white">
+            <span className="su-sub-label">Renewal / Expiry</span>
+            <p className="su-sub-val">
               {activeSubscription?.end_date
                 ? new Date(activeSubscription.end_date).toLocaleDateString("en-IN", {
                     day: "numeric",
@@ -230,7 +229,7 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
                 : "No expiry"}
             </p>
             {activeSubscription && (
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-[#64748B]">
                 {expiryInfo.daysLeft > 0 ? `${expiryInfo.daysLeft} days remaining` : "Expired"}
               </p>
             )}
@@ -238,17 +237,17 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
 
           <div className="space-y-2">
             <div className="flex justify-between text-xs">
-              <span className="text-white/40 uppercase tracking-wider font-semibold">Cycle Progress</span>
-              <span className="text-white font-bold">{expiryInfo.percentLeft}% left</span>
+              <span className="su-sub-label">Cycle Progress</span>
+              <span className="su-sub-val" style={{ fontSize: "14px" }}>{expiryInfo.percentLeft}% left</span>
             </div>
-            <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+            <div className="h-2.5 w-full bg-[#E2E8F0] shadow-[inset_1px_1px_3px_rgba(163,177,198,0.4)] rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${expiryInfo.percentLeft}%`,
                   background: expiryInfo.isExpiringSoon
-                    ? "#FFD60A"
-                    : `linear-gradient(90deg, #84FF00, #38BDF8)`
+                    ? "#D97706"
+                    : `linear-gradient(90deg, #16A34A, #2563EB)`
                 }}
               />
             </div>
@@ -256,16 +255,15 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
         </div>
 
         {/* Features Checklist */}
-        <div className="mt-8 pt-6 border-t border-white/10">
-          <h4 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-3">
+        <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
+          <h4 className="su-sub-label mb-3">
             Features Included in Your Tier
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             {currentPlanDef.features.map((feat) => (
-              <div key={feat} className="flex items-center gap-2 text-xs text-white/80">
+              <div key={feat} className="flex items-center gap-2 text-xs font-semibold su-feat-text">
                 <div
-                  className="h-4 w-4 rounded-full flex items-center justify-center shrink-0"
-                  style={{ background: `${currentPlanDef.accent}20`, color: currentPlanDef.accent }}
+                  className="h-4 w-4 rounded-full flex items-center justify-center shrink-0 su-feat-icon"
                 >
                   <Check size={11} />
                 </div>
@@ -277,23 +275,23 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
       </div>
 
       {/* 2. PAYMENT & INVOICE HISTORY */}
-      <div className="ks-hub-panel bg-white/[0.03] border border-white/10 rounded-2xl p-6 sm:p-8">
-        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+      <div className="ks-hub-panel ks-billing-card rounded-2xl p-6 sm:p-8">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E2E8F0] mb-4">
           <div>
-            <h3 className="text-xl font-bold text-white">Payment & Billing History</h3>
-            <p className="text-xs text-white/50">View all past transactions, tax invoices, and payment receipts.</p>
+            <h3 className="su-billing-title text-xl font-bold">Payment &amp; Billing History</h3>
+            <p className="su-billing-desc text-xs">View all past transactions, tax invoices, and payment receipts.</p>
           </div>
-          <CreditCard size={22} className="text-[#84FF00] opacity-80" />
+          <CreditCard size={22} className="text-[#15803D]" />
         </div>
 
         {paymentHistory.length === 0 ? (
-          <div className="py-8 text-center text-white/40 text-sm">
+          <div className="py-8 text-center text-[#64748B] text-sm">
             <p>No billing transactions found. When you subscribe, official receipts will be logged here.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-white/70">
-              <thead className="text-xs text-white/40 uppercase tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-sm">
+              <thead className="su-billing-thead">
                 <tr>
                   <th className="py-3 px-3">Date</th>
                   <th className="py-3 px-3">Plan</th>
@@ -303,7 +301,7 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
                   <th className="py-3 px-3 text-right">Invoice</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="su-billing-tbody divide-y divide-[#E2E8F0]">
                 {paymentHistory.map((p) => {
                   const isPaid = p.status === "paid";
                   const dateStr = new Date(p.created_at).toLocaleDateString("en-IN", {
@@ -312,21 +310,21 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
                     year: "numeric"
                   });
                   return (
-                    <tr key={p.id} className="hover:bg-white/[0.02]">
-                      <td className="py-3.5 px-3 font-medium text-white">{dateStr}</td>
-                      <td className="py-3.5 px-3 capitalize font-semibold text-white">
+                    <tr key={p.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3.5 px-3 font-medium text-[#0F172A]">{dateStr}</td>
+                      <td className="py-3.5 px-3 capitalize font-bold text-[#0F172A]">
                         {p.plan_slug.replace("-", " ")}
                       </td>
-                      <td className="py-3.5 px-3 capitalize text-xs text-white/60">{p.billing_cycle}</td>
-                      <td className="py-3.5 px-3 font-bold text-white">₹{p.amount}</td>
+                      <td className="py-3.5 px-3 capitalize text-xs text-[#475569]">{p.billing_cycle}</td>
+                      <td className="py-3.5 px-3 font-bold text-[#0F172A]">₹{p.amount}</td>
                       <td className="py-3.5 px-3">
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
                             isPaid
-                              ? "bg-[#84FF00]/15 text-[#84FF00]"
+                              ? "bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]"
                               : p.status === "failed"
-                              ? "bg-red-500/15 text-red-400"
-                              : "bg-white/10 text-white/60"
+                              ? "bg-[#FEE2E2] text-[#DC2626] border border-[#FCA5A5]"
+                              : "bg-[#E2E8F0] text-[#475569] border border-[#CBD5E1]"
                           }`}
                         >
                           {p.status}
@@ -337,7 +335,7 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
                           <button
                             type="button"
                             onClick={() => setSelectedInvoice(p)}
-                            className="inline-flex items-center gap-1 text-xs text-[#84FF00] hover:underline font-semibold"
+                            className="inline-flex items-center gap-1 text-xs text-[#2563EB] hover:underline font-semibold"
                           >
                             <span>Receipt</span>
                             <Download size={12} />
@@ -355,67 +353,67 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
 
       {/* 3. PRINTABLE INVOICE MODAL */}
       {selectedInvoice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg bg-[#0e140b] border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg bg-[#EDF0F5] border border-white rounded-2xl p-6 sm:p-8 shadow-[-10px_-10px_30px_rgba(255,255,255,0.9),10px_10px_30px_rgba(163,177,198,0.45)] text-[#0F172A]">
             <button
               type="button"
               onClick={() => setSelectedInvoice(null)}
-              className="absolute top-4 right-4 text-white/50 hover:text-white p-1 rounded-lg"
+              className="absolute top-4 right-4 text-[#64748B] hover:text-[#0F172A] p-1 rounded-lg"
             >
               <X size={20} />
             </button>
 
             {/* Invoice Header */}
-            <div className="border-b border-white/10 pb-5 mb-5 flex justify-between items-start">
+            <div className="border-b border-[rgba(163,177,198,0.25)] pb-5 mb-5 flex justify-between items-start">
               <div>
-                <h3 className="text-xl font-black text-white flex items-center gap-2">
-                  <span className="text-[#84FF00]">KSAM Deal</span> Tax Receipt
+                <h3 className="text-xl font-black text-[#0F172A] flex items-center gap-2">
+                  <span className="text-[#15803D]">KSAM Deal</span> Tax Receipt
                 </h3>
-                <p className="text-xs text-white/40">Invoice #{selectedInvoice.razorpay_order_id?.slice(-8) || selectedInvoice.id.slice(0, 8)}</p>
+                <p className="text-xs text-[#64748B]">Invoice #{selectedInvoice.razorpay_order_id?.slice(-8) || selectedInvoice.id.slice(0, 8)}</p>
               </div>
-              <div className="text-right text-xs text-white/50">
+              <div className="text-right text-xs text-[#475569]">
                 <p>Date: {new Date(selectedInvoice.created_at).toLocaleDateString("en-IN")}</p>
                 <p>GSTIN: 27AABCK1234F1Z5</p>
               </div>
             </div>
 
             {/* Billed To */}
-            <div className="text-xs text-white/60 mb-5">
-              <span className="font-bold text-white uppercase tracking-wider block mb-1">Billed To:</span>
-              <p className="text-white font-medium">{profile?.full_name || session?.user?.email}</p>
+            <div className="text-xs text-[#475569] mb-5">
+              <span className="font-bold text-[#0F172A] uppercase tracking-wider block mb-1">Billed To:</span>
+              <p className="text-[#0F172A] font-semibold">{profile?.full_name || session?.user?.email}</p>
               <p>{session?.user?.email}</p>
               {profile?.phone && <p>{profile.phone}</p>}
             </div>
 
             {/* Line Items */}
-            <div className="space-y-2 text-sm border-y border-white/10 py-4 mb-4">
-              <div className="flex justify-between items-center text-white">
+            <div className="space-y-2 text-sm border-y border-[rgba(163,177,198,0.25)] py-4 mb-4">
+              <div className="flex justify-between items-center text-[#0F172A]">
                 <span className="font-semibold capitalize">{selectedInvoice.plan_slug.replace("-", " ")} Membership ({selectedInvoice.billing_cycle})</span>
                 <span>₹{(selectedInvoice.amount / 1.18).toFixed(2)}</span>
               </div>
-              <div className="flex justify-between items-center text-xs text-white/50">
+              <div className="flex justify-between items-center text-xs text-[#64748B]">
                 <span>GST (18% IGST)</span>
                 <span>₹{(selectedInvoice.amount - selectedInvoice.amount / 1.18).toFixed(2)}</span>
               </div>
             </div>
 
             {/* Total */}
-            <div className="flex justify-between items-baseline text-base font-bold text-white mb-6">
+            <div className="flex justify-between items-baseline text-base font-bold text-[#0F172A] mb-6">
               <span>Total Paid</span>
-              <span className="text-2xl font-black text-[#84FF00]">₹{selectedInvoice.amount} INR</span>
+              <span className="text-2xl font-black text-[#15803D]">₹{selectedInvoice.amount} INR</span>
             </div>
 
-            <div className="text-xs text-white/40 mb-6 space-y-1">
+            <div className="text-xs text-[#64748B] mb-6 space-y-1">
               <p>Payment Reference: {selectedInvoice.razorpay_payment_id || "Online Verification"}</p>
               <p>Status: Payment Confirmed (Captured)</p>
             </div>
 
             {/* Print & Close */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[rgba(163,177,198,0.25)]">
               <button
                 type="button"
                 onClick={handlePrintInvoice}
-                className="sub-btn-secondary !text-xs !py-2"
+                className="px-4 py-2 rounded-full border border-[rgba(163,177,198,0.3)] bg-[#EDF0F5] text-xs font-bold text-[#0F172A] hover:bg-white shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(163,177,198,0.3)] flex items-center gap-1.5 transition"
               >
                 <Printer size={14} />
                 <span>Print Invoice</span>
@@ -423,7 +421,7 @@ export default function SubscriptionTab({ session, profile, onShowToast }) {
               <button
                 type="button"
                 onClick={() => setSelectedInvoice(null)}
-                className="sub-btn-primary !w-auto !text-xs !py-2 !px-5"
+                className="px-5 py-2 rounded-full bg-[#0F172A] text-white text-xs font-bold shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_4px_10px_rgba(15,23,42,0.3)] hover:bg-[#1E293B] transition"
               >
                 Done
               </button>

@@ -84,14 +84,14 @@ export default function HelpLegalTab() {
       {/* 1. Wide Featured Assistance Banner */}
       <div className="kx-help-featured-banner">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#8cff00]/10 text-[#8cff00] border border-[#8cff00]/25 shrink-0">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] shrink-0 shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(163,177,198,0.3)]">
             <MessageSquare size={22} />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white tracking-[-0.01em]">
+            <h3 className="text-base font-bold text-[#0F172A] tracking-[-0.01em]">
               Need Dedicated Assistance?
             </h3>
-            <p className="text-[13.5px] text-[#98A3A0] mt-0.5 leading-[1.55]">
+            <p className="text-[13.5px] text-[#475569] mt-0.5 leading-[1.55]">
               Our support team typically responds to tickets in under 24 hours.
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function HelpLegalTab() {
 
         <a
           href={`${BASE_URL}contact-us.html`}
-          className="shrink-0 rounded-xl bg-gradient-to-r from-[#8cff00] to-[#38BDF8] px-6 py-3 text-xs font-black text-black hover:opacity-90 transition shadow-lg inline-flex items-center justify-center"
+          className="shrink-0 rounded-full bg-[#0F172A] px-6 py-3 text-xs font-bold text-white hover:bg-[#1E293B] transition shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_4px_10px_rgba(15,23,42,0.3)] inline-flex items-center justify-center"
         >
           Get Help Now
         </a>
@@ -126,13 +126,13 @@ export default function HelpLegalTab() {
                       >
                         <Icon size={20} />
                       </div>
-                      <h4 className="text-[17px] font-[650] text-[#F4F7F5] tracking-[-0.01em] leading-snug">
+                      <h4 className="text-[17px] font-bold text-[#0F172A] tracking-[-0.01em] leading-snug">
                         {item.title}
                       </h4>
                     </div>
 
                     {/* Description max 70ch */}
-                    <p className="text-[14px] text-[#98A3A0] leading-[1.55] max-w-[70ch] m-0">
+                    <p className="text-[14px] text-[#475569] leading-[1.55] max-w-[70ch] m-0">
                       {item.desc}
                     </p>
                   </div>
@@ -140,7 +140,7 @@ export default function HelpLegalTab() {
                   {/* Action Link with 6px gap to chevron that nudges 3px on hover */}
                   <a
                     href={item.url}
-                    className="kx-card-link"
+                    className="kx-card-link font-bold"
                     aria-label={`${item.action} for ${item.title}`}
                   >
                     <span>{item.action}</span>

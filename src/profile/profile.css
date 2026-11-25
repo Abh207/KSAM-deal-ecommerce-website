@@ -2563,6 +2563,13 @@
   -webkit-text-fill-color: #ffffff !important;
 }
 
+/* Page Backdrop for Account Hub */
+.ks-account-hub-backdrop {
+  background-color: #EEF2F6 !important;
+  width: 100%;
+  position: relative;
+}
+
 /* 4. One-Section-At-A-Time Layout & Navigation */
 .ks-account-hub-layout {
   display: flex;
@@ -2572,15 +2579,15 @@
 
 @media (min-width: 1024px) {
   .ks-account-hub-layout {
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    max-width: 1240px;
-    margin: 0 auto;
-    gap: 32px;
-    padding: 36px 24px 80px;
-    align-items: start;
-    width: 100%;
-    box-sizing: border-box;
+    display: grid !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    max-width: 1280px !important;
+    margin: 0 auto !important;
+    gap: 28px !important;
+    padding: 32px 24px 80px !important;
+    align-items: start !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
@@ -2595,11 +2602,9 @@
     top: 72px;
     z-index: 40;
     width: 100%;
-    background: var(--kx-surface-glass, rgba(13, 17, 20, 0.88));
-    backdrop-filter: var(--kx-backdrop-blur, blur(16px));
-    -webkit-backdrop-filter: var(--kx-backdrop-blur, blur(16px));
-    border-bottom: 1px solid var(--kx-border, rgba(255, 255, 255, 0.16));
-    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+    background: #EDF0F5;
+    border-bottom: 1px solid rgba(163, 177, 198, 0.25);
+    box-shadow: 0 4px 14px rgba(163, 177, 198, 0.2);
   }
 
   .ks-hub-sidebar .ks-sticky-nav {
@@ -2610,6 +2615,44 @@
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
+
+  .ks-hub-sidebar .ks-nav-active-pill {
+    display: none !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    background: #EDF0F5;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.9), 2px 2px 6px rgba(163, 177, 198, 0.25);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:hover {
+    color: #1E293B;
+    box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.95), 3px 3px 8px rgba(163, 177, 198, 0.35);
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active {
+    color: #15803D !important;
+    font-weight: 700;
+    background: #EDF0F5 !important;
+    border-color: rgba(163, 177, 198, 0.25) !important;
+    box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.85) !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active .ks-nav-tab-icon {
+    color: #15803D !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2618,114 +2661,197 @@
   }
 }
 
+/* Neumorphic Profile Sidebar - Desktop */
 @media (min-width: 1024px) {
   .ks-hub-sidebar {
-    position: sticky;
-    top: 96px;
-    z-index: 30;
-    width: 260px;
-    align-self: start;
+    position: sticky !important;
+    top: 96px !important;
+    z-index: 30 !important;
+    width: 260px !important;
+    align-self: start !important;
   }
 
   .ks-hub-sidebar .ks-sticky-nav {
-    position: static;
-    background: #0a0f19;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 20px;
-    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
-    padding: 8px;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    position: static !important;
+    background: #EDF0F5 !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    border-radius: 20px !important;
+    padding: 16px !important;
+    box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.85), 8px 8px 18px rgba(163, 177, 198, 0.35) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .ks-hub-sidebar .ks-sticky-nav-inner {
-    padding: 0;
-    max-width: 100%;
+    padding: 0 !important;
+    max-width: 100% !important;
   }
 
   .ks-hub-sidebar .ks-sticky-nav-scroll {
-    overflow: visible;
+    overflow: visible !important;
   }
 
   .ks-hub-sidebar .ks-sticky-nav-track {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 4px;
-    padding: 0;
-    position: relative;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 6px !important;
+    padding: 0 !important;
+    position: relative !important;
   }
 
+  /* Hide sliding indicator box in favor of tactile pressed pill */
   .ks-hub-sidebar .ks-nav-active-pill {
-    position: absolute;
-    left: 0;
-    border-radius: 12px;
-    background: rgba(140, 255, 0, 0.12);
-    border: 1px solid rgba(140, 255, 0, 0.35);
-    box-shadow: 0 0 20px rgba(140, 255, 0, 0.15);
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-    z-index: 1;
-    pointer-events: none;
+    display: none !important;
   }
 
+  /* Default State: Flat resting state with muted slate text and crisp stroke icons */
   .ks-hub-sidebar .ks-nav-pill-btn {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding: 11px 14px;
-    border-radius: 12px;
-    font-size: 13.5px;
-    font-weight: 600;
-    text-align: left;
-    background: transparent;
-    border: none;
-    z-index: 2;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn:hover {
-    background: rgba(255, 255, 255, 0.04);
-    color: #ffffff;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn.is-active {
-    color: var(--kx-accent, #8cff00) !important;
-    font-weight: 700;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 10px 14px 10px 16px !important;
+    border-radius: 12px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    color: #475569 !important;
     background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    z-index: 2 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
   }
 
+  .ks-hub-sidebar .ks-nav-pill-btn .ks-nav-tab-icon {
+    color: #64748B !important;
+    transition: color 0.2s ease !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn .ks-nav-desktop-chevron {
+    color: #94A3B8 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* Hover State (Dynamic Lift): Raised Neumorphic Pill */
+  .ks-hub-sidebar .ks-nav-pill-btn:not(.is-active):hover {
+    background: #EDF0F5 !important;
+    color: #1E293B !important;
+    box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.9), 4px 4px 10px rgba(163, 177, 198, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.8) !important;
+    transform: translateX(2px) !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:not(.is-active):hover .ks-nav-tab-icon {
+    color: #1E293B !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn:hover .ks-nav-desktop-chevron {
+    opacity: 0.7 !important;
+  }
+
+  /* Active State (Pressed / Inset Shadow Play): Tactile Recessed Neumorphic Pill */
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active {
+    background: #EDF0F5 !important;
+    color: #15803D !important;
+    font-weight: 700 !important;
+    box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.38), inset -4px -4px 8px rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(163, 177, 198, 0.25) !important;
+    transform: none !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active .ks-nav-tab-icon {
+    color: #15803D !important;
+  }
+
+  /* Vertical pill indicator on the left edge */
+  .ks-hub-sidebar .ks-nav-pill-btn.is-active::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 5px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 3.5px !important;
+    height: 18px !important;
+    border-radius: 999px !important;
+    background-color: #15803D !important;
+    box-shadow: 0 0 6px rgba(21, 128, 61, 0.35) !important;
+  }
+
+  /* Danger Zone Item: Engraved divider above, rose/red hover and active */
   .ks-hub-sidebar .ks-nav-pill-btn.is-danger {
-    color: rgba(239, 68, 68, 0.85);
+    margin-top: 10px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid rgba(163, 177, 198, 0.35) !important;
+    color: #64748B !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger .ks-nav-tab-icon {
+    color: #64748B !important;
   }
 
   .ks-hub-sidebar .ks-nav-pill-btn.is-danger:hover {
-    background: rgba(239, 68, 68, 0.08);
-    color: #ef4444;
+    color: #DC2626 !important;
+    background: #EDF0F5 !important;
+    border-color: rgba(255, 255, 255, 0.8) !important;
+    border-top-color: rgba(163, 177, 198, 0.35) !important;
+    box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.9), 4px 4px 10px rgba(163, 177, 198, 0.3) !important;
+    transform: translateX(2px) !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger:hover .ks-nav-tab-icon {
+    color: #DC2626 !important;
   }
 
   .ks-hub-sidebar .ks-nav-pill-btn.is-danger.is-active {
-    color: #ef4444 !important;
+    color: #DC2626 !important;
+    background: #EDF0F5 !important;
+    box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.38), inset -4px -4px 8px rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(220, 38, 38, 0.25) !important;
+    border-top-color: rgba(163, 177, 198, 0.35) !important;
+    transform: none !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger.is-active .ks-nav-tab-icon {
+    color: #DC2626 !important;
+  }
+
+  .ks-hub-sidebar .ks-nav-pill-btn.is-danger.is-active::before {
+    background-color: #DC2626 !important;
+    box-shadow: 0 0 6px rgba(220, 38, 38, 0.35) !important;
   }
 }
 
-/* Tab Count Badge */
+/* Tab Count Badge: Soft-gray circular/pill badge with subtle inset shadow */
 .ks-nav-count-badge {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #E2E8F0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  margin-left: auto;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 2px 8px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  border-radius: 999px !important;
+  background: #EDF0F5 !important;
+  color: #334155 !important;
+  box-shadow: inset 2px 2px 4px rgba(163, 177, 198, 0.35), inset -2px -2px 4px rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(163, 177, 198, 0.2) !important;
+  margin-left: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
 }
 
 .ks-nav-pill-btn.is-active .ks-nav-count-badge {
-  background: rgba(140, 255, 0, 0.2);
-  color: #8cff00;
-  border-color: rgba(140, 255, 0, 0.4);
+  background: #EDF0F5 !important;
+  color: #15803D !important;
+  border-color: rgba(21, 128, 61, 0.25) !important;
+  box-shadow: inset 2px 2px 4px rgba(163, 177, 198, 0.35), inset -2px -2px 4px rgba(255, 255, 255, 0.85) !important;
 }
 
 /* Active Panel Main Area */
@@ -2931,54 +3057,7 @@
    REFINED SIDEBAR & COMPACT OVERVIEW PANEL (Phase 1 & Phase 2)
    ========================================================================== */
 
-/* 1. Layout & Sidebar refinement */
-@media (min-width: 1024px) {
-  .ks-account-hub-layout {
-    grid-template-columns: 248px minmax(0, 1fr) !important;
-    gap: 20px !important;
-    padding: 24px 20px 64px !important;
-  }
-
-  .ks-hub-sidebar {
-    width: 248px !important;
-    top: 88px !important;
-  }
-
-  .ks-hub-sidebar .ks-sticky-nav {
-    padding: 8px !important;
-    border-radius: 16px !important;
-  }
-
-  .ks-hub-sidebar .ks-sticky-nav-track {
-    gap: 4px !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn {
-    height: 44px !important;
-    padding: 0 12px !important;
-    gap: 12px !important;
-    border-radius: 12px !important;
-    font-size: 13.5px !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn:hover {
-    background: rgba(255, 255, 255, 0.04) !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-active-pill {
-    border-radius: 12px !important;
-    background: rgba(140, 255, 0, 0.12) !important;
-    border: 1px solid rgba(140, 255, 0, 0.3) !important;
-  }
-}
-
-@media (max-width: 1023px) {
-  .ks-hub-sidebar .ks-nav-pill-btn {
-    height: 40px !important;
-    padding: 0 14px !important;
-    font-size: 13px !important;
-  }
-}
+/* 1. Layout & Sidebar refinement handled by Neumorphic Profile Sidebar in Section 4 */
 
 /* 2. Overview Panel - Spacing & Structure */
 .ks-overview-panel {
@@ -4331,21 +4410,21 @@
   }
 }
 
-/* 6. Strict Dark Theme Enforcement (Guarantees zero white backgrounds) */
-.kx-page.ks-profile-page,
-.kx-page[data-theme="light"].ks-profile-page,
-[data-theme="light"] .ks-profile-page {
+/* 6. Strict Dark Theme Enforcement (Guarantees proper colors in both modes) */
+.kx-page.ks-profile-page {
   background-color: transparent !important;
   color: #F1F5F9 !important;
 }
 
-.ks-photo-card,
-.ks-profile-form-card,
-.ks-card,
+.kx-page[data-theme="light"].ks-profile-page,
+[data-theme="light"] .ks-profile-page {
+  background-color: transparent !important;
+  color: #0F172A !important;
+}
+
 .ks-overview-welcome-card,
 .ks-checklist-card,
 .ks-alerts-card,
-.ks-address-card,
 .ks-product-dashboard-card {
   background: radial-gradient(circle at top right, rgba(0, 255, 170, 0.08), transparent 40%), linear-gradient(135deg, #0A0F17 0%, #101827 100%) !important;
   border: 1px solid rgba(148, 163, 184, 0.14) !important;
@@ -4355,67 +4434,13 @@
 }
 
 /* Card hover lift & glow */
-.ks-card:hover,
-.ks-address-card:hover,
-.ks-product-dashboard-card:hover,
-.ks-photo-card:hover,
-.ks-profile-form-card:hover {
+.ks-product-dashboard-card:hover {
   transform: translateY(-2px);
   border-color: rgba(132, 255, 0, 0.28) !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 24px rgba(132, 255, 0, 0.08) !important;
 }
 
-/* Strict Dark Form Inputs */
-.ks-unified-field {
-  background: #080D15 !important;
-  border: 1px solid rgba(148, 163, 184, 0.20) !important;
-  border-radius: 14px !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
-}
-
-.ks-unified-field:hover {
-  border-color: rgba(148, 163, 184, 0.35) !important;
-}
-
-.ks-unified-field:focus-within {
-  border-color: #84FF00 !important;
-  box-shadow: 0 0 0 3px rgba(132, 255, 0, 0.18), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-  background: #080D15 !important;
-}
-
-.ks-unified-field.is-readonly {
-  background: rgba(10, 15, 23, 0.7) !important;
-  border-color: rgba(148, 163, 184, 0.12) !important;
-  opacity: 0.85;
-}
-
-.ks-unified-input,
-.ks-unified-select {
-  background: transparent !important;
-  color: #E2E8F0 !important;
-  font-size: 15px !important;
-}
-
-.ks-unified-input::placeholder {
-  color: #748399 !important;
-}
-
-.ks-unified-label {
-  color: #A8B5C7 !important;
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
-}
-
-.ks-unified-field:focus-within .ks-unified-label {
-  color: #84FF00 !important;
-}
-
-.ks-unified-select option {
-  background: #080D15 !important;
-  color: #E2E8F0 !important;
-}
-
+/* Strict Dark Form Inputs (Unified fields are styled with neumorphic soft-UI in soft-ui.css) */
 .ks-phone-combined-input {
   background: #080D15 !important;
   border: 1px solid rgba(148, 163, 184, 0.20) !important;
@@ -4444,8 +4469,6 @@
 }
 
 /* Text Hierarchy */
-.ks-photo-name,
-.ks-form-card-title,
 .ks-card-section-title,
 .ks-overview-heading,
 .ks-panel-heading {
@@ -4461,7 +4484,7 @@
 }
 
 .ks-overview-eyebrow,
-.ks-section-eyebrow {
+.ks-section-eyebrow:not(.is-profile-eyebrow) {
   color: #84FF00 !important;
   font-weight: 700 !important;
   letter-spacing: 0.08em !important;
@@ -4469,34 +4492,48 @@
   font-size: 11.5px !important;
 }
 
-/* Save Bar */
+/* Save Bar: Neumorphic Soft-Gray */
 .ks-save-bar {
-  background: linear-gradient(135deg, #0D1420 0%, #111827 100%) !important;
-  border: 1px solid rgba(132, 255, 0, 0.28) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 20px rgba(132, 255, 0, 0.15) !important;
+  background: #EDF0F5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: -6px -6px 16px rgba(255, 255, 255, 0.85), 6px 12px 28px rgba(163, 177, 198, 0.45) !important;
   border-radius: 18px !important;
 }
 
 .ks-save-bar-msg {
-  color: #F1F5F9 !important;
-  font-weight: 600 !important;
+  color: #1E293B !important;
+  font-weight: 700 !important;
+}
+
+.ks-save-bar-dot {
+  background: #16A34A !important;
+  box-shadow: 0 0 10px rgba(22, 163, 74, 0.5) !important;
 }
 
 .ks-save-bar .ks-btn-secondary {
-  background: #080D15 !important;
-  border-color: rgba(148, 163, 184, 0.2) !important;
-  color: #C0CAD8 !important;
+  background: #EDF0F5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.85), 2px 2px 6px rgba(163, 177, 198, 0.3) !important;
+  color: #475569 !important;
 }
 
 .ks-save-bar .ks-btn-secondary:hover {
-  background: #111827 !important;
+  background: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+.ks-save-bar .ks-btn-primary {
+  background: #16A34A !important;
   color: #FFFFFF !important;
-  border-color: rgba(132, 255, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.85), 2px 4px 10px rgba(22, 163, 74, 0.35) !important;
+}
+
+.ks-save-bar .ks-btn-primary:hover {
+  background: #15803D !important;
 }
 
 /* Interactive Card Lift */
-.ks-card:hover,
-.ks-address-card:hover,
 .ks-product-dashboard-card:hover {
   transform: translateY(-2px);
   border-color: rgba(140, 255, 0, 0.28) !important;
@@ -4645,101 +4682,7 @@
   transform: translateY(-2px);
 }
 
-/* 7. Refined 248px Sidebar Navigation on Desktop */
-@media (min-width: 1024px) {
-  .ks-hub-sidebar {
-    width: 248px !important;
-    position: sticky !important;
-    top: 96px !important;
-    z-index: 30 !important;
-    align-self: start !important;
-  }
-
-  .ks-account-hub-layout {
-    grid-template-columns: 248px minmax(0, 1fr) !important;
-    gap: 24px !important;
-    padding: 24px 24px 48px !important;
-    max-width: 1320px !important;
-  }
-
-  .ks-hub-sidebar .ks-sticky-nav {
-    background: #0A0F17 !important;
-    border: 1px solid rgba(148, 163, 184, 0.14) !important;
-    border-radius: 16px !important;
-    padding: 8px !important;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
-  }
-
-  .ks-hub-sidebar .ks-sticky-nav-track {
-    gap: 4px !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn {
-    height: 44px !important;
-    padding: 0 12px !important;
-    border-radius: 12px !important;
-    font-size: 13.5px !important;
-    font-weight: 600 !important;
-    color: #A8B5C7 !important;
-    gap: 12px !important;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn:hover {
-    background: rgba(132, 255, 0, 0.05) !important;
-    color: #F1F5F9 !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn.is-active {
-    color: #84FF00 !important;
-    font-weight: 700 !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-active-pill {
-    background: linear-gradient(135deg, rgba(132, 255, 0, 0.16) 0%, rgba(38, 217, 248, 0.12) 100%) !important;
-    border: 1px solid rgba(132, 255, 0, 0.35) !important;
-    box-shadow: 0 0 18px rgba(132, 255, 0, 0.16) !important;
-    border-radius: 12px !important;
-    pointer-events: none !important;
-    z-index: 1 !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-active-pill.is-danger-pill {
-    background: linear-gradient(135deg, rgba(248, 113, 113, 0.20) 0%, rgba(245, 158, 11, 0.15) 100%) !important;
-    border: 1px solid rgba(248, 113, 113, 0.45) !important;
-    box-shadow: 0 0 18px rgba(248, 113, 113, 0.22) !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn:focus {
-    outline: none !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn:focus-visible {
-    outline: 2px solid var(--kx-accent, #8cff00) !important;
-    outline-offset: 2px !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn.is-danger:focus-visible {
-    outline: 2px solid #F87171 !important;
-    outline-offset: 2px !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn.is-danger {
-    color: #F87171 !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn.is-danger:hover {
-    background: rgba(248, 113, 113, 0.08) !important;
-    color: #FFA3A3 !important;
-  }
-
-  .ks-hub-sidebar .ks-nav-pill-btn.is-danger.is-active {
-    color: #FFFFFF !important;
-    font-weight: 700 !important;
-  }
-}
+/* 7. Sidebar navigation rules handled by Neumorphic Profile Sidebar in Section 4 */
 
 /* Scroll margin offset so panel top is not hidden behind the sticky navbar */
 .ks-hub-content,
@@ -4855,8 +4798,6 @@
 /* 11. Input Fields General System */
 .ks-password-input,
 .ks-field-input,
-.ks-unified-field input,
-.ks-unified-field select,
 .ks-float-input,
 .ks-float-select {
   background-color: #080D15 !important;
@@ -4879,10 +4820,7 @@
 .ks-password-input:focus,
 .ks-field-input:focus,
 .ks-float-input:focus,
-.ks-float-select:focus,
-.ks-unified-field.is-focused,
-.ks-unified-field input:focus,
-.ks-unified-field select:focus {
+.ks-float-select:focus {
   border-color: #84FF00 !important;
   box-shadow: 0 0 0 3px rgba(132, 255, 0, 0.18) !important;
   background-color: #080D15 !important;
@@ -4971,29 +4909,29 @@
   border-color: rgba(148, 163, 184, 0.08) !important;
 }
 
-/* Strict Dark Guarantee: override any light theme styles that try to invert text to dark gray on profile */
+/* Light theme text preservation */
 .kx-page[data-theme="light"].ks-profile-page .text-gray-400,
 [data-theme="light"] .ks-profile-page .text-gray-400,
 .kx-page[data-theme="light"] .ks-hub-content .text-gray-400 {
-  color: #98A6BA !important;
+  color: #64748B !important;
 }
 
 .kx-page[data-theme="light"].ks-profile-page .text-gray-500,
 [data-theme="light"] .ks-profile-page .text-gray-500,
 .kx-page[data-theme="light"] .ks-hub-content .text-gray-500 {
-  color: #748399 !important;
+  color: #475569 !important;
 }
 
 .kx-page[data-theme="light"].ks-profile-page .text-gray-300,
 [data-theme="light"] .ks-profile-page .text-gray-300,
 .kx-page[data-theme="light"] .ks-hub-content .text-gray-300 {
-  color: #C0CAD8 !important;
+  color: #334155 !important;
 }
 
 .kx-page[data-theme="light"].ks-profile-page .text-\[\#98A3A0\],
 [data-theme="light"] .ks-profile-page .text-\[\#98A3A0\],
 .kx-page[data-theme="light"] .ks-hub-content .text-\[\#98A3A0\] {
-  color: #98A6BA !important;
+  color: #475569 !important;
 }
 
 .kx-page[data-theme="light"].ks-profile-page .border-white\/10,
@@ -5142,10 +5080,9 @@
     position: sticky;
     top: 64px;
     z-index: 50;
-    background: rgba(10, 15, 12, 0.94);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(132, 255, 0, 0.22);
+    background: #EDF0F5;
+    border-bottom: 1px solid rgba(163, 177, 198, 0.25);
+    box-shadow: 0 4px 14px rgba(163, 177, 198, 0.2);
     padding: 10px 16px;
     box-sizing: border-box;
   }
@@ -5183,37 +5120,44 @@
     padding: 8px 16px;
     border-radius: 999px;
     font-size: 0.84rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.72);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-weight: 600;
+    color: #475569;
+    background: #EDF0F5;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.9), 2px 2px 6px rgba(163, 177, 198, 0.25);
     white-space: nowrap;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  .ks-profile-mobile-tab-btn:hover {
+    color: #1E293B;
+  }
+
   .ks-profile-mobile-tab-btn.is-active {
-    color: #050a04;
-    background: #84FF00;
-    border-color: #84FF00;
-    box-shadow: 0 0 16px rgba(132, 255, 0, 0.45);
-    font-weight: 800;
+    color: #15803D;
+    background: #EDF0F5;
+    border-color: rgba(163, 177, 198, 0.25);
+    box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+    font-weight: 700;
   }
 
   .ks-profile-mobile-badge {
     font-size: 0.7rem;
     padding: 1px 6px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.25);
-    color: currentColor;
+    background: #EDF0F5;
+    color: #334155;
+    box-shadow: inset 1px 1px 3px rgba(163, 177, 198, 0.3), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
+    font-weight: 700;
   }
 
   .ks-profile-mobile-hamburger {
     width: 42px;
     height: 42px;
     border-radius: 12px;
-    background: rgba(14, 22, 17, 0.9);
-    border: 1.5px solid rgba(132, 255, 0, 0.4);
+    background: #EDF0F5;
+    border: 1px solid rgba(255, 255, 255, 0.8);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -5221,19 +5165,19 @@
     gap: 4.5px;
     cursor: pointer;
     flex-shrink: 0;
-    box-shadow: 0 0 14px rgba(132, 255, 0, 0.18);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.9), 3px 3px 6px rgba(163, 177, 198, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   .ks-profile-mobile-hamburger:hover {
-    border-color: #84FF00;
     transform: scale(1.04);
+    box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.95), 4px 4px 8px rgba(163, 177, 198, 0.35);
   }
 
   .ks-pm-line {
     width: 20px;
     height: 2px;
-    background: #84FF00;
+    background: #475569;
     border-radius: 2px;
     transition: all 0.2s ease;
   }
@@ -5243,7 +5187,7 @@
 .ks-profile-sheet-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 1000;
@@ -5262,10 +5206,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: #090e0b;
-  border-top: 1.5px solid rgba(132, 255, 0, 0.4);
+  background: #EDF0F5;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.8);
   border-radius: 24px 24px 0 0;
-  box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.9), 0 0 32px rgba(132, 255, 0, 0.15);
+  box-shadow: 0 -16px 40px rgba(163, 177, 198, 0.45);
   z-index: 1001;
   max-height: 84vh;
   display: flex;
@@ -5284,7 +5228,7 @@
   width: 44px;
   height: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(163, 177, 198, 0.45);
   margin: 12px auto 6px;
 }
 
@@ -5293,13 +5237,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(163, 177, 198, 0.2);
 }
 
 .ks-profile-sheet-title {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #1E293B;
   letter-spacing: -0.01em;
 }
 
@@ -5308,18 +5252,20 @@
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(132, 255, 0, 0.12);
-  color: #84FF00;
-  border: 1px solid rgba(132, 255, 0, 0.28);
+  background: #EDF0F5;
+  color: #15803D;
+  border: 1px solid rgba(163, 177, 198, 0.2);
+  box-shadow: inset 1px 1px 3px rgba(163, 177, 198, 0.3), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
 }
 
 .ks-profile-sheet-close {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: #EDF0F5;
+  box-shadow: -2px -2px 5px rgba(255, 255, 255, 0.9), 2px 2px 5px rgba(163, 177, 198, 0.25);
+  color: #475569;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5328,8 +5274,8 @@
 }
 
 .ks-profile-sheet-close:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: #E8ECF2;
+  color: #1E293B;
 }
 
 .ks-profile-sheet-list {
@@ -5347,9 +5293,10 @@
   justify-content: space-between;
   padding: 12px 14px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  color: #ffffff;
+  background: #EDF0F5;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.85), 2px 2px 6px rgba(163, 177, 198, 0.2);
+  color: #1E293B;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -5358,26 +5305,26 @@
 }
 
 .ks-profile-sheet-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.95), 3px 3px 8px rgba(163, 177, 198, 0.3);
 }
 
 .ks-profile-sheet-item.is-active {
-  background: rgba(132, 255, 0, 0.12);
-  border-color: #84FF00;
-  color: #84FF00;
-  box-shadow: 0 0 16px rgba(132, 255, 0, 0.18);
+  color: #15803D;
+  background: #EDF0F5;
+  border-color: rgba(163, 177, 198, 0.25);
+  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+  font-weight: 700;
 }
 
 .ks-profile-sheet-item.is-danger {
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.25);
+  color: #DC2626;
+  border-color: rgba(220, 38, 38, 0.25);
   margin-top: 8px;
 }
 
 .ks-profile-sheet-item.is-danger:hover {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: #ef4444;
+  background: #EDF0F5;
+  color: #B91C1C;
 }
 
 .ks-profile-sheet-item-left {
@@ -5390,7 +5337,8 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(163, 177, 198, 0.15);
+  color: #64748B;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5398,8 +5346,8 @@
 }
 
 .ks-profile-sheet-item.is-active .ks-profile-sheet-item-icon {
-  background: rgba(132, 255, 0, 0.2);
-  color: #84FF00;
+  background: #EBF8F2;
+  color: #15803D;
 }
 
 .ks-profile-sheet-item-text {
@@ -5415,7 +5363,7 @@
 
 .ks-profile-sheet-item-desc {
   font-size: 0.74rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: #64748B;
 }
 
 .ks-profile-sheet-item-right {
@@ -5429,9 +5377,9 @@
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(132, 255, 0, 0.15);
-  color: #84FF00;
-  border: 1px solid rgba(132, 255, 0, 0.3);
+  background: #EBF8F2;
+  color: #15803D;
+  border: 1px solid rgba(21, 128, 61, 0.25);
 }
 
 .ks-profile-sheet-badge {
@@ -5439,8 +5387,10 @@
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: #EDF0F5;
+  color: #334155;
+  box-shadow: inset 1px 1px 3px rgba(163, 177, 198, 0.3), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(163, 177, 198, 0.2);
 }
 
 

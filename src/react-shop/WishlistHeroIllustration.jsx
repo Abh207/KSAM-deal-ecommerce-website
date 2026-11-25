@@ -188,22 +188,15 @@ export default function WishlistHeroIllustration() {
           </g>
         </g>
 
-        {/* 7. Floating Sparkles and Chips */}
-        {/* Sparkle 1 (Above right of laptop) */}
+        {/* 7. Floating Ambient Accent Dots */}
+        {/* Accent 1 (Above right of laptop) */}
         <g className="ksam-wishlist-sparkle-1" transform="translate(426, 48)">
-          <path
-            d="M10 0 L12 7 L19 10 L12 13 L10 20 L8 13 L1 10 L8 7 Z"
-            fill="#8cff00"
-            filter="url(#softGlowSparkle)"
-          />
+          <circle cx="10" cy="10" r="4" fill="#8cff00" filter="url(#softGlowSparkle)" />
         </g>
 
-        {/* Sparkle 2 (Near badge) */}
+        {/* Accent 2 (Near badge) */}
         <g className="ksam-wishlist-sparkle-2" transform="translate(90, 80)">
-          <path
-            d="M8 0 L9.5 5.5 L15 8 L9.5 10.5 L8 16 L6.5 10.5 L1 8 L6.5 5.5 Z"
-            fill="#8cff00"
-          />
+          <circle cx="8" cy="8" r="3" fill="#8cff00" />
         </g>
 
         {/* Sparkle 3 (Small dot near right plant) */}

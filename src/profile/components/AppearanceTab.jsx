@@ -200,18 +200,18 @@ export default function AppearanceTab({
               <div className="flex items-center justify-between gap-2 w-full mt-auto">
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <Icon size={14} className={isSelected ? "text-[#8cff00]" : "text-gray-400"} />
-                    <h4 className="text-sm font-bold text-white tracking-[-0.01em]">
+                    <Icon size={14} className={isSelected ? "text-[#15803D]" : "text-gray-400"} />
+                    <h4 className="text-sm font-bold text-[#0F172A] tracking-[-0.01em]">
                       {t.label}
                     </h4>
                   </div>
-                  <p className="text-[11.5px] text-[#98A3A0] mt-0.5 line-clamp-1">
+                  <p className="text-[11.5px] text-[#475569] mt-0.5 line-clamp-1">
                     {t.desc}
                   </p>
                 </div>
 
                 {isSelected && (
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8cff00] text-black shrink-0">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#16A34A] text-white shrink-0">
                     <Check size={12} strokeWidth={3} />
                   </div>
                 )}
@@ -223,10 +223,10 @@ export default function AppearanceTab({
 
       {/* 2. Brand Accent Color Section (24px space from theme grid) */}
       <div className="kx-accent-section mt-6">
-        <h3 className="text-sm font-bold text-white tracking-[-0.01em] mb-1">
+        <h3 className="su-accent-heading text-sm font-bold text-[#0F172A] tracking-[-0.01em] mb-1">
           Brand Accent Color
         </h3>
-        <p className="text-[13.5px] text-[#98A3A0] leading-[1.55] mb-3">
+        <p className="su-accent-desc text-[13.5px] text-[#475569] leading-[1.55] mb-3">
           Select the primary highlight color for buttons, active indicators, and focus rings.
         </p>
 
@@ -258,8 +258,8 @@ export default function AppearanceTab({
       </div>
 
       {/* 3. Information Note Block */}
-      <div className="mt-8 rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-xs text-[#98A3A0] leading-[1.55]">
-        <strong className="text-white">Note:</strong> Light theme is currently available for Account Hub, Authentication, Contact, and Legal pages. Catalog deals discovery pages maintain the signature dark theme.
+      <div className="su-appearance-note mt-8">
+        <strong>Note:</strong> Light theme is currently available for Account Hub, Authentication, Contact, and Legal pages. Catalog deals discovery pages maintain the signature dark theme.
       </div>
     </div>
   );

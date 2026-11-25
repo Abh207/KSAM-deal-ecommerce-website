@@ -14,7 +14,7 @@ import {
   CART_STORAGE_KEY
 } from "../lib/cartHelper.js";
 import { toggleWishlist, isInWishlist } from "../lib/wishlist.js";
-import { getStoreName } from "../deals/services/productService.js";
+import { getStoreName, getProductDirectMerchantUrl, isExternalProduct } from "../deals/services/productService.js";
 
 // Storage Keys
 export const SAVED_FOR_LATER_KEY = "ksam_saved_for_later";
@@ -703,9 +703,9 @@ function renderCartItems(cart, summary) {
       `
       : "";
 
-    const store = getStoreName(product);
-    const outboundUrl = product.product_url || product.affiliate_url || "";
-    const isExternal = Boolean(product.is_external || outboundUrl || store);
+    const store = getStoreName(product) || (product.store && product.store.toLowerCase() !== "ksam" ? product.store : "") || "store website";
+    const outboundUrl = getProductDirectMerchantUrl(product) || product.affiliate_url || product.product_url || "";
+    const isExternal = isExternalProduct(product) || Boolean(product.is_external || outboundUrl || (store && store !== "store website"));
     let category = product.category || "";
     if (!category || category.toLowerCase() === "deals" || category.toLowerCase() === "deal") {
       category = "Product";
@@ -1065,8 +1065,8 @@ function renderOrderSummary(summary) {
 
   const cart = getCart();
   const hasItems = summary.itemCount > 0;
-  const allExternal = hasItems && cart.every((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
-  const hasExternal = cart.some((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
+  const allExternal = hasItems && cart.every((i) => isExternalProduct(i) || i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
+  const hasExternal = cart.some((i) => isExternalProduct(i) || i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
 
   container.innerHTML = `
     <div class="your-shopping-card">
@@ -1427,9 +1427,10 @@ export function attachCartEvents() {
       const url = buyStoreBtn.dataset.url;
       try {
         if (supabase) {
+          const isUuid = prodId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(prodId));
           supabase.from("click_events").insert({
-            product_id: prodId,
-            platform: storeName,
+            product_id: isUuid ? prodId : null,
+            platform: storeName || "Store",
             affiliate_url: url,
             user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null
           }).catch(() => {});
@@ -1465,7 +1466,7 @@ function handleCheckoutClick(btn) {
     return;
   }
 
-  const allExternal = cart.length > 0 && cart.every((i) => i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
+  const allExternal = cart.length > 0 && cart.every((i) => isExternalProduct(i) || i.is_external || i.product_url || i.affiliate_url || (i.store && i.store.toLowerCase() !== "ksam"));
   if (allExternal) {
     showCartToast("Please use the 'Buy on [Store]' button next to each item to purchase directly from the partner store.");
     document.querySelectorAll(".shop-cart-buy-store-btn").forEach((b) => {

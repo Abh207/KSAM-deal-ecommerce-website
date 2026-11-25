@@ -136,7 +136,7 @@ export default function PersonalInfoTab({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="text-3xl font-black text-[#8cff00] tracking-wider select-none">
+                <div className="text-3xl font-black text-[#15803D] tracking-wider select-none">
                   {initials}
                 </div>
               )}
@@ -199,7 +199,7 @@ export default function PersonalInfoTab({
         <div className="ks-form-card-header">
           <div className="ks-form-header-left">
             <h3 className="ks-form-card-title">
-              <User size={18} className="text-[#8cff00] shrink-0" />
+              <User size={18} className="text-[#15803D] shrink-0" />
               <span>Personal Details</span>
             </h3>
             <p className="ks-form-card-desc">
@@ -208,7 +208,7 @@ export default function PersonalInfoTab({
           </div>
 
           <div className="ks-dpdp-pill" aria-label="DPDP 2023 Protected">
-            <ShieldCheck size={14} className="shrink-0 text-[#8cff00]" />
+            <ShieldCheck size={14} className="shrink-0 text-[#15803D]" />
             <span>DPDP 2023 Protected</span>
           </div>
         </div>
@@ -378,27 +378,33 @@ export default function PersonalInfoTab({
           <div
             className="ks-unsaved-modal"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "#EDF0F5",
+              border: "1px solid rgba(255, 255, 255, 0.8)",
+              boxShadow: "-8px -8px 24px rgba(255, 255, 255, 0.9), 8px 8px 24px rgba(163, 177, 198, 0.4)",
+              color: "#1E293B"
+            }}
           >
-            <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-              <Mail size={18} className="text-[#38BDF8]" />
+            <h3 className="text-lg font-bold text-[#1E293B] mb-2 flex items-center gap-2">
+              <Mail size={18} className="text-[#2563EB]" />
               <span>Change Email Address</span>
             </h3>
-            <p className="text-xs text-gray-400 mb-5 leading-relaxed">
+            <p className="text-xs text-[#475569] mb-5 leading-relaxed">
               Enter your new email address. We will send a confirmation link to that inbox. Your login email will update only after you confirm.
             </p>
 
             {emailSuccess ? (
               <div className="py-4 text-center space-y-2">
-                <CheckCircle2 size={36} className="mx-auto text-[#8cff00]" />
-                <h4 className="text-sm font-bold text-white">Confirmation Link Sent!</h4>
-                <p className="text-xs text-gray-300">
+                <CheckCircle2 size={36} className="mx-auto text-[#15803D]" />
+                <h4 className="text-sm font-bold text-[#1E293B]">Confirmation Link Sent!</h4>
+                <p className="text-xs text-[#475569]">
                   Please check <strong>{newEmail}</strong> and click the link to confirm your new email.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleChangeEmail} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#475569] mb-1.5">
                     New Email Address
                   </label>
                   <input
@@ -408,11 +414,16 @@ export default function PersonalInfoTab({
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     className="ks-password-input"
+                    style={{
+                      backgroundColor: "#E9EDF2",
+                      borderColor: "rgba(163, 177, 198, 0.3)",
+                      color: "#1E293B"
+                    }}
                   />
                 </div>
 
                 {emailError && (
-                  <div className="flex items-center gap-1.5 text-xs text-red-400 bg-red-500/10 p-2.5 rounded-xl border border-red-500/20">
+                  <div className="flex items-center gap-1.5 text-xs text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200">
                     <AlertCircle size={14} className="shrink-0" />
                     <span>{emailError}</span>
                   </div>
@@ -422,14 +433,14 @@ export default function PersonalInfoTab({
                   <button
                     type="button"
                     onClick={() => setEmailModalOpen(false)}
-                    className="px-4 py-2.5 rounded-xl text-xs font-semibold text-gray-400 hover:bg-white/10 hover:text-white transition"
+                    className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#475569] hover:bg-slate-200 hover:text-[#1E293B] transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={emailLoading}
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#84FF00] to-[#25C9F7] text-xs font-black text-[#05070B] hover:opacity-95 disabled:opacity-50 transition cursor-pointer shadow-md"
+                    className="px-5 py-2.5 rounded-xl bg-[#16A34A] text-xs font-bold text-white hover:bg-[#15803D] disabled:opacity-50 transition cursor-pointer shadow-md"
                   >
                     {emailLoading ? "Sending Link..." : "Send Confirmation Link"}
                   </button>

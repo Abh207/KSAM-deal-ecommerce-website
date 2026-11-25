@@ -1046,6 +1046,26 @@ body.product-details-body:has(.is-home-appliances-view) {
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(140, 255, 0, 0.35);
   }
+
+  .mobile-sticky-btn.is-dark {
+    background: #0f172a;
+    color: #ffffff;
+    border: 1.5px solid #0f172a;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28);
+    text-decoration: none;
+  }
+
+  .mobile-sticky-btn.is-dark:hover:not(:disabled) {
+    background: #1e293b;
+  }
+
+  .mobile-sticky-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #64748b !important;
+    border-color: #64748b !important;
+    box-shadow: none !important;
+  }
 }
 
 /* ------------------------------------------------------------

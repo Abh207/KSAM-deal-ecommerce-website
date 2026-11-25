@@ -5,7 +5,7 @@ import {
   BadgeDollarSign,
   Bell,
   Globe2,
-  Sparkles,
+  Compass,
   ArrowRight,
   TrendingDown,
 } from "lucide-react";
@@ -51,7 +51,7 @@ const features = [
     visual: "stores",
   },
   {
-    icon: Sparkles,
+    icon: Compass,
     title: "Smart Discovery",
     text: "Future AI features will personalize deal discovery.",
     accent: "#FB923C",
@@ -193,7 +193,7 @@ function SmartVisual() {
     <div className="ft-vis-smart">
       {["Sneakers", "Gadgets", "Home decor"].map((c, i) => (
         <span key={c} className="ft-chip-smart" style={{ animationDelay: `${i * 400}ms` }}>
-          <Sparkles size={12} />
+          <Compass size={12} />
           {c}
         </span>
       ))}

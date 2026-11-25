@@ -243,15 +243,15 @@ export default function AddressesTab({
       {/* Top Bar */}
       <div className="ks-address-topbar">
         <div>
-          <h2 className="ks-card-title">
-            <MapPin size={20} color="#38BDF8" />
+          <h2 className="ks-card-title flex items-center gap-2 text-[#0F172A]">
+            <MapPin size={20} className="text-[#15803D]" />
             <span>Saved Addresses</span>
           </h2>
-          <p className="ks-card-desc">
+          <p className="ks-card-desc text-[#475569]">
             Manage your delivery and billing locations for fast 1-click checkout.
           </p>
         </div>
-        <button type="button" className="ks-btn-primary" onClick={handleAddNew}>
+        <button type="button" className="su-btn-primary flex items-center gap-2" onClick={handleAddNew}>
           <Plus size={16} />
           <span>Add New Address</span>
         </button>
@@ -259,17 +259,17 @@ export default function AddressesTab({
 
       {/* Address Cards Grid */}
       {addresses.length === 0 ? (
-        <div className="ks-empty-state-stack">
-          <div className="ks-empty-state-icon bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">
+        <div className="ks-empty-state-stack bg-[#EDF0F5] border border-white shadow-[-6px_-6px_14px_rgba(255,255,255,0.85),6px_6px_16px_rgba(163,177,198,0.35)] rounded-2xl p-8">
+          <div className="ks-empty-state-icon bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
             <MapPin size={28} />
           </div>
           <div className="max-w-md mx-auto space-y-1">
-            <h3 className="text-base font-bold text-white">No addresses saved yet</h3>
-            <p className="text-xs text-gray-400">
+            <h3 className="text-base font-bold text-[#0F172A]">No addresses saved yet</h3>
+            <p className="text-xs text-[#64748B]">
               Add your primary shipping pin code so you can easily check deal shipping eligibility and speed.
             </p>
           </div>
-          <button type="button" className="ks-btn-primary ks-empty-state-btn" onClick={handleAddNew}>
+          <button type="button" className="su-btn-primary ks-empty-state-btn flex items-center gap-2 mx-auto" onClick={handleAddNew}>
             <Plus size={16} />
             <span>Add Delivery Address</span>
           </button>
@@ -347,13 +347,13 @@ export default function AddressesTab({
           <button
             type="button"
             onClick={handleAddNew}
-            className="ks-address-card flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/15 hover:border-[#38BDF8]/50 bg-white/[0.01] hover:bg-white/[0.03] transition-all cursor-pointer min-h-[220px] text-center group rounded-2xl"
+            className="su-card-add-address flex flex-col items-center justify-center p-8 transition-all cursor-pointer min-h-[220px] text-center group rounded-2xl"
           >
-            <div className="h-12 w-12 rounded-2xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+            <div className="su-add-icon-circle mb-3 group-hover:scale-110 transition">
               <Plus size={22} />
             </div>
-            <h4 className="text-sm font-bold text-white group-hover:text-[#38BDF8] transition">Add Another Address</h4>
-            <p className="text-xs text-gray-500 mt-1 max-w-[200px]">Save office, warehouse or home addresses for 1-click checkout</p>
+            <h4 className="text-sm font-bold transition">Add Another Address</h4>
+            <p className="text-xs mt-1 max-w-[200px]">Save office, warehouse or home addresses for 1-click checkout</p>
           </button>
         </div>
       )}

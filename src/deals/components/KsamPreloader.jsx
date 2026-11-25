@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { Sparkles, Flame, Percent, ShoppingBag, ShieldCheck } from "lucide-react";
+import { Flame, Percent, ShoppingBag, ShieldCheck } from "lucide-react";
 import "./KsamPreloader.css";
 
 // Configurable timing constants (milliseconds)

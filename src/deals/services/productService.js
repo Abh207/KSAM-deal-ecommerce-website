@@ -18,16 +18,26 @@ export function formatTimeAgo(dateString) {
 }
 
 /**
- * Unwraps redirect parameters (e.g. Google Shopping redirects) to reach the real destination URL.
+ * Unwraps redirect parameters (e.g. Google Shopping redirects, adurls, tracking parameters)
+ * to reach the real destination merchant URL.
  */
 export function unwrapRedirectUrl(rawUrl) {
   if (!rawUrl || typeof rawUrl !== "string") return "";
   const trimmed = rawUrl.trim();
   try {
-    if (trimmed.includes("google.") && (trimmed.includes("/url?") || trimmed.includes("/shopping/product/"))) {
+    if (
+      trimmed.includes("google.") &&
+      (trimmed.includes("/url?") ||
+        trimmed.includes("/shopping/product/") ||
+        trimmed.includes("/aclk?") ||
+        trimmed.includes("adurl=") ||
+        trimmed.includes("&url=") ||
+        trimmed.includes("?url="))
+    ) {
       const parsed = new URL(trimmed.startsWith("//") ? `https:${trimmed}` : trimmed);
       const targetParam =
         parsed.searchParams.get("url") ||
+        parsed.searchParams.get("adurl") ||
         parsed.searchParams.get("q") ||
         parsed.searchParams.get("u") ||
         parsed.searchParams.get("dest") ||
@@ -44,6 +54,87 @@ export function unwrapRedirectUrl(rawUrl) {
   } catch {
     return trimmed;
   }
+}
+
+/**
+ * Resolves the direct merchant product URL, preferring direct store links over Google redirects,
+ * unwrapping redirects, blocking insecure schemes, and strictly requiring HTTPS.
+ */
+export function getProductDirectMerchantUrl(product) {
+  if (!product) return null;
+
+  const candidates = [
+    product.affiliate_url,
+    product.affiliateUrl,
+    product.bestOffer?.affiliateUrl,
+    product.product_url,
+    product.productUrl,
+    product.url,
+    product.link,
+    product.raw?.merchant_link,
+    product.raw?.direct_link,
+    product.raw?.link,
+    product.raw?.product_link
+  ];
+
+  let unwrapFallback = null;
+
+  for (const cand of candidates) {
+    if (!cand || typeof cand !== "string" || cand === "#") continue;
+    const trimmed = cand.trim();
+    if (!trimmed.startsWith("https://") && !trimmed.startsWith("//") && !trimmed.startsWith("http://")) continue;
+
+    const isGoogle =
+      trimmed.includes("google.") &&
+      (trimmed.includes("/url?") ||
+        trimmed.includes("/shopping/product/") ||
+        trimmed.includes("adurl=") ||
+        trimmed.includes("/aclk?"));
+
+    if (isGoogle) {
+      const unwrapped = unwrapRedirectUrl(trimmed);
+      if (unwrapped && unwrapped !== trimmed && isSafeAffiliateUrl(unwrapped)) {
+        if (!unwrapFallback) unwrapFallback = unwrapped;
+      }
+    } else if (isSafeAffiliateUrl(trimmed)) {
+      // Direct merchant link!
+      return trimmed;
+    }
+  }
+
+  if (unwrapFallback && isSafeAffiliateUrl(unwrapFallback)) {
+    return unwrapFallback;
+  }
+
+  for (const cand of candidates) {
+    if (cand && typeof cand === "string" && isSafeAffiliateUrl(cand)) {
+      return cand;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Determines whether a product is an external store deal vs local catalog item.
+ */
+export function isExternalProduct(product) {
+  if (!product) return false;
+  if (String(product.id || "").startsWith("ext-")) return true;
+  if (Boolean(product.external_id)) return true;
+  if (product.is_external === true) return true;
+  const store = getStoreName(product);
+  if (store && !store.toLowerCase().includes("ksam")) return true;
+  const directUrl = getProductDirectMerchantUrl(product);
+  if (directUrl) {
+    try {
+      const host = new URL(directUrl).hostname.toLowerCase();
+      if (!host.includes("ksamdeal") && !host.includes("localhost") && !host.includes("127.0.0.1")) {
+        return true;
+      }
+    } catch {}
+  }
+  return false;
 }
 
 /**
@@ -511,14 +602,43 @@ export function saveDealToSession(deal) {
   if (typeof window === "undefined" || !deal) return;
   try {
     const id = deal.id || deal.external_id;
+    const store = getStoreName(deal) || deal.store_name || deal.store || "";
+    const directUrl =
+      getProductDirectMerchantUrl(deal) ||
+      deal.affiliate_url ||
+      deal.affiliateUrl ||
+      deal.product_url ||
+      deal.productUrl ||
+      deal.url ||
+      "";
+
+    const enriched = {
+      ...deal,
+      store_name: store || deal.store_name || deal.store,
+      store: store || deal.store || deal.store_name,
+      platform: store || deal.platform,
+      affiliate_url: directUrl || deal.affiliate_url || deal.affiliateUrl,
+      affiliateUrl: directUrl || deal.affiliateUrl || deal.affiliate_url,
+      product_url: directUrl || deal.product_url || deal.productUrl,
+      productUrl: directUrl || deal.productUrl || deal.product_url,
+      url: directUrl || deal.url,
+      is_external: isExternalProduct(deal)
+    };
+
     if (id) {
       const cleanId = String(id).trim();
-      sessionStorage.setItem(`ksam_deal_${cleanId}`, JSON.stringify(deal));
-      if (cleanId.startsWith("ext-")) {
-        sessionStorage.setItem(`ksam_deal_${cleanId.replace(/^ext-/, "")}`, JSON.stringify(deal));
-      }
+      const cleanNoExt = cleanId.replace(/^ext-/, "");
+      sessionStorage.setItem(`ksam_deal_${cleanId}`, JSON.stringify(enriched));
+      sessionStorage.setItem(`ksam_deal_${cleanNoExt}`, JSON.stringify(enriched));
+      sessionStorage.setItem(`ksam_deal_ext-${cleanNoExt}`, JSON.stringify(enriched));
     }
-    sessionStorage.setItem("ksam_last_clicked_deal", JSON.stringify(deal));
+    if (deal.external_id) {
+      const extId = String(deal.external_id).trim();
+      const extClean = extId.replace(/^ext-/, "");
+      sessionStorage.setItem(`ksam_deal_${extId}`, JSON.stringify(enriched));
+      sessionStorage.setItem(`ksam_deal_ext-${extClean}`, JSON.stringify(enriched));
+    }
+    sessionStorage.setItem("ksam_last_clicked_deal", JSON.stringify(enriched));
   } catch (e) {
     console.warn("Failed to save deal to sessionStorage:", e);
   }
@@ -532,7 +652,16 @@ export function saveDealToSession(deal) {
 export async function upsertExternalDeal(product) {
   if (!product) return null;
   try {
-    const storeName = getStoreName(product);
+    const storeName = getStoreName(product) || product.store_name || product.store || "";
+    const directUrl =
+      getProductDirectMerchantUrl(product) ||
+      product.affiliate_url ||
+      product.affiliateUrl ||
+      product.product_url ||
+      product.productUrl ||
+      product.url ||
+      null;
+
     const rawDesc = (product.description || "").trim();
     const cleanDesc = rawDesc.startsWith("Verified hot deal on") ? null : (rawDesc || null);
 
@@ -543,7 +672,7 @@ export async function upsertExternalDeal(product) {
         external_id: product.external_id || String(product.id || "").replace(/^ext-/, ""),
         name: product.name || product.title,
         title: product.title || product.name,
-        brand: product.brand && !product.brand.toLowerCase().includes("ksam") ? product.brand : null,
+        brand: product.brand && !product.brand.toLowerCase().includes("ksam") && product.brand.toLowerCase() !== storeName.toLowerCase() ? product.brand : null,
         category: product.category || "General",
         description: cleanDesc,
         image_url: product.image || product.image_url || null,
@@ -556,8 +685,8 @@ export async function upsertExternalDeal(product) {
         store: storeName || null,
         store_name: storeName || null,
         source: storeName || null,
-        product_url: product.product_url || product.url || null,
-        affiliate_url: product.affiliate_url || product.url || product.product_url || null
+        product_url: directUrl || product.product_url || product.productUrl || product.url || null,
+        affiliate_url: directUrl || product.affiliate_url || product.affiliateUrl || product.url || product.product_url || null
       }
     };
 
@@ -669,12 +798,20 @@ export function normalizeDeal(product) {
     categoryName = deriveCategoryFromName(product.name || product.title);
   }
 
-  const affiliateUrl =
+  const directMerchantUrl =
     bestOffer?.affiliateUrl ||
+    getProductDirectMerchantUrl(product) ||
     product.affiliate_url ||
     product.affiliateUrl ||
     product.product_url ||
-    "#";
+    product.productUrl ||
+    product.url ||
+    product.link ||
+    product.raw?.link ||
+    product.raw?.product_link ||
+    "";
+
+  const affiliateUrl = directMerchantUrl || "#";
 
   const rawDesc = (product.description || product.summary || product.desc || "").trim();
   const description = cleanCardDescription(rawDesc, product.name || product.title);
@@ -710,7 +847,7 @@ export function normalizeDeal(product) {
     uid: product.uid || `deal_${product.id}`,
     name: product.name || product.title || "Untitled Deal",
     title: product.title || product.name || "Untitled Deal",
-    brand: realBrand || storeName || "",
+    brand: realBrand || null,
     category: categoryName,
     price: basePrice,
     oldPrice: baseOldPrice > basePrice ? baseOldPrice : basePrice,
@@ -733,7 +870,11 @@ export function normalizeDeal(product) {
     platform: storeName,
     store: storeName,
     affiliateUrl,
+    affiliate_url: affiliateUrl,
+    product_url: directMerchantUrl || product.product_url || product.productUrl || affiliateUrl,
+    productUrl: directMerchantUrl || product.product_url || product.productUrl || affiliateUrl,
     url: affiliateUrl,
+    is_external: isExternalProduct(product),
     description,
     keyFeatures,
     specs,
@@ -1580,10 +1721,19 @@ export async function getSupabaseDealByIdOrUid(id, uid) {
         }
       }
 
-      return normalizeDeal({
+      const sessionItem = getDealFromSession(id || uid);
+      const merged = {
+        ...(sessionItem || {}),
         ...singleProd,
-        product_offers: offers
-      });
+        store_name: singleProd.store_name || sessionItem?.store_name || sessionItem?.store || getStoreName(sessionItem) || getStoreName(singleProd),
+        store: singleProd.store_name || sessionItem?.store || sessionItem?.store_name || getStoreName(sessionItem) || getStoreName(singleProd),
+        affiliate_url: singleProd.affiliate_url || sessionItem?.affiliate_url || sessionItem?.affiliateUrl || sessionItem?.url || singleProd.product_url,
+        product_url: singleProd.product_url || sessionItem?.product_url || sessionItem?.productUrl || sessionItem?.url || singleProd.affiliate_url,
+        url: singleProd.affiliate_url || sessionItem?.affiliate_url || sessionItem?.url || singleProd.product_url,
+        product_offers: offers.length > 0 ? offers : (singleProd.product_offers || sessionItem?.product_offers || sessionItem?.offers || [])
+      };
+
+      return normalizeDeal(merged);
     }
   } catch (err) {
     // Non-blocking query failure
@@ -1608,18 +1758,20 @@ export const getDealById = (id) => getSupabaseDealByIdOrUid(id, null);
  */
 export async function logPlatformClick(productId, platform, affiliateUrl) {
   try {
+    const isUuid = productId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(productId));
     const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : null;
     await supabase.from("click_events").insert({
-      product_id: productId,
-      platform,
-      affiliate_url: affiliateUrl,
+      product_id: isUuid ? productId : null,
+      platform: platform ? String(platform) : "Store",
+      affiliate_url: affiliateUrl ? String(affiliateUrl) : null,
       user_agent: userAgent
     });
   } catch (err) {
     // Also try outbound_clicks fallback
     try {
+      const isUuid = productId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(productId));
       await supabase.from("outbound_clicks").insert({
-        product_id: productId,
+        product_id: isUuid ? productId : null,
         source: platform || "deal_card"
       });
     } catch {}

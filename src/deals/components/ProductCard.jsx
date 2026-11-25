@@ -188,6 +188,7 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
           <a
             href={productUrl}
             className="deal-card-name-link"
+            title={item.name}
             onClick={handleCardClick}
           >
             {item.name}

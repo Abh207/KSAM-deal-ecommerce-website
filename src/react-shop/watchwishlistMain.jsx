@@ -8,7 +8,7 @@ import {
   ArrowUp,
   ShoppingBag,
   Check,
-  Sparkles,
+  Compass,
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
@@ -576,7 +576,7 @@ function WishlistPage() {
               >
                 <div className="kx-rec-header-text-block">
                   <div className="kx-rec-tag-pill">
-                    <Sparkles size={14} className="kx-rec-sparkle-icon" />
+                    <Compass size={14} className="kx-rec-pill-icon" />
                     <span className="kx-rec-dot" aria-hidden="true" />
                     <span className="kx-rec-tag-text">DISCOVER</span>
                   </div>

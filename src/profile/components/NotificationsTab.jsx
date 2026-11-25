@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Bell, Lock, Mail, ShieldAlert, Sparkles, Zap } from "lucide-react";
+import { Bell, Lock, Mail, ShieldAlert, Compass, Zap } from "lucide-react";
 import gsap from "gsap";
 import { supabase } from "../../lib/supabase";
 import { respectReducedMotion } from "../../lib/motion.js";
@@ -94,11 +94,11 @@ export default function NotificationsTab({
     <div ref={panelRef} className="ks-tab-panel" role="tabpanel" aria-label="Notification Preferences">
       {/* Clean Section Heading (No redundant outer card container) */}
       <div className="kx-notifications-heading mb-6 px-1">
-        <h2 className="flex items-center gap-2.5 text-lg font-bold text-white tracking-[-0.01em]">
-          <Bell size={20} className="text-[#8cff00]" />
+        <h2 className="flex items-center gap-2.5 text-lg font-bold text-[#0F172A] tracking-[-0.01em]">
+          <Bell size={20} className="text-[#15803D]" />
           <span>Notification Channels</span>
         </h2>
-        <p className="text-[13.5px] text-[#98A3A0] mt-1 leading-[1.55]">
+        <p className="text-[13.5px] text-[#475569] mt-1 leading-[1.55]">
           Choose what alerts and marketing updates you wish to receive from KSAM Deal.
         </p>
       </div>
@@ -178,7 +178,7 @@ export default function NotificationsTab({
         <div className="kx-spot" data-tone="purple">
           <div className="kx-spot-content">
             <div className="kx-spot-icon-tile kx-spot-icon-tile--purple">
-              <Sparkles size={20} />
+              <Compass size={20} />
             </div>
             <div className="kx-spot-text-wrap">
               <h4 className="kx-spot-title">Personalized Recommendations</h4>

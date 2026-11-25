@@ -19,7 +19,7 @@ import {
   Watch,
   Footprints,
   Shirt,
-  Sparkles,
+  Tag,
   Smartphone,
   Laptop,
   Camera,
@@ -156,7 +156,7 @@ function getSubCategoryIcon(name = "") {
   if (n.includes("chair")) return <Armchair size={20} />;
   if (n.includes("beauty") || n.includes("skin") || n.includes("serum")) return <Heart size={20} />;
 
-  return <Sparkles size={20} />;
+  return <Tag size={20} />;
 }
 
 // Derive subcategory from individual product

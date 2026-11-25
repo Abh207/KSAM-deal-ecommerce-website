@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowDown, Sparkles, Compass } from "lucide-react";
+import { ArrowDown, Compass } from "lucide-react";
 import "./AccessoriesFullscreenHero.css";
 
 export default function AccessoriesFullscreenHero({
@@ -104,7 +104,7 @@ export default function AccessoriesFullscreenHero({
       >
         {/* Small Badge */}
         <div className="accessories-hero-badge">
-          <Sparkles size={14} className="hero-badge-sparkle" />
+          <Compass size={14} className="hero-badge-icon" />
           <span>TRENDING COLLECTION 2026</span>
         </div>
 

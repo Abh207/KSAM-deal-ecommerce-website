@@ -404,7 +404,7 @@ export default function SectionNav({ activeSection, onNavigate, counts = {} }) {
                       tabIndex={isActive ? 0 : -1}
                       onClick={() => handleSelect(sec.id)}
                       onKeyDown={(e) => handleKeyDown(e, idx)}
-                      className={`ks-nav-pill-btn ${isActive ? "is-active" : ""} ${sec.isDanger ? "is-danger" : ""}`}
+                      className={`ks-nav-pill-btn group ${isActive ? "is-active" : ""} ${sec.isDanger ? "is-danger" : ""}`}
                     >
                       <Icon size={20} className="ks-nav-tab-icon shrink-0" />
                       <span className="ks-nav-tab-text">

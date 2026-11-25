@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Flame } from "lucide-react";
 
 const PROMO_DATA = [
     {
@@ -230,7 +230,7 @@ const PromoCarousel = ({ onSelectCategory }) => {
                 {/* Header */}
                 <div className="beauty-promo-header">
                     <div className="beauty-section-badge">
-                        <Sparkles size={14} className="beauty-badge-icon" />
+                        <Flame size={14} className="beauty-badge-icon" />
                         <span>LIMITED TIME EXTRAVAGANZA</span>
                     </div>
                     <h2 className="beauty-promo-main-title">Hot Offers & Promotions</h2>

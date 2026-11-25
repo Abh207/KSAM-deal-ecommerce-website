@@ -5,7 +5,6 @@ import {
   ArrowRight,
   UserPlus,
   LogIn,
-  Sparkles,
   Bell,
   MapPin,
   Clock,
@@ -130,7 +129,7 @@ export default function SignedOutGate() {
         {/* Overlay gradient mask */}
         <div className="ks-gate-preview-gradient-overlay flex items-center justify-center">
           <div className="text-center p-8 rounded-3xl bg-[#0a0e14]/90 border border-white/15 backdrop-blur-xl max-w-md shadow-2xl">
-            <Sparkles size={28} className="text-[#8cff00] mx-auto mb-3" />
+            <ShieldCheck size={28} className="text-[#8cff00] mx-auto mb-3" />
             <h3 className="text-lg font-bold text-white mb-1">Signed-Out Preview</h3>
             <p className="text-xs text-gray-400 mb-5">
               Sign in with your email or Google account to load your saved data and custom dashboard.

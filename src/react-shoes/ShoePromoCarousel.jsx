@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Flame } from "lucide-react";
 import { buildProductUid } from "../lib/cartHelper.js";
 
 const PROMO_DATA = [
@@ -260,7 +260,7 @@ function ShoePromoCarousel() {
             {/* Centered Heading Block matching site style */}
             <div className="shoe-section-header-centered">
                 <span className="shoe-pill-badge">
-                    <Sparkles size={13} className="inline-block mr-1 text-[#16c965]" />
+                    <Flame size={13} className="inline-block mr-1 text-[#16c965]" />
                     LIMITED TIME DEALS
                 </span>
                 <h2 className="shoe-section-title">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
 
 const WATCH_PROMO_DATA = [
     {
@@ -237,7 +237,7 @@ function WatchPromoCarousel() {
                 {/* Centered Heading Block */}
                 <div className="beauty-promo-header">
                     <div className="beauty-section-badge watch-promo-badge">
-                        <Sparkles size={14} className="beauty-badge-icon" />
+                        <Clock size={14} className="beauty-badge-icon" />
                         <span>LIMITED TIME DEALS</span>
                     </div>
                     <h2 className="beauty-promo-main-title">Hot Watch Offers &amp; Promotions</h2>

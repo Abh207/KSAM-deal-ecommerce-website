@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Zap } from "lucide-react";
 
 const PROMO_CARDS = [
     {
@@ -223,7 +223,7 @@ const ElectronicsPromoCarousel = () => {
                 {/* Centered Header */}
                 <div className="beauty-section-header-centered">
                     <div className="beauty-section-badge">
-                        <Sparkles size={14} className="beauty-badge-icon" />
+                        <Zap size={14} className="beauty-badge-icon" />
                         <span>LIMITED TIME DEALS</span>
                     </div>
                     <h2 className="beauty-section-title">
