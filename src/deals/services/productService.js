@@ -1,5 +1,11 @@
 import { supabase, isSupabaseConfigured } from "../../lib/supabase.js";
 import { INLINE_PRODUCTS } from "../components/HeroHead/useMarquee.js";
+import {
+  CATEGORY_TABS,
+  normalizeCategoryName,
+  classifyProduct,
+  getCategoryFilterValues
+} from "../data/categories.js";
 
 export function formatTimeAgo(dateString) {
   if (!dateString) return "Price updated recently";
@@ -406,21 +412,8 @@ export function isDemoProduct(item) {
   );
 }
 
-export function deriveCategoryFromName(name = "") {
-  const text = (name || "").toLowerCase();
-  if (text.includes("watch") || text.includes("timepiece") || text.includes("chronograph") || text.includes("smartwatch")) return "Watches";
-  if (text.includes("shirt") || text.includes("t-shirt") || text.includes("pant") || text.includes("trouser") || text.includes("jeans") || text.includes("dress") || text.includes("kurti") || text.includes("saree") || text.includes("suit") || text.includes("cloth") || text.includes("hoodie") || text.includes("jacket") || text.includes("top") || text.includes("kurta")) return "Clothes";
-  if (text.includes("phone") || text.includes("galaxy") || text.includes("iphone") || text.includes("mobile") || text.includes("oneplus") || text.includes("redmi") || text.includes("pixel")) return "Mobiles";
-  if (text.includes("laptop") || text.includes("macbook") || text.includes("tuf") || text.includes("thinkpad") || text.includes("notebook")) return "Laptops";
-  if (text.includes("headphone") || text.includes("airpod") || text.includes("audio") || text.includes("earbud") || text.includes("earphone") || text.includes("speaker") || text.includes("soundbar")) return "Audio";
-  if (text.includes("shoe") || text.includes("air max") || text.includes("sneaker") || text.includes("footwear") || text.includes("boot") || text.includes("sandal")) return "Shoes";
-  if (text.includes("mouse") || text.includes("keyboard") || text.includes("playstation") || text.includes("ps5") || text.includes("xbox") || text.includes("gaming") || text.includes("controller")) return "Gaming";
-  if (text.includes("cream") || text.includes("beauty") || text.includes("lotion") || text.includes("serum") || text.includes("perfume") || text.includes("lipstick") || text.includes("makeup") || text.includes("skincare")) return "Beauty";
-  if (text.includes("chair") || text.includes("sofa") || text.includes("vacuum") || text.includes("mattress") || text.includes("bedsheet") || text.includes("curtain")) return "Home";
-  if (text.includes("sunglass") || text.includes("glasses") || text.includes("eyewear") || text.includes("spectacle")) return "Eyewear";
-  if (text.includes("tv") || text.includes("television") || text.includes("oled") || text.includes("qled") || text.includes("refrigerator") || text.includes("microwave") || text.includes("camera") || text.includes("monitor")) return "Electronics";
-  if (text.includes("fashion") || text.includes("apparel") || text.includes("wear")) return "Fashion";
-  return "General";
+export function deriveCategoryFromName(name = "", existingCategory = "") {
+  return classifyProduct(name, existingCategory);
 }
 
 export function getCategoryFallbackImage(category = "", name = "") {
@@ -793,10 +786,7 @@ export function normalizeDeal(product) {
   }
 
   const storeName = getStoreName(product);
-  let categoryName = (product.category || "").trim();
-  if (!categoryName || categoryName.toLowerCase() === "deals" || categoryName.toLowerCase() === "deal" || categoryName.toLowerCase() === "search") {
-    categoryName = deriveCategoryFromName(product.name || product.title);
-  }
+  const categoryName = normalizeCategoryName(product.category) || classifyProduct(product.name || product.title, product.category);
 
   const directMerchantUrl =
     bestOffer?.affiliateUrl ||
@@ -1058,6 +1048,56 @@ export function clearDealsNavigationState() {
   } catch {}
 }
 
+/**
+ * Interleaves an array of products round-robin across categories
+ * so no single category dominates the view (especially for "All" tab).
+ * Removes duplicates by id and preserves stable relative order within categories.
+ */
+export function interleaveProductsAcrossCategories(productsList) {
+  if (!Array.isArray(productsList) || productsList.length === 0) return [];
+
+  // Deduplicate products by id
+  const seenIds = new Set();
+  const deduped = [];
+  for (const p of productsList) {
+    const idKey = String(p.id || p.external_id || p.product_url || "");
+    if (!idKey || !seenIds.has(idKey)) {
+      if (idKey) seenIds.add(idKey);
+      deduped.push(p);
+    }
+  }
+
+  // Bucket by canonical category
+  const buckets = new Map();
+  for (const p of deduped) {
+    const cat = normalizeCategoryName(p.category) || classifyProduct(p.name || p.title, p.category) || "General";
+    if (!buckets.has(cat)) {
+      buckets.set(cat, []);
+    }
+    buckets.get(cat).push(p);
+  }
+
+  // Round-robin interleaving
+  const interleaved = [];
+  let hasMoreItems = true;
+  let round = 0;
+
+  while (hasMoreItems) {
+    hasMoreItems = false;
+    for (const [, list] of buckets.entries()) {
+      if (round < list.length) {
+        interleaved.push(list[round]);
+        if (round + 1 < list.length) {
+          hasMoreItems = true;
+        }
+      }
+    }
+    round++;
+  }
+
+  return interleaved;
+}
+
 export function getInstantCachedDeals(options = {}) {
   const cached = getCachedDealsList();
   if (!cached || !Array.isArray(cached.data) || cached.data.length < 12) {
@@ -1080,20 +1120,13 @@ export function getInstantCachedDeals(options = {}) {
   }
 
   if (category && category !== "All") {
-    const targetCat = category.toLowerCase().trim();
+    const canonical = normalizeCategoryName(category) || category;
     allDeals = allDeals.filter((p) => {
-      const c = (p.category || "").toLowerCase();
-      const n = (p.name || "").toLowerCase();
-      if (targetCat === "clothes") {
-        return c.includes("cloth") || c.includes("fashion") || c.includes("apparel") ||
-          n.includes("shirt") || n.includes("t-shirt") || n.includes("dress") || n.includes("kurti") ||
-          n.includes("jeans") || n.includes("pant") || n.includes("trouser") || n.includes("cloth");
-      }
-      if (targetCat === "watches") {
-        return c.includes("watch") || n.includes("watch") || n.includes("chronograph") || n.includes("smartwatch");
-      }
-      return c.includes(targetCat) || targetCat.includes(c) || n.includes(targetCat);
+      const pCat = normalizeCategoryName(p.category) || classifyProduct(p.name || p.title, p.category);
+      return pCat.toLowerCase() === canonical.toLowerCase();
     });
+  } else {
+    allDeals = interleaveProductsAcrossCategories(allDeals);
   }
 
   if (store && store !== "All") {
@@ -1410,20 +1443,69 @@ export async function getDeals(options = {}) {
     try {
       const isFirstPage = from === 0;
 
+      // STEP 4: Server-side balanced RPC for "All" tab deals
+      if (category === "All" && (!search || !search.trim())) {
+        try {
+          const timeoutRpc = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Balanced deals RPC timeout")), 4000)
+          );
+          const rpcPromise = supabase.rpc("get_balanced_deals", {
+            p_store: store || "All",
+            p_sort: sort || "biggest_discount",
+            p_from: from,
+            p_to: to
+          });
+          const { data: rpcData, error: rpcErr } = await Promise.race([rpcPromise, timeoutRpc]);
+
+          if (!rpcErr && Array.isArray(rpcData) && rpcData.length > 0) {
+            const normalized = rpcData
+              .map(normalizeDeal)
+              .filter((d) => {
+                if (!d || !d.name) return false;
+                if (isDemoProduct(d)) return false;
+                if (d.is_suspicious) return false;
+                if (!d.price || d.price <= 0 || !Number.isFinite(d.price)) return false;
+                if (d.name.trim().length < 5 || /^\d+$/.test(d.name.trim())) return false;
+                const link = d.affiliate_url || d.affiliateUrl || d.url || d.product_url;
+                if (!link || link === "#") return false;
+                return true;
+              });
+
+            const totalCount = Number(rpcData[0]?.total_count) || (normalized.length >= 12 ? 290 : normalized.length);
+            const hasMore = to + 1 < totalCount && normalized.length > 0;
+
+            if (validPage === 1 && normalized.length > 0) {
+              setCachedDealsList(normalized);
+            }
+
+            return {
+              products: normalized,
+              total: totalCount,
+              hasMore,
+              page: validPage,
+              isOffline: false
+            };
+          }
+        } catch {
+          // Fall through to query builder if RPC is not yet executed
+        }
+      }
+
       const buildDealsQuery = (cols) => {
         let q = supabase.from("products").select(cols, { count: "exact" });
 
         q = q.eq("is_active", true);
 
-        // 1. Filter by category
+        // 1. Filter strictly on canonical category column
         if (category && category !== "All") {
-          const targetCat = category.toLowerCase().trim();
-          if (targetCat === "clothes") {
-            q = q.or("category.ilike.%clothes%,category.ilike.%fashion%,category.ilike.%apparel%,name.ilike.%shirt%,name.ilike.%t-shirt%,name.ilike.%kurti%,name.ilike.%dress%,name.ilike.%pant%,name.ilike.%trouser%,title.ilike.%shirt%,title.ilike.%t-shirt%");
-          } else if (targetCat === "watches") {
-            q = q.or("category.ilike.%watch%,name.ilike.%watch%,title.ilike.%watch%,name.ilike.%chronograph%,name.ilike.%smartwatch%");
+          const canonical = normalizeCategoryName(category) || category;
+          const filterVals = getCategoryFilterValues(canonical);
+          if (filterVals.length === 1) {
+            q = q.ilike("category", filterVals[0]);
+          } else if (filterVals.length > 1) {
+            q = q.or(filterVals.map((v) => `category.ilike.${v}`).join(","));
           } else {
-            q = q.or(`category.ilike.%${targetCat}%,name.ilike.%${targetCat}%,title.ilike.%${targetCat}%`);
+            q = q.ilike("category", canonical);
           }
         }
 
@@ -1439,7 +1521,7 @@ export async function getDeals(options = {}) {
           q = q.or(`name.ilike.%${searchClean}%,title.ilike.%${searchClean}%,brand.ilike.%${searchClean}%,category.ilike.%${searchClean}%`);
         }
 
-        // 4. Stable sort: .order("created_at", { ascending: false }).order("id", { ascending: false })
+        // 4. Stable sort
         switch (sort) {
           case "price_low_high":
             q = q
@@ -1468,6 +1550,10 @@ export async function getDeals(options = {}) {
         }
 
         // 5. Server-side pagination range
+        if (category === "All") {
+          // Fetch up to the required batch for round-robin interleaving
+          return q.range(0, Math.max(to, 71));
+        }
         return q.range(from, to);
       };
 
@@ -1513,7 +1599,7 @@ export async function getDeals(options = {}) {
       }
 
       if (!error && Array.isArray(data)) {
-        const normalized = data
+        let normalized = data
           .map(normalizeDeal)
           .filter((d) => {
             if (!d || !d.name) return false;
@@ -1525,6 +1611,73 @@ export async function getDeals(options = {}) {
             if (!link || link === "#") return false;
             return true;
           });
+
+        if (category === "All") {
+          normalized = interleaveProductsAcrossCategories(normalized);
+          normalized = normalized.slice(from, to + 1);
+        } else {
+          const canonical = normalizeCategoryName(category) || category;
+          normalized = normalized.filter((d) => {
+            const itemCat = normalizeCategoryName(d.category) || classifyProduct(d.name || d.title, d.category);
+            return itemCat.toLowerCase() === canonical.toLowerCase();
+          });
+
+          // Fallback if database row categories are not yet backfilled via migration 019
+          if (normalized.length === 0 && (!data || data.length === 0)) {
+            try {
+              let fbQuery = supabase
+                .from("products")
+                .select(initialCols, { count: "exact" })
+                .eq("is_active", true);
+
+              if (store && store !== "All") {
+                const targetStore = store.toLowerCase().trim();
+                fbQuery = fbQuery.or(
+                  `source.ilike.%${targetStore}%,product_url.ilike.%${targetStore}%,affiliate_url.ilike.%${targetStore}%`
+                );
+              }
+
+              const { data: allActive } = await fbQuery.range(0, 289);
+              if (Array.isArray(allActive) && allActive.length > 0) {
+                const matching = allActive
+                  .map(normalizeDeal)
+                  .filter((d) => {
+                    if (!d || !d.name) return false;
+                    if (isDemoProduct(d)) return false;
+                    if (d.is_suspicious) return false;
+                    if (!d.price || d.price <= 0 || !Number.isFinite(d.price)) return false;
+                    if (d.name.trim().length < 5 || /^\d+$/.test(d.name.trim())) return false;
+                    const link = d.affiliate_url || d.affiliateUrl || d.url || d.product_url;
+                    if (!link || link === "#") return false;
+                    const itemCat = normalizeCategoryName(d.category) || classifyProduct(d.name || d.title, d.category);
+                    return itemCat.toLowerCase() === canonical.toLowerCase();
+                  });
+
+                if (matching.length > 0) {
+                  switch (sort) {
+                    case "price_low_high":
+                      matching.sort((a, b) => (a.price || 0) - (b.price || 0));
+                      break;
+                    case "price_high_low":
+                      matching.sort((a, b) => (b.price || 0) - (a.price || 0));
+                      break;
+                    case "newest":
+                      matching.sort((a, b) => new Date(b.priceUpdatedAt || 0) - new Date(a.priceUpdatedAt || 0));
+                      break;
+                    case "biggest_discount":
+                    default:
+                      matching.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+                      break;
+                  }
+                  normalized = matching.slice(from, to + 1);
+                  count = matching.length;
+                }
+              }
+            } catch (fbErr) {
+              console.debug("[getDeals] Category fallback query error:", fbErr);
+            }
+          }
+        }
 
         const totalCount =
           count !== null && count !== undefined
@@ -1569,20 +1722,13 @@ export async function getDeals(options = {}) {
     });
 
   if (category && category !== "All") {
-    const targetCat = category.toLowerCase().trim();
+    const canonical = normalizeCategoryName(category) || category;
     allDeals = allDeals.filter((p) => {
-      const c = (p.category || "").toLowerCase();
-      const n = (p.name || "").toLowerCase();
-      if (targetCat === "clothes") {
-        return c.includes("cloth") || c.includes("fashion") || c.includes("apparel") ||
-          n.includes("shirt") || n.includes("t-shirt") || n.includes("dress") || n.includes("kurti") ||
-          n.includes("jeans") || n.includes("pant") || n.includes("trouser") || n.includes("cloth");
-      }
-      if (targetCat === "watches") {
-        return c.includes("watch") || n.includes("watch") || n.includes("chronograph") || n.includes("smartwatch");
-      }
-      return c.includes(targetCat) || targetCat.includes(c) || n.includes(targetCat);
+      const pCat = normalizeCategoryName(p.category) || classifyProduct(p.name || p.title, p.category);
+      return pCat.toLowerCase() === canonical.toLowerCase();
     });
+  } else {
+    allDeals = interleaveProductsAcrossCategories(allDeals);
   }
 
   if (store && store !== "All") {
@@ -1808,4 +1954,159 @@ export function subscribeDealsRealtime(onUpdate) {
     console.debug("[subscribeDealsRealtime] Channel error:", err);
     return () => {};
   }
+}
+
+const CATEGORY_COUNTS_CACHE_PREFIX = "ksam_category_counts_v2_";
+const CATEGORY_COUNTS_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
+
+const memoryCategoryCountsCache = new Map();
+
+/**
+ * Returns active product count per category tab.
+ * Uses a 5-minute memory and sessionStorage cache per store.
+ * 1. Tries `get_category_counts` RPC (with optional p_store parameter).
+ * 2. Falls back to ONE single query to calculate canonical classifications on the fly.
+ * 3. Never shows 0 on error; logs the real error with console.error and returns null.
+ * 4. Tab counts add up to All total: sum(11 tabs) + countsMap.Other === countsMap.All.
+ */
+export async function getCategoryCounts(store = "All") {
+  const normalizedStore = (store || "All").trim();
+  const cacheKey = `${CATEGORY_COUNTS_CACHE_PREFIX}${normalizedStore.toLowerCase()}`;
+  const now = Date.now();
+
+  const memCached = memoryCategoryCountsCache.get(cacheKey);
+  if (memCached && now - memCached.timestamp < CATEGORY_COUNTS_TTL_MS) {
+    return memCached.counts;
+  }
+
+  try {
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      const stored = window.sessionStorage.getItem(cacheKey);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.timestamp && now - parsed.timestamp < CATEGORY_COUNTS_TTL_MS) {
+          memoryCategoryCountsCache.set(cacheKey, parsed);
+          return parsed.counts;
+        }
+      }
+    }
+  } catch {}
+
+  const countsMap = { All: 0, Other: 0 };
+  for (const tab of CATEGORY_TABS) {
+    if (tab.canonical !== "All") {
+      countsMap[tab.canonical] = 0;
+      countsMap[tab.label] = 0;
+      countsMap[tab.id] = 0;
+    }
+  }
+
+  if (isSupabaseConfigured && supabase) {
+    // 1. Try RPC get_category_counts with optional p_store
+    try {
+      const { data: rpcData, error: rpcErr } = await supabase.rpc("get_category_counts", {
+        p_store: normalizedStore
+      });
+      if (!rpcErr && Array.isArray(rpcData) && rpcData.length > 0) {
+        let total = 0;
+        let otherTotal = 0;
+        for (const row of rpcData) {
+          const rawCat = row.category;
+          const cnt = Number(row.count) || 0;
+          total += cnt;
+          const norm = normalizeCategoryName(rawCat);
+          if (norm && countsMap[norm] !== undefined) {
+            countsMap[norm] = (countsMap[norm] || 0) + cnt;
+          } else {
+            otherTotal += cnt;
+          }
+        }
+        countsMap.Other = otherTotal;
+        countsMap.All = total;
+
+        for (const tab of CATEGORY_TABS) {
+          if (tab.canonical !== "All") {
+            const c = countsMap[tab.canonical] || 0;
+            countsMap[tab.label] = c;
+            countsMap[tab.id] = c;
+          }
+        }
+
+        memoryCategoryCountsCache.set(cacheKey, { counts: countsMap, timestamp: now });
+        try {
+          if (typeof window !== "undefined" && window.sessionStorage) {
+            window.sessionStorage.setItem(
+              cacheKey,
+              JSON.stringify({ counts: countsMap, timestamp: now })
+            );
+          }
+        } catch {}
+        return countsMap;
+      }
+    } catch {
+      // RPC failed (e.g. migration 019 not executed yet) - fall through to single fallback query
+    }
+
+    // 2. Single Query Fallback:
+    // Fetches active products (filtered by store if requested) and classifies in memory using canonical rules.
+    // This allows exact counts even before migration 019 is run in SQL editor!
+    try {
+      let q = supabase
+        .from("products")
+        .select("id, title, name, category, source, product_url, affiliate_url")
+        .eq("is_active", true);
+
+      if (normalizedStore !== "All") {
+        const s = normalizedStore.toLowerCase();
+        q = q.or(`source.ilike.%${s}%,product_url.ilike.%${s}%,affiliate_url.ilike.%${s}%`);
+      }
+
+      const { data: productsData, error: queryErr } = await q;
+
+      if (queryErr) {
+        console.error("[KsamDeal] getCategoryCounts query error:", queryErr);
+        // Do not return false 0s on error; return null
+        return null;
+      }
+
+      if (Array.isArray(productsData)) {
+        let otherCount = 0;
+        for (const p of productsData) {
+          const norm = normalizeCategoryName(p.category) || classifyProduct(p.title || p.name, p.category);
+          if (norm && countsMap[norm] !== undefined) {
+            countsMap[norm] = (countsMap[norm] || 0) + 1;
+          } else {
+            otherCount += 1;
+          }
+        }
+
+        countsMap.Other = otherCount;
+        countsMap.All = productsData.length;
+
+        for (const tab of CATEGORY_TABS) {
+          if (tab.canonical !== "All") {
+            const c = countsMap[tab.canonical] || 0;
+            countsMap[tab.label] = c;
+            countsMap[tab.id] = c;
+          }
+        }
+
+        memoryCategoryCountsCache.set(cacheKey, { counts: countsMap, timestamp: now });
+        try {
+          if (typeof window !== "undefined" && window.sessionStorage) {
+            window.sessionStorage.setItem(
+              cacheKey,
+              JSON.stringify({ counts: countsMap, timestamp: now })
+            );
+          }
+        } catch {}
+        return countsMap;
+      }
+    } catch (err) {
+      console.error("[KsamDeal] Failed to calculate category counts:", err);
+      return null;
+    }
+  }
+
+  return null;
 }

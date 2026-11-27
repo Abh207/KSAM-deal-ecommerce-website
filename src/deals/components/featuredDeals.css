@@ -350,6 +350,29 @@
   line-height: 1;
 }
 
+.fd-chip.is-empty {
+  opacity: 0.55;
+  filter: grayscale(35%);
+}
+
+.fd-chip-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #a3a3a3;
+  line-height: 1.2;
+  margin-left: 3px;
+  transition: all 0.2s ease;
+}
+
+.fd-chip-active .fd-chip-count,
+.is-active .fd-chip-count {
+  background: rgba(0, 0, 0, 0.22);
+  color: #041009;
+}
+
 /* Right: Selects Group (Store & Sort) */
 .fd-selects-group {
   display: flex;

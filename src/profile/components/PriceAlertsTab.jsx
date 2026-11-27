@@ -5,6 +5,7 @@ import {
   Edit3,
   ArrowUpRight,
   ArrowLeft,
+  ArrowRight,
   TrendingDown,
   Mail,
   Tag,
@@ -118,9 +119,9 @@ export default function PriceAlertsTab({
               onShowToast?.("No alerts yet. Add an alert from any deal card!");
             }
           }}
-          className="su-btn-pill-raised"
+          className="su-btn-secondary-white text-xs h-9 px-3.5"
         >
-          <Bell size={16} className="text-[#1E293B]" strokeWidth={2.2} />
+          <Bell size={15} className="text-[#111827]" strokeWidth={2.2} />
           <span>Manage Alerts</span>
         </button>
       </div>
@@ -150,18 +151,6 @@ export default function PriceAlertsTab({
       {/* 3. Empty State or Alerts List */}
       {alerts.length === 0 ? (
         <div className="su-card su-card-raised su-empty-card">
-          {/* Mint-green organic rounded badge with bell and tag accent */}
-          <div className="su-organic-badge-wrap">
-            <div className="su-organic-badge">
-              <div className="relative">
-                <Bell size={36} className="text-[#1E293B]" strokeWidth={2} />
-                <span className="su-tag-accent">
-                  <Tag size={12} className="text-[#059669]" strokeWidth={2.4} />
-                </span>
-              </div>
-            </div>
-          </div>
-
           <h3 className="su-empty-title">No Price Drop Monitors Active</h3>
           <p className="su-empty-subtitle">
             Start tracking your favourite products and get instant alerts when their price drops.
@@ -169,9 +158,10 @@ export default function PriceAlertsTab({
 
           <a
             href={`${BASE_URL}#deals`}
-            className="su-btn-mint-cta"
+            className="su-btn-secondary-white"
           >
-            <span>+ Explore Trending Deals</span>
+            <span>Explore Trending Deals</span>
+            <ArrowRight size={15} strokeWidth={2} />
           </a>
         </div>
       ) : (
@@ -338,14 +328,14 @@ export default function PriceAlertsTab({
                 <button
                   type="button"
                   onClick={() => setEditingAlert(null)}
-                  className="su-btn-pill-raised text-xs py-2 px-4"
+                  className="su-btn-secondary-white text-xs py-2 px-4"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="su-btn-mint-cta text-xs py-2 px-5"
+                  className="su-btn-primary text-xs py-2 px-5"
                 >
                   {actionLoading ? "Saving..." : "Save Target"}
                 </button>

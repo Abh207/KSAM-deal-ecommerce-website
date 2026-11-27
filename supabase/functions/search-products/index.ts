@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
 import { fetchFromAllAdapters } from "../_shared/providers/registry.ts";
+import { classifyProduct } from "../_shared/categories.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -187,7 +188,7 @@ Deno.serve(async (req: Request) => {
       name: p.name || p.title || "External Product",
       title: p.title || p.name || "External Product",
       brand: p.brand && !String(p.brand).toLowerCase().includes("ksam") ? p.brand : null,
-      category: p.category && String(p.category).toLowerCase() !== "deals" ? p.category : "General",
+      category: classifyProduct(p.title || p.name || "", p.category),
       description: cleanDesc || null,
       image_url: p.image_url || p.image || null,
       price: p.price ? Number(p.price) : 0,

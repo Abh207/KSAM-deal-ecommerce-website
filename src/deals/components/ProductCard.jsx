@@ -46,7 +46,8 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
   const uid = item.uid || item.external_id || buildProductUid(item.category, item.id);
   const fromParam = item.from || "deals";
-  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(item.id)}&category=${encodeURIComponent(item.category || "General")}&uid=${encodeURIComponent(uid)}&from=${encodeURIComponent(fromParam)}`;
+  const canonicalCat = item.category || deriveCategoryFromName(item.name || item.title) || "General";
+  const productUrl = `${normalizedBase}product.html?id=${encodeURIComponent(item.id)}&category=${encodeURIComponent(canonicalCat)}&uid=${encodeURIComponent(uid)}&from=${encodeURIComponent(fromParam)}`;
 
   const isSaved = isInWishlist(item.uid || item.id || item.external_id);
 
@@ -112,10 +113,7 @@ export function ProductCard({ product, p, index, onOpenDetails, onClick }) {
   const rawDesc = (item.description || item.desc || item.summary || "").trim();
   const descText = cleanCardDescription(rawDesc, item.name || item.title);
 
-  let categoryLabel = (item.category || "").trim();
-  if (!categoryLabel || categoryLabel.toLowerCase() === "deals" || categoryLabel.toLowerCase() === "deal" || categoryLabel.toLowerCase() === "search") {
-    categoryLabel = deriveCategoryFromName(item.name || item.title);
-  }
+  const categoryLabel = item.category || deriveCategoryFromName(item.name || item.title);
 
   const realBrand = item.brand && !item.brand.toLowerCase().includes("ksam") ? item.brand.trim() : "";
   const displayBrandOrStore = realBrand || storeName || "";

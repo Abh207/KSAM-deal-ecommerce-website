@@ -68,7 +68,7 @@
   transform: translateY(0);
 }
 
-/* Loading & Empty State */
+/* Loading & Empty State (FIX 5: Clean white surface) */
 .orders-loading-box,
 .orders-empty-box {
   display: flex;
@@ -77,10 +77,10 @@
   justify-content: center;
   text-align: center;
   padding: 56px 24px;
-  border-radius: 20px;
-  background: #EDF0F5;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: -6px -6px 14px rgba(255, 255, 255, 0.85), 6px 6px 16px rgba(163, 177, 198, 0.35);
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .orders-spinner {
@@ -98,73 +98,78 @@
 }
 
 .orders-empty-icon-wrap {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background: #E8EDF3;
-  box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.35), inset -2px -2px 5px rgba(255, 255, 255, 0.85);
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   color: #15803D;
 }
 
 .orders-empty-box h3 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #0F172A;
-  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px 0;
 }
 
 .orders-empty-box p {
-  color: #475569;
+  color: #4B5563;
   font-size: 0.9rem;
   max-width: 440px;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   line-height: 1.5;
 }
 
 .orders-shop-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 24px;
-  border-radius: 9999px;
-  background: #0F172A;
-  color: #FFFFFF !important;
-  font-weight: 700;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #111827 !important;
+  border: 1px solid #D1D5DB;
+  font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.8), 2px 4px 10px rgba(15, 23, 42, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.15s, border-color 0.15s;
 }
 
 .orders-shop-btn:hover {
-  background: #1E293B;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+  background: #F3F4F6;
+  border-color: #9CA3AF;
+  color: #111827 !important;
+  transform: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Orders List & Card */
 .orders-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .order-card {
-  background: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.8) !important;
-  border-radius: 18px !important;
-  box-shadow: -7px -7px 14px rgba(255, 255, 255, 0.85), 7px 7px 16px rgba(163, 177, 198, 0.35) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   overflow: hidden;
-  transition: all 0.25s ease;
+  transition: border-color 0.15s ease;
 }
 
 .order-card:hover {
-  border-color: rgba(22, 163, 74, 0.3) !important;
-  box-shadow: -8px -8px 18px rgba(255, 255, 255, 0.95), 8px 8px 20px rgba(163, 177, 198, 0.45) !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 .order-card-header {
@@ -173,9 +178,9 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 16px 20px;
-  background: #E8EDF3;
-  border-bottom: 1px solid rgba(163, 177, 198, 0.2);
+  padding: 14px 20px;
+  background: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .order-meta-group {

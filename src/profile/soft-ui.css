@@ -4,42 +4,41 @@
    ========================================================================== */
 
 :root {
-  --su-canvas: #EEF2F6;
-  --su-surface: #EDF0F5;
-  --su-surface-subtle: #E8ECF2;
+  --su-canvas: #F6F7F9;
+  --su-surface: #FFFFFF;
+  --su-surface-subtle: #F9FAFB;
   --su-surface-white: #FFFFFF;
-  --su-border: rgba(255, 255, 255, 0.75);
-  --su-border-subtle: rgba(163, 177, 198, 0.25);
+  --su-border: #E5E7EB;
+  --su-border-subtle: #E5E7EB;
   
-  --su-text-primary: #1E293B;
-  --su-text-secondary: #475569;
-  --su-text-muted: #64748B;
+  --su-text-primary: #111827;
+  --su-text-secondary: #4B5563;
+  --su-text-muted: #6B7280;
   
-  /* Neumorphic Dual Shadows */
-  --su-shadow-raised: -6px -6px 14px rgba(255, 255, 255, 0.85), 6px 6px 16px rgba(163, 177, 198, 0.35);
-  --su-shadow-raised-sm: -3px -3px 8px rgba(255, 255, 255, 0.85), 3px 3px 8px rgba(163, 177, 198, 0.3);
-  --su-shadow-raised-lg: -8px -8px 20px rgba(255, 255, 255, 0.9), 8px 8px 24px rgba(163, 177, 198, 0.4);
-  --su-shadow-raised-hover: -8px -8px 18px rgba(255, 255, 255, 0.95), 8px 8px 20px rgba(163, 177, 198, 0.45);
+  /* Clean subtle flat shadows - no raised/inset neumorphic shadows */
+  --su-shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --su-shadow-raised-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --su-shadow-raised-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --su-shadow-raised-hover: 0 2px 4px rgba(0, 0, 0, 0.06);
   
-  /* Neumorphic Inset / Recessed Shadows */
-  --su-shadow-inset: inset 3px 3px 6px rgba(163, 177, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
-  --su-shadow-inset-sm: inset 2px 2px 5px rgba(163, 177, 198, 0.3), inset -2px -2px 5px rgba(255, 255, 255, 0.75);
+  /* Neumorphic Inset / Recessed Shadows removed */
+  --su-shadow-inset: none;
+  --su-shadow-inset-sm: none;
 }
 
 /* 1. Canvas Wrap */
 .su-canvas-wrap {
-  background-color: var(--su-canvas) !important;
-  border-radius: 24px;
-  padding: clamp(20px, 3.5vw, 36px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.95),
-              0 10px 30px -5px rgba(163, 177, 198, 0.3);
+  background-color: transparent !important;
+  border-radius: 0;
+  padding: 0;
+  border: none !important;
+  box-shadow: none !important;
   color: var(--su-text-primary);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   box-sizing: border-box;
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .su-canvas-wrap * {
@@ -48,53 +47,55 @@
 
 /* 2. Raised Cards */
 .su-card {
-  background-color: var(--su-surface);
-  border: 1px solid var(--su-border);
-  border-radius: 20px;
-  box-shadow: var(--su-shadow-raised);
-  padding: clamp(20px, 3vw, 28px);
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  padding: clamp(18px, 2.5vw, 24px);
   position: relative;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.15s ease;
 }
 
 .su-card-raised {
-  background-color: var(--su-surface);
-  border: 1px solid var(--su-border);
-  box-shadow: var(--su-shadow-raised);
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 .su-card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--su-shadow-raised-hover);
+  transform: none;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* 3. Inset / Recessed Elements */
 .su-inset {
-  background-color: var(--su-surface);
-  box-shadow: var(--su-shadow-inset);
+  background-color: #F9FAFB;
+  box-shadow: none;
   border-radius: 9999px;
-  border: 1px solid rgba(163, 177, 198, 0.2);
+  border: 1px solid #E5E7EB;
 }
 
 .su-recessed-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: var(--su-surface);
-  box-shadow: var(--su-shadow-inset-sm);
+  gap: 6px;
+  padding: 4px 12px;
+  background-color: #F3F4F6;
+  box-shadow: none !important;
   border-radius: 9999px;
-  border: 1px solid rgba(163, 177, 198, 0.2);
-  font-size: 12.5px;
+  border: 1px solid #E5E7EB;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--su-text-secondary);
+  color: #4B5563;
 }
 
 .su-recessed-pill-green {
-  background-color: #EBF8F2;
-  box-shadow: inset 2px 2px 5px rgba(16, 185, 129, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.9);
-  color: #065F46;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background-color: #F0FDF4;
+  box-shadow: none !important;
+  color: #15803D;
+  border: 1px solid #DCFCE7;
 }
 
 /* 4. Raised Buttons & Interactive Pills */
@@ -168,65 +169,84 @@
   color: #0F172A;
 }
 
-/* Mint-Green CTA Button */
-.su-btn-mint-cta {
+/* White Secondary Button Style (FIX 4) */
+.su-btn-secondary-white,
+.su-btn-gradient-cta,
+.su-btn-mint-cta,
+.orders-shop-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 28px;
-  border-radius: 9999px;
-  background-color: #A7F3D0;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: -4px -4px 12px rgba(255, 255, 255, 0.9), 4px 6px 16px rgba(16, 185, 129, 0.3);
-  color: #064E3B;
-  font-size: 14.5px;
-  font-weight: 800;
-  text-decoration: none;
+  height: 40px;
+  padding: 0 16px;
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border: 1px solid #D1D5DB !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  outline: none;
+  box-sizing: border-box;
 }
 
-.su-btn-mint-cta:hover {
-  background-color: #9EE6C3;
-  transform: translateY(-2px);
-  box-shadow: -5px -5px 14px rgba(255, 255, 255, 0.95), 5px 8px 20px rgba(16, 185, 129, 0.4);
-  color: #022C22;
+.su-btn-secondary-white:hover,
+.su-btn-gradient-cta:hover,
+.su-btn-mint-cta:hover,
+.orders-shop-btn:hover {
+  background-color: #F3F4F6 !important;
+  border-color: #9CA3AF !important;
+  color: #111827 !important;
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
-.su-btn-mint-cta:active {
-  transform: translateY(1px);
-  box-shadow: inset 2px 2px 5px rgba(6, 78, 59, 0.25), inset -2px -2px 5px rgba(255, 255, 255, 0.8);
+.su-btn-secondary-white:focus-visible,
+.su-btn-gradient-cta:focus-visible,
+.su-btn-mint-cta:focus-visible,
+.orders-shop-btn:focus-visible {
+  outline: 2px solid #2F7D1F !important;
+  outline-offset: 2px !important;
 }
 
-/* Gradient Pill Button (Lime-to-Cyan) */
-.su-btn-gradient-cta {
+/* Solid Primary Button Style (FIX 2 & FIX 4) */
+.su-btn-primary,
+.kx-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 26px;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #84FF00 0%, #06B6D4 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: -4px -4px 12px rgba(255, 255, 255, 0.85), 4px 6px 18px rgba(6, 182, 212, 0.35);
-  color: #0F172A;
-  font-size: 14px;
-  font-weight: 800;
-  text-decoration: none;
+  height: 40px;
+  padding: 0 20px;
+  background-color: #2F7D1F !important;
+  color: #FFFFFF !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: background-color 0.15s ease;
+  outline: none;
+  box-sizing: border-box;
 }
 
-.su-btn-gradient-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: -5px -5px 15px rgba(255, 255, 255, 0.95), 5px 8px 22px rgba(6, 182, 212, 0.45);
-  color: #020617;
+.su-btn-primary:hover,
+.kx-btn-primary:hover {
+  background-color: #276A19 !important;
+  color: #FFFFFF !important;
+  transform: none !important;
 }
 
-.su-btn-gradient-cta:active {
-  transform: translateY(1px);
-  box-shadow: inset 2px 2px 5px rgba(15, 23, 42, 0.3);
+.su-btn-primary:focus-visible,
+.kx-btn-primary:focus-visible {
+  outline: 2px solid #2F7D1F !important;
+  outline-offset: 2px !important;
 }
 
 /* 5. Typography */
@@ -548,67 +568,94 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+}
+
+.su-roadmap-complete-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background-color: #F0FDF4;
+  border: 1px solid #DCFCE7;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .su-roadmap-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
+  width: 100%;
   position: relative;
+  overflow: visible;
+  box-sizing: border-box;
 }
 
-/* Connecting Line across the 5 steps */
-.su-roadmap-line {
-  position: absolute;
-  top: 18px;
-  left: 5%;
-  right: 5%;
-  height: 2px;
-  background-color: #CBD5E1;
-  z-index: 0;
+@media (max-width: 1199px) and (min-width: 860px) {
+  .su-roadmap-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 859px) and (min-width: 520px) {
+  .su-roadmap-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 519px) {
+  .su-roadmap-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .su-roadmap-step {
   position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-  background: transparent;
-  border: none;
-  padding: 0;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 14px 12px;
   text-align: left;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.su-step-pill-header {
-  display: inline-flex;
+.su-roadmap-step:hover {
+  background-color: #F9FAFB;
+  border-color: #CBD5E1;
+}
+
+.su-step-header-row {
+  display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  border-radius: 9999px;
-  background-color: var(--su-surface);
-  border: 1px solid var(--su-border);
-  box-shadow: var(--su-shadow-raised-sm);
-  font-size: 12px;
-  font-weight: 750;
-  color: var(--su-text-primary);
-  margin-bottom: 10px;
-  max-width: 100%;
-  transition: all 0.2s ease;
+  width: 100%;
+  margin-bottom: 6px;
 }
 
-.su-roadmap-step:hover .su-step-pill-header {
-  transform: translateY(-1px);
-  box-shadow: var(--su-shadow-raised);
+.su-step-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .su-step-circle-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -619,21 +666,24 @@
 }
 
 .su-step-circle-done {
-  background-color: #10B981;
+  background-color: #2F7D1F;
   color: #FFFFFF;
 }
 
 .su-step-circle-pending {
-  background-color: #94A3B8;
-  color: #FFFFFF;
+  background-color: #E5E7EB;
+  color: #4B5563;
 }
 
 .su-step-desc {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.45;
-  color: var(--su-text-muted);
+  color: #4B5563;
   margin: 0;
-  padding-left: 4px;
+  padding: 0;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* Bottom 3-Column Equal Grid */
@@ -772,20 +822,21 @@
 
 /* Product Card Grid */
 .su-product-card {
-  background-color: var(--su-surface);
-  border: 1px solid var(--su-border);
-  border-radius: 18px;
-  box-shadow: var(--su-shadow-raised-sm);
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.22s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .su-product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--su-shadow-raised);
+  transform: none !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* ==========================================================================
@@ -796,21 +847,12 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
-  .su-roadmap-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-  
-  .su-roadmap-line {
-    display: none;
-  }
 }
 
 @media (max-width: 768px) {
   .su-canvas-wrap {
-    padding: 18px 16px;
-    border-radius: 18px;
+    padding: 0;
+    border-radius: 0;
   }
 
   .su-alerts-header-row,
@@ -828,11 +870,6 @@
 
   .su-banner-divider {
     display: none;
-  }
-
-  .su-roadmap-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
   }
   
   .su-roadmap-header {
@@ -859,68 +896,30 @@
   gap: 20px !important;
 }
 
-.kx-panel-header-open .kx-section-eyebrow:not(.is-danger-eyebrow),
+.kx-panel-header-open .kx-section-eyebrow,
 .is-profile-section-header .kx-section-eyebrow,
 #panel-profile .kx-panel-header-open .kx-section-eyebrow,
-.is-profile-eyebrow {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-  padding: 6px 14px !important;
-  border-radius: 9999px !important;
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.95), 3px 3px 8px rgba(163, 177, 198, 0.35) !important;
-  color: #15803D !important;
-  font-size: 11.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  margin-bottom: 10px !important;
-  width: fit-content !important;
-}
-
-.kx-panel-header-open .kx-section-eyebrow.is-danger-eyebrow {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-  padding: 6px 14px !important;
-  border-radius: 9999px !important;
-  background-color: #FEF2F2 !important;
-  border: 1px solid #FCA5A5 !important;
-  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.95), 3px 3px 8px rgba(239, 68, 68, 0.15) !important;
-  color: #DC2626 !important;
-  font-size: 11.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  margin-bottom: 10px !important;
-  width: fit-content !important;
-}
-
-.kx-panel-header-open .kx-section-eyebrow:not(.is-danger-eyebrow) svg,
-.is-profile-section-header .kx-section-eyebrow svg,
-#panel-profile .kx-panel-header-open .kx-section-eyebrow svg,
-.is-profile-eyebrow svg {
-  color: #15803D !important;
-  stroke: #15803D !important;
-}
-
-.kx-panel-header-open .kx-section-eyebrow.is-danger-eyebrow svg {
-  color: #DC2626 !important;
-  stroke: #DC2626 !important;
+.is-profile-eyebrow,
+.kx-section-eyebrow,
+.kx-page .kx-panel-header-open .kx-panel-header-art,
+.kx-panel-header-open .kx-panel-header-art,
+.is-profile-section-header .kx-panel-header-art,
+#panel-profile .kx-panel-header-open .kx-panel-header-art,
+.kx-panel-header-art,
+.su-eyebrow-pill {
+  display: none !important;
 }
 
 .kx-panel-header-open .kx-panel-heading,
 .is-profile-section-header .kx-panel-heading,
 #panel-profile .kx-panel-header-open .kx-panel-heading {
-  font-size: clamp(24px, 3.2vw, 32px) !important;
+  font-size: clamp(22px, 3vw, 28px) !important;
   font-weight: 800 !important;
-  color: #0F172A !important;
-  -webkit-text-fill-color: #0F172A !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
   background: none !important;
   letter-spacing: -0.02em !important;
-  margin: 0 0 8px 0 !important;
+  margin: 0 0 6px 0 !important;
   line-height: 1.25 !important;
 }
 
@@ -932,40 +931,11 @@
 .kx-panel-header-open .kx-panel-desc,
 .is-profile-section-header .kx-panel-desc,
 #panel-profile .kx-panel-header-open .kx-panel-desc {
-  font-size: 14.5px !important;
-  color: #475569 !important;
-  line-height: 1.6 !important;
+  font-size: 14px !important;
+  color: #4B5563 !important;
+  line-height: 1.55 !important;
   max-width: 72ch !important;
   margin: 0 !important;
-}
-
-.kx-page .kx-panel-header-open .kx-panel-header-art,
-.kx-panel-header-open .kx-panel-header-art,
-.is-profile-section-header .kx-panel-header-art,
-#panel-profile .kx-panel-header-open .kx-panel-header-art {
-  width: 52px !important;
-  height: 52px !important;
-  border-radius: 16px !important;
-  background: #EDF0F5 !important;
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.95), 4px 4px 12px rgba(163, 177, 198, 0.35) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-}
-
-.kx-panel-header-open .kx-panel-header-art svg,
-.is-profile-section-header .kx-panel-header-art svg,
-#panel-profile .kx-panel-header-open .kx-panel-header-art svg {
-  color: #15803D !important;
-  stroke: #15803D !important;
-}
-
-.kx-panel-header-open.is-danger-header .kx-panel-header-art svg {
-  color: #DC2626 !important;
-  stroke: #DC2626 !important;
 }
 
 /* 2. Two-Column Layout Grid */
@@ -987,23 +957,23 @@
 
 /* 3. Left Card: Profile Photo & Identity */
 .ks-photo-card {
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.85) !important;
-  border-radius: 20px !important;
-  box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.85), 8px 8px 18px rgba(163, 177, 198, 0.35) !important;
-  padding: 28px 24px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  padding: 24px 20px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   text-align: center !important;
   box-sizing: border-box !important;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
+  transition: border-color 0.15s ease !important;
 }
 
 .ks-photo-card:hover {
-  transform: translateY(-2px) !important;
-  border-color: rgba(255, 255, 255, 0.95) !important;
-  box-shadow: -10px -10px 20px rgba(255, 255, 255, 0.95), 10px 10px 22px rgba(163, 177, 198, 0.42) !important;
+  transform: none !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 @media (min-width: 1024px) {
@@ -1068,17 +1038,15 @@
   height: 116px !important;
   border-radius: 50% !important;
   background-color: #E2E8F0 !important;
-  border: 4px solid #EDF0F5 !important;
-  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.95),
-              4px 4px 12px rgba(163, 177, 198, 0.4),
-              inset 2px 2px 4px rgba(163, 177, 198, 0.25) !important;
+  border: 3px solid #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
   overflow: hidden !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-/* Camera Badge: Small raised circular button in bottom-right */
+/* Camera Badge: Small circular button in bottom-right */
 .ks-avatar-anchor-btn {
   position: absolute !important;
   right: 0 !important;
@@ -1086,27 +1054,28 @@
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background-color: #EDF0F5 !important;
-  border: 2px solid #FFFFFF !important;
-  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.95), 3px 3px 8px rgba(163, 177, 198, 0.4) !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
   color: #15803D !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease, color 0.18s ease !important;
+  transition: border-color 0.15s ease, color 0.15s ease !important;
   z-index: 5 !important;
 }
 
 .ks-avatar-anchor-btn:hover {
-  transform: scale(1.08) !important;
+  transform: none !important;
+  border-color: #9CA3AF !important;
   color: #16A34A !important;
-  box-shadow: -3px -3px 8px rgba(255, 255, 255, 1), 4px 4px 10px rgba(163, 177, 198, 0.5) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
 .ks-avatar-anchor-btn:active {
-  transform: scale(0.96) !important;
-  box-shadow: inset 2px 2px 4px rgba(163, 177, 198, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.8) !important;
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Name & Email */
@@ -1120,7 +1089,7 @@
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 19px !important;
   font-weight: 800 !important;
-  color: #1E293B !important;
+  color: #111827 !important;
   letter-spacing: -0.015em !important;
   margin: 0 !important;
   line-height: 1.3 !important;
@@ -1128,7 +1097,7 @@
 
 .ks-photo-email {
   font-size: 13.5px !important;
-  color: #64748B !important;
+  color: #4B5563 !important;
   margin-top: 4px !important;
   margin-bottom: 0 !important;
   white-space: nowrap !important;
@@ -1147,33 +1116,32 @@
 }
 
 .ks-photo-primary-btn {
-  height: 44px !important;
+  height: 40px !important;
   width: 100% !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  border-radius: 9999px !important;
+  border-radius: 6px !important;
   font-size: 13.5px !important;
-  font-weight: 700 !important;
-  background-color: #16A34A !important;
+  font-weight: 600 !important;
+  background-color: #2F7D1F !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.9), 3px 5px 12px rgba(22, 163, 74, 0.35) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.15s ease !important;
   text-decoration: none !important;
 }
 
 .ks-photo-primary-btn:hover {
-  background-color: #15803D !important;
-  transform: translateY(-2px) !important;
-  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.95), 4px 7px 16px rgba(22, 163, 74, 0.45) !important;
+  background-color: #276A19 !important;
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 .ks-photo-primary-btn:active {
-  transform: translateY(1px) !important;
-  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.25), inset -2px -2px 5px rgba(255, 255, 255, 0.15) !important;
+  transform: none !important;
 }
 
 .ks-photo-ghost-btn {
@@ -1183,33 +1151,32 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  border-radius: 9999px !important;
+  border-radius: 6px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
-  background-color: #EDF0F5 !important;
-  color: #475569 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.85), 3px 3px 8px rgba(163, 177, 198, 0.3) !important;
+  background-color: #FFFFFF !important;
+  color: #4B5563 !important;
+  border: 1px solid #D1D5DB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
 }
 
 .ks-photo-ghost-btn:hover {
   color: #DC2626 !important;
   background-color: #FEF2F2 !important;
-  border-color: rgba(220, 38, 38, 0.2) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.95), 4px 4px 10px rgba(220, 38, 38, 0.15) !important;
+  border-color: #FCA5A5 !important;
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 .ks-photo-ghost-btn:active {
-  transform: translateY(1px) !important;
-  box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.35), inset -2px -2px 5px rgba(255, 255, 255, 0.8) !important;
+  transform: none !important;
 }
 
 .ks-photo-specs-note {
   font-size: 12px !important;
-  color: #64748B !important;
+  color: #6B7280 !important;
   line-height: 1.5 !important;
   margin-top: 14px !important;
   margin-bottom: 0 !important;
@@ -1218,14 +1185,14 @@
 
 /* 4. Right Card: Personal Details Form */
 .ks-profile-form-card {
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.85) !important;
-  border-radius: 20px !important;
-  box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.85), 8px 8px 18px rgba(163, 177, 198, 0.35) !important;
-  padding: 28px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  padding: 24px !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 24px !important;
+  gap: 20px !important;
   box-sizing: border-box !important;
 }
 
@@ -1507,7 +1474,7 @@
   transform: translateY(-11px) scale(0.76) !important;
 }
 
-/* Email "Change" Button: Small raised soft-gray pill with crisp royal blue (#2563EB) text */
+/* Email "Change" Button: Small clean pill with royal blue text */
 .ks-email-change-btn {
   position: absolute !important;
   right: 12px !important;
@@ -1515,20 +1482,26 @@
   transform: translateY(-50%) !important;
   height: 30px !important;
   padding: 0 14px !important;
-  border-radius: 9999px !important;
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.9), 2px 2px 6px rgba(163, 177, 198, 0.35) !important;
-  color: #2563EB !important;
+  border-radius: 6px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  color: #1F6F12 !important;
   font-size: 12px !important;
-  font-weight: 750 !important;
+  font-weight: 600 !important;
   letter-spacing: 0.01em !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.15s ease !important;
   z-index: 2 !important;
+}
+
+.ks-email-change-btn:hover {
+  background-color: #F3F4F6 !important;
+  border-color: #9CA3AF !important;
+  color: #15803D !important;
 }
 
 .ks-email-change-btn:hover {
@@ -1600,24 +1573,26 @@
   line-height: 1.55 !important;
 }
 
-/* 2. Global Soft-UI Raised Cards */
+/* 2. Global Clean White Cards (FIX 5) */
 .ks-card,
 .ks-address-card,
 .kx-spot,
 .kx-theme-card,
 .kx-help-featured-banner {
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.8) !important;
-  border-radius: 20px !important;
-  box-shadow: -7px -7px 14px rgba(255, 255, 255, 0.85), 7px 7px 16px rgba(163, 177, 198, 0.35) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: border-color 0.15s ease !important;
 }
 
 .ks-card:hover,
+.ks-address-card:hover,
 .kx-spot:hover,
 .kx-theme-card:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: -8px -8px 18px rgba(255, 255, 255, 0.95), 8px 8px 20px rgba(163, 177, 198, 0.45) !important;
+  transform: none !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* 3. Primary Button Style (.su-btn-primary) */
@@ -1626,51 +1601,64 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  padding: 10px 22px !important;
-  border-radius: 9999px !important;
-  background-color: #0F172A !important;
+  height: 40px !important;
+  padding: 0 20px !important;
+  border-radius: 6px !important;
+  background-color: #2F7D1F !important;
   color: #FFFFFF !important;
   font-size: 13.5px !important;
-  font-weight: 700 !important;
-  border: 1px solid #0F172A !important;
-  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.8), 2px 4px 10px rgba(15, 23, 42, 0.3) !important;
+  font-weight: 600 !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.15s ease !important;
   text-decoration: none !important;
 }
 
 .su-btn-primary:hover {
-  background-color: #1E293B !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25) !important;
+  background-color: #276A19 !important;
+  color: #FFFFFF !important;
+  transform: none !important;
 }
 
-.su-btn-primary:active {
-  transform: translateY(1px) !important;
-  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3) !important;
+.su-btn-primary:focus-visible {
+  outline: 2px solid #2F7D1F !important;
+  outline-offset: 2px !important;
 }
 
-/* Secondary Button Style (.su-btn-secondary) */
-.su-btn-secondary {
+/* Secondary Button Style (.su-btn-secondary, .su-btn-secondary-white) */
+.su-btn-secondary,
+.su-btn-secondary-white {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  padding: 10px 20px !important;
-  border-radius: 9999px !important;
-  background-color: #EDF0F5 !important;
-  color: #0F172A !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.85), 2px 2px 6px rgba(163, 177, 198, 0.3) !important;
+  height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 6px !important;
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  border: 1px solid #D1D5DB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  text-decoration: none !important;
 }
 
-.su-btn-secondary:hover {
-  background-color: #FFFFFF !important;
-  color: #15803D !important;
+.su-btn-secondary:hover,
+.su-btn-secondary-white:hover {
+  background-color: #F3F4F6 !important;
+  border-color: #9CA3AF !important;
+  color: #111827 !important;
+  transform: none !important;
+}
+
+.su-btn-secondary:focus-visible,
+.su-btn-secondary-white:focus-visible {
+  outline: 2px solid #2F7D1F !important;
+  outline-offset: 2px !important;
 }
 
 /* 4. Delivery Addresses Section */
@@ -1811,25 +1799,25 @@
 
 .ks-modal-card,
 .kx-modal-card {
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -10px -10px 30px rgba(255, 255, 255, 0.9), 10px 10px 30px rgba(163, 177, 198, 0.45) !important;
-  border-radius: 20px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
   width: 100% !important;
   max-width: 520px !important;
-  padding: 28px !important;
+  padding: 24px !important;
   position: relative !important;
-  color: #0F172A !important;
+  color: #111827 !important;
 }
 
 .ks-modal-card input,
 .ks-modal-card select,
 .ks-modal-card textarea {
-  background: #E6EBF1 !important;
-  border: 1px solid rgba(163, 177, 198, 0.25) !important;
-  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.85) !important;
-  border-radius: 12px !important;
-  color: #0F172A !important;
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  color: #111827 !important;
   font-weight: 600 !important;
   padding: 10px 14px !important;
   width: 100% !important;
@@ -1847,15 +1835,15 @@
 .ks-modal-title {
   font-size: 1.25rem !important;
   font-weight: 800 !important;
-  color: #0F172A !important;
+  color: #111827 !important;
 }
 
 .ks-modal-close-btn {
-  background: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -2px -2px 5px rgba(255, 255, 255, 0.8), 2px 2px 5px rgba(163, 177, 198, 0.3) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: none !important;
   color: #64748B !important;
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   width: 32px !important;
   height: 32px !important;
   display: flex !important;
@@ -1865,8 +1853,8 @@
 }
 
 .ks-modal-close-btn:hover {
-  color: #0F172A !important;
-  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  background-color: #F3F4F6 !important;
 }
 
 /* 5. Security & Credentials Section */
@@ -2055,10 +2043,10 @@
   gap: 10px !important;
   padding: 8px 18px !important;
   border-radius: 9999px !important;
-  background-color: #EDF0F5 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.85), 3px 3px 8px rgba(163, 177, 198, 0.3) !important;
-  color: #0F172A !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  color: #111827 !important;
   font-size: 13px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
@@ -2066,7 +2054,7 @@
 }
 
 .kx-swatch-chip.is-selected {
-  box-shadow: inset 2px 2px 4px rgba(163, 177, 198, 0.35), inset -2px -2px 4px rgba(255, 255, 255, 0.85) !important;
+  box-shadow: none !important;
   border-color: #16A34A !important;
   color: #15803D !important;
 }

@@ -25,6 +25,7 @@ export default function OverviewTab({
   const containerRef = useRef(null);
   const progressFillRef = useRef(null);
   const [displayPercent, setDisplayPercent] = useState(() => (respectReducedMotion() ? completeness : 0));
+  const [showCompletedSteps, setShowCompletedSteps] = useState(false);
 
   // 5 discrete steps in priority order
   const steps = useMemo(() => {
@@ -207,44 +208,70 @@ export default function OverviewTab({
         />
       </div>
 
-      {/* 3. Setup Roadmap Card (Full-width raised card) */}
+      {/* 3. Setup Roadmap Card (Full-width card) */}
       <div className="su-card su-card-raised">
         <div className="su-roadmap-header">
           <div>
             <h3 className="su-banner-title" style={{ fontSize: "17px" }}>Setup Roadmap</h3>
             <p className="su-banner-desc">Key milestones to optimize your deal tracking experience</p>
           </div>
-          <div className="su-recessed-pill su-recessed-pill-green">
-            <Check size={14} className="text-[#059669]" strokeWidth={2.6} />
-            <span>{completedCount} of 5 completed</span>
+          <div className="flex items-center gap-2.5">
+            <div className="su-recessed-pill su-recessed-pill-green">
+              <Check size={14} className="text-[#15803D]" strokeWidth={2.6} />
+              <span>{completedCount} of 5 completed</span>
+            </div>
+            {completedCount === 5 && (
+              <button
+                type="button"
+                onClick={() => setShowCompletedSteps((v) => !v)}
+                className="text-xs font-semibold text-[#1F6F12] hover:underline px-1 py-0.5"
+              >
+                {showCompletedSteps ? "Hide steps" : "Show steps"}
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Horizontal 5-Step Connected Layout */}
-        <div className="su-roadmap-grid">
-          <div className="su-roadmap-line" aria-hidden="true" />
-          {steps.map((step) => (
+        {/* If all steps done, compact line with toggle */}
+        {completedCount === 5 && !showCompletedSteps ? (
+          <div className="su-roadmap-complete-banner">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[#15803D]">
+              <Check size={16} strokeWidth={2.6} />
+              <span>All 5 steps complete</span>
+            </div>
             <button
-              key={step.id}
               type="button"
-              onClick={step.action}
-              className="su-roadmap-step"
-              title={`${step.title} - ${step.done ? "Completed" : "Click to complete"}`}
+              onClick={() => setShowCompletedSteps(true)}
+              className="text-xs font-semibold text-[#1F6F12] hover:underline"
             >
-              <div className="su-step-pill-header">
-                <span
-                  className={`su-step-circle-icon ${
-                    step.done ? "su-step-circle-done" : "su-step-circle-pending"
-                  }`}
-                >
-                  {step.done ? <Check size={11} strokeWidth={3} /> : step.stepNum}
-                </span>
-                <span className="truncate">{step.title}</span>
-              </div>
-              <p className="su-step-desc">{step.desc}</p>
+              Show steps
             </button>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="su-roadmap-grid">
+            {steps.map((step) => (
+              <button
+                key={step.id}
+                type="button"
+                onClick={step.action}
+                className="su-roadmap-step"
+                title={`${step.title} - ${step.done ? "Completed" : "Click to complete"}`}
+              >
+                <div className="su-step-header-row">
+                  <span
+                    className={`su-step-circle-icon ${
+                      step.done ? "su-step-circle-done" : "su-step-circle-pending"
+                    }`}
+                  >
+                    {step.done ? <Check size={11} strokeWidth={3} /> : step.stepNum}
+                  </span>
+                  <span className="su-step-title">{step.title}</span>
+                </div>
+                <p className="su-step-desc">{step.desc}</p>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 4. Bottom 3-Column Equal Grid */}
@@ -369,9 +396,10 @@ export default function OverviewTab({
           <div className="su-col-card-bottom justify-end">
             <a
               href={`${BASE_URL}#deals`}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1E293B] hover:text-blue-600 transition"
+              className="su-btn-secondary-white text-xs h-8 px-3"
             >
-              <span>Browse Deals →</span>
+              <span>Browse Deals</span>
+              <ArrowRight size={13} strokeWidth={2} />
             </a>
           </div>
         </div>

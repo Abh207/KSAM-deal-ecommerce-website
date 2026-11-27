@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
+import { classifyProduct, normalizeCategoryName } from "../_shared/categories.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -279,7 +280,7 @@ Deno.serve(async (req: Request) => {
           external_id: externalId,
           name: title,
           title: title,
-          category: category,
+          category: classifyProduct(title, category),
           brand: item.brand || null,
           description: desc || null,
           image_url: rawImg,
@@ -303,26 +304,57 @@ Deno.serve(async (req: Request) => {
       return valid;
     }
 
-    // 5. Fetch 6 Clothes (3 Men's + 3 Women's)
-    const menClothesRaw = await queryGoogleShopping("men cotton shirts t-shirts discount sale", 6);
-    const womenClothesRaw = await queryGoogleShopping("women kurti dresses tops discount sale", 6);
-
-    const menClothes = await processAndCollectItems(menClothesRaw, "Clothes", 3);
-    const womenClothes = await processAndCollectItems(womenClothesRaw, "Clothes", 3);
-    const allClothes = [...menClothes, ...womenClothes];
-
-    // If either sub-query fell short, supplement to reach 6
-    if (allClothes.length < 6) {
-      const extraClothesRaw = await queryGoogleShopping("branded clothing discount sale india", 6);
-      const extra = await processAndCollectItems(extraClothesRaw, "Clothes", 6 - allClothes.length);
-      allClothes.push(...extra);
+    // Parse optional request parameters
+    let body: { category?: string; query?: string; count?: number } = {};
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
     }
 
-    // 6. Fetch 5 Watches
-    const watchesRaw = await queryGoogleShopping("smartwatch analog watches men women discount sale", 8);
-    const allWatches = await processAndCollectItems(watchesRaw, "Watches", 5);
+    const requestedCategory = body.category ? (normalizeCategoryName(body.category) || body.category) : null;
+    const targetCount = Math.max(1, Math.min(30, body.count || 12));
 
-    const totalProducts = [...allClothes, ...allWatches];
+    const DEFAULT_CATEGORY_QUERIES: Record<string, string> = {
+      Mobiles: "5g smartphones discount sale india",
+      Laptops: "laptops macbook discount sale india",
+      Audio: "bluetooth headphones soundbar earbuds discount sale india",
+      Shoes: "running shoes sneakers discount sale india",
+      Fashion: "handbags sunglasses wallet leather belt discount sale india",
+      Home: "kitchen appliances mixer grinder lamp bedsheet discount sale india",
+      Gaming: "gaming console controller keyboard mouse discount sale india",
+      Electronics: "smart tv power bank camera router discount sale india",
+      Beauty: "perfume serum skincare shampoo makeup discount sale india",
+      Clothes: "cotton shirts dresses kurti branded clothing discount sale india",
+      Watches: "smartwatch analog watches men women discount sale"
+    };
+
+    let totalProducts: any[] = [];
+
+    if (requestedCategory && requestedCategory !== "All") {
+      const q = (body.query && body.query.trim()) || DEFAULT_CATEGORY_QUERIES[requestedCategory] || `${requestedCategory} discount sale india`;
+      const rawResults = await queryGoogleShopping(q, targetCount);
+      totalProducts = await processAndCollectItems(rawResults, requestedCategory, targetCount);
+    } else {
+      // Default initial seeding: 6 Clothes (3 Men's + 3 Women's) + 5 Watches
+      const menClothesRaw = await queryGoogleShopping("men cotton shirts t-shirts discount sale", 6);
+      const womenClothesRaw = await queryGoogleShopping("women kurti dresses tops discount sale", 6);
+
+      const menClothes = await processAndCollectItems(menClothesRaw, "Clothes", 3);
+      const womenClothes = await processAndCollectItems(womenClothesRaw, "Clothes", 3);
+      const allClothes = [...menClothes, ...womenClothes];
+
+      if (allClothes.length < 6) {
+        const extraClothesRaw = await queryGoogleShopping("branded clothing discount sale india", 6);
+        const extra = await processAndCollectItems(extraClothesRaw, "Clothes", 6 - allClothes.length);
+        allClothes.push(...extra);
+      }
+
+      const watchesRaw = await queryGoogleShopping("smartwatch analog watches men women discount sale", 8);
+      const allWatches = await processAndCollectItems(watchesRaw, "Watches", 5);
+
+      totalProducts = [...allClothes, ...allWatches];
+    }
 
     if (totalProducts.length === 0) {
       return new Response(

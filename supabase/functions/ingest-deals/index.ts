@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
 import { fetchFromAllAdapters, getRegisteredAdapters } from "../_shared/providers/registry.ts";
 import { NormalizedProduct } from "../_shared/providers/types.ts";
+import { classifyProduct } from "../_shared/categories.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -140,7 +141,7 @@ serve(async (req: Request) => {
         name: p.name,
         title: p.name,
         brand: p.brand || null,
-        category: p.category || categoryToIngest,
+        category: classifyProduct(p.name || p.title || "", p.category || categoryToIngest),
         description: p.description || null,
         image_url: p.image_url,
         additional_images: p.additional_images || [],

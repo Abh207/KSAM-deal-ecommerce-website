@@ -335,9 +335,8 @@ export default function ProfileHero({
 
               <a
                 href={`${BASE_URL}#deals`}
-                className="ks-btn-secondary"
+                className="su-btn-secondary-white"
               >
-                <ShoppingBag size={16} />
                 <span>Explore Deals</span>
                 <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
               </a>

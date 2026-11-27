@@ -7,39 +7,15 @@ import {
   saveDealsNavigationState,
   getDealsNavigationState,
   clearDealsNavigationState,
-  getInstantCachedDeals
+  getInstantCachedDeals,
+  getCategoryCounts
 } from "../services/productService.js";
+import {
+  CATEGORY_TABS,
+  CATEGORY_ICONS,
+  findCategoryBySlugOrName
+} from "../data/categories.js";
 import "./featuredDeals.css";
-
-const CATEGORIES = [
-  "All",
-  "Clothes",
-  "Watches",
-  "Mobiles",
-  "Laptops",
-  "Audio",
-  "Shoes",
-  "Fashion",
-  "Home",
-  "Gaming",
-  "Electronics",
-  "Beauty"
-];
-
-const CATEGORY_ICONS = {
-  All: "⚡",
-  Clothes: "👕",
-  Watches: "⌚",
-  Mobiles: "📱",
-  Laptops: "💻",
-  Audio: "🎧",
-  Shoes: "👟",
-  Fashion: "👗",
-  Home: "🏠",
-  Gaming: "🎮",
-  Electronics: "🔌",
-  Beauty: "💄"
-};
 
 const SORTS = [
   { id: "biggest_discount", label: "Biggest discount" },
@@ -61,6 +37,35 @@ const STORES = [
   { id: "ajio", label: "AJIO" },
   { id: "meesho", label: "Meesho" }
 ];
+
+function getCategoryFromUrl() {
+  if (typeof window === "undefined") return null;
+  const hash = window.location.hash || "";
+  const hashQueryIdx = hash.indexOf("?");
+  if (hashQueryIdx !== -1) {
+    const params = new URLSearchParams(hash.slice(hashQueryIdx + 1));
+    const cat = params.get("category");
+    if (cat) return findCategoryBySlugOrName(cat);
+  } else if (hash.startsWith("#category=")) {
+    const cat = hash.slice("#category=".length);
+    if (cat) return findCategoryBySlugOrName(cat);
+  }
+  const searchParams = new URLSearchParams(window.location.search);
+  const cat = searchParams.get("category");
+  if (cat) return findCategoryBySlugOrName(cat);
+  return null;
+}
+
+function updateCategoryUrl(catLabel) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  if (catLabel && catLabel !== "All") {
+    url.hash = `deals?category=${encodeURIComponent(catLabel.toLowerCase())}`;
+  } else {
+    url.hash = "deals";
+  }
+  window.history.replaceState(null, "", url.toString());
+}
 
 function performScrollRestoration(state) {
   if (!state) return () => {};
@@ -101,7 +106,8 @@ function performScrollRestoration(state) {
 
 function FeaturedDeals() {
   const savedNavState = useMemo(() => getDealsNavigationState(), []);
-  const initialCategory = savedNavState?.category || "All";
+  const urlCategory = useMemo(() => getCategoryFromUrl(), []);
+  const initialCategory = urlCategory || savedNavState?.category || "All";
   const initialStore = savedNavState?.store || "All";
   const initialSort = savedNavState?.sort || "biggest_discount";
   const initialSearch = savedNavState?.search || "";
@@ -125,6 +131,7 @@ function FeaturedDeals() {
 
   const [products, setProducts] = useState(() => initialCache?.products || []);
   const [category, setCategory] = useState(initialCategory);
+  const [categoryCounts, setCategoryCounts] = useState({});
   const [store, setStore] = useState(initialStore);
   const [sort, setSort] = useState(initialSort);
   const [search, setSearch] = useState(initialSearch);
@@ -135,6 +142,33 @@ function FeaturedDeals() {
   const [loadMoreError, setLoadMoreError] = useState("");
   const [error, setError] = useState("");
   const [isOffline, setIsOffline] = useState(false);
+
+  // Load category counts cached for 5 minutes (updates when store filter changes)
+  useEffect(() => {
+    let mounted = true;
+    getCategoryCounts(store).then((counts) => {
+      if (mounted && counts) {
+        setCategoryCounts(counts);
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [store]);
+
+  // Listen to popstate and hashchange for browser Back/Forward tab sync
+  useEffect(() => {
+    const handlePopState = () => {
+      const catFromUrl = getCategoryFromUrl() || "All";
+      setCategory(catFromUrl);
+    };
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handlePopState);
+    };
+  }, []);
 
   const totalCountRef = useRef(290);
   const isRestoringRef = useRef(Boolean(savedNavState && savedNavState.loadedCount));
@@ -356,9 +390,9 @@ function FeaturedDeals() {
     }
   }, [products, savedNavState]);
 
-  // Smooth scroll to #deals on mount if hash is #deals
+  // Smooth scroll to #deals on mount if hash starts with #deals
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash === "#deals") {
+    if (typeof window !== "undefined" && window.location.hash.startsWith("#deals")) {
       setTimeout(() => {
         const el = document.getElementById("deals");
         if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -414,6 +448,16 @@ function FeaturedDeals() {
 
   const handleSelectCategory = (cat) => {
     setCategory(cat);
+    updateCategoryUrl(cat);
+    saveDealsNavigationState({
+      category: cat,
+      store,
+      sort,
+      search,
+      page: 1,
+      loadedCount: 12,
+      scrollY: window.scrollY
+    });
     const chipEl = chipsScrollRef.current?.querySelector(`[data-category="${cat}"]`);
     if (chipEl) {
       chipEl.scrollIntoView({ behavior: "smooth", inline: "nearest", block: "nearest" });
@@ -428,6 +472,7 @@ function FeaturedDeals() {
 
   const resetFilters = () => {
     clearDealsNavigationState();
+    updateCategoryUrl("All");
     setCategory("All");
     setStore("All");
     setSort("biggest_discount");
@@ -502,20 +547,26 @@ function FeaturedDeals() {
         {/* ROW 2: Category Chips Row */}
         <div className="fd-category-scroll-wrap" ref={chipsScrollRef}>
           <div className="fd-category-chips">
-            {CATEGORIES.map((cat) => {
-              const isActive = category === cat;
+            {CATEGORY_TABS.map((tab) => {
+              const isActive = category === tab.label || (category === "All" && tab.id === "all");
+              const count = categoryCounts[tab.canonical] ?? categoryCounts[tab.label];
+              const isEmpty = count === 0;
               return (
                 <button
-                  key={cat}
-                  data-category={cat}
+                  key={tab.id}
+                  data-category={tab.label}
                   type="button"
-                  onClick={() => handleSelectCategory(cat)}
-                  className={`fd-chip ${isActive ? "is-active" : ""}`}
+                  onClick={() => handleSelectCategory(tab.label)}
+                  className={`fd-chip ${isActive ? "is-active fd-chip-active" : ""} ${isEmpty ? "is-empty" : ""}`}
+                  title={isEmpty ? `No deals currently in ${tab.label}` : `${tab.label} (${count ?? 0} deals)`}
                 >
                   <span className="fd-chip-icon" aria-hidden="true">
-                    {CATEGORY_ICONS[cat] || "🏷️"}
+                    {tab.icon}
                   </span>
-                  <span>{cat}</span>
+                  <span className="fd-chip-label">{tab.label}</span>
+                  {typeof count === "number" && (
+                    <span className="fd-chip-count">{count}</span>
+                  )}
                 </button>
               );
             })}
@@ -658,8 +709,20 @@ function FeaturedDeals() {
         {/* Products Grid: 4 cols desktop, 3 tablet, 2 mobile */}
         {!loading && !error && filteredProducts.length > 0 && (
           <>
+            {/* Live Category Deal Count Banner */}
+            <div className="flex items-center justify-between text-xs text-neutral-400 mt-6 mb-2 px-1">
+              <span>
+                Showing <span className="font-semibold text-white">{filteredProducts.length}</span> of{" "}
+                <span className="font-semibold text-white">{categoryCounts[category] ?? totalCountRef.current}</span>{" "}
+                {category !== "All" ? `${category} ` : ""}deals available
+                {(categoryCounts[category] ?? totalCountRef.current) > MAX_PRODUCTS && (
+                  <span className="text-[#8cff00] ml-2 font-medium">(Scroll loads top {MAX_PRODUCTS})</span>
+                )}
+              </span>
+            </div>
+
             <div
-              className="deals-grid mt-8 grid"
+              className="deals-grid mt-2 grid"
               onClickCapture={(e) => {
                 const card = e.target.closest("[data-product-id]");
                 const pId = card?.getAttribute("data-product-id");
@@ -737,16 +800,30 @@ function FeaturedDeals() {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0a0a0a] text-xl">
               🔎
             </div>
-            <h3 className="mt-5 text-xl font-black text-white">No deals right now</h3>
+            <h3 className="mt-5 text-xl font-black text-white">
+              {category !== "All" ? `No ${category} deals right now` : "No deals right now"}
+            </h3>
             <p className="mt-2 text-xs text-gray-500">
-              Try adjusting your filters, store selection, or search query.
+              {category !== "All"
+                ? `There are no active deals under ${category} matching your selected filters. Explore all categories or adjust your filters.`
+                : "Try adjusting your filters, store selection, or search query."}
             </p>
-            <button
-              onClick={resetFilters}
-              className="mt-6 inline-flex min-h-[44px] items-center rounded-xl bg-[#8cff00] px-5 py-2.5 text-xs font-bold text-black transition hover:scale-105"
-            >
-              Clear filters
-            </button>
+            <div className="mt-6 flex items-center justify-center gap-3">
+              {category !== "All" && (
+                <button
+                  onClick={() => handleSelectCategory("All")}
+                  className="inline-flex min-h-[44px] items-center rounded-xl bg-[#8cff00] px-5 py-2.5 text-xs font-bold text-black transition hover:scale-105"
+                >
+                  Show all deals
+                </button>
+              )}
+              <button
+                onClick={resetFilters}
+                className="inline-flex min-h-[44px] items-center rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-white/10"
+              >
+                Clear filters
+              </button>
+            </div>
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Clock, Trash2, ArrowUpRight, ShoppingBag, ArrowLeft } from "lucide-react";
+import { Trash2, ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { BASE_URL } from "../../auth/auth.js";
 import { clearRecentlyViewed } from "../../deals/services/accountActivityService.js";
 
@@ -51,73 +51,48 @@ export default function RecentlyViewedTab({
             >
               <ArrowLeft size={18} className="text-[#1E293B]" strokeWidth={2.4} />
             </button>
-            <div className="su-eyebrow-pill">
-              <Clock size={12} className="text-[#3B82F6]" strokeWidth={2.5} />
-              <span>BROWSING HISTORY</span>
-            </div>
+            <h2 className="su-page-title mb-0">Recently Viewed Deals</h2>
           </div>
-
-          <h2 className="su-page-title mt-1.5">Recently Viewed Deals</h2>
-          <p className="su-page-subtitle">
+          <p className="su-page-subtitle mt-1">
             Quickly revisit gadgets, apparel, and electronic deals you recently explored.
           </p>
         </div>
-
-        {/* Right: Rounded square raised icon button with clock icon */}
-        <div className="su-card su-card-raised p-2.5 rounded-2xl flex items-center justify-center shrink-0">
-          <Clock size={20} className="text-[#3B82F6]" strokeWidth={2.4} />
-        </div>
       </div>
 
-      {/* 2. Main Container Card (Large raised card) */}
+      {/* 2. Main Container Card */}
       <div className="su-card su-card-raised">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3.5">
-            <div className="su-embossed-circle su-embossed-tile-blue w-11 h-11 rounded-xl">
-              <Clock size={20} strokeWidth={2.4} />
-            </div>
-            <div>
-              <h3 className="su-banner-title" style={{ fontSize: "16.5px" }}>Recently Viewed Deals</h3>
-              <p className="su-banner-desc">
-                Revisit the deals, products, and discounts you recently explored across Indian partner stores.
-              </p>
-            </div>
-          </div>
-
-          {items.length > 0 && (
+        {items.length > 0 && (
+          <div className="flex items-center justify-between pb-4 mb-5 border-b border-[#E5E7EB]">
+            <span className="text-xs font-semibold text-[#4B5563]">
+              {items.length} {items.length === 1 ? "product" : "products"} in browsing history
+            </span>
             <button
               type="button"
               disabled={clearing}
               onClick={handleClear}
-              className="su-btn-pill-raised text-xs py-2 px-3.5 hover:text-red-600"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline inline-flex items-center gap-1.5 transition"
             >
-              <Trash2 size={14} className="text-red-500" />
-              <span>{clearing ? "Clearing..." : "Clear History"}</span>
+              <Trash2 size={13} />
+              <span>{clearing ? "Clearing..." : "Clear history"}</span>
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Inner Empty State Box or Product Grid */}
         {items.length === 0 ? (
-          <div className="su-recent-empty-inner">
-            {/* Raised white rounded square (56px x 56px) with soft blue clock icon */}
-            <div className="su-white-square-icon" aria-hidden="true">
-              <Clock size={28} className="text-[#3B82F6]" strokeWidth={2.2} />
-            </div>
-
-            <h3 className="su-empty-title" style={{ fontSize: "18px" }}>
-              No Recently Viewed Products
+          <div className="py-12 px-4 text-center flex flex-col items-center justify-center">
+            <h3 className="text-base font-bold text-[#111827] mb-1.5">
+              Nothing viewed yet
             </h3>
-            <p className="su-empty-subtitle text-xs" style={{ maxWidth: "420px" }}>
-              Explore the latest electronics, fashion, and lifestyle discounts across partner stores to see them tracked here.
+            <p className="text-sm text-[#4B5563] max-w-md mb-6 leading-relaxed">
+              Products you open will show up here so you can find them again.
             </p>
-
             <a
               href={`${BASE_URL}#deals`}
-              className="su-btn-gradient-cta"
+              className="su-btn-secondary-white"
             >
-              <ShoppingBag size={16} strokeWidth={2.4} />
               <span>Browse Deals</span>
+              <ArrowRight size={15} strokeWidth={2} />
             </a>
           </div>
         ) : (
@@ -131,7 +106,7 @@ export default function RecentlyViewedTab({
                 >
                   <div>
                     {/* Image with 16:10 aspect ratio */}
-                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-100 mb-3.5 border border-slate-200/80">
+                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100 mb-3.5 border border-[#E5E7EB]">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -146,13 +121,13 @@ export default function RecentlyViewedTab({
                       )}
 
                       {/* Store Badge */}
-                      <span className="absolute right-2.5 top-2.5 su-recessed-pill text-[10px] py-0.5 px-2 bg-white/90">
+                      <span className="absolute right-2.5 top-2.5 text-[10px] py-0.5 px-2 bg-white/95 text-[#111827] font-semibold rounded border border-[#E5E7EB]">
                         {item.store || "Store"}
                       </span>
 
                       {/* Discount Badge */}
                       {item.discount > 0 && (
-                        <span className="absolute left-2.5 top-2.5 rounded-full bg-emerald-500 text-white font-extrabold px-2 py-0.5 text-[10px] shadow-sm">
+                        <span className="absolute left-2.5 top-2.5 rounded bg-emerald-600 text-white font-bold px-2 py-0.5 text-[10px] shadow-sm">
                           -{item.discount}%
                         </span>
                       )}
@@ -160,30 +135,30 @@ export default function RecentlyViewedTab({
 
                     {/* Category & Rating */}
                     <div className="flex items-center justify-between text-[11px] mb-1">
-                      <span className="font-bold uppercase tracking-wider text-blue-600">
+                      <span className="font-bold uppercase tracking-wider text-emerald-700">
                         {item.category || "Deal"}
                       </span>
-                      <span className="text-amber-500 font-semibold flex items-center gap-1">
+                      <span className="text-amber-600 font-semibold flex items-center gap-1">
                         ★ {item.rating || "4.5"}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h4 className="text-sm font-bold text-[#1E293B] line-clamp-2 min-h-[40px] leading-snug">
-                      <a href={detailUrl} className="hover:text-blue-600 transition">
+                    <h4 className="text-sm font-bold text-[#111827] line-clamp-2 min-h-[40px] leading-snug">
+                      <a href={detailUrl} className="hover:text-emerald-700 transition">
                         {item.name}
                       </a>
                     </h4>
                   </div>
 
                   {/* Price & Action Row */}
-                  <div className="mt-4 flex items-center justify-between pt-2 border-t border-slate-200/60">
+                  <div className="mt-4 flex items-center justify-between pt-2 border-t border-[#E5E7EB]">
                     <div>
-                      <p className="text-base font-black text-emerald-600">
+                      <p className="text-base font-black text-emerald-700">
                         ₹{Number(item.price || 0).toLocaleString("en-IN")}
                       </p>
                       {item.oldPrice > item.price && (
-                        <del className="text-xs text-slate-400 block -mt-0.5">
+                        <del className="text-xs text-[#6B7280] block -mt-0.5">
                           ₹{Number(item.oldPrice).toLocaleString("en-IN")}
                         </del>
                       )}
@@ -191,10 +166,10 @@ export default function RecentlyViewedTab({
 
                     <a
                       href={detailUrl}
-                      className="su-btn-pill-raised text-xs py-1.5 px-3"
+                      className="su-btn-secondary-white text-xs h-8 px-3"
                     >
                       <span>View Deal</span>
-                      <ArrowUpRight size={13} />
+                      <ArrowRight size={13} strokeWidth={2} />
                     </a>
                   </div>
                 </div>

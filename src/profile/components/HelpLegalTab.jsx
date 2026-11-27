@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Mail, Shield, Scale, Info, MessageSquare, ChevronRight } from "lucide-react";
+import { Mail, Shield, Scale, Info, MessageSquare, ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { BASE_URL } from "../../auth/auth.js";
 import { respectReducedMotion } from "../../lib/motion.js";
@@ -84,22 +84,22 @@ export default function HelpLegalTab() {
       {/* 1. Wide Featured Assistance Banner */}
       <div className="kx-help-featured-banner">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] shrink-0 shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(163,177,198,0.3)]">
-            <MessageSquare size={22} />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#F0FDF4] text-[#15803D] border border-[#DCFCE7] shrink-0">
+            <MessageSquare size={20} />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#0F172A] tracking-[-0.01em]">
+            <h3 className="text-base font-bold text-[#111827] tracking-[-0.01em]">
               Need Dedicated Assistance?
             </h3>
-            <p className="text-[13.5px] text-[#475569] mt-0.5 leading-[1.55]">
-              Our support team typically responds to tickets in under 24 hours.
+            <p className="text-[13.5px] text-[#4B5563] mt-0.5 leading-[1.55]">
+              Reach out to our support team for help with your account, orders, or deal tracking.
             </p>
           </div>
         </div>
 
         <a
           href={`${BASE_URL}contact-us.html`}
-          className="shrink-0 rounded-full bg-[#0F172A] px-6 py-3 text-xs font-bold text-white hover:bg-[#1E293B] transition shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_4px_10px_rgba(15,23,42,0.3)] inline-flex items-center justify-center"
+          className="kx-btn-primary shrink-0"
         >
           Get Help Now
         </a>
@@ -114,37 +114,32 @@ export default function HelpLegalTab() {
               <div
                 key={item.id}
                 className="kx-spot"
-                data-tone={item.tone}
                 tabIndex={0}
               >
                 <div className="flex flex-col justify-between h-full w-full relative z-10">
                   <div>
-                    {/* Header with 12px gap to icon tile */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <div
-                        className={`kx-spot-icon-tile kx-spot-icon-tile--${item.tone}`}
-                      >
-                        <Icon size={20} />
-                      </div>
-                      <h4 className="text-[17px] font-bold text-[#0F172A] tracking-[-0.01em] leading-snug">
+                    {/* Header with small green icon, no coloured square tile */}
+                    <div className="flex items-center gap-2.5 mb-2.5">
+                      <Icon size={18} className="text-[#15803D] shrink-0" />
+                      <h4 className="text-[16px] font-bold text-[#111827] tracking-[-0.01em] leading-snug">
                         {item.title}
                       </h4>
                     </div>
 
                     {/* Description max 70ch */}
-                    <p className="text-[14px] text-[#475569] leading-[1.55] max-w-[70ch] m-0">
+                    <p className="text-[13.5px] text-[#4B5563] leading-[1.55] max-w-[70ch] m-0">
                       {item.desc}
                     </p>
                   </div>
 
-                  {/* Action Link with 6px gap to chevron that nudges 3px on hover */}
+                  {/* Action Link with one link style */}
                   <a
                     href={item.url}
-                    className="kx-card-link font-bold"
+                    className="kx-legal-action-link"
                     aria-label={`${item.action} for ${item.title}`}
                   >
                     <span>{item.action}</span>
-                    <ChevronRight size={14} className="kx-chevron-nudge" />
+                    <ArrowRight size={14} className="kx-arrow-nudge" />
                   </a>
                 </div>
               </div>

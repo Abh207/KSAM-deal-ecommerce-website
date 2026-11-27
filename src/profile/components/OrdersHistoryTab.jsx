@@ -223,17 +223,14 @@ export default function OrdersHistoryTab({ session, profile, onNavigateTab }) {
         </div>
       ) : orders.length === 0 ? (
         <div className="orders-empty-box">
-          <div className="orders-empty-icon-wrap">
-            <ShoppingBag size={48} className="orders-empty-icon" />
-          </div>
-          <h3>No Orders Found Yet</h3>
-          <p>
+          <h3 className="text-base font-bold text-[#111827] mb-1.5">No Orders Found Yet</h3>
+          <p className="text-sm text-[#4B5563] max-w-md mb-6 leading-relaxed">
             When you purchase products from the KSAM Deal store, your orders, delivery milestones,
             and review links will appear here.
           </p>
-          <a href="./products.html" className="orders-shop-btn">
+          <a href="./products.html" className="su-btn-secondary-white">
             <span>Explore Products</span>
-            <ArrowRight size={16} />
+            <ArrowRight size={15} strokeWidth={2} />
           </a>
         </div>
       ) : (

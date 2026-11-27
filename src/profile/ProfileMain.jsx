@@ -706,18 +706,10 @@ export function ProfileApp() {
               {!["overview", "alerts", "recent"].includes(activeSection) && (
                 <div className={`kx-panel-header-open ${activeMeta.isDanger ? "is-danger-header" : ""}`}>
                   <div className="kx-panel-header-left">
-                    <div className={`kx-section-eyebrow ${activeMeta.isDanger ? "text-red-600 is-danger-eyebrow" : ""}`}>
-                      <ActiveIcon size={14} className="shrink-0" />
-                      <span>{activeMeta.eyebrow}</span>
-                    </div>
                     <h1 className={`kx-panel-heading ${activeMeta.isDanger ? "text-red-700" : ""}`}>
                       {activeMeta.title}
                     </h1>
                     <p className="kx-panel-desc">{activeMeta.desc}</p>
-                  </div>
-
-                  <div className="kx-panel-header-art hidden md:flex" aria-hidden="true">
-                    <ActiveIcon size={22} className={activeMeta.isDanger ? "text-red-600" : "text-[#15803D]"} />
                   </div>
                 </div>
               )}
